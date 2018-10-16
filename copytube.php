@@ -97,7 +97,7 @@
 						<p id="comment-title">Comments Section</p>
 						<div id="comment" class="input-group">
 							<!-- comments bar -->
-     						<input type="text" id="comment-bar" class="form-control my-input" placeholder="Add a comment..."/>
+							<form action="/new_comment.php" method="post"></form>
       						<span class="input-group-btn">
       							<!-- comments button -->
        							<button id="comment-button" class="btn btn-default" type="button">Add</button>
@@ -106,7 +106,9 @@
     					<!-- user comments -->
 						<div id="user-comments">
 
+								<!-- start of php database grabbing -->
 								<?php
+									// setting variables
 									$servername = "localhost";
 									$username = "root";
 									$password = "password";
@@ -118,14 +120,17 @@
 									if ($connection->connect_error) {
 										die("connection failed: " + $connection->connect_error);
 									}
+									// variables to equal all rows of comments and result of this
 									$sql = "SELECT * FROM `comments`";
 									$result = $connection->query($sql);
 
+									// fetch all comments from table
 									if ($result->num_rows > 0) {
 										while($row = $result->fetch_assoc()) {
-											echo "id: " . $row["id"]. " - comment: " . $row["comment"]. " " . $row["date"]. "<br>";
+											echo "Author: " . $row["author"]. "<br>" . "Date: " . $row["date"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
 										}
 									}
+									//close database
 									$connection->close();
 								?>
 
