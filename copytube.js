@@ -63,6 +63,10 @@ $(document).ready(function(){
 		$container.append(html);
 	}
 
+	//create array for storing comments and display
+	//var commentarray = [,];
+	//$('#user-comments').val(commentarray);
+
 	//when the add comment button is clicked
 	$('#comment-button').on('click', function(){
 		var emptycheck = $('#comment-bar').val();
