@@ -1,8 +1,4 @@
-window.onload = function(){
-
-	//Difference between JQ and JS
-	/* $('# */							/* main-video-title').val() = main_video_title;		*/
-	/* document.getElementById(' */		/* main-video-title').innerHTML = main_video_title; */
+$(document).ready(function(){
 
 	//getting the users name by asking for an input and saving this to use for comments later
 	var username = prompt("Please Enter Your Username Below or You Cannot use This Web Page", "Remove me when you aren't refreshing the page a million times");
@@ -18,11 +14,11 @@ window.onload = function(){
 	}
 
 	//generates the welcome message with the users username
-	document.getElementById('welcome').innerHTML = "Hello " + username + ", and welcome to CopyTube, where you will find a plagurised version of YouTube";
+	$('#welcome').text("Hello " + username + ", and welcome to CopyTube, where you will find a plagurised version of YouTube");
 
 	//object array for videos
 	var arr = [{
-		name: 'Big Buck Bunny - Official Trailer (2018)',
+		name: 'bunny',
 		src: 'http://dl3.webmfiles.org/big-buck-bunny_trailer.webm',
 		height: '200',
 		width: '210',
@@ -30,7 +26,7 @@ window.onload = function(){
 		id: '0'
 	},
 	{
-		name: 'An Elephants Dream',
+		name: 'elephant',
 		src: 'http://dl3.webmfiles.org/elephants-dream.webm',
 		height: '200',
 		width: '210',
@@ -38,7 +34,7 @@ window.onload = function(){
 		id: '1'
 	},
 	{
-		name: 'Just Some Lego',
+		name: 'lego',
 		src: 'http://techslides.com/demos/sample-videos/small.mp4',
 		height: '200',
 		width: '210',
@@ -48,16 +44,14 @@ window.onload = function(){
 
 	//pre-defining description & title and assigning these to the id for display
 	var main_video_title = arr[0].name;
-	document.getElementById('main-video-title').innerHTML = main_video_title;
+	$('#main-video-title').text(main_video_title);
 	var description = arr[0].description;
-	document.getElementById('main-video-description').innerHTML = description;
+	$('#main-video-description').text(description);
 
 	//Array for loop to display rabbit hole videos on load of document
-	var error = "Cannot display rabbit hole, JavaScript doesnt like [append], error is commented out, please refer to code in for loop.";
-	alert(error);
 	for(var i=0, l=arr.length; i<l; i++){
 
-		//var container = document.getElementById('rabbit-holes').value;
+		var $container = $('#rabbit-holes');
 
 		var html = '<div id="rabbit-holes col xs-12">' +
 						'<video id="2ndrabbithold" class="rabbit-hole-vid" controls muted src="'+ arr[i].src + '" data-array-element="'+i+'" width="210" height="200">' +
@@ -66,18 +60,18 @@ window.onload = function(){
 						'<p>' + arr[i].name + '</p>'
 					'</div>';
 
-		//container.append(html);
+		$container.append(html);
 	}
 
 	//when the add comment button is clicked
-	document.getElementById('comment-button').onclick = function(){
-		var emptycheck = document.getElementById('comment-bar').value;
+	$('#comment-button').on('click', function(){
+		var emptycheck = $('#comment-bar').val();
 		if (emptycheck == ""){
 			alert("Please input a comment");
 		} else {
 
 			//setting "description" to equal value in comment bar
-			var description = document.getElementById('comment-bar').value;
+			var description = $('#comment-bar').val();
 			//setting "today" to equal todays date
 			var today = new Date();
 			var dd = today.getDate();
@@ -96,35 +90,36 @@ window.onload = function(){
 			//combing these variables into one variable to concatenate them and display them in order
 			var actualcomment = '<br>' + '<p>' + "Username: " + username + '</p>' + '<p>' + "Date: " + today + '</p>' + '<p>' + "Time: " + time + '</p>' + '<p>' + description + '</p>';
 			//assign above variable to the id
-			document.getElementById('user-comments').innerHTML = actualcomment;
+			$('#user-comments').append(actualcomment);
 			//clear comment text bar
-			document.getElementById('comment-bar').value = "";
+			$('#comment-bar').val("");
 		}
-	}
+	})
 
 	//when a rabbit hole video is clicked
-	document.getElementById('rabbit-holes').onclick = function(){
+	$(document).on('click', '.rabbit-hole-vid',function(){
+
 		//setting variables: IDelement, source of main video, source of clicked video
-		var array_element = this.data('array-element');
-		var main_vid_src = document.getElementById('main-video').innerHTML('src');
+		var array_element = $(this).data('array-element');
+		var main_vid_src = $('#main-video').prop('src');
 		var clicked_vid_src = this.currentSrc;
 		//setting the clicked rabbit hole video  as the main video
-		document.getElementById('rabbit-hole-vid').innerHTML('src') = main_vid_src;
+		$('.rabbit-hole-vid').prop('src', main_vid_src);
 		//setting the main videos as the clicked rabbit hole video
-		document.getElementById('main-video').innerHTML('src') = clicked_vid_src;
+		$('#main-video').prop('src', clicked_vid_src);
 
 		//setting clicked element to a variable
-		var clicked_video_element = this.data('array-element');
+		var clicked_video_element = $(this).data('array-element');
 		console.log("Clicked array element on is: %s - obj: %o",clicked_video_element, arr[clicked_video_element].name);
 		//variable now equals that elements name
 		main_video_title = arr[clicked_video_element].name;
-		document.getElementById('main-video-title').innerHTML = main_video_title;
+		$('#main-video-title').text(main_video_title);
 		console.log("Main video element is: " + clicked_video_element);
 
 		//testing a new way to display title which should be a more efficient way
-		console.log(document.getElementById('main-video').innerHTML);
-		console.log(document.getElementById('main-video').innerHTML);
-	}
+		console.log($('#main-video').name);
+		console.log($('#main-video').prop('name'));
+	})
 
 	//Another way to display rabbit hole videos (commented out)
 		//To replace a rabbit hole video with the main video, use this:
@@ -132,4 +127,4 @@ window.onload = function(){
 		//To replace main video with a rabbit hole video, use this:
 		//$('#main-video').prop('src', src);
 		//this is because "src" is a variable and has already grabbed the source from the clicked video so you are setting the source of main vid to this source
-}
+})
