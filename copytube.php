@@ -97,7 +97,7 @@
 						<p id="comment-title">Comments Section</p>
 						<div id="comment" class="input-group">
 							<!-- comments bar -->
-							<form action="/new_comment.php" method="post"></form>
+							<input id="comment-bar" type="text" class="form-control my-input" placeholder="Add a comment..."/>
       						<span class="input-group-btn">
       							<!-- comments button -->
        							<button id="comment-button" class="btn btn-default" type="button">Add</button>

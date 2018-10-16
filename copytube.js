@@ -1,20 +1,20 @@
 $(document).ready(function(){
 
-	// //getting the users name by asking for an input and saving this to use for comments later
-	// var username = prompt("Please Enter Your Username Below or You Cannot use This Web Page", "Remove me when you aren't refreshing the page a million times");
+	//getting the users name by asking for an input and saving this to use for comments later
+	var username = prompt("Please Enter Your Username Below or You Cannot use This Web Page", "Remove me when you aren't refreshing the page a million times");
 
-	// //If the user ignores this and presses cancel (which equals null) or types nothing and clicks ok then window will close
-	// if (username == null){
-	// 	alert("I warned you.");
-	// 	close();
-	// }
-	// if (username == ""){
-	// 	alert("I warned you.");
-	// 	close();
-	// }
+	//If the user ignores this and presses cancel (which equals null) or types nothing and clicks ok then window will close
+	if (username == null){
+		alert("I warned you.");
+		close();
+	}
+	if (username == ""){
+		alert("I warned you.");
+		close();
+	}
 
-	// //generates the welcome message with the users username
-	// $('#welcome').text("Hello " + username + ", and welcome to CopyTube, where you will find a plagurised version of YouTube");
+	//generates the welcome message with the users username
+	$('#welcome').text("Hello " + username + ", and welcome to CopyTube, where you will find a plagurised version of YouTube");
 
 	//object array for videos
 	var arr = [{
