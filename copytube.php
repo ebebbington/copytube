@@ -104,7 +104,33 @@
       						</span>
     					</div>
     					<!-- user comments -->
-						<p id="user-comments"></p>
+						<div id="user-comments">
+
+								<?php
+									$servername = "localhost";
+									$username = "root";
+									$password = "password";
+
+									//create connection
+									$connection = new mysqli($servername, $username, $password, 'copytube');
+
+									//check connection
+									if ($connection->connect_error) {
+										die("connection failed: " + $connection->connect_error);
+									}
+									$sql = "SELECT * FROM `comments`";
+									$result = $connection->query($sql);
+
+									if ($result->num_rows > 0) {
+										while($row = $result->fetch_assoc()) {
+											echo "id: " . $row["id"]. " - comment: " . $row["comment"]. " " . $row["date"]. "<br>";
+										}
+									}
+									$connection->close();
+								?>
+
+						</div>
+
 
 				</div>
 
