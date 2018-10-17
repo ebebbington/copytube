@@ -7,7 +7,6 @@
 		<!--<To do>
 			- Sort out click event of changing video - make only clicked video change and not all 3
 			- I COULD, instead of finding name of clicked video, find it on the main video after it has changed and assign this to a variable
-			- Do something with ID's in arrays
 			- Create a local database
 				- Create array on document load
 					- store comments into this array
@@ -17,6 +16,7 @@
 			- display correct name and description under main video when new video is clicked
 			- I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
 			Save data to the database and try JSON (saving objects)
+			- Get DB to display videos so i can remove code in .js file
 		 <To do/>-->
 
 		 <!-- insert title of tab and welcome message -->
@@ -106,35 +106,38 @@
     					</div>
     					<br>
     					<!-- user comments -->
-						<div id="user-comments">
+						<div class="user-comments">
+								<!-- display new comment -->
+								<div id="user-comments"></div>
+								
 
-								<!-- start of php database grabbing -->
-								<?php
-									// setting variables
-									$servername = "localhost";
-									$username = "root";
-									$password = "password";
-
-									//create connection
-									$connection = new mysqli($servername, $username, $password, 'copytube');
-
-									//check connection
-									if ($connection->connect_error) {
-										die("connection failed: " + $connection->connect_error);
-									}
-									// variables to equal all rows of comments and result of this
-									$sql = "SELECT * FROM `comments`";
-									$result = $connection->query($sql);
-
-									// fetch all comments from table
-									if ($result->num_rows > 0) {
-										while($row = $result->fetch_assoc()) {
-											echo "Author: " . $row["author"]. "<br>" . "Date: " . $row["date"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
+								<!-- display comments from database -->
+								<div id="db-comments">
+									<!-- start of php database grabbing -->
+									<?php
+										// setting variables
+										$servername = "localhost";
+										$username = "root";
+										$password = "password";
+										//create connection
+										$connection = new mysqli($servername, $username, $password, 'copytube');
+										//check connection
+										if ($connection->connect_error) {
+											die("connection failed: " + $connection->connect_error);
 										}
-									}
-									//close database
-									$connection->close();
-								?>
+										// variables to equal all rows of comments and result of this
+										$sql = "SELECT * FROM `comments`";
+										$result = $connection->query($sql);
+										// fetch all comments from table
+										if ($result->num_rows > 0) {
+											while($row = $result->fetch_assoc()) {
+												echo "Author: " . $row["author"]. "<br>" . "Date: " . $row["date"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
+											}
+										}
+										//close database
+										$connection->close();
+									?>
+								</div>
 
 						</div>
 

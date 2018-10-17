@@ -23,7 +23,6 @@ $(document).ready(function(){
 		height: '200',
 		width: '210',
 		description: "This tells a story of a Bunny, that doesn't have the greatest time. But one thing changes this and shifts the Bunny's life around",
-		id: '0'
 	},
 	{
 		name: 'An Elephants Dream',
@@ -31,7 +30,6 @@ $(document).ready(function(){
 		height: '200',
 		width: '210',
 		description: "A great animation - I don't really know what else to say about it",
-		id: '1'
 	},
 	{
 		name: 'Lego Display',
@@ -39,7 +37,6 @@ $(document).ready(function(){
 		height: '200',
 		width: '210',
 		description: "It's a bird! It's a plane! Its... Lego?",
-		id: '2'
 	}];
 
 	//pre-defining description & title and assigning these to the id for display
@@ -63,17 +60,12 @@ $(document).ready(function(){
 		$container.append(html);
 	}
 
-	//create array for storing comments and display
-	//var commentarray = [,];
-	//$('#user-comments').val(commentarray);
-
 	//when the add comment button is clicked
 	$('#comment-button').on('click', function(){
 		var emptycheck = $('#comment-bar').val();
 		if (emptycheck == ""){
 			alert("Please input a comment");
 		} else {
-
 			//setting "description" to equal value in comment bar
 			var description = $('#comment-bar').val();
 			//setting "today" to equal todays date
@@ -98,6 +90,7 @@ $(document).ready(function(){
 			//clear comment text bar
 			$('#comment-bar').val("");
 		}
+
 	})
 
 	//when a rabbit hole video is clicked
