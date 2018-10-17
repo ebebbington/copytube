@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 	//object array for videos
 	var arr = [{
-		name: 'bunny',
+		name: 'Big Buck Bunner Trailer (2018)',
 		src: 'http://dl3.webmfiles.org/big-buck-bunny_trailer.webm',
 		height: '200',
 		width: '210',
@@ -26,7 +26,7 @@ $(document).ready(function(){
 		id: '0'
 	},
 	{
-		name: 'elephant',
+		name: 'An Elephants Dream',
 		src: 'http://dl3.webmfiles.org/elephants-dream.webm',
 		height: '200',
 		width: '210',
@@ -34,7 +34,7 @@ $(document).ready(function(){
 		id: '1'
 	},
 	{
-		name: 'lego',
+		name: 'Lego Display',
 		src: 'http://techslides.com/demos/sample-videos/small.mp4',
 		height: '200',
 		width: '210',
@@ -92,7 +92,7 @@ $(document).ready(function(){
 			}
 			time = h + ":" + m;
 			//combing these variables into one variable to concatenate them and display them in order
-			var actualcomment = '<br>' + '<p>' + "Username: " + username + '</p>' + '<p>' + "Date: " + today + '</p>' + '<p>' + "Time: " + time + '</p>' + '<p>' + description + '</p>';
+			var actualcomment = '<br>' + '<p>' + "Author: " + username + '</p>' + '<p>' + "Date: " + today + '</p>' + '<p>' + "Time: " + time + '</p>' + '<p>' + description + '</p>';
 			//assign above variable to the id
 			$('#user-comments').append(actualcomment);
 			//clear comment text bar

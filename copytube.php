@@ -16,6 +16,7 @@
 			- display correct name under rabbit hole vids
 			- display correct name and description under main video when new video is clicked
 			- I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
+			Save data to the database and try JSON (saving objects)
 		 <To do/>-->
 
 		 <!-- insert title of tab and welcome message -->
@@ -103,6 +104,7 @@
        							<button id="comment-button" class="btn btn-default" type="button">Add</button>
       						</span>
     					</div>
+    					<br>
     					<!-- user comments -->
 						<div id="user-comments">
 
