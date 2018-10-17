@@ -15,7 +15,7 @@
 			- display correct name under rabbit hole vids
 			- display correct name and description under main video when new video is clicked
 			- I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
-			Save data to the database and try JSON (saving objects)
+			- Have newly posted comments above the old-newest comment
 			- Get DB to display videos so i can remove code in .js file
 		 <To do/>-->
 
@@ -110,7 +110,6 @@
 
 								<!-- display and save new comment -->
 								<div id="user-comments"></div>
-								<?php include "savecomment.php";?>
 
 								<!-- display comments from database -->
 								<div id="db-comments">

@@ -90,6 +90,23 @@ $(document).ready(function(){
 			//clear comment text bar
 			$('#comment-bar').val("");
 		}
+		console.log(username + " " + description);
+		$.ajax({
+			type: "POST",
+			url: "models/savecomment.php",
+			data: {
+				author: username,
+				comment: description
+			},
+			success: function(response){
+				// do something cool, like tell the user what’s happened!
+				console.log('AJAX Response: Data has successfully been added to the database');
+			},
+			error: function(err) {
+				console.log('Error: Data has not been added to the database, please refer to copytube.js AJAX section');
+			}
+		});
+
 
 	})
 
