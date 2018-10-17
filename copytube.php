@@ -107,12 +107,14 @@
     					<br>
     					<!-- user comments -->
 						<div class="user-comments">
-								<!-- display new comment -->
+
+								<!-- display and save new comment -->
 								<div id="user-comments"></div>
-								
+								<?php include "savecomment.php";?>
 
 								<!-- display comments from database -->
 								<div id="db-comments">
+
 									<!-- start of php database grabbing -->
 									<?php
 										// setting variables
