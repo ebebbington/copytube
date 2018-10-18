@@ -14,7 +14,7 @@
 	}
 
 	//if connection works, set variable to string of inserting data
-	$sql = "INSERT INTO comments (author, comment, dateposted, timeposted) VALUES ('adam', 'you will get a bafta for this beauty', '10/10/2010')";
+	$sql = "INSERT INTO comments (author, comment, dateposted) VALUES ('adam', 'you will get a bafta for this beauty', '10/10/2010')";
 
 	//set this data in the database
 	$connection->query($sql);

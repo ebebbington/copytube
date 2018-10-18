@@ -75,22 +75,23 @@ $(document).ready(function(){
 			mm += 1; //some reason, month was 1 behind
 			var yyyy = today.getFullYear();
 			today = dd + '/' + mm + '/' + yyyy;
-			//setting "time" to equal current time
-			var time = new Date();
+
+			//setting "time" to equal current time - ONLY HERE FOR FUTURE REFERENCE, DO NOT USE
+			/*var time = new Date();
 			var h = time.getHours();
 			var m = time.getMinutes();
 			if (m < "10"){ //slight problem, any minute below 10 was displayed as 15:1 or 15:8, this fixes it by adding a zero before the minute
 				m = "0" + m;
 			}
-			time = h + ":" + m;
+			time = h + ":" + m;*/
+
 			//combing these variables into one variable to concatenate them and display them in order
-			var actualcomment = '<br>' + '<p>' + "Author: " + username + '</p>' + '<p>' + "Date: " + today + '</p>' + '<p>' + "Time: " + time + '</p>' + '<p>' + description + '</p>';
+			var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>";
 			//assign above variable to the id
 			$('#user-comments').append(actualcomment);
 			//clear comment text bar
 			$('#comment-bar').val("");
 		}
-		console.log(username + " " + description);
 		$.ajax({
 			type: "POST",
 			url: "models/savecomment.php",
@@ -98,7 +99,6 @@ $(document).ready(function(){
 				author: username,
 				comment: description,
 				dateposted: today,
-				timeposted: time
 			},
 			success: function(response){
 				console.log('AJAX Response: Data has successfully been added to the database');

@@ -15,7 +15,7 @@
 			- display correct name under rabbit hole vids
 			- display correct name and description under main video when new video is clicked
 			- I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
-			- Have newly posted comments above the old-newest comment
+			- Sort dates in database in order of having earliest comment at top (grabs 1 comment, then 2nd etc.)
 			- Get DB to display videos so i can remove code in .js file
 		 <To do/>-->
 
@@ -112,6 +112,8 @@
 								<div id="user-comments"></div>
 
 								<!-- display comments from database -->
+								<br>
+								<br>
 								<div id="db-comments">
 
 									<!-- start of php database grabbing -->
