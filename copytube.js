@@ -107,7 +107,7 @@ $(document).ready(function(){
 			error: function(err) {
 				console.log('AJAX save-comment Response: ERROR - Request for AJAX has not passed.');
 			}
-		});
+		}); //I can use "var_dump($_[typename])" to get props in network response which i an then do "var_dump($_POST[author])" to get value of this property
 
 	})
 

@@ -7,17 +7,12 @@
 		<!--<To do>
 			- Sort out click event of changing video - make only clicked video change and not all 3
 			- I COULD, instead of finding name of clicked video, find it on the main video after it has changed and assign this to a variable
-			- Create a local database
-				- Create array on document load
-					- store comments into this array
-						- display comments based on video
-							- use top search bar to search for these videos
+			- display comments based on video
+			- use top search bar to search for these videos
 			- display correct name under rabbit hole vids
 			- display correct name and description under main video when new video is clicked
 			- I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
-			- Sort dates in database in order of having earliest comment at top (grabs 1 comment, then 2nd etc.)
 			- Get DB to display videos so i can remove code in .js file
-			- Sort out saving inputted comments to database anf formatting the date to be the same
 		 <To do/>-->
 
 		 <!-- insert title of tab and welcome message -->
