@@ -98,16 +98,15 @@ $(document).ready(function(){
 			data: {
 				author: username,
 				comment: description,
-				dateposted: today,
+				dateposted: today
 			},
 			success: function(response){
-				console.log('AJAX Response: Data has successfully been added to the database');
+				console.log('AJAX save-comment Response: AJAX request has followed through.');
 			},
 			error: function(err) {
-				console.log('Error: Data has not been added to the database, please refer to copytube.js AJAX section');
+				console.log('AJAX save-comment Response: ERROR - Request for AJAX has not passed.');
 			}
 		});
-
 
 	})
 

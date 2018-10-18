@@ -17,6 +17,7 @@
 			- I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
 			- Sort dates in database in order of having earliest comment at top (grabs 1 comment, then 2nd etc.)
 			- Get DB to display videos so i can remove code in .js file
+			- Sort out saving inputted comments to database anf formatting the date to be the same
 		 <To do/>-->
 
 		 <!-- insert title of tab and welcome message -->
@@ -137,7 +138,7 @@
 												echo "Username: " . $row["author"]. "<br>" . "Date: " . $row["dateposted"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
 											}
 										}
-										//close database
+										//close database connection
 										$connection->close();
 									?>
 								</div>
