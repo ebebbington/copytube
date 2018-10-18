@@ -1,16 +1,19 @@
 $(document).ready(function(){
-
 	//getting the users name by asking for an input and saving this to use for comments later
-	var username = prompt("Please Enter Your Username Below or You Cannot use This Web Page", "Remove me when you aren't refreshing the page a million times");
+	var username = prompt("Please enter your username below or result to 'ALT+F4'...");
 
 	//If the user ignores this and presses cancel (which equals null) or types nothing and clicks ok then window will close
-	if (username == null){
-		alert("I warned you.");
-		close();
-	}
-	if (username == ""){
-		alert("I warned you.");
-		close();
+
+	if (username == null || username == ""){
+		var imsorry = "0";
+		var left = "10000";
+		while (imsorry != "10000") {
+			imsorry += 1;
+			left -= 1;
+			alert("This alert will pop up " + left + "more times. Suggestion: close the tab.");
+			console.log("Alerts: " + imsorry + "/" + "10000");
+			console.log("Alerts left: " + left);
+		}
 	}
 
 	//generates the welcome message with the users username
@@ -88,11 +91,12 @@ $(document).ready(function(){
 
 			//combing these variables into one variable to concatenate them and display them in order
 			var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>";
-			//assign above variable to the id
+			//assign above variable to the id for the div to display
 			$('#user-comments').prepend(actualcomment);
 			//clear comment text bar
 			$('#comment-bar').val("");
 		}
+		//start of setting up ajax request by setting url to go to and data
 		$.ajax({
 			type: "POST",
 			url: "models/savecomment.php",
@@ -101,6 +105,7 @@ $(document).ready(function(){
 				comment: description,
 				dateposted: today
 			},
+			//if working or if not
 			success: function(response){
 				console.log('AJAX save-comment Response: AJAX request has followed through.');
 			},
