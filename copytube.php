@@ -132,7 +132,7 @@
 										// fetch all comments from table
 										if ($result->num_rows > 0) {
 											while($row = $result->fetch_assoc()) {
-												echo "Author: " . $row["author"]. "<br>" . "Date: " . $row["date"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
+												echo "Username: " . $row["author"]. "<br>" . "Date: " . $row["dateposted"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
 											}
 										}
 										//close database
