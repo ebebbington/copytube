@@ -89,7 +89,7 @@ $(document).ready(function(){
 			//combing these variables into one variable to concatenate them and display them in order
 			var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>";
 			//assign above variable to the id
-			$('#user-comments').append(actualcomment);
+			$('#user-comments').prepend(actualcomment);
 			//clear comment text bar
 			$('#comment-bar').val("");
 		}
