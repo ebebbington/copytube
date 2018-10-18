@@ -1,24 +1,22 @@
 <?php
-				// $username = 
-				// $description = 
-				// $date = 
-				// $time =
+	//Setting variables up
+	$servername = "localhost";
+	$username = "root";
+	$password = "password";
+	$database = "copytube";
 
-				$servername = "localhost";
-				$username = "root";
-				$password = "password";
-				$database = "copytube";
+	//create connection
+	$connection = new mysqli($servername, $username, $password, $database);
 
-				//create connection
-				$connection = new mysqli($servername, $username, $password, $database);
-				//check connection
-				if ($connection->connect_error) {
-					die("connection failed: " + $connection->connect_error);
-				}
+	//check connection
+	if ($connection->connect_error) {
+		die("connection failed: " + $connection->connect_error);
+	}
 
-				$sql = "INSERT INTO comments (comment, author, `date`, `time`) VALUES ('testcomment', 'testauthor', 'testdate', 'testtime')";
+	//if connection works, set variable to string of inserting data
+	$sql = "INSERT INTO comments (author, comment, dateposted, timeposted) VALUES ('adam', 'you will get a bafta for this beauty', '10/10/2010')";
 
-				$connection->query($sql);
-				//die($connection->error);
-				$connection->close();
+	//set this data in the database
+	$connection->query($sql);
+	$connection->close();
 ?>

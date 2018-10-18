@@ -96,10 +96,11 @@ $(document).ready(function(){
 			url: "models/savecomment.php",
 			data: {
 				author: username,
-				comment: description
+				comment: description,
+				dateposted: today,
+				timeposted: time
 			},
 			success: function(response){
-				// do something cool, like tell the user what’s happened!
 				console.log('AJAX Response: Data has successfully been added to the database');
 			},
 			error: function(err) {
