@@ -74,7 +74,8 @@ $(document).ready(function(){
 			var mm = today.getMonth();
 			mm += 1; //some reason, month was 1 behind
 			var yyyy = today.getFullYear();
-			today = dd + '/' + mm + '/' + yyyy;
+			//today = dd + '/' + mm + '/' + yyyy;
+			today = yyyy + "-" + mm + "-" + dd;
 
 			//setting "time" to equal current time - ONLY HERE FOR FUTURE REFERENCE, DO NOT USE
 			/*var time = new Date();
