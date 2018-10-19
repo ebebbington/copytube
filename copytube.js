@@ -106,7 +106,7 @@ $(document).ready(function(){
 
 		//creating varibles for titles and description
 		var clicked_vid_title = $(this).prop('title');
-		var clicked_vid_description = $(this).prop('description');
+		var clicked_vid_description = $(this).prop('description'); //doesnt work, add in description in video props and test again
 		var main_vid_title = $('#main-video-title').text();
 
 		//creating variables for the main and clicked video source
@@ -115,8 +115,8 @@ $(document).ready(function(){
 
 		//setting titles and descriptions
 		$('#main-video-title').text(clicked_vid_title);
-		$('#main-video-description').text(clicked_vid_description);
-		$(this).prop('title', main_vid_title);
+		$('#main-video-description').text(clicked_vid_description); //doesnt work, fix variable first then this will work
+		$(this).prop('title', main_vid_title); //doesnt work, displays ALL of 'this' (such as using: console.log($(this))) and not the title i.e. gets all of the props and not just the title
 
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
