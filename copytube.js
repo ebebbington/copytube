@@ -69,15 +69,6 @@ $(document).ready(function(){
 			//today = dd + '/' + mm + '/' + yyyy;
 			today = yyyy + "-" + mm + "-" + dd;
 
-			//setting "time" to equal current time - ONLY HERE FOR FUTURE REFERENCE, DO NOT USE
-			/*var time = new Date();
-			var h = time.getHours();
-			var m = time.getMinutes();
-			if (m < "10"){ //slight problem, any minute below 10 was displayed as 15:1 or 15:8, this fixes it by adding a zero before the minute
-				m = "0" + m;
-			}
-			time = h + ":" + m;*/
-
 			//combing these variables into one variable to concatenate them and display them in order
 			var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>";
 			//assign above variable to the id for the div to display

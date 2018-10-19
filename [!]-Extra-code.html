@@ -1,29 +1,11 @@
-			<div class="rabbit-hole col xs-12">
+JavaScript - Getting the current time {}
 
-							<!-- This shows a video in the upper most box -->
-							<video id='my-id' class='rabbit-hole-vid' controls
-							    	muted
-							    	src="http://dl3.webmfiles.org/elephants-dream.webm"
-							    	width="210"
-							    	height="200">
-							    Sorry, your browser doesn't support embedded videos.
-							</video>
-							
-						</div>
+	var time = new Date();
+	var h = time.getHours();
+	var m = time.getMinutes();
+	if (m < "10"){ //slight problem, any minute below 10 was displayed as 15:1 or 15:8, this fixes it by adding a zero before the minute
+		m = "0" + m;
+	}
+	time = h + ":" + m;
+}
 
-						<div class="rabbit-hole col xs-12">
-
-							<video id='2ndrabbithold' class='rabbit-hole-vid' controls
-							    	muted
-							    	src="http://techslides.com/demos/sample-videos/small.mp4"
-							    	width="210"
-							    	height="200">
-							    Sorry, your browser doesn't support embedded videos.
-							</video>
-
-							
-						</div>
-
-						<div class="rabbit-hole col xs-12">
-							
-						</div>
