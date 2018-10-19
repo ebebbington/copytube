@@ -77,6 +77,7 @@
 							<video id='main-video' controls
 									autoplay
 							    	muted
+							    	title="Big Buck Bunny Trailer (2018)"
 							    	src="http://dl3.webmfiles.org/big-buck-bunny_trailer.webm"
 							    	width="750"
 							    	height="400">
@@ -150,6 +151,7 @@
 
 							<video id='rabbit-hole-vid-1' class='rabbit-hole-vid' controls
 							    	muted
+							    	title="An Elephants Dream"
 							    	src="http://dl3.webmfiles.org/elephants-dream.webm"
 							    	width="230"
 							    	height="220">
@@ -163,6 +165,7 @@
 
 							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
 							    	muted
+							    	title="Lego Display"
 							    	src="http://techslides.com/demos/sample-videos/small.mp4"
 							    	width="230"
 							    	height="220">

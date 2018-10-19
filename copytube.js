@@ -43,10 +43,10 @@ $(document).ready(function(){
 	}];
 
 	//pre-defining description & title and assigning these to the id for display
-	var main_video_title = arr[0].name;
-	$('#main-video-title').text(main_video_title);
-	var description = arr[0].description;
-	$('#main-video-description').text(description);
+	var main_vid_title = arr[0].name;
+	$('#main-video-title').text(main_vid_title);
+	var main_vid_description = arr[0].description;
+	$('#main-video-description').text(main_vid_description);
 	var rabbit_hole_vid_1_title = arr[1].name;
 	$('#rabbit-hole-vid-1-title').text(rabbit_hole_vid_1_title);
 	var rabbit_hole_vid_2_title = arr[2].name;
@@ -108,24 +108,22 @@ $(document).ready(function(){
 	//when a rabbit hole video is clicked
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
-		//creating main video and clicked video source variable
+		//creating varibles for titles and description
+		var clicked_vid_title = $(this).prop('title');
+		var clicked_vid_description = $(this).prop('description');
+		var main_vid_title = $('#main-video-title').text();
+
+		//creating variables for the main and clicked video source
 		var main_vid_src = $('#main-video').prop('src');
 		var clicked_vid_src = this.currentSrc;
 
-		//setting clicked video and main video source
-		//var clicked_video = this;
-		console.log(this.id.src);
+		//setting titles and descriptions
+		$('#main-video-title').text(clicked_vid_title);
+		$('#main-video-description').text(clicked_vid_description);
+		$(this).prop('title', main_vid_title);
 
+		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
-
-		//re setting and displaying titles + description
-		$('#main-video-title').text(main_video_title);
-		//rab vid 1 title//
-		//rab vid 2 title//
-		//main vid desscription//
-
-		//testing a new way to display title which should be a more efficient way
-		console.log($('#main-video').name);
-		console.log($('#main-video').prop('name'));
+		$(this).prop('src', main_vid_src);
 	})
 })
