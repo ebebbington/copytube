@@ -146,7 +146,33 @@
 				<!-- rabbit hole videos -->
 				<div class="col-xs-3">
 
-					<div class="row" id="rabbit-holes"></div>
+					<div class="rabbit-holes col-xs-12">
+
+							<video id='rabbit-hole-vid-1' class='rabbit-hole-vid' controls
+							    	muted
+							    	src="http://dl3.webmfiles.org/elephants-dream.webm"
+							    	width="230"
+							    	height="220">
+							    Sorry, your browser doesn't support embedded videos.
+							</video>
+							<p id="rabbit-hole-vid-1-title"></p>
+							
+						</div>
+
+						<div class="rabbit-hole col xs-12">
+
+							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
+							    	muted
+							    	src="http://techslides.com/demos/sample-videos/small.mp4"
+							    	width="230"
+							    	height="220">
+							    Sorry, your browser doesn't support embedded videos.
+							</video>
+							<p id="rabbit-hole-vid-2-title"></p>
+							
+						</div>
+
+					</div>
 
 				</div>
 				

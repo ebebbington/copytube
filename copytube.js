@@ -23,22 +23,22 @@ $(document).ready(function(){
 	var arr = [{
 		name: 'Big Buck Bunner Trailer (2018)',
 		src: 'http://dl3.webmfiles.org/big-buck-bunny_trailer.webm',
-		height: '200',
-		width: '210',
+		height: '220',
+		width: '230',
 		description: "This tells a story of a Bunny, that doesn't have the greatest time. But one thing changes this and shifts the Bunny's life around",
 	},
 	{
 		name: 'An Elephants Dream',
 		src: 'http://dl3.webmfiles.org/elephants-dream.webm',
-		height: '200',
-		width: '210',
+		height: '220',
+		width: '230',
 		description: "A great animation - I don't really know what else to say about it",
 	},
 	{
 		name: 'Lego Display',
 		src: 'http://techslides.com/demos/sample-videos/small.mp4',
-		height: '200',
-		width: '210',
+		height: '220',
+		width: '230',
 		description: "It's a bird! It's a plane! Its... Lego?",
 	}];
 
@@ -47,21 +47,10 @@ $(document).ready(function(){
 	$('#main-video-title').text(main_video_title);
 	var description = arr[0].description;
 	$('#main-video-description').text(description);
-
-	//Array for loop to display rabbit hole videos on load of document
-	for(var i=0, l=arr.length; i<l; i++){
-
-		var $container = $('#rabbit-holes');
-
-		var html = '<div id="rabbit-holes col xs-12">' +
-						'<video id="2ndrabbithold" class="rabbit-hole-vid" controls muted src="'+ arr[i].src + '" data-array-element="'+i+'" width="210" height="200">' +
-						   ' Sorry, your browser doesn\'t support embedded videos.' +
-						'</video>' +
-						'<p>' + arr[i].name + '</p>'
-					'</div>';
-
-		$container.append(html);
-	}
+	var rabbit_hole_vid_1_title = arr[1].name;
+	$('#rabbit-hole-vid-1-title').text(rabbit_hole_vid_1_title);
+	var rabbit_hole_vid_2_title = arr[2].name;
+	$('#rabbit-hole-vid-2-title').text(rabbit_hole_vid_2_title);
 
 	//when the add comment button is clicked
 	$('#comment-button').on('click', function(){
@@ -119,22 +108,21 @@ $(document).ready(function(){
 	//when a rabbit hole video is clicked
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
-		//setting variables: IDelement, source of main video, source of clicked video
-		var array_element = $(this).data('array-element');
+		//creating main video and clicked video source variable
 		var main_vid_src = $('#main-video').prop('src');
 		var clicked_vid_src = this.currentSrc;
-		//setting the clicked rabbit hole video  as the main video
-		$('.rabbit-hole-vid').prop('src', main_vid_src);
-		//setting the main videos as the clicked rabbit hole video
+
+		//setting clicked video and main video source
+		//var clicked_video = this;
+		console.log(this.id.src);
+
 		$('#main-video').prop('src', clicked_vid_src);
 
-		//setting clicked element to a variable
-		var clicked_video_element = $(this).data('array-element');
-		console.log("Clicked array element on is: %s - obj: %o",clicked_video_element, arr[clicked_video_element].name);
-		//variable now equals that elements name
-		main_video_title = arr[clicked_video_element].name;
+		//re setting and displaying titles + description
 		$('#main-video-title').text(main_video_title);
-		console.log("Main video element is: " + clicked_video_element);
+		//rab vid 1 title//
+		//rab vid 2 title//
+		//main vid desscription//
 
 		//testing a new way to display title which should be a more efficient way
 		console.log($('#main-video').name);
