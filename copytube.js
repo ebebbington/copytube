@@ -140,11 +140,4 @@ $(document).ready(function(){
 		console.log($('#main-video').name);
 		console.log($('#main-video').prop('name'));
 	})
-
-	//Another way to display rabbit hole videos (commented out)
-		//To replace a rabbit hole video with the main video, use this:
-		//$('.[vid clas name]').prop('src', videotoreplace);
-		//To replace main video with a rabbit hole video, use this:
-		//$('#main-video').prop('src', src);
-		//this is because "src" is a variable and has already grabbed the source from the clicked video so you are setting the source of main vid to this source
 })
