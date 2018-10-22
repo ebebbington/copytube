@@ -29,11 +29,7 @@ h2{
 	font-size: 15px;
 }
 
-#rabbit-hole-vid-1-title{
-	font-weight: bold;
-}
-
-#rabbit-hole-vid-2-title{
+#rabbit-hole-vid-1-title, #rabbit-hole-vid-2-title{
 	font-weight: bold;
 }
 
@@ -47,12 +43,7 @@ h2{
 	margin-left: 13px;
 }
 
-#user-comments{
-	word-wrap: break-word;
-	margin-left: 1em;
-}
-
-#db-comments{
+#user-comments, #db-comments{
 	word-wrap: break-word;
 	margin-left: 1em;
 }
