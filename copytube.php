@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 
 <html> 
-
+    <!-- region head -->
 	<head>
 
-		<!--<To do>
-			- I COULD, instead of finding name of clicked video, find it on the main video after it has changed and assign this to a variable
-			- display comments based on video
-			- use top search bar to search for these videos
-			- display correct name under rabbit hole vids
-			- display correct name and description under main video when new video is clicked
-			- I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
-			- Get DB to display videos so i can remove code in .js file
-		 <To do/>-->
+        <!-- region To Do List -->
+        <!--
+        - I COULD, instead of finding name of clicked video, find it on the main video after it has changed and assign this to a variable
+        - display comments based on video
+        - use top search bar to search for these videos
+        - display correct name under rabbit hole vids
+        - display correct name and description under main video when new video is clicked
+        - I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
+        - Get DB to display videos so i can remove code in .js file
+        <!-- endregion-->
 
-		 <!-- insert title of tab and welcome message -->
+        <!-- region Tab Title & Welcome Message -->
 		<title>CopyTube</title>
 		<h2 id="welcome"></h2>
+        <!-- endregion -->
 
+        <!-- region Links & Scripts -->
 		<!-- allows .js code to run jquery -->
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
@@ -32,24 +35,29 @@
 
 		<!-- links my javascript sheet so it can be used -->
 		<script src="copytube.js"></script>
+        <!-- endregion -->
 
 	</head>
+    <!-- endregion -->
 
+    <!-- region body -->
 	<body>
 
+        <!-- region Opening Page -->
 		<div class="container">
 			
-			<!-- row to include logo and search bar and button -->
+			<!-- region Row for Logo, Search Bar and Search Button -->
 			<div class="row">
 
-				<!-- logo -->
+				<!-- region Logo -->
 				<div class="col-xs-3">
 
 					<img id="logo" src="imageresources/CopyTube_Logo.png"/>
 
 				</div>
+                <!-- endregion -->
 
-				<!-- search bar/button -->
+				<!-- region Search Bar/Button -->
 				<div class="col-xs-9">
 					<div id="search" class="input-group">
      					<input id="search-bar" type="text" class="form-control my-input" placeholder="Search..."/>
@@ -57,20 +65,22 @@
        						<button id="search-button" class="btn btn-default" type="button">Beep Boop Calculate!</button>
       					</span>
     				</div>
-
 				</div>
+                <!-- endregion -->
 
 			</div>
+            <!-- endregion -->
 
-			<!-- new row to insert main video, title & description, and comments section and rabbit hole videos -->
+			<!-- region Row for Main Video/Title/Description, Comments Section & Rabbit Hole -->
 			<div class="row">
-				<!-- insert main video, title, description and comments section and rabbit hole videos-->
+
+				<!-- region Main Video/Title/Description & Comments Section-->
 				<div class="col-xs-9">
 
+                        <!-- region Main Video/Title/Description -->
 						<br>
 						<br>
 						<br>
-						<!-- contains video, title and description -->
 						<div class="my-video col-xs-12">
 							<!-- video -->
 							<video id='main-video' controls
@@ -90,7 +100,9 @@
 						<br>
 						<br>
 						</div>
-						<!-- comments title -->
+                        <!-- endregion -->
+
+						<!-- region Comments Title/Bar & Button -->
 						<p id="comment-title">Comments Section</p>
 						<div id="comment" class="input-group">
 							<!-- comments bar -->
@@ -100,19 +112,18 @@
        							<button id="comment-button" class="btn btn-default" type="button">Add</button>
       						</span>
     					</div>
+                        <!-- endregion -->
     					<br>
-    					<!-- user comments -->
+    					<!-- region User Comments -->
 						<div class="user-comments">
 
-								<!-- display and save new comment -->
+								<!-- region Display New Comment & Comments from Database -->
 								<div id="user-comments"></div>
-
-								<!-- display comments from database -->
 								<br>
 								<br>
 								<div id="db-comments">
 
-									<!-- start of php database grabbing -->
+									<!-- region Get Database Comments -->
 									<?php
 										// setting variables
 										$servername = "localhost";
@@ -136,14 +147,17 @@
 										//close database connection
 										$connection->close();
 									?>
+                                    <!-- endregion -->
 								</div>
-
+                                <!-- endregion -->
 						</div>
+                        <!-- endregion -->
 
 
 				</div>
+                <!-- endregion -->
 
-				<!-- rabbit hole videos -->
+                <!-- region Rabbit Hole -->
 				<div class="col-xs-3">
 
 					<div class="rabbit-holes col-xs-12">
@@ -177,11 +191,15 @@
 					</div>
 
 				</div>
-				
+                <!-- endregion -->
+
 			</div>
+            <!-- endregion -->
 
 		</div>
+        <!-- endregion -->
 
 	</body>
+    <!-- endregion -->
 
 </html>
