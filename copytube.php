@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
+<!-- region html -->
 <html> 
     <!-- region head -->
 	<head>
 
         <!-- region To Do List -->
-        <!--
-        - I COULD, instead of finding name of clicked video, find it on the main video after it has changed and assign this to a variable
+        <!-- TODO To Do List
         - display comments based on video
         - use top search bar to search for these videos
         - display correct name under rabbit hole vids
@@ -203,3 +203,4 @@
     <!-- endregion -->
 
 </html>
+<!-- endregion -->
