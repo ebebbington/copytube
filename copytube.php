@@ -5,7 +5,6 @@
 	<head>
 
 		<!--<To do>
-			- Sort out click event of changing video - make only clicked video change and not all 3
 			- I COULD, instead of finding name of clicked video, find it on the main video after it has changed and assign this to a variable
 			- display comments based on video
 			- use top search bar to search for these videos
