@@ -113,7 +113,7 @@ $(document).ready(function(){
 
 		//creating varibles for titles and description
 		var clicked_vid_title = $(this).prop('title');
-		var clicked_vid_description = $(this).prop('description'); //FIXME [1]: Add Description to video elements and test
+		var clicked_vid_description = $(this).prop('description'); //FIXME [1]: test with console log, result should be a description
 		var main_vid_title = $('#main-video-title').text();
 
 		//creating variables for the main and clicked video source
@@ -122,8 +122,8 @@ $(document).ready(function(){
 
 		//setting titles and descriptions
 		$('#main-video-title').text(clicked_vid_title);
-		$('#main-video-description').text(clicked_vid_description); //FIXME [1.1]: Test after [1] works
-		$(this).prop('title', main_vid_title); //FIXME [2]: Displays all properties of 'this' and not just the title (use console.log)
+		$('#main-video-description').text(clicked_vid_description); //FIXME [1.1]: Test after [1] works as it SHOULD work
+        $(this).prop('title', main_vid_title); //FIXME [2]: Displays all properties of 'this' and not just the title (use console.log)
 
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
