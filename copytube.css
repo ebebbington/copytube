@@ -1,3 +1,4 @@
+/*region h2*/
 h2{
 	text-align: center;
 	color: green;
@@ -5,45 +6,62 @@ h2{
 	word-spacing: 1px;
 	font-size: 20px;
 }
+/*endregion*/
 
+/*region search-bar*/
 #search-bar{
 	font-style: italic;
 	font-weight: bold;
 	margin-top: 1em;
 	max-width: 40em;
 }
+/*endregion*/
 
+/*region search-button*/
 #search-button{
 	margin-top: 1em;
 	margin-right: 130px;
 }
+/*endregion*/
 
+/*region main-video-title*/
 #main-video-title{
 	font-size: 30px;
 	text-indent: 1px;
 	font-weight: bold;
 }
+/*endregion*/
 
+/*region main-video-description*/
 #main-video-description{
 	text-indent: 1px;
 	font-size: 15px;
 }
+/*endregion*/
 
+/*region All Rabbit Hole Titles*/
 #rabbit-hole-vid-1-title, #rabbit-hole-vid-2-title{
 	font-weight: bold;
 }
+/*endregion*/
 
+/*region comment-title*/
 #comment-title{
 	font-weight: bold;
 	font-size: 20px;
 	text-indent: 15px;
 }
+/*endregion*/
 
+/*region comment-bar*/
 #comment-bar{
 	margin-left: 13px;
 }
+/*endregion*/
 
+/*region All Displayed Comments*/
 #user-comments, #db-comments{
 	word-wrap: break-word;
 	margin-left: 1em;
 }
+/*endregion*/
