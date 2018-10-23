@@ -85,13 +85,15 @@ $(document).ready(function(){
 
                 //region AJAX save-comments Request
                 //start of setting up ajax request by setting url to go to and data
+				var vid_title = $('#main-video-title').text();
                 $.ajax({
                     type: "POST",
                     url: "models/savecomment.php",
                     data: {
                         author: username,
                         comment: description,
-                        dateposted: today
+                        dateposted: today,
+						videotitle: vid_title
                     },
                     //if working or if not
                     success: function (response) {
