@@ -6,9 +6,8 @@
 
         <!-- region To Do List -->
         <!-- TODO To Do List
-        - display comments based on video
         - use top search bar to search for these videos
-        - Get DB to display videos so i can remove code in .js file
+            - display comments based on this video (create a link [foreign key])
         <!-- endregion-->
 
         <!-- region Tab Title & Welcome Message -->
