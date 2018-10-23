@@ -23,5 +23,6 @@
     $result = $connection->query($sql);
     $response = $result->fetch_all(MYSQLI_ASSOC);
     print_r(json_encode($response));
+
     $connection->close();
 ?>

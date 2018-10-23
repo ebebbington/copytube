@@ -143,7 +143,7 @@ $(document).ready(function(){
 		//endregion
 
 		//region AJAX Request to get comments based on clicked video
-        $.ajax({ //TODO: Finish AJAX Request
+        $.ajax({
             type: "GET",
             url: "models/getcomment.php",
             data: {

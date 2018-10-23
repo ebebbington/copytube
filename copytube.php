@@ -7,7 +7,6 @@
         <!-- region To Do List -->
         <!-- TODO To Do List
         - use top search bar to search for these videos
-            - display comments based on this video (create a link [foreign key])
         <!-- endregion-->
 
         <!-- region Tab Title & Welcome Message -->
