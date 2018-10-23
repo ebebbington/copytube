@@ -110,6 +110,7 @@ $(document).ready(function(){
     //region When Rabit Hole is Clicked
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
+		//region Changing Videos, Titles & Descriptions
 		//creating varibles for titles and description
 		var clicked_vid_title = $(this).prop('title');
 		var i = 0;
@@ -137,6 +138,29 @@ $(document).ready(function(){
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
 		$(this).prop('src', main_vid_src);
+		//endregion
+
+		//region AJAX Request to get comments based on clicked video
+        $.ajax({ //TODO: Finish AJAX Request
+            type: "GET",
+            url: "models/getcomment.php",
+            data: {
+                author: username,
+                comment: description,
+                dateposted: today,
+				videotitle: clicked_vid_title
+            },
+            //if working or if not
+            success: function (response) {
+                console.log('AJAX get-comment Response: AJAX request has followed through.');
+            },
+            error: function (err) {
+                console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
+            }
+        });
+        $('#db-comments').clear();
+        $('#db-comments').append($sql);
+        //endregion
 	})
     //endregion
 })
