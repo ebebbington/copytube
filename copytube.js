@@ -113,7 +113,8 @@ $(document).ready(function(){
 
 		//creating varibles for titles and description
 		var clicked_vid_title = $(this).prop('title');
-		var clicked_vid_description = $(this).prop('description'); //FIXME [1]: Console.log not working. Test with console log, result should be a description
+		var clicked_vid_description = $(this).prop('description'); //FIXME [1]: Web page isnt refreshing changes made in code. Test with console log, result should be a description
+		console.log(clicked_vid_description);
 		var main_vid_title = $('#main-video-title').text();
 
 		//creating variables for the main and clicked video source
