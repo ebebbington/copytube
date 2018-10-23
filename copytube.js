@@ -73,8 +73,7 @@ $(document).ready(function(){
                 var mm = today.getMonth();
                 mm += 1; //some reason, month was 1 behind
                 var yyyy = today.getFullYear();
-                //today = dd + '/' + mm + '/' + yyyy;
-                today = yyyy + "-" + mm + "-" + dd;
+                today = dd + "/" + mm + "/" + yyyy;
 
                 //combing these variables into one variable to concatenate them and display them in order
                 var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>";
