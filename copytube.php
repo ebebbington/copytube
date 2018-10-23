@@ -86,9 +86,8 @@
 							<video id='main-video' controls
 									autoplay
 							    	muted
-							    	title="Big Buck Bunny Trailer (2018)"
-                                    description="test bunny description .html code"
-							    	src="http://dl3.webmfiles.org/big-buck-bunny_trailer.webm"
+							    	title="Something More Adventure"
+							    	src="http://mazwai.com/system/posts/videos/000/000/191/original/something-more.mp4?1445788608"
 							    	width="750"
 							    	height="400">
 							    Sorry, your browser doesn't support embedded videos.
@@ -165,8 +164,8 @@
 
 							<video id='rabbit-hole-vid-1' class='rabbit-hole-vid' controls
 							    	muted
-							    	title="An Elephants Dream"
-							    	src="http://dl3.webmfiles.org/elephants-dream.webm"
+							    	title="Lava Sample"
+							    	src="https://upload.wikimedia.org/wikipedia/commons/transcoded/2/22/Volcano_Lava_Sample.webm/Volcano_Lava_Sample.webm.360p.webm"
 							    	width="230"
 							    	height="220">
 							    Sorry, your browser doesn't support embedded videos.
@@ -179,8 +178,8 @@
 
 							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
 							    	muted
-							    	title="Lego Display"
-							    	src="http://techslides.com/demos/sample-videos/small.mp4"
+							    	title="An Iceland Venture"
+							    	src="http://mazwai.com/system/posts/videos/000/000/229/original/omote_iceland__an_iceland_venture.mp4?1528050680"
 							    	width="230"
 							    	height="220">
 							    Sorry, your browser doesn't support embedded videos.

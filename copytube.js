@@ -22,25 +22,25 @@ $(document).ready(function(){
 
 	//region Object Array for Videos
 	var arr = [{
-		name: 'Big Buck Bunner Trailer (2018)',
-		src: 'http://dl3.webmfiles.org/big-buck-bunny_trailer.webm',
+		name: 'Something More',
+		src: 'http://mazwai.com/system/posts/videos/000/000/191/original/something-more.mp4?1445788608',
 		height: '220',
 		width: '230',
-		description: "This tells a story of a Bunny, that doesn't have the greatest time. But one thing changes this and shifts the Bunny's life around",
+		description: "Watch this inspirational video as we look at all of the beautiful things inside this world",
 	},
 	{
-		name: 'An Elephants Dream',
-		src: 'http://dl3.webmfiles.org/elephants-dream.webm',
+		name: 'Lava Sample',
+		src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/2/22/Volcano_Lava_Sample.webm/Volcano_Lava_Sample.webm.360p.webm',
 		height: '220',
 		width: '230',
-		description: "A great animation - I don't really know what else to say about it",
+		description: "Watch this lava flow through the eart, burning and sizzling as it progresses",
 	},
 	{
-		name: 'Lego Display',
-		src: 'http://techslides.com/demos/sample-videos/small.mp4',
+		name: 'An Iceland Venture',
+		src: 'http://mazwai.com/system/posts/videos/000/000/229/original/omote_iceland__an_iceland_venture.mp4?1528050680',
 		height: '220',
 		width: '230',
-		description: "It's a bird! It's a plane! Its... Lego?",
+		description: "Iceland, beautiful and static, watch as we venture through this glorious place",
 	}];
 	//endregion
 
@@ -113,10 +113,10 @@ $(document).ready(function(){
 
 		//creating varibles for titles and description
 		var clicked_vid_title = $(this).prop('title');
-		var i = 0;//FIXME [1]: Display description using while loop - should work but web page wont fully load
+		var i = 0;
 		while (clicked_vid_title != arr[i].name)
 		{
-			i++;
+			i++; //This was originally a problem, but solved it by trying to match the description of a clicked video. This works by: matching name of clicked video and finding the description in that object (easy)
 		}
 		var clicked_vid_description = arr[i].description;
 		var main_vid_title = $('#main-video-title').text();
@@ -127,8 +127,9 @@ $(document).ready(function(){
 
 		//setting titles and descriptions
 		$('#main-video-title').text(clicked_vid_title);
-		$('#main-video-description').text(clicked_vid_description); //FIXME [1.1]: Test after [1] works as it SHOULD work
-        $(this).prop('title', main_vid_title); //FIXME [2]: Displays all properties of 'this' and not just the title (use console.log)
+		$('#main-video-description').text(clicked_vid_description);
+        $(this).prop('title', main_vid_title); //FIXME [1]: Displays all properties of 'this' and not just the title (use console.log)
+		console.log($(this).prop('title'));
 
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
