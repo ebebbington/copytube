@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 
-<!-- region html -->
-<html> 
-    <!-- region head -->
+<html>
+
 	<head>
 
         <!-- region To Do List -->
         <!-- TODO To Do List
         - display comments based on video
         - use top search bar to search for these videos
-        - display correct name under rabbit hole vids
-        - display correct name and description under main video when new video is clicked
-        - I CAN HAVE THE TITLE OF RABBIT HOLE VIDEO AS AN ID UNDERNEATH EACH VIDEO AND ALSO GET 2 MORE RABBIT HOLE ID'S TO DISPLAY THE OTHER TWO
         - Get DB to display videos so i can remove code in .js file
         <!-- endregion-->
 
@@ -38,9 +34,7 @@
         <!-- endregion -->
 
 	</head>
-    <!-- endregion -->
 
-    <!-- region body -->
 	<body>
 
         <!-- region Opening Page -->
@@ -199,8 +193,7 @@
 		</div>
         <!-- endregion -->
 
+
 	</body>
-    <!-- endregion -->
 
 </html>
-<!-- endregion -->

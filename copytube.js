@@ -128,8 +128,12 @@ $(document).ready(function(){
 		//setting titles and descriptions
 		$('#main-video-title').text(clicked_vid_title);
 		$('#main-video-description').text(clicked_vid_description);
-        $(this).prop('title', main_vid_title); //FIXME [1]: Displays all properties of 'this' and not just the title (use console.log)
-		console.log($(this).prop('title'));
+        $(this).prop('title', main_vid_title);
+        if ($(this).prop('id') == "rabbit-hole-vid-1") //TODO: Is there a more code-efficient way for what this if statement is trying to do?
+		{
+			$('#rabbit-hole-vid-1-title').text(main_vid_title);
+        }
+        $('#rabbit-hole-vid-2-title').text(main_vid_title);
 
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
