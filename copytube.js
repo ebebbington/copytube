@@ -147,9 +147,6 @@ $(document).ready(function(){
             type: "GET",
             url: "models/getcomment.php",
             data: {
-                author: username,
-                comment: description,
-                dateposted: today,
 				videotitle: clicked_vid_title
             },
             //if working or if not
@@ -160,8 +157,6 @@ $(document).ready(function(){
                 console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
             }
         });
-        $('#db-comments').clear();
-        $('#db-comments').append($sql);
         //endregion
 	})
     //endregion

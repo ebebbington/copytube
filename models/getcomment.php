@@ -16,10 +16,11 @@
     //create connection
     $connection = new mysqli($servername, $username, $password, 'copytube');
 
-    //if connection works, set variable to string
-    $sql = "SELECT * FROM comments (author, comment, dateposted) WHERE video=$videotitle";
+    //check connection
+    if ($connection->connect_error) {
+        die("connection to database inside getcomment.php has failed: " + $connection->connect_error);
+    }
+    die("connection to database inside getcomment.php has completed");
 
-    //set this data in the database DO I NEED THIS:--------------------
-    //$connection->query($sql);
-    //$connection->close();
-    //-----------------------------------------------------------------
+    //if connection works, set variable to string
+    $sql = "SELECT (author, comment, dateposted) FROM `comments` WHERE video='Lava Display'";
