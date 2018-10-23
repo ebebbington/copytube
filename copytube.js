@@ -153,7 +153,12 @@ $(document).ready(function(){
             success: function (response) {
                 console.log('AJAX get-comment Response: AJAX request has followed through.');
                 console.log('RESPONSE: %s', response);
-                //FIXME [[]: I need to use a 'JSON.parse'? The data is correct, I just need to somehow display it and where in this code do i write the code to display?
+                //---------------------------------------------------------------
+                //FIXME: I need to use a 'JSON.parse'? The data above is correct, I just need to somehow display it and where in this code do i write the code to display?
+                var obj = JSON.parse(response);
+                console.log(obj);
+				$('#db-comments').text(response[1]);
+				//---------------------------------------------------------------
             },
             error: function (err) {
                 console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
