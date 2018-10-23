@@ -8,9 +8,6 @@
     $servername = "localhost";
     $username = "root";
     $password = "password";
-    $author = $_GET['author'];
-    $comment = $_GET['comment'];
-    $date = $_GET['dateposted'];
     $videotitle = $_GET['videotitle'];
 
     //create connection
@@ -20,7 +17,11 @@
     if ($connection->connect_error) {
         die("connection to database inside getcomment.php has failed: " + $connection->connect_error);
     }
-    die("connection to database inside getcomment.php has completed");
 
     //if connection works, set variable to string
-    $sql = "SELECT (author, comment, dateposted) FROM `comments` WHERE video='Lava Display'";
+    $sql = "SELECT author, comment, dateposted FROM comments WHERE video='Lava Sample'";
+    $result = $connection->query($sql);
+    $response = $result->fetch_all(MYSQLI_ASSOC);
+    print_r(json_encode($response));
+    $connection->close();
+?>

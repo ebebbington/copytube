@@ -152,6 +152,8 @@ $(document).ready(function(){
             //if working or if not
             success: function (response) {
                 console.log('AJAX get-comment Response: AJAX request has followed through.');
+                console.log('RESPONSE: %s', response);
+                //FIXME [[]: I need to use a 'JSON.parse'? The data is correct, I just need to somehow display it and where in this code do i write the code to display?
             },
             error: function (err) {
                 console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
