@@ -166,7 +166,6 @@
 							<video id='rabbit-hole-vid-1' class='rabbit-hole-vid' controls
 							    	muted
 							    	title="An Elephants Dream"
-                                    description="test elephants dream description .html code"
 							    	src="http://dl3.webmfiles.org/elephants-dream.webm"
 							    	width="230"
 							    	height="220">
@@ -181,7 +180,6 @@
 							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
 							    	muted
 							    	title="Lego Display"
-                                    description="test lego description .html code"
 							    	src="http://techslides.com/demos/sample-videos/small.mp4"
 							    	width="230"
 							    	height="220">

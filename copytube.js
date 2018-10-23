@@ -113,8 +113,12 @@ $(document).ready(function(){
 
 		//creating varibles for titles and description
 		var clicked_vid_title = $(this).prop('title');
-		var clicked_vid_description = $(this).prop('description'); //FIXME [1]: Web page isnt refreshing changes made in code. Test with console log, result should be a description
-		console.log(clicked_vid_description);
+		var i = 0;//FIXME [1]: Display description using while loop - should work but web page wont fully load
+		while (clicked_vid_title != arr[i].name)
+		{
+			i++;
+		}
+		var clicked_vid_description = arr[i].description;
 		var main_vid_title = $('#main-video-title').text();
 
 		//creating variables for the main and clicked video source
