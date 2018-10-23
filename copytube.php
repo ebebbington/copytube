@@ -130,7 +130,7 @@
 											die("connection failed: " + $connection->connect_error);
 										}
 										// variables to equal all rows of comments and result of this
-										$sql = "SELECT * FROM `comments`"; //FIXME [1]: loaded comments are in the format of "2018-10-18" for some reason and saves new comment to database in wrong format
+										$sql = "SELECT * FROM `comments` ORDER BY `dateposted` DESC";
 										$result = $connection->query($sql);
 										// fetch all comments from table
 										if ($result->num_rows > 0) {
