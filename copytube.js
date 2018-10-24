@@ -164,7 +164,6 @@ $(document).ready(function(){
 		//setting posters
         $(this).prop('poster', main_vid_poster);
         $('#main-video').prop('poster', clicked_vid_poster);
-
 		//endregion
 
 		//region AJAX Request to get comments based on clicked video
