@@ -32,7 +32,7 @@ $(document).ready(function(){
 		src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/2/22/Volcano_Lava_Sample.webm/Volcano_Lava_Sample.webm.360p.webm',
 		height: '220',
 		width: '230',
-		description: "Watch this lava flow through the eart, burning and sizzling as it progresses",
+		description: "Watch this lava flow through the earth, burning and sizzling as it progresses",
 	},
 	{
 		title: 'An Iceland Venture',
