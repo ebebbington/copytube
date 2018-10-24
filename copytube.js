@@ -1,18 +1,18 @@
 $(document).ready(function(){
 	//region Getting Username, Validation & Display Welcome Message
 	//getting a username by asking for an input and saving this to a variable
-	var username = prompt("Please enter your username below or result to closing the tab.");
+	var username = encodeURI(prompt("Please enter your username below or result to closing the tab."));
+	console.log(username);
 
 	//If the user ignores this and presses cancel (which equals null) or types nothing and clicks ok then window will close
 
-	if (username == null || username == ""){
+	if (username == "null" || username == ""){
 		var imsorry = "0";
 		var left = "10000";
 		while (imsorry != "10000") {
-			imsorry += 1;
+			imsorry++;
 			left -= 1;
 			alert("This alert will pop up " + left + "more times. Suggestion: close the tab.");
-			console.log("Alerts: " + imsorry + "/" + "10000");
 			console.log("Alerts left: " + left);
 		}
 	}
@@ -58,7 +58,7 @@ $(document).ready(function(){
 	//region When Add Comment Button is Clicked
 	$('#comment-button').on('click', function(){
 
-		var description = $('#comment-bar').val();
+		var description = encodeURI($('#comment-bar').val());
 		var max_length = 400;
 		if (description == ""){
 			alert("Please input a comment");
