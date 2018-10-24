@@ -2,7 +2,9 @@ $(document).ready(function(){
 	//region Getting Username, Validation & Display Welcome Message
 	//getting a username by asking for an input and saving this to a variable
 	var username = encodeURI(prompt("Please enter your username below or result to closing the tab."));
-	console.log(username);
+	while (username.length > 80){
+		username = encodeURI(prompt("Please enter a username less than 80 characters long"));
+	}
 
 	//If the user ignores this and presses cancel (which equals null) or types nothing and clicks ok then window will close
 
