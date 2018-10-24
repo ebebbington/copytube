@@ -111,8 +111,6 @@
 
 								<!-- region Display New Comment & Comments from Database -->
 								<div id="user-comments"></div>
-								<br>
-                                <br>
 								<div id="db-comments">
 
 									<!-- region Get Database Comments -->
