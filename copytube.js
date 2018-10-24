@@ -22,21 +22,21 @@ $(document).ready(function(){
 
 	//region Object Array for Videos
 	var arr = [{
-		name: 'Something More',
+		title: 'Something More',
 		src: 'http://mazwai.com/system/posts/videos/000/000/191/original/something-more.mp4?1445788608',
 		height: '220',
 		width: '230',
 		description: "Watch this inspirational video as we look at all of the beautiful things inside this world",
 	},
 	{
-		name: 'Lava Sample',
+		title: 'Lava Sample',
 		src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/2/22/Volcano_Lava_Sample.webm/Volcano_Lava_Sample.webm.360p.webm',
 		height: '220',
 		width: '230',
 		description: "Watch this lava flow through the eart, burning and sizzling as it progresses",
 	},
 	{
-		name: 'An Iceland Venture',
+		title: 'An Iceland Venture',
 		src: 'http://mazwai.com/system/posts/videos/000/000/229/original/omote_iceland__an_iceland_venture.mp4?1528050680',
 		height: '220',
 		width: '230',
@@ -45,13 +45,13 @@ $(document).ready(function(){
 	//endregion
 
 	//region Pre-define and Display Titles, and Description
-	var main_vid_title = arr[0].name;
+	var main_vid_title = arr[0].title;
 	$('#main-video-title').text(main_vid_title);
 	var main_vid_description = arr[0].description;
 	$('#main-video-description').text(main_vid_description);
-	var rabbit_hole_vid_1_title = arr[1].name;
+	var rabbit_hole_vid_1_title = arr[1].title;
 	$('#rabbit-hole-vid-1-title').text(rabbit_hole_vid_1_title);
-	var rabbit_hole_vid_2_title = arr[2].name;
+	var rabbit_hole_vid_2_title = arr[2].title;
 	$('#rabbit-hole-vid-2-title').text(rabbit_hole_vid_2_title);
 	//endregion
 
@@ -113,10 +113,11 @@ $(document).ready(function(){
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
 		//region Changing Videos, Titles & Descriptions
-		//creating varibles for titles and description
+
+		//creating variables for titles and description
 		var clicked_vid_title = $(this).prop('title');
 		var i = 0;
-		while (clicked_vid_title != arr[i].name)
+		while (clicked_vid_title != arr[i].title)
 		{
 			i++; //This was originally a problem, but solved it by trying to match the description of a clicked video. This works by: matching name of clicked video and finding the description in that object (easy)
 		}
@@ -131,7 +132,7 @@ $(document).ready(function(){
 		$('#main-video-title').text(clicked_vid_title);
 		$('#main-video-description').text(clicked_vid_description);
         $(this).prop('title', main_vid_title);
-        if ($(this).prop('id') == "rabbit-hole-vid-1") //TODO: Is there a more code-efficient way for what this if statement is trying to do?
+        if ($(this).prop('id') == "rabbit-hole-vid-1")
 		{
 			$('#rabbit-hole-vid-1-title').text(main_vid_title);
         }
@@ -140,6 +141,7 @@ $(document).ready(function(){
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
 		$(this).prop('src', main_vid_src);
+
 		//endregion
 
 		//region AJAX Request to get comments based on clicked video
@@ -149,17 +151,20 @@ $(document).ready(function(){
             data: {
 				videotitle: clicked_vid_title
             },
-            //if working or if not
+            //if working
             success: function (response) {
                 console.log('AJAX get-comment Response: AJAX request has followed through.');
-                console.log('RESPONSE: %s', response);
-                //---------------------------------------------------------------
-                //FIXME: I need to use a 'JSON.parse'? The data above is correct, I just need to somehow display it and where in this code do i write the code to display?
+                //parsing the string from the ajax request into an object
                 var obj = JSON.parse(response);
-                console.log(obj);
-				$('#db-comments').text(response[1]);
-				//---------------------------------------------------------------
+                //clear all comments
+                $('#user-comments').empty();
+                $('#db-comments').empty();
+                //for loop to diSplay new comments based on clicked video
+                for (var i = 0; i < obj.length; i++) {
+                    $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
+                }
             },
+			//if not working
             error: function (err) {
                 console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
             }

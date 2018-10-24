@@ -17,7 +17,7 @@
     }
 
 	//if connection works, set variable to string of inserting data
-	$sql = "INSERT INTO comments (author, comment, dateposted, video) VALUES
+	$sql = "INSERT INTO comments (author, comment, dateposted, title) VALUES
 	('".$author."', '".$comment."', '".$date."', '".$videotitle."')";
 
 	//set this data in the database
