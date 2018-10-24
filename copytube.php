@@ -89,8 +89,8 @@
 						</div>
                         <!-- endregion -->
 
-						<!-- region Comments Title/Bar & Button -->
-						<p id="comment-title">Comments Section</p>
+						<!-- region Comments Title/Count/Bar & Button -->
+                        <p id="comment-title">Comments Section</p> <p id="comment-count"></p>
 						<div id="comment" class="input-group">
 							<!-- comments bar -->
 							<input id="comment-bar" type="text" class="form-control my-input" placeholder="Add a comment..."/>

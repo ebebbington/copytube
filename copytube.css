@@ -54,6 +54,14 @@ h2{
 }
 /*endregion*/
 
+/*region comment-count*/
+#comment-count{
+	font-size: 10px;
+	margin-left: 82em;
+	opacity: 0.5;
+}
+/*endregion*/
+
 /*region comment-bar*/
 #comment-bar{
 	margin-left: 13px;

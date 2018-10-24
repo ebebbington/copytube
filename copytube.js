@@ -2,6 +2,7 @@ $(document).ready(function(){
 	//region Getting Username, Validation & Display Welcome Message
 	//getting a username by asking for an input and saving this to a variable
 	var username = encodeURI(prompt("Please enter your username below or result to closing the tab."));
+
 	while (username.length > 80){
 		username = encodeURI(prompt("Please enter a username less than 80 characters long"));
 	}
@@ -51,6 +52,15 @@ $(document).ready(function(){
 	$('#rabbit-hole-vid-1-title').text(rabbit_hole_vid_1_title);
 	var rabbit_hole_vid_2_title = arr[2].title;
 	$('#rabbit-hole-vid-2-title').text(rabbit_hole_vid_2_title);
+	//endregion
+
+	//region Counter for Characters While User Types a New Comment
+	$('#comment-count').text("0");
+	$(document).on('keyup', '#comment-bar',function(){
+		var string = $('#comment-bar').val();
+		var count = string.length;
+		$('#comment-count').text(count);
+    })
 	//endregion
 
 	//region When Add Comment Button is Clicked
