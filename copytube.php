@@ -35,10 +35,8 @@
 
 	<body>
 
-        <!-- region Opening Page -->
 		<div class="container">
-			
-			<!-- region Row for Logo, Search Bar and Search Button -->
+
 			<div class="row">
 
 				<!-- region Logo -->
@@ -61,12 +59,9 @@
                 <!-- endregion -->
 
 			</div>
-            <!-- endregion -->
 
-			<!-- region Row for Main Video/Title/Description, Comments Section & Rabbit Hole -->
 			<div class="row">
 
-				<!-- region Main Video/Title/Description & Comments Section-->
 				<div class="col-xs-9">
 
                         <!-- region Main Video/Title/Description -->
@@ -106,46 +101,39 @@
     					</div>
                         <!-- endregion -->
     					<br>
-    					<!-- region User Comments -->
-						<div class="user-comments">
-
-								<!-- region Display New Comment & Comments from Database -->
-								<div id="user-comments"></div>
-								<div id="db-comments">
-
-									<!-- region Get Database Comments -->
-									<?php
-										// setting variables
-										$servername = "localhost";
-										$username = "root";
-										$password = "password";
-										//create connection
-										$connection = new mysqli($servername, $username, $password, 'copytube');
-										//check connection
-										if ($connection->connect_error) {
-											die("connection failed: " + $connection->connect_error);
-										}
-										// variables to equal all rows of comments and result of this
-										$sql = "SELECT * FROM `comments` ORDER BY `dateposted` DESC";
-										$result = $connection->query($sql);
-										// fetch all comments from table
-										if ($result->num_rows > 0) {
-											while($row = $result->fetch_assoc()) {
-												echo "Username: " . $row["author"]. "<br>" . "Date: " . $row["dateposted"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
-											}
-										}
-										//close database connection
-										$connection->close();
-									?>
-                                    <!-- endregion -->
-								</div>
-                                <!-- endregion -->
-						</div>
+						<!-- region Display New Comment -->
+                        <div id="user-comments"></div>
                         <!-- endregion -->
 
-
+                        <!-- region Get Database Comments -->
+                        <div id="db-comments">
+                            <?php
+                                // setting variables
+                                $servername = "localhost";
+                                $username = "root";
+                                $password = "password";
+                                //create connection
+                                $connection = new mysqli($servername, $username, $password, 'copytube');
+                                //check connection
+                                if ($connection->connect_error) {
+                                    die("connection failed: " + $connection->connect_error);
+                                }
+                                // variables to equal all rows of comments and result of this
+                                $sql = "SELECT * FROM `comments` ORDER BY `dateposted` DESC";
+                                $result = $connection->query($sql);
+                                // fetch all comments from table
+                                if ($result->num_rows > 0) {
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "Username: " . $row["author"]. "<br>" . "Date: " . $row["dateposted"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
+                                    }
+                                }
+                                //close database connection
+                                $connection->close();
+                            ?>
+                        </div>
+                         <!-- endregion -->
+                    
 				</div>
-                <!-- endregion -->
 
                 <!-- region Rabbit Hole -->
 				<div class="col-xs-3">
@@ -184,11 +172,8 @@
                 <!-- endregion -->
 
 			</div>
-            <!-- endregion -->
 
 		</div>
-        <!-- endregion -->
-
 
 	</body>
 
