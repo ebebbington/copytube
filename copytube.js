@@ -135,8 +135,9 @@ $(document).ready(function(){
         if ($(this).prop('id') == "rabbit-hole-vid-1")
 		{
 			$('#rabbit-hole-vid-1-title').text(main_vid_title);
+        } else {
+            $('#rabbit-hole-vid-2-title').text(main_vid_title);
         }
-        $('#rabbit-hole-vid-2-title').text(main_vid_title);
 
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
