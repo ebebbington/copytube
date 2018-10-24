@@ -5,14 +5,10 @@ $(document).ready(function(){
 	while (username.length > 80){
 		username = encodeURI(prompt("Please enter a username less than 80 characters long"));
 	}
-
 	//If the user ignores this and presses cancel (which equals null) or types nothing and clicks ok then window will close
-
 	if (username == "null" || username == ""){
-		var imsorry = "0";
 		var left = "10000";
-		while (imsorry != "10000") {
-			imsorry++;
+		while (left != "10001") {
 			left -= 1;
 			alert("This alert will pop up " + left + "more times. Suggestion: close the tab.");
 			console.log("Alerts left: " + left);
