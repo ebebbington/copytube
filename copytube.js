@@ -26,6 +26,7 @@ $(document).ready(function(){
 		height: '220',
 		width: '230',
 		description: "Watch this inspirational video as we look at all of the beautiful things inside this world",
+		poster: "imageresources/something_more.jpg",
 	},
 	{
 		title: 'Lava Sample',
@@ -33,6 +34,7 @@ $(document).ready(function(){
 		height: '220',
 		width: '230',
 		description: "Watch this lava flow through the earth, burning and sizzling as it progresses",
+		poster: "imageresources/lava_sample.jpg",
 	},
 	{
 		title: 'An Iceland Venture',
@@ -40,6 +42,7 @@ $(document).ready(function(){
 		height: '220',
 		width: '230',
 		description: "Iceland, beautiful and static, watch as we venture through this glorious place",
+		poster: "imageresources/an_iceland_venture.jpg",
 	}];
 	//endregion
 
@@ -120,13 +123,12 @@ $(document).ready(function(){
     //region When Rabit Hole is Clicked
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
-		//region Changing Videos, Titles & Descriptions
+        //region Changing Videos, Titles & Descriptions
 
 		//creating variables for titles and description
 		var clicked_vid_title = $(this).prop('title');
 		var i = 0;
-		while (clicked_vid_title != arr[i].title)
-		{
+		while (clicked_vid_title != arr[i].title){
 			i++; //This was originally a problem, but solved it by trying to match the description of a clicked video. This works by: matching name of clicked video and finding the description in that object (easy)
 		}
 		var clicked_vid_description = arr[i].description;
@@ -135,6 +137,14 @@ $(document).ready(function(){
 		//creating variables for the main and clicked video source
 		var main_vid_src = $('#main-video').prop('src');
 		var clicked_vid_src = this.currentSrc;
+
+		//creating variables for poster
+        var clicked_vid_poster = arr[i].poster;
+		i = 0;
+        while (main_vid_title != arr[i].title){
+        	i++
+		}
+        var main_vid_poster = arr[i].poster;
 
 		//setting titles and descriptions
 		$('#main-video-title').text(clicked_vid_title);
@@ -150,6 +160,10 @@ $(document).ready(function(){
 		//setting main and clicked video source
 		$('#main-video').prop('src', clicked_vid_src);
 		$(this).prop('src', main_vid_src);
+
+		//setting posters
+        $(this).prop('poster', main_vid_poster);
+        $('#main-video').prop('poster', clicked_vid_poster);
 
 		//endregion
 
