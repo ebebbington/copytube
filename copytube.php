@@ -5,8 +5,8 @@
 	<head>
 
         <!-- region To Do List -->
-        <!-- TODO To Do List
-        - use top search bar to search for these videos
+        <!-- TODO List
+        - use top search bar to search for these videos?
         <!-- endregion-->
 
         <!-- region Tab Title & Welcome Message -->
