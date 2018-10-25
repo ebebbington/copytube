@@ -214,9 +214,8 @@ $(document).ready(function(){
 	//region When the Search Video Button is Clicked
     $(document).on('click', '#search-button',function(){
 		//TODO: Allow text to only match letters and not care about capitals etc.
-    	var einput = encodeURI($('#search-bar').val());
-        var input = einput;
-        var count = einput.split('%20');
+    	var input = encodeURI($('#search-bar').val());
+        var count = input.split('%20');
         var i = 0;
         //LOOKING FOR TITLE
         while (i != count.length) {
