@@ -69,7 +69,14 @@ $(document).ready(function(){
 	//region When Add Comment Button is Clicked
 	$('#comment-button').on('click', function(){
 
-		var description = encodeURI($('#comment-bar').val());
+		var edescription = encodeURI($('#comment-bar').val());
+        var description = edescription;
+		var count = edescription.split('%20');
+		var i = 0;
+		while (i != count.length) {
+            i++;
+            description = description.replace("%20", " ");
+        }
 		var max_length = 400;
 		if (description == ""){
 			alert("Please input a comment");
@@ -87,11 +94,12 @@ $(document).ready(function(){
                 today = yyyy + "-" + mm + "-" + dd;
 
                 //combing these variables into one variable to concatenate them and display them in order
-                var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>";
+                var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>" + "<br>";
                 //assign above variable to the id for the div to display
                 $('#user-comments').prepend(actualcomment);
                 //clear comment text bar
                 $('#comment-bar').val("");
+                $('#comment-count').text("0");
                 //endregion
 
                 //region AJAX save-comments Request
