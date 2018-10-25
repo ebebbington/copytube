@@ -1,7 +1,15 @@
 $(document).ready(function(){
 	//region Getting Username, Validation & Display Welcome Message
-	//getting a username by asking for an input and saving this to a variable
-	var username = encodeURI(prompt("Please enter your username below or result to closing the tab."));
+	//getting a username by asking for an input and saving this to a variable and replacing encoded spaces
+	var eusername = encodeURI(prompt("Please enter your username below or result to closing the tab."));
+    var username = eusername;
+    var count = eusername.split('%20');
+    var i = 0;
+    //while loop to replaces any encoded spaces back to a space character
+    while (i != count.length) {
+        i++;
+        username = username.replace("%20", " ");
+    }
 
 	while (username.length > 80){
 		username = encodeURI(prompt("Please enter a username less than 80 characters long"));
@@ -133,7 +141,6 @@ $(document).ready(function(){
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
         //region Changing Videos, Titles & Descriptions
-
 		//creating variables for titles and description
 		var clicked_vid_title = $(this).prop('title');
 		var i = 0;
@@ -203,4 +210,35 @@ $(document).ready(function(){
         //endregion
 	})
     //endregion
+
+    $(document).on('click', '#search-button',function(){
+		//TODO: Allow text to only match letters and not care about capitals etc.
+    	var einput = encodeURI($('#search-bar').val());
+        var input = einput;
+        var count = einput.split('%20');
+        var i = 0;
+        //while loop to replaces any encoded spaces back to a space character
+        while (i != count.length) {
+            i++;
+            input = input.replace("%20", " ");
+        }
+        console.log(input);
+
+    	i = 0;
+    	while (input != arr[i].title && i < (arr.length - 1)){
+    		i++
+		}
+		//by now, i should be equal to a correct title or the length of the array, meaning that if input equals array title then text is right or if it doesnt then text doesnt match array title
+
+		//checking if it found title
+		if (input == arr[i].title){
+			console.log("found");
+
+
+
+		} else {
+
+            console.log("not found");
+		}
+    })
 })
