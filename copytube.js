@@ -73,6 +73,7 @@ $(document).ready(function(){
         var description = edescription;
 		var count = edescription.split('%20');
 		var i = 0;
+		//while loop to replaces any encoded spaces back to a space character
 		while (i != count.length) {
             i++;
             description = description.replace("%20", " ");
