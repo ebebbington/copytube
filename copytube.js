@@ -211,13 +211,14 @@ $(document).ready(function(){
 	})
     //endregion
 
+	//region When the Search Video Button is Clicked
     $(document).on('click', '#search-button',function(){
 		//TODO: Allow text to only match letters and not care about capitals etc.
     	var einput = encodeURI($('#search-bar').val());
         var input = einput;
         var count = einput.split('%20');
         var i = 0;
-        //while loop to replaces any encoded spaces back to a space character
+        //LOOKING FOR TITLE
         while (i != count.length) {
             i++;
             input = input.replace("%20", " ");
@@ -230,15 +231,15 @@ $(document).ready(function(){
 		}
 		//by now, i should be equal to a correct title or the length of the array, meaning that if input equals array title then text is right or if it doesnt then text doesnt match array title
 
-		//checking if it found title
+		//CHECKING IF TRUE
 		if (input == arr[i].title){
-			console.log("found");
-
-
+			console.log("found a video");
 
 		} else {
 
-            console.log("not found");
+            console.log("not found a video");
+
 		}
     })
+	//endregion
 })
