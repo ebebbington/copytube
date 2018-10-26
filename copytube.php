@@ -120,7 +120,7 @@
                                     die("connection failed: " + $connection->connect_error);
                                 }
                                 // variables to equal all rows of comments and result of this
-                                $sql = "SELECT * FROM `comments` ORDER BY `dateposted` DESC";
+                                $sql = "SELECT * FROM `comments` WHERE title='Something More' ORDER BY `dateposted` DESC";
                                 $result = $connection->query($sql);
                                 // fetch all comments from table
                                 if ($result->num_rows > 0) {
