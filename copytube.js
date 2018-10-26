@@ -213,6 +213,7 @@ $(document).ready(function(){
 
 	//region When the Search Video Button is Clicked
     $(document).on('click', '#search-button',function(){
+    	//region Getting and Creating
 		//TODO: Allow text to only match letters and not care about capitals etc.
     	var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
@@ -222,8 +223,6 @@ $(document).ready(function(){
             i++;
             input = input.replace("%20", " ");
         }
-        console.log(input);
-
         //getting i to match a title
     	i = 0;
     	while (input != arr[i].title && i < (arr.length - 1)){
@@ -231,17 +230,33 @@ $(document).ready(function(){
 		}
 		/* by now, i should be equal to a correct title or the length of the array, meaning that if input equals array
 		title then text is right or if it doesn't then text doesn't match array title */
+		//endregion
 
-		//checking if text == a title
+		//region Setting
+		//if text == a title
 		if (input == arr[i].title){
+			$('#main-video').prop('src', arr[i].src);
+			$('#main-video-title').text(arr[i].title);
+			$('#main-video-description').text(arr[i].description);
+			if (i < (arr.length - 1)){
+				i = -1;
+			}
+			i++; //todo: while loop somwhere for if i ever reaches something... etc
+			$('#rabbit-hole-vid-1').prop('src', arr[i].src);
+			$('#rabbit-hole-vid-1-title').text(arr[i].title);
+			i++;
+			$('#rabbit-hole-vid-2').prop('src', arr[i].src);
+			$('#rabbit-hole-vid-2-title').text(arr[i].title);
 
+			//TODO: add code to run ajax getcomment request and change posters of videos
 			console.log("found a video");
 
 		//if text != a title or close to a title
 		} else {
 			i = 0;
-			while (i < (arr.length - 1)){
+			while (i < arr.length){
                 var close = input.includes(arr[i].title);
+                console.log("Array Title" + " : " + "User Input" + " : " + "Is It Close" + '\n' + arr[i].title + " : " + input + " : " + close); //FIXME: close is false even if arr includes input
 				//if text is close to a title
 				if (close == true){
 					alert("Did you mean " + arr[i].title + " ?");
@@ -250,6 +265,7 @@ $(document).ready(function(){
 			}
 			alert("No video with said name has been found.");
 		}
+		//endregion
     })
 	//endregion
 })
