@@ -287,16 +287,20 @@ $(document).ready(function(){
 			i = 0;
 			while (i < arr.length){
                 var close = input.includes(arr[i].title);
-                console.log("Array Title" + " : " + "User Input" + " : " + "Is It Close" + '\n' + arr[i].title + " : " + input + " : " + close); //FIXME: close is false even if arr includes input
+                console.log("Array Title" + " : " + "User Input" + " : " + "Is It Close" + '\n' + arr[i].title + " : " + input + " : " + close);
 				//if text is close to a title
 				if (close == true){
 					alert("Did you mean " + arr[i].title + " ?");
 				}
 				i++;
 			}
-			alert("No video with said name has been found.");
 		}
+        alert("No video with " + input + " has been found.");
 		//endregion
     })
 	//endregion
+
+	$(document).on('hover', '#search-bar',function(){ //todo: list of titles when hovering over search bar?
+
+	})
 })
