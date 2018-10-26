@@ -217,27 +217,38 @@ $(document).ready(function(){
     	var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
         var i = 0;
-        //LOOKING FOR TITLE
+        //replacing encoded spaces
         while (i != count.length) {
             i++;
             input = input.replace("%20", " ");
         }
         console.log(input);
 
+        //getting i to match a title
     	i = 0;
     	while (input != arr[i].title && i < (arr.length - 1)){
     		i++
 		}
-		//by now, i should be equal to a correct title or the length of the array, meaning that if input equals array title then text is right or if it doesnt then text doesnt match array title
+		/* by now, i should be equal to a correct title or the length of the array, meaning that if input equals array
+		title then text is right or if it doesn't then text doesn't match array title */
 
-		//CHECKING IF TRUE
+		//checking if text == a title
 		if (input == arr[i].title){
+
 			console.log("found a video");
 
+		//if text != a title or close to a title
 		} else {
-
-            console.log("not found a video");
-
+			i = 0;
+			while (i < (arr.length - 1)){
+                var close = input.includes(arr[i].title);
+				//if text is close to a title
+				if (close == true){
+					alert("Did you mean " + arr[i].title + " ?");
+				}
+				i++;
+			}
+			alert("No video with said name has been found.");
 		}
     })
 	//endregion
