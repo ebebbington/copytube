@@ -300,7 +300,11 @@ $(document).ready(function(){
     })
 	//endregion
 
-	$(document).on('hover', '#search-bar',function(){ //todo: list of titles when hovering over search bar?
-
+	$(document).on('mouseover', '#search-bar',function(){ //todo: list of titles when hovering over search bar?
+		console.log("hovered over search bar");
+		var html = "<div id='title-dropdown'>" + "<br>" + "<a href='#'>Test 1</a>" + "<br>" + "<a href='#'>Test 2</a>" + "<br>" + "</div>";
+		var container = $('#search-bar').id;
+		$('#search-bar').append(html);
+		container.appendChild(html);
 	})
 })
