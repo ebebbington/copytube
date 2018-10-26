@@ -237,6 +237,7 @@ $(document).ready(function(){
 		if (input == arr[i].title){
 			while (i < (arr.length - 1)) {
 				//todo: another while loop somewhere to check if i = arr.length resulting in i=0;
+				//region Changing video elements
 				//change main video elements
                 $('#main-video').prop('src', arr[i].src);
                 $('#main-video-title').text(arr[i].title);
@@ -252,6 +253,7 @@ $(document).ready(function(){
                 $('#rabbit-hole-vid-2').prop('src', arr[i].src);
                 $('#rabbit-hole-vid-2-title').text(arr[i].title);
                 $('#rabbit-hole-vid-2').prop('poster', arr[i].poster);
+                //endregion
 
                 //region AJAX Request after Searching for a Video
                 $.ajax({
@@ -300,11 +302,15 @@ $(document).ready(function(){
     })
 	//endregion
 
-	$(document).on('mouseover', '#search-bar',function(){ //todo: list of titles when hovering over search bar?
+	//region When Mouse Hovers over Search Bar
+	$(document).on('mouseover', '#search-bar',function(){
 		console.log("hovered over search bar");
+		//setting variables
 		var html = "<div id='title-dropdown'>" + "<br>" + "<a href='#'>Test 1</a>" + "<br>" + "<a href='#'>Test 2</a>" + "<br>" + "</div>";
 		var container = $('#search-bar').id;
+		//appending variable //todo: how to append code to html? (below)
 		$('#search-bar').append(html);
 		container.appendChild(html);
 	})
+	//endregion
 })
