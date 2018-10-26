@@ -232,24 +232,55 @@ $(document).ready(function(){
 		title then text is right or if it doesn't then text doesn't match array title */
 		//endregion
 
-		//region Setting
+		//region Setting Elements
 		//if text == a title
 		if (input == arr[i].title){
-			$('#main-video').prop('src', arr[i].src);
-			$('#main-video-title').text(arr[i].title);
-			$('#main-video-description').text(arr[i].description);
-			if (i < (arr.length - 1)){
-				i = -1;
-			}
-			i++; //todo: while loop somwhere for if i ever reaches something... etc
-			$('#rabbit-hole-vid-1').prop('src', arr[i].src);
-			$('#rabbit-hole-vid-1-title').text(arr[i].title);
-			i++;
-			$('#rabbit-hole-vid-2').prop('src', arr[i].src);
-			$('#rabbit-hole-vid-2-title').text(arr[i].title);
+			while (i < (arr.length - 1)) {
+				//todo: another while loop somewhere to check if i = arr.length resulting in i=0;
+				//change main video elements
+                $('#main-video').prop('src', arr[i].src);
+                $('#main-video-title').text(arr[i].title);
+                var searched_vid_title = arr[i].title;
+                $('#main-video-description').text(arr[i].description);
+                i++;
+				//change rabbit hole 1 elements
+                $('#rabbit-hole-vid-1').prop('src', arr[i].src);
+                $('#rabbit-hole-vid-1-title').text(arr[i].title);
+                $('#rabbit-hole-vid-1').prop('poster', arr[i].poster);
+                i++;
+                //change rabbit hole 2 elements
+                $('#rabbit-hole-vid-2').prop('src', arr[i].src);
+                $('#rabbit-hole-vid-2-title').text(arr[i].title);
+                $('#rabbit-hole-vid-2').prop('poster', arr[i].poster);
 
-			//TODO: add code to run ajax getcomment request and change posters of videos
-			console.log("found a video");
+                //region AJAX Request after Searching for a Video
+                $.ajax({
+                    type: "GET",
+                    url: "models/getcomment.php",
+                    data: {
+                        videotitle: searched_vid_title
+                    },
+                    //if working
+                    success: function (response) {
+                        console.log('AJAX get-comment Response: AJAX request has followed through.');
+                        //parsing the string from the ajax request into an object
+                        var obj = JSON.parse(response);
+                        //clear all comments
+                        $('#user-comments').empty();
+                        $('#db-comments').empty();
+                        //for loop to diSplay new comments based on clicked video
+                        for (var i = 0; i < obj.length; i++) {
+                            $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
+                        }
+                    },
+                    //if not working
+                    error: function (err) {
+                        console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
+                    }
+                })
+				//endregion
+            }
+
 
 		//if text != a title or close to a title
 		} else {

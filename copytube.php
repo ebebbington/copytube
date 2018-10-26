@@ -4,11 +4,6 @@
 
 	<head>
 
-        <!-- region To Do List -->
-        <!-- TODO List
-        - use top search bar to search for these videos?
-        <!-- endregion-->
-
         <!-- region Tab Title & Welcome Message -->
 		<title>CopyTube</title>
 		<h2 id="welcome"></h2>
