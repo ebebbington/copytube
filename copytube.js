@@ -214,7 +214,7 @@ $(document).ready(function(){
 
     //region On Click of Search Button
     $(document).on('click', '#search-button',function(){
-        //FixMe [ID: 001]: After searching a video, the text for rabbit-hole-vid-1-title never changes. Line 306-313
+        //FixMe [ID: 001]: After searching a video, rabbit-hole-vid-1-title text never changes after clicking first rabbit hole. Line 306-313 (problem with rabbit hole click event? i.e. title is wrong after implementing search event
         //region Encoding & Validating Input
         var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
@@ -281,6 +281,7 @@ $(document).ready(function(){
                 //Pushes array object to this variable every time found != arr[i] so the var below gathers up all unused array objects
                 rabbit_hole_vids.push(arr[i]);
                 rabbit_hole_titles.push(arr[i].title);
+                console.log("Titles saved into array: " + rabbit_hole_titles);
             }
         }
         //endregion
@@ -309,6 +310,7 @@ $(document).ready(function(){
                 a++;
 
             });
+            console.log("Titles going to be displayed in rabbit hole: " + rabbit_hole_titles[0] + " " + " : " + " " + rabbit_hole_titles[1]);
             $('#rabbit-hole-vid-1-title').text(rabbit_hole_titles[0]);
             $('#rabbit-hole-vid-2-title').text(rabbit_hole_titles[1]);
         } else {
