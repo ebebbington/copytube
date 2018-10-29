@@ -75,7 +75,7 @@ $(document).ready(function(){
     })
 	//endregion
 
-	//region When Add Comment Button is Clicked
+	//region On Click of Add Comment Button
 	$('#comment-button').on('click', function(){
 
 		var edescription = encodeURI($('#comment-bar').val());
@@ -292,7 +292,7 @@ $(document).ready(function(){
                 rabbit_holes.append(video_html);
             });
         } else {
-            alert("No video with the tite of " + "'" + $('#search-bar').val() + "' has been found.");
+            alert("No video with the title of " + "'" + $('#search-bar').val() + "' has been found.");
         }
         //endregion
     });
