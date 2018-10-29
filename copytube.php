@@ -152,7 +152,7 @@
 							    	height="220">
 							    Sorry, your browser doesn't support embedded videos.
 							</video>
-							<p id="rabbit-hole-vid-1-title"></p>
+							<p id="rabbit-hole-vid-1-title" class="rabbit-hole-titles"></p>
 
 							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
 							    	muted
@@ -163,7 +163,7 @@
 							    	height="220">
 							    Sorry, your browser doesn't support embedded videos.
 							</video>
-							<p id="rabbit-hole-vid-2-title"></p>
+							<p id="rabbit-hole-vid-2-title" class="rabbit-hole-titles"></p>
 
 					</div>
 

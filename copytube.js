@@ -214,7 +214,8 @@ $(document).ready(function(){
 
     //region On Click of Search Button
     $(document).on('click', '#search-button',function(){
-        //region Encoding Input
+        //FixMe: After searching a video, the text for rabbit-hole-vid-1-title never changes
+        //region Encoding & Validating Input
         var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
         var i=0;
@@ -222,12 +223,19 @@ $(document).ready(function(){
             i++;
             input = input.replace("%20", " ");
         }
+        //validation
+        if (input == "" || input == " ") {
+            alert("Please input a video title.");
+            $('#search-bar').val("");
+            return;
+        }
         //endregion
 
         //region Setting Main Video
         var complete = false;
         var found = null;
         var rabbit_hole_vids = [];
+        var rabbit_hole_titles = [];
         for(var i=0, l=arr.length; i < l; i++){
             if((arr[i].title.toLowerCase() === input.toLowerCase()) || arr[i].title.toLowerCase().indexOf(input.toLowerCase()) > -1) {
                 found = arr[i];
@@ -237,6 +245,8 @@ $(document).ready(function(){
                 $('#main-video').prop('src', found.src);
                 $('#main-video').prop('poster', found.poster);
                 $('#main-video0').prop('description', found.description);
+                $('#main-video-title').text(found.title);
+                $('#main-video-description').text(found.description);
                 complete = true;
                 //endregion
 
@@ -270,12 +280,14 @@ $(document).ready(function(){
             } else {
                 //Pushes array object to this variable every time found != arr[i] so the var below gathers up all unused array objects
                 rabbit_hole_vids.push(arr[i]);
+                rabbit_hole_titles.push(arr[i].title);
             }
         }
         //endregion
 
         //region Displaying Rabbit Hole Videos
         if (complete == true){
+            a=1;
             var rabbit_holes = $('.rabbit-holes');
             rabbit_holes.html('');
             rabbit_hole_vids.forEach(function (video, i) {
@@ -289,12 +301,21 @@ $(document).ready(function(){
                     "height='" + video.height + "'" +
                     "Sorry, your browser doesn/'t support embedded videos." +
                     " </video>";
+                    //"<p id=\"rabbit-hole-vid-" + a + "-title\" class=\"rabbit-hole-titles\"></p>";
                 rabbit_holes.append(video_html);
+                var title_html =
+                    "<p id=rabbit-hole-vid-" + a + "-title class=rabbit-hole-titles></p>";
+                rabbit_holes.append(title_html);
+                a++;
+
             });
+            $('#rabbit-hole-vid-1-title').text(rabbit_hole_titles[0]);
+            $('#rabbit-hole-vid-2-title').text(rabbit_hole_titles[1]);
         } else {
             alert("No video with the title of " + "'" + $('#search-bar').val() + "' has been found.");
         }
         //endregion
+        $('#search-bar').val("");
     });
 	//endregion
 })
