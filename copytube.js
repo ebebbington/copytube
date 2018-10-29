@@ -214,7 +214,7 @@ $(document).ready(function(){
 	//region When the Search Video Button is Clicked
     $(document).on('click', '#search-button',function(){
     	//region Getting and Creating
-		//TODO: Allow text to only match letters and not care about capitals etc.
+		//TODO: Allow text to only match letters and not care about capitals etc //.toLowerCase() on both when comparing,.
     	var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
         var i = 0;
@@ -234,7 +234,7 @@ $(document).ready(function(){
 
 		//region Setting Elements
 		//if text == a title
-		if (input == arr[i].title){
+		if (input.toLowerCase() == arr[i].title.toLowerCase()){
 			while (i < (arr.length - 1)) {
 				//todo: another while loop somewhere to check if i = arr.length resulting in i=0;
 				//region Changing video elements
@@ -309,8 +309,5 @@ $(document).ready(function(){
 		var html = "<div id='title-dropdown'>" + "<br>" + "<a href='#'>Test 1</a>" + "<br>" + "<a href='#'>Test 2</a>" + "<br>" + "</div>";
 		var container = $('#search-bar').id;
 		//appending variable //todo: how to append code to html? (below)
-		$('#search-bar').append(html);
-		container.appendChild(html);
-	})
 	//endregion
 })
