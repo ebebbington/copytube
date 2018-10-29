@@ -214,190 +214,87 @@ $(document).ready(function(){
 
     //region On Click of Search Button
     $(document).on('click', '#search-button',function(){
-        //region Getting and Creating
-        //Encoding Input
+        //region Encoding Input
         var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
-        var i = 0;
+        var i=0;
         while (i != count.length) {
             i++;
             input = input.replace("%20", " ");
         }
+        //endregion
 
-        //Getting Videos
+        //region Setting Main Video
+        var complete = false;
         var found = null;
         var rabbit_hole_vids = [];
         for(var i=0, l=arr.length; i < l; i++){
-            if((arr[i].title.toLowerCase() === input.toLowerCase()) || arr[i].title.toLowerCase().indexOf(input) > -1){
+            if((arr[i].title.toLowerCase() === input.toLowerCase()) || arr[i].title.toLowerCase().indexOf(input.toLowerCase()) > -1) {
                 found = arr[i];
+
+                //region Displaying Content
+                $('#main-video').prop('title', found.title);
+                $('#main-video').prop('src', found.src);
+                $('#main-video').prop('poster', found.poster);
+                $('#main-video0').prop('description', found.description);
+                complete = true;
+                //endregion
+
+                //region AJAX Request after Searching for a Video
+                $.ajax({
+                    type: "GET",
+                    url: "models/getcomment.php",
+                    data: {
+                        videotitle: $('#main-video').prop('title')
+                    },
+                    //if working
+                    success: function (response) {
+                        console.log('AJAX get-comment Response: AJAX request has followed through.');
+                        //parsing the string from the ajax request into an object
+                        var obj = JSON.parse(response);
+                        //clear all comments
+                        $('#user-comments').empty();
+                        $('#db-comments').empty();
+                        //for loop to diSplay new comments based on clicked video
+                        for (var i = 0; i < obj.length; i++) {
+                            $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
+                        }
+                    },
+                    //if not working
+                    error: function (err) {
+                        console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
+                    }
+                })
+                //endregion
+
+            } else {
+                //Pushes array object to this variable every time found != arr[i] so the var below gathers up all unused array objects
                 rabbit_hole_vids.push(arr[i]);
             }
         }
         //endregion
 
-        //region Displaying Content
-        $('#main-video').prop('title', found.title);
-        $('#main-video').prop('src', found.src);
-        $('#main-video0').prop('description', found.description);
-        $('#main-video-title').text(found.title);
-        $('#main-video-description').text(found.description);
-        //Displaying Rabbit Hole Videos
-        var rabbit_holes = $('.rabbit-holes'); //fixme: doesn't work........
-        rabbit_holes.html('');
-        rabbit_hole_vids.forEach(function(video, i){
-            var video_html =
-                "<video id='"+video.title+"' class='rabbit-hole-vid' controls" +
-                " muted" +
-                "poster='"+video.poster+"'" +
-                "title='"+video.title+"'" +
-                "src='"+video.src+"'" +
-                "width='"+video.width+"'" +
-                "height='"+video.height+"'" +
-                "Sorry, your browser doesn/'t support embedded videos." +
-                " </video>";
-            rabbit_holes.append(video_html);
-        });
-        //endregion
-
-        //region AJAX Request after Searching for a Video
-        $.ajax({
-            type: "GET",
-            url: "models/getcomment.php",
-            data: {
-                videotitle: $('#main-video').prop('title')
-            },
-            //if working
-            success: function (response) {
-                console.log('AJAX get-comment Response: AJAX request has followed through.');
-                //parsing the string from the ajax request into an object
-                var obj = JSON.parse(response);
-                //clear all comments
-                $('#user-comments').empty();
-                $('#db-comments').empty();
-                //for loop to diSplay new comments based on clicked video
-                for (var i = 0; i < obj.length; i++) {
-                    $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
-                }
-            },
-            //if not working
-            error: function (err) {
-                console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
-            }
-        })
+        //region Displaying Rabbit Hole Videos
+        if (complete == true){
+            var rabbit_holes = $('.rabbit-holes');
+            rabbit_holes.html('');
+            rabbit_hole_vids.forEach(function (video, i) {
+                var video_html =
+                    "<video id='" + video.title + "' class='rabbit-hole-vid' controls" +
+                    " muted" + " " +
+                    "poster='" + video.poster + "'" +
+                    "title='" + video.title + "'" +
+                    "src='" + video.src + "'" +
+                    "width='" + video.width + "'" +
+                    "height='" + video.height + "'" +
+                    "Sorry, your browser doesn/'t support embedded videos." +
+                    " </video>";
+                rabbit_holes.append(video_html);
+            });
+        } else {
+            alert("No video with the tite of " + "'" + $('#search-bar').val() + "' has been found.");
+        }
         //endregion
     });
-
-	//region When the Search Video Button is Clicked
-    // $(document).on('click', '#search-button',function(){
-
-
-
-            //region Getting and Creating
-    	// var input = encodeURI($('#search-bar').val());
-        // var count = input.split('%20');
-        // var i = 0;
-        // var found = null;
-        // var sub_arr = [];
-        // //replacing encoded spaces
-        // while (i != count.length) {
-        //     i++;
-        //     input = input.replace("%20", " ");
-        // }
-        // //getting i to match a title
-    	// i = 0;
-        //
-        // //found will contain al elements of 1 video, nw array will contain all elements of every OTHER video
-        // for (i=0, l=arr.length; i < l; i++){
-        //     if (arr[i].title.toLowerCase() === input.toLowerCase() || arr[i].title.toLowerCase().indexOf(input) > -1){
-        //         found = arr[i]
-        //         $('#main-video').prop('src', found.src);
-        //         $('#main-video-title').text(found.title);
-        //         $('#main-video-description').text(found.description);
-        //
-        //         sub_arr.push(arr[i]);
-        //
-        //
-        //     } else {
-        //         sub_arr.push(arr[i]);
-        //         console.log(sub_arr);
-        //     }
-        // }
-        //
-        //
-        //
-        //
-        //
-        //
-        // while (input != arr[i].title && i < (arr.length - 1)){
-    	// 	i++
-		// }
-		// //endregion
-        //
-		// //region Setting Elements
-		// //if text == a title
-		// if (input.toLowerCase() == arr[i].title.toLowerCase()){
-		// 	while (i < (arr.length - 1)) {
-		// 		//region Changing video elements
-		// 		//change main video elements
-        //         $('#main-video').prop('src', arr[i].src);
-        //         $('#main-video-title').text(arr[i].title);
-        //         $('#main-video-description').text(arr[i].description);
-        //         i++;
-		// 		//change rabbit hole 1 elements
-        //         $('#rabbit-hole-vid-1').prop('src', arr[i].src);
-        //         $('#rabbit-hole-vid-1-title').text(arr[i].title);
-        //         $('#rabbit-hole-vid-1').prop('poster', arr[i].poster);
-        //         i++;
-        //         //change rabbit hole 2 elements
-        //         $('#rabbit-hole-vid-2').prop('src', arr[i].src);
-        //         $('#rabbit-hole-vid-2-title').text(arr[i].title);
-        //         $('#rabbit-hole-vid-2').prop('poster', arr[i].poster);
-        //         //endregion
-        //
-        //         //region AJAX Request after Searching for a Video
-        //         $.ajax({
-        //             type: "GET",
-        //             url: "models/getcomment.php",
-        //             data: {
-        //                 videotitle: searched_vid_title
-        //             },
-        //             //if working
-        //             success: function (response) {
-        //                 console.log('AJAX get-comment Response: AJAX request has followed through.');
-        //                 //parsing the string from the ajax request into an object
-        //                 var obj = JSON.parse(response);
-        //                 //clear all comments
-        //                 $('#user-comments').empty();
-        //                 $('#db-comments').empty();
-        //                 //for loop to diSplay new comments based on clicked video
-        //                 for (var i = 0; i < obj.length; i++) {
-        //                     $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
-        //                 }
-        //             },
-        //             //if not working
-        //             error: function (err) {
-        //                 console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
-        //             }
-        //         })
-		// 		//endregion
-        //     }
-        //
-        //
-		// //if text != a title or close to a title
-		// } else {
-		// 	i = 0;
-		// 	while (i < arr.length){
-        //         var close = input.includes(arr[i].title);
-        //         console.log("Array Title" + " : " + "User Input" + " : " + "Is It Close" + '\n' + arr[i].title + " : " + input + " : " + close);
-		// 		//if text is close to a title
-		// 		if (close == true){
-		// 			alert("Did you mean " + arr[i].title + " ?");
-		// 		}
-		// 		i++;
-		// 	}
-		// }
-        // alert("No video with " + input + " has been found.");
-		// //endregion
-    // })
 	//endregion
 })
