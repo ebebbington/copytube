@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
 	//region Getting Username, Validation & Display Welcome Message
 	//getting a username by asking for an input and saving this to a variable and replacing encoded spaces
 	var eusername = encodeURI(prompt("Please enter your username below or result to closing the tab."));
@@ -137,7 +138,7 @@ $(document).ready(function(){
 	})
 	//endregion
 
-    //region When Rabit Hole is Clicked
+    //region On Click of Rabbit Hole Video
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
         //region Changing Videos, Titles & Descriptions
@@ -182,7 +183,7 @@ $(document).ready(function(){
         $('#main-video').prop('poster', clicked_vid_poster);
 		//endregion
 
-		//region AJAX Request to get comments based on clicked video
+		//region AJAX Request: Get Comments Relative to Video
         $.ajax({
             type: "GET",
             url: "models/getcomment.php",
@@ -211,103 +212,192 @@ $(document).ready(function(){
 	})
     //endregion
 
-	//region When the Search Video Button is Clicked
+    //region On Click of Search Button
     $(document).on('click', '#search-button',function(){
-    	//region Getting and Creating
-		//TODO: Allow text to only match letters and not care about capitals etc //.toLowerCase() on both when comparing,.
-    	var input = encodeURI($('#search-bar').val());
+        //region Getting and Creating
+        //Encoding Input
+        var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
         var i = 0;
-        //replacing encoded spaces
         while (i != count.length) {
             i++;
             input = input.replace("%20", " ");
         }
-        //getting i to match a title
-    	i = 0;
-    	while (input != arr[i].title && i < (arr.length - 1)){
-    		i++
-		}
-		/* by now, i should be equal to a correct title or the length of the array, meaning that if input equals array
-		title then text is right or if it doesn't then text doesn't match array title */
-		//endregion
 
-		//region Setting Elements
-		//if text == a title
-		if (input.toLowerCase() == arr[i].title.toLowerCase()){
-			while (i < (arr.length - 1)) {
-				//todo: another while loop somewhere to check if i = arr.length resulting in i=0;
-				//region Changing video elements
-				//change main video elements
-                $('#main-video').prop('src', arr[i].src);
-                $('#main-video-title').text(arr[i].title);
-                var searched_vid_title = arr[i].title;
-                $('#main-video-description').text(arr[i].description);
-                i++;
-				//change rabbit hole 1 elements
-                $('#rabbit-hole-vid-1').prop('src', arr[i].src);
-                $('#rabbit-hole-vid-1-title').text(arr[i].title);
-                $('#rabbit-hole-vid-1').prop('poster', arr[i].poster);
-                i++;
-                //change rabbit hole 2 elements
-                $('#rabbit-hole-vid-2').prop('src', arr[i].src);
-                $('#rabbit-hole-vid-2-title').text(arr[i].title);
-                $('#rabbit-hole-vid-2').prop('poster', arr[i].poster);
-                //endregion
-
-                //region AJAX Request after Searching for a Video
-                $.ajax({
-                    type: "GET",
-                    url: "models/getcomment.php",
-                    data: {
-                        videotitle: searched_vid_title
-                    },
-                    //if working
-                    success: function (response) {
-                        console.log('AJAX get-comment Response: AJAX request has followed through.');
-                        //parsing the string from the ajax request into an object
-                        var obj = JSON.parse(response);
-                        //clear all comments
-                        $('#user-comments').empty();
-                        $('#db-comments').empty();
-                        //for loop to diSplay new comments based on clicked video
-                        for (var i = 0; i < obj.length; i++) {
-                            $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
-                        }
-                    },
-                    //if not working
-                    error: function (err) {
-                        console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
-                    }
-                })
-				//endregion
+        //Getting Videos
+        var found = null;
+        var rabbit_hole_vids = [];
+        for(var i=0, l=arr.length; i < l; i++){
+            if((arr[i].title.toLowerCase() === input.toLowerCase()) || arr[i].title.toLowerCase().indexOf(input) > -1){
+                found = arr[i];
+                rabbit_hole_vids.push(arr[i]);
             }
+        }
+        //endregion
+
+        //region Displaying Content
+        $('#main-video').prop('title', found.title);
+        $('#main-video').prop('src', found.src);
+        $('#main-video0').prop('description', found.description);
+        $('#main-video-title').text(found.title);
+        $('#main-video-description').text(found.description);
+        //Displaying Rabbit Hole Videos
+        var rabbit_holes = $('.rabbit-holes'); //fixme: doesn't work........
+        rabbit_holes.html('');
+        rabbit_hole_vids.forEach(function(video, i){
+            var video_html =
+                "<video id='"+video.title+"' class='rabbit-hole-vid' controls" +
+                " muted" +
+                "poster='"+video.poster+"'" +
+                "title='"+video.title+"'" +
+                "src='"+video.src+"'" +
+                "width='"+video.width+"'" +
+                "height='"+video.height+"'" +
+                "Sorry, your browser doesn/'t support embedded videos." +
+                " </video>";
+            rabbit_holes.append(video_html);
+        });
+        //endregion
+
+        //region AJAX Request after Searching for a Video
+        $.ajax({
+            type: "GET",
+            url: "models/getcomment.php",
+            data: {
+                videotitle: $('#main-video').prop('title')
+            },
+            //if working
+            success: function (response) {
+                console.log('AJAX get-comment Response: AJAX request has followed through.');
+                //parsing the string from the ajax request into an object
+                var obj = JSON.parse(response);
+                //clear all comments
+                $('#user-comments').empty();
+                $('#db-comments').empty();
+                //for loop to diSplay new comments based on clicked video
+                for (var i = 0; i < obj.length; i++) {
+                    $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
+                }
+            },
+            //if not working
+            error: function (err) {
+                console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
+            }
+        })
+        //endregion
+    });
+
+	//region When the Search Video Button is Clicked
+    // $(document).on('click', '#search-button',function(){
 
 
-		//if text != a title or close to a title
-		} else {
-			i = 0;
-			while (i < arr.length){
-                var close = input.includes(arr[i].title);
-                console.log("Array Title" + " : " + "User Input" + " : " + "Is It Close" + '\n' + arr[i].title + " : " + input + " : " + close);
-				//if text is close to a title
-				if (close == true){
-					alert("Did you mean " + arr[i].title + " ?");
-				}
-				i++;
-			}
-		}
-        alert("No video with " + input + " has been found.");
-		//endregion
-    })
-	//endregion
 
-	//region When Mouse Hovers over Search Bar
-	$(document).on('mouseover', '#search-bar',function(){
-		console.log("hovered over search bar");
-		//setting variables
-		var html = "<div id='title-dropdown'>" + "<br>" + "<a href='#'>Test 1</a>" + "<br>" + "<a href='#'>Test 2</a>" + "<br>" + "</div>";
-		var container = $('#search-bar').id;
-		//appending variable //todo: how to append code to html? (below)
+            //region Getting and Creating
+    	// var input = encodeURI($('#search-bar').val());
+        // var count = input.split('%20');
+        // var i = 0;
+        // var found = null;
+        // var sub_arr = [];
+        // //replacing encoded spaces
+        // while (i != count.length) {
+        //     i++;
+        //     input = input.replace("%20", " ");
+        // }
+        // //getting i to match a title
+    	// i = 0;
+        //
+        // //found will contain al elements of 1 video, nw array will contain all elements of every OTHER video
+        // for (i=0, l=arr.length; i < l; i++){
+        //     if (arr[i].title.toLowerCase() === input.toLowerCase() || arr[i].title.toLowerCase().indexOf(input) > -1){
+        //         found = arr[i]
+        //         $('#main-video').prop('src', found.src);
+        //         $('#main-video-title').text(found.title);
+        //         $('#main-video-description').text(found.description);
+        //
+        //         sub_arr.push(arr[i]);
+        //
+        //
+        //     } else {
+        //         sub_arr.push(arr[i]);
+        //         console.log(sub_arr);
+        //     }
+        // }
+        //
+        //
+        //
+        //
+        //
+        //
+        // while (input != arr[i].title && i < (arr.length - 1)){
+    	// 	i++
+		// }
+		// //endregion
+        //
+		// //region Setting Elements
+		// //if text == a title
+		// if (input.toLowerCase() == arr[i].title.toLowerCase()){
+		// 	while (i < (arr.length - 1)) {
+		// 		//region Changing video elements
+		// 		//change main video elements
+        //         $('#main-video').prop('src', arr[i].src);
+        //         $('#main-video-title').text(arr[i].title);
+        //         $('#main-video-description').text(arr[i].description);
+        //         i++;
+		// 		//change rabbit hole 1 elements
+        //         $('#rabbit-hole-vid-1').prop('src', arr[i].src);
+        //         $('#rabbit-hole-vid-1-title').text(arr[i].title);
+        //         $('#rabbit-hole-vid-1').prop('poster', arr[i].poster);
+        //         i++;
+        //         //change rabbit hole 2 elements
+        //         $('#rabbit-hole-vid-2').prop('src', arr[i].src);
+        //         $('#rabbit-hole-vid-2-title').text(arr[i].title);
+        //         $('#rabbit-hole-vid-2').prop('poster', arr[i].poster);
+        //         //endregion
+        //
+        //         //region AJAX Request after Searching for a Video
+        //         $.ajax({
+        //             type: "GET",
+        //             url: "models/getcomment.php",
+        //             data: {
+        //                 videotitle: searched_vid_title
+        //             },
+        //             //if working
+        //             success: function (response) {
+        //                 console.log('AJAX get-comment Response: AJAX request has followed through.');
+        //                 //parsing the string from the ajax request into an object
+        //                 var obj = JSON.parse(response);
+        //                 //clear all comments
+        //                 $('#user-comments').empty();
+        //                 $('#db-comments').empty();
+        //                 //for loop to diSplay new comments based on clicked video
+        //                 for (var i = 0; i < obj.length; i++) {
+        //                     $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
+        //                 }
+        //             },
+        //             //if not working
+        //             error: function (err) {
+        //                 console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
+        //             }
+        //         })
+		// 		//endregion
+        //     }
+        //
+        //
+		// //if text != a title or close to a title
+		// } else {
+		// 	i = 0;
+		// 	while (i < arr.length){
+        //         var close = input.includes(arr[i].title);
+        //         console.log("Array Title" + " : " + "User Input" + " : " + "Is It Close" + '\n' + arr[i].title + " : " + input + " : " + close);
+		// 		//if text is close to a title
+		// 		if (close == true){
+		// 			alert("Did you mean " + arr[i].title + " ?");
+		// 		}
+		// 		i++;
+		// 	}
+		// }
+        // alert("No video with " + input + " has been found.");
+		// //endregion
+    // })
 	//endregion
 })

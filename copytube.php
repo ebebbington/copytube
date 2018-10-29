@@ -45,7 +45,14 @@
 				<!-- region Search Bar/Button -->
 				<div class="col-xs-9">
 					<div id="search" class="input-group">
-     					<input id="search-bar" type="text" class="form-control my-input" placeholder="Search..."/>
+                        <div class="dropdown">
+     					    <input id="search-bar" type="text" class="form-control my-input" placeholder="Hover Over Me for a List of Videos"/>
+                            <div class="dropdown-content">
+                                <a href='#'>Something More</a>
+                                <a href='#'>Lava Sample</a>
+                                <a href='#'>An Iceland Venture</a>
+                            </div>
+                        </div>
       					<span class="input-group-btn">
        						<button id="search-button" class="btn btn-default" type="button">Beep Boop Calculate!</button>
       					</span>
@@ -146,10 +153,6 @@
 							    Sorry, your browser doesn't support embedded videos.
 							</video>
 							<p id="rabbit-hole-vid-1-title"></p>
-							
-						</div>
-
-						<div class="rabbit-hole col xs-12">
 
 							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
 							    	muted
@@ -161,8 +164,6 @@
 							    Sorry, your browser doesn't support embedded videos.
 							</video>
 							<p id="rabbit-hole-vid-2-title"></p>
-							
-						</div>
 
 					</div>
 

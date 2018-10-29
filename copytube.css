@@ -17,6 +17,27 @@ h2{
 }
 /*endregion*/
 
+/*region Dropdown for Titles on Search Bar*/
+.dropdown-content{
+	position: absolute;
+	z-index: 1;
+	display: none;
+	background-color: #f1f1f1;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	margin-top: 3.5em;
+}
+
+.dropdown:hover .dropdown-content{display: block;}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+}
+/*endregion*/
+
 /*region search-button*/
 #search-button{
 	margin-top: 1em;
