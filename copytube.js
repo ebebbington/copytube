@@ -75,6 +75,17 @@ $(document).ready(function(){
     })
 	//endregion
 
+    //region Removing Dropdown for Search in Prep for Auto-complete
+    var drop_down = true;
+    $(document).on('keyup', '#search-bar',function(){
+        //disable drop-down elements
+        // drop_down = false;
+        // if (drop_down == false){
+        //     $('.dropdown-content').prop('textContent', "");
+        // }
+    })
+    //endregion
+
 	//region On Click of Add Comment Button
 	$('#comment-button').on('click', function(){
 
@@ -292,6 +303,7 @@ $(document).ready(function(){
             var rabbit_holes = $('.rabbit-holes');
             rabbit_holes.html('');
             rabbit_hole_vids.forEach(function (video, i) {
+                //creating and displaying new video elements
                 var video_html =
                     "<video id='" + "rabbit-hole-vid-" + a + "' class='rabbit-hole-vid' controls" +
                     " muted" + " " +
@@ -302,14 +314,15 @@ $(document).ready(function(){
                     "height='" + video.height + "'" +
                     "Sorry, your browser doesn/'t support embedded videos." +
                     " </video>";
-                    //"<p id=\"rabbit-hole-vid-" + a + "-title\" class=\"rabbit-hole-titles\"></p>";
                 rabbit_holes.append(video_html);
+                //creating and displaying new rabbit hole title elements
                 var title_html =
                     "<p id=rabbit-hole-vid-" + a + "-title class=rabbit-hole-titles></p>";
                 rabbit_holes.append(title_html);
                 a++;
 
             });
+            //setting content for rabbit holes using unused array titles
             $('#rabbit-hole-vid-1-title').text(rabbit_hole_titles[0]);
             $('#rabbit-hole-vid-2-title').text(rabbit_hole_titles[1]);
         } else {
