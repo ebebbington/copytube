@@ -139,28 +139,23 @@ $(document).ready(function(){
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
         //region AJAX Request: Get Videos
-        var clicked_vid_title = $(this).prop('title');
         $.ajax({
             type: "GET",
             url: "models/getvideos.php",
             data: {
-                videotitle: clicked_vid_title
+                videotitle: $(this).prop('title')
             },
-            //if working
+            //region On Success
             success: function (response) {
-                //region On Success
                 console.log('%cAJAX Request Completed', 'color: green');
                 //parsing the string from the ajax request into an object
-                var main_vid = JSON.parse(response); //fixme: why isn't this working? how do i assign $response2 to rabbit_holes variable (all code below is correct, just not the 1st 2 vars below
-                console.log(main_vid);
-                var rabbit_holes = JSON.parse(response2);
+                var main_vid = JSON.parse(response);
                 //changing main video elements
-                $('#main-video').prop('title', main_vid.title);
-                $('#main-video').prop('description', main_vid.description);
-                $('#main-video').prop('src', main_vid.src);
-                $('#main-video').prop('poster', main_vid.poster);
-                $('#main-video-title').text(main_vid.title);
-                $('#main-video-description').text(main_vid.description);
+                $('#main-video').prop('title', main_vid[0].title);
+                $('#main-video').prop('src', main_vid[0].src);
+                $('#main-video').prop('poster', main_vid[0].poster);
+                $('#main-video-title').text(main_vid[0].title);
+                $('#main-video-description').text(main_vid[0].description);
                 //changing rabbit hole elements
                 a=1;
                 var rabbit_holes = $('.rabbit-holes');
@@ -187,24 +182,23 @@ $(document).ready(function(){
                 //setting content for rabbit holes using unused video titles
                 $('#rabbit-hole-vid-1-title').text(rabbit_holes[0].title);
                 $('#rabbit-hole-vid-2-title').text(rabbit_holes[1].title);
-                //endregion
             },
-            //if not working
+            //endregion
+
+            //region On Failure
             error: function (err) {
-                //region On Failure
                     console.log('%cAJAX Request Failed', 'color: red');
-                    //endregion
             }
+            //endregion
         });
 		//endregion
 
 		//region AJAX Request: Get Comments Relative to Video
-        var clicked_vid_title = $(this).prop('title');
         $.ajax({
             type: "GET",
             url: "models/getcomment.php",
             data: {
-                videotitle: clicked_vid_title
+                videotitle: $(this).prop('title')
             },
             //if working
             success: function (response) {
@@ -238,23 +232,23 @@ $(document).ready(function(){
             input = input.replace("%20", " ");
         }
         //validation
-        if (input == "" || input == " ") {
+        if (input == "" || input == " " || (jQuery.trim(input)).length==0) {
             alert("Please input a video title.");
             $('#search-bar').val("");
-            return;
         }
         //endregion
 
-        //region Setting Main Video
+        //region MAIN VIDEO & COMMENTS
         var complete = false;
         var found = null;
         var rabbit_hole_vids = [];
         var rabbit_hole_titles = [];
         for(var i=0, l=arr.length; i < l; i++){
+            //region IF Video is Found
             if((arr[i].title.toLowerCase() === input.toLowerCase()) || arr[i].title.toLowerCase().indexOf(input.toLowerCase()) > -1) {
                 found = arr[i];
 
-                //region Displaying Content
+                //region Displaying Main Video
                 $('#main-video').prop('title', found.title);
                 $('#main-video').prop('src', found.src);
                 $('#main-video').prop('poster', found.poster);
@@ -264,7 +258,7 @@ $(document).ready(function(){
                 complete = true;
                 //endregion
 
-                //region AJAX Request after Searching for a Video
+                //region AJAX Request for Getting Comments
                 $.ajax({
                     type: "GET",
                     url: "models/getcomment.php",
@@ -296,6 +290,7 @@ $(document).ready(function(){
                 rabbit_hole_vids.push(arr[i]);
                 rabbit_hole_titles.push(arr[i].title);
             }
+            //endregion
         }
         //endregion
 
@@ -328,7 +323,7 @@ $(document).ready(function(){
             $('#rabbit-hole-vid-1-title').text(rabbit_hole_titles[0]);
             $('#rabbit-hole-vid-2-title').text(rabbit_hole_titles[1]);
         } else {
-            alert("No video with the title of " + "'" + $('#search-bar').val() + "' has been found.");
+            alert("No video with the title of " + "'" + input + "' has been found.");
         }
         //endregion
         $('#search-bar').val("");

@@ -134,38 +134,52 @@
                                 $connection->close();
                             ?>
                         </div>
-                         <!-- endregion -->
+                        <!-- endregion -->
 
 				</div>
 
-                <!-- region Rabbit Hole -->
+                <!-- region Rabbit Hole Videos -->
 				<div class="col-xs-3">
 
 					<div class="rabbit-holes col-xs-12">
 
-							<video id='rabbit-hole-vid-1' class='rabbit-hole-vid' controls
-							    	muted
-                                    poster="imageresources/lava_sample.jpg"
-							    	title="Lava Sample"
-							    	src="https://upload.wikimedia.org/wikipedia/commons/transcoded/2/22/Volcano_Lava_Sample.webm/Volcano_Lava_Sample.webm.360p.webm"
-							    	width="230"
-							    	height="220">
-							    Sorry, your browser doesn't support embedded videos.
-							</video>
-							<p id="rabbit-hole-vid-1-title" class="rabbit-hole-titles">Lava Sample</p>
+                        <!-- PHP Code -->
+                        <?php
+                            // setting variables
+                            $servername = "localhost";
+                            $username = "root";
+                            $password = "password";
+                            //create connection
+                            $connection = new mysqli($servername, $username, $password, 'copytube');
+                            //check connection
+                            if ($connection->connect_error) {
+                                die("connection failed: " + $connection->connect_error);
+                            }
+                            // variables to equal all rows of comments and result of this
+                            $sql = "SELECT * FROM `videos` WHERE title<>'Something More'";
+                            $result = $connection->query($sql);
+                            // fetch all comments from table
+                            $count = 1;
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    echo "<video id='rabbit-hole-vid-1' class='rabbit-hole-vid' controls
+                                        muted
+                                        poster=".$row["poster"]."
+                                        title=".$row["title"]."
+                                        src=".$row["src"]."
+                                        width=".$row["width"]."
+                                        height=".$row["height"].">
+                                    Sorry, your browser doesn't support embedded videos.
+                                    </video>";
+                                    echo "<p id="."rabbit-hole-vid-".$count."-title". " class="."rabbit-hole-titles>".$row['title']."</p>";
+                                    $count + 1;
+                                }
+                            }
+                            //close database connection
+                            $connection->close();
+                        ?>
 
-							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
-							    	muted
-                                    poster="imageresources/an_iceland_venture.jpg"
-							    	title="An Iceland Venture"
-							    	src="http://mazwai.com/system/posts/videos/000/000/229/original/omote_iceland__an_iceland_venture.mp4?1528050680"
-							    	width="230"
-							    	height="220">
-							    Sorry, your browser doesn't support embedded videos.
-							</video>
-							<p id="rabbit-hole-vid-2-title" class="rabbit-hole-titles">An Iceland Venture</p>
-
-					</div>
+                    </div>
 
 				</div>
                 <!-- endregion -->
