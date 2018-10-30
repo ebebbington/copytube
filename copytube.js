@@ -3,9 +3,7 @@ $(document).ready(function(){
 	//region Getting Username, Validation & Display Welcome Message
 	//GET USERNAME, ENCODE & REPAIR
     function getusername() {
-        var check = prompt("Please enter your username below");
-        username = encodeURI(check);
-        check = null;
+        username = encodeURI(prompt("Please enter your username below"));
         var count = username.split('%20');
         var i = 0;
         while (i != count.length) {
@@ -61,7 +59,7 @@ $(document).ready(function(){
     })
 	//endregion
 
-    //region Removing Dropdown for Search in Prep for Auto-complete
+    //region Removing Drop-down for Search in Prep for Auto-complete //ToDo: Auto-complete section
     var drop_down = true;
     $(document).on('keyup', '#search-bar',function(){
         //disable drop-down elements
@@ -75,63 +73,60 @@ $(document).ready(function(){
 	//region On Click of Add Comment Button
 	$('#comment-button').on('click', function(){
 
-		var edescription = encodeURI($('#comment-bar').val());
-        var description = edescription;
-		var count = edescription.split('%20');
+	    //ENCODING & REPAIRING
+        var description = encodeURI($('#comment-bar').val());
+		var count = description.split('%20');
 		var i = 0;
-		//while loop to replaces any encoded spaces back to a space character
 		while (i != count.length) {
             i++;
             description = description.replace("%20", " ");
         }
 		var max_length = 400;
-		if (description == ""){
-			alert("Please input a comment");
+		if (description == "" || description.length > max_length || (jQuery.trim(description)).length==0){
+			alert("Please input a comment and have it be less than 401 characters long");
+			$('#comment-bar').val("");
+			$('#comment-count').text("0");
 		} else {
-            if (description.length > max_length) {
-                alert("Comment exceeds maximum characters, maximum characters is 400 and your comment is " + description.length + " characters long");
-            } else {
-            	//region Setting actualcomment and Displaying
-                //setting "today" to equal todays date
-                var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth();
-                mm += 1; //some reason, month was 1 behind
-                var yyyy = today.getFullYear();
-                today = yyyy + "-" + mm + "-" + dd;
+		    //region Setting actualcomment and Displaying
+            //setting "today" to equal todays date
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth();
+            mm += 1; //some reason, month was 1 behind
+            var yyyy = today.getFullYear();
+            today = yyyy + "-" + mm + "-" + dd;
 
-                //combing these variables into one variable to concatenate them and display them in order
-                var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>" + "<br>";
-                //assign above variable to the id for the div to display
-                $('#user-comments').prepend(actualcomment);
-                //clear comment text bar
-                $('#comment-bar').val("");
-                $('#comment-count').text("0");
-                //endregion
+            //combing these variables into one variable to concatenate them and display them in order
+            var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>" + "<br>";
+            //assign above variable to the id for the div to display
+            $('#user-comments').prepend(actualcomment);
+            //clear comment text bar
+            $('#comment-bar').val("");
+            $('#comment-count').text("0");
+            //endregion
 
-                //region AJAX save-comments Request
-                //start of setting up ajax request by setting url to go to and data
-				var vid_title = $('#main-video-title').text();
-                $.ajax({
-                    type: "POST",
-                    url: "models/savecomment.php",
-                    data: {
-                        author: username,
-                        comment: description,
-                        dateposted: today,
-						videotitle: vid_title
-                    },
-                    //if working or if not
-                    success: function (response) {
-                        console.log('AJAX save-comment Response: AJAX request has followed through.');
-                    },
-                    error: function (err) {
-                        console.log('AJAX save-comment Response: ERROR - Request for AJAX has not passed.');
-                    }
-                }); //I can use "var_dump($_[typename])" to get props in network response which i an then do "var_dump($_POST[author])" to get value of this property
-                //endregion
-            }
-        }
+            //region AJAX save-comments Request
+            //start of setting up ajax request by setting url to go to and data
+            var vid_title = $('#main-video-title').text();
+            $.ajax({
+                type: "POST",
+                url: "models/savecomment.php",
+                data: {
+                    author: username,
+                    comment: description,
+                    dateposted: today,
+                    videotitle: vid_title
+                },
+                //if working or if not
+                success: function (response) {
+                    console.log('AJAX save-comment Response: AJAX request has followed through.');
+                },
+                error: function (err) {
+                    console.log('AJAX save-comment Response: ERROR - Request for AJAX has not passed.');
+                }
+            }); //I can use "var_dump($_[typename])" to get props in network response which i an then do "var_dump($_POST[author])" to get value of this property
+            // endregion
+		}
 	})
 	//endregion
 
