@@ -149,13 +149,29 @@ $(document).ready(function(){
             success: function (response) {
                 console.log('%cAJAX Request Completed', 'color: green');
                 //parsing the string from the ajax request into an object
-                var main_vid = JSON.parse(response);
-                //changing main video elements
-                $('#main-video').prop('title', main_vid[0].title);
-                $('#main-video').prop('src', main_vid[0].src);
-                $('#main-video').prop('poster', main_vid[0].poster);
-                $('#main-video-title').text(main_vid[0].title);
-                $('#main-video-description').text(main_vid[0].description);
+                var videos = JSON.parse(response);
+                //Looking For Videos
+                var clicked_vid = $(this);
+                var rabbit_hole_vids = [];
+                var found = null;
+                for (var i=0, l=videos.length; i<l; i++){
+
+                    if (clicked_vid.title == videos[i].title){
+
+                        found = videos[i];
+                        $('#main-video').prop('title', found.title);
+                        $('#main-video').prop('src', found.src);
+                        $('#main-video').prop('poster', found.poster);
+                        $('#main-video-title').text(found.title);
+                        $('#main-video-description').text(found.description);
+
+                    } else{
+                        rabbit_hole_vids.push(videos[i]);
+                    }
+                }
+                console.log(found);
+                console.log(rabbit_hole_vids);
+
                 //changing rabbit hole elements
                 a=1;
                 var rabbit_holes = $('.rabbit-holes');
@@ -165,23 +181,20 @@ $(document).ready(function(){
                     var video_html =
                         "<video id='" + "rabbit-hole-vid-" + a + "' class='rabbit-hole-vid' controls" +
                         " muted" + " " +
-                        "poster='" + rabbit_holes.poster + "'" +
-                        "title='" + rabbit_holes.title + "'" +
-                        "src='" + rabbit_holes.src + "'" +
-                        "width='" + rabbit_holes.width + "'" +
-                        "height='" + rabbit_holes.height + "'" +
+                        "poster='" + rabbit_vids.poster + "'" +
+                        "title='" + rabbit_vids.title + "'" +
+                        "src='" + rabbit_vids.src + "'" +
+                        "width='" + rabbit_vids.width + "'" +
+                        "height='" + rabbit_vids.height + "'" +
                         "Sorry, your browser doesn/'t support embedded videos." +
                         " </video>";
                     rabbit_holes.append(video_html);
                     //creating and displaying new rabbit hole title elements
                     var title_html =
-                        "<p id=rabbit-hole-vid-" + a + "-title class=rabbit-hole-titles></p>";
+                        "<p id=rabbit-hole-vid-" + a + "-title class=rabbit-hole-titles>" + rabbit_vids.title + "</p>";
                     rabbit_holes.append(title_html);
                     a++;
                 });
-                //setting content for rabbit holes using unused video titles
-                $('#rabbit-hole-vid-1-title').text(rabbit_holes[0].title);
-                $('#rabbit-hole-vid-2-title').text(rabbit_holes[1].title);
             },
             //endregion
 

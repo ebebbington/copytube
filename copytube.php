@@ -76,7 +76,7 @@
 									autoplay
 							    	muted
                                     poster="imageresources/something_more.jpg"
-							    	title="Something More Adventure"
+							    	title="Something More"
 							    	src="http://mazwai.com/system/posts/videos/000/000/191/original/something-more.mp4?1445788608"
 							    	width="750"
 							    	height="400">
@@ -143,7 +143,7 @@
 
 					<div class="rabbit-holes col-xs-12">
 
-                        <!-- PHP Code -->
+                        <!-- PHP Code Displaying Rabbit Holes -->
                         <?php
                             // setting variables
                             $servername = "localhost";
@@ -155,25 +155,33 @@
                             if ($connection->connect_error) {
                                 die("connection failed: " + $connection->connect_error);
                             }
-                            // variables to equal all rows of comments and result of this
-                            $sql = "SELECT * FROM `videos` WHERE title<>'Something More'";
+                            $sql = "SELECT poster, title, src, width, height FROM `videos` WHERE title<>'Something More'";
                             $result = $connection->query($sql);
-                            // fetch all comments from table
+                            // fetch all videos from table
                             $count = 1;
                             if ($result->num_rows > 0) {
+                                $html = "";
                                 while($row = $result->fetch_assoc()) {
-                                    echo "<video id='rabbit-hole-vid-1' class='rabbit-hole-vid' controls
-                                        muted
-                                        poster=".$row["poster"]."
-                                        title=".$row["title"]."
-                                        src=".$row["src"]."
-                                        width=".$row["width"]."
-                                        height=".$row["height"].">
-                                    Sorry, your browser doesn't support embedded videos.
-                                    </video>";
-                                    echo "<p id="."rabbit-hole-vid-".$count."-title". " class="."rabbit-hole-titles>".$row['title']."</p>";
+                                    /*FixMe [001]: 'title' is only taking the first word of the title e.g. title="Lava" sample src="....."
+                                    So, $sql is taking "Lava Sample" but when being echoed it equals "Lava"*/
+
+                                    $html .= '<video id="rabbit-hole-vid-1" class="rabbit-hole-vid" controls ';
+                                    $html .= ' muted ';
+                                    $html .= 'poster=' . $row['poster'] . " ";
+                                    $html .= 'title=' . $row['title'] . " ";
+                                    $html .= 'src=' . $row['src'] ;
+                                    $html .= 'width=' . $row['width'] ;
+                                    $html .= 'height=' . $row['height'] . '>' ;
+                                    $html .= '</video>';
+
+                                    echo $html;
+
+                                    //create and display titles
+                                    echo "<p id='rabbit-hole-vid-'".$count."-title" . " class='rabbit-hole-titles>'" .$row['title']. "</p>";
                                     $count + 1;
                                 }
+
+                                echo $html;
                             }
                             //close database connection
                             $connection->close();
