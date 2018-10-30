@@ -138,7 +138,7 @@ $(document).ready(function(){
     //region On Click of Rabbit Hole Video
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
-        //region AJAX Request: Get Videos
+        //region AJAX Request: Get Videos //Todo: Test and Complete me
         $.ajax({
             type: "GET",
             url: "models/getvideos.php",
@@ -235,7 +235,7 @@ $(document).ready(function(){
     //endregion
 
     //region On Click of Search Button
-    $(document).on('click', '#search-button',function(){
+    $(document).on('click', '#search-button',function(){ //ToDo: Change Arrays to DB, Test and Complete
         //region Encoding & Validating Input
         var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
