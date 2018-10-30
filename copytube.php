@@ -83,10 +83,10 @@
 							    Sorry, your browser doesn't support embedded videos.
 							</video>
 							<!-- main video title -->
-							<p id="main-video-title"></p> 
+							<p id="main-video-title">Something More</p>
 							<br>
 							<!-- main video description -->
-							<p id="main-video-description"></p> 
+							<p id="main-video-description">Watch this inspirational video as we look at all of the beautiful things inside this world</p>
 						<br>
 						<br>
 						</div>
@@ -152,7 +152,7 @@
 							    	height="220">
 							    Sorry, your browser doesn't support embedded videos.
 							</video>
-							<p id="rabbit-hole-vid-1-title" class="rabbit-hole-titles"></p>
+							<p id="rabbit-hole-vid-1-title" class="rabbit-hole-titles">Lava Sample</p>
 
 							<video id='rabbit-hole-vid-2' class='rabbit-hole-vid' controls
 							    	muted
@@ -163,7 +163,7 @@
 							    	height="220">
 							    Sorry, your browser doesn't support embedded videos.
 							</video>
-							<p id="rabbit-hole-vid-2-title" class="rabbit-hole-titles"></p>
+							<p id="rabbit-hole-vid-2-title" class="rabbit-hole-titles">An Iceland Venture</p>
 
 					</div>
 

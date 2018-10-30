@@ -5,6 +5,7 @@ h2{
 	letter-spacing: 1px;
 	word-spacing: 1px;
 	font-size: 20px;
+	word-wrap: break-word;
 }
 /*endregion*/
 

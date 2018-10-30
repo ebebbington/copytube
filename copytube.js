@@ -1,30 +1,27 @@
 $(document).ready(function(){
 
 	//region Getting Username, Validation & Display Welcome Message
-	//getting a username by asking for an input and saving this to a variable and replacing encoded spaces
-	var eusername = encodeURI(prompt("Please enter your username below or result to closing the tab."));
-    var username = eusername;
-    var count = eusername.split('%20');
-    var i = 0;
-    //while loop to replaces any encoded spaces back to a space character
-    while (i != count.length) {
-        i++;
-        username = username.replace("%20", " ");
+	//GET USERNAME, ENCODE & REPAIR
+    function getusername() {
+        var check = prompt("Please enter your username below");
+        username = encodeURI(check);
+        check = null;
+        var count = username.split('%20');
+        var i = 0;
+        while (i != count.length) {
+            i++;
+            username = username.replace("%20", " ");
+        }
+        //VALIDATION
+        if (username.length > 80 || username == "null" || (jQuery.trim(username)).length==0){
+            alert("Please enter an appropriate username between 0 and 81 characters long");
+            getusername();
+        }
     }
+    //RUN FUNCTION
+    getusername();
 
-	while (username.length > 80){
-		username = encodeURI(prompt("Please enter a username less than 80 characters long"));
-	}
-	//If the user ignores this and presses cancel (which equals null) or types nothing and clicks ok then window will close
-	if (username == "null" || username == ""){
-		var left = "10000";
-		while (left != "10001") {
-			left -= 1;
-			alert("This alert will pop up " + left + "more times. Suggestion: close the tab.");
-			console.log("Alerts left: " + left);
-		}
-	}
-	//generates the welcome message with the users username
+	//generates the welcome message with the username
 	$('#welcome').text("Hello " + username + ", and welcome to CopyTube, where you will find a plagiarised version of YouTube");
 	//endregion
 
@@ -53,17 +50,6 @@ $(document).ready(function(){
 		description: "Iceland, beautiful and static, watch as we venture through this glorious place",
 		poster: "imageresources/an_iceland_venture.jpg",
 	}];
-	//endregion
-
-	//region Pre-define and Display Titles, and Description
-	var main_vid_title = arr[0].title;
-	$('#main-video-title').text(main_vid_title);
-	var main_vid_description = arr[0].description;
-	$('#main-video-description').text(main_vid_description);
-	var rabbit_hole_vid_1_title = arr[1].title;
-	$('#rabbit-hole-vid-1-title').text(rabbit_hole_vid_1_title);
-	var rabbit_hole_vid_2_title = arr[2].title;
-	$('#rabbit-hole-vid-2-title').text(rabbit_hole_vid_2_title);
 	//endregion
 
 	//region Counter for Characters While User Types a New Comment
