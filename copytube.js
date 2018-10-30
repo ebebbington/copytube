@@ -59,21 +59,21 @@ $(document).ready(function(){
     })
 	//endregion
 
-    //region Removing Drop-down for Search in Prep for Auto-complete //ToDo: Auto-complete section
-    var drop_down = true;
+    //region //ToDo: Removing Drop-down for Search in Prep for Auto-complete
+    /*var drop_down = true;
     $(document).on('keyup', '#search-bar',function(){
-        //disable drop-down elements
-        // drop_down = false;
-        // if (drop_down == false){
-        //     $('.dropdown-content').prop('textContent', "");
-        // }
-    })
+        disable drop-down elements
+        drop_down = false;
+        if (drop_down == false){
+            $('.dropdown-content').prop('textContent', "");
+        }
+    })*/
     //endregion
 
 	//region On Click of Add Comment Button
 	$('#comment-button').on('click', function(){
 
-	    //ENCODING & REPAIRING
+	    //region ENCODING, REPAIRING & VALIDATING
         var description = encodeURI($('#comment-bar').val());
 		var count = description.split('%20');
 		var i = 0;
@@ -86,9 +86,13 @@ $(document).ready(function(){
 			alert("Please input a comment and have it be less than 401 characters long");
 			$('#comment-bar').val("");
 			$('#comment-count').text("0");
-		} else {
+		}
+		//endregion
+
+        //region IF comment is OK
+		else
+		    {
 		    //region Setting actualcomment and Displaying
-            //setting "today" to equal todays date
             var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth();
@@ -96,11 +100,11 @@ $(document).ready(function(){
             var yyyy = today.getFullYear();
             today = yyyy + "-" + mm + "-" + dd;
 
-            //combing these variables into one variable to concatenate them and display them in order
+            //Concatenating comment, date and author
             var actualcomment = '<br>' + '<br>' + "Username: " + username + "<br>" + "Date: " + today + "<br>" + "Comment: " + description + "<br>" + "<br>";
             //assign above variable to the id for the div to display
             $('#user-comments').prepend(actualcomment);
-            //clear comment text bar
+            //clear comment-bar and comment-count
             $('#comment-bar').val("");
             $('#comment-count').text("0");
             //endregion
@@ -119,14 +123,15 @@ $(document).ready(function(){
                 },
                 //if working or if not
                 success: function (response) {
-                    console.log('AJAX save-comment Response: AJAX request has followed through.');
+                    console.log('%cAJAX Request Completed', 'color: green');
                 },
                 error: function (err) {
-                    console.log('AJAX save-comment Response: ERROR - Request for AJAX has not passed.');
+                    console.log('%cAJAX Request Failed', 'color: red');
                 }
             }); //I can use "var_dump($_[typename])" to get props in network response which i an then do "var_dump($_POST[author])" to get value of this property
             // endregion
 		}
+		//endregion
 	})
 	//endregion
 
@@ -185,7 +190,7 @@ $(document).ready(function(){
             },
             //if working
             success: function (response) {
-                console.log('AJAX get-comment Response: AJAX request has followed through.');
+                console.log('%cAJAX Request Completed', 'color: green');
                 //parsing the string from the ajax request into an object
                 var obj = JSON.parse(response);
                 //clear all comments
@@ -198,7 +203,7 @@ $(document).ready(function(){
             },
 			//if not working
             error: function (err) {
-                console.log('AJAX get-comment Response: ERROR - Request for AJAX has not passed.');
+                console.log('%cAJAX Request Failed', 'color: red');
             }
         });
         //endregion
