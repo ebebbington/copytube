@@ -138,55 +138,73 @@ $(document).ready(function(){
     //region On Click of Rabbit Hole Video
 	$(document).on('click', '.rabbit-hole-vid',function(){
 
-        //region Changing Videos, Titles & Descriptions
-		//creating variables for titles and description
-		var clicked_vid_title = $(this).prop('title');
-		var i = 0;
-		while (clicked_vid_title != arr[i].title){
-			i++; //This was originally a problem, but solved it by trying to match the description of a clicked video. This works by: matching name of clicked video and finding the description in that object (easy)
-		}
-		var clicked_vid_description = arr[i].description;
-		var main_vid_title = $('#main-video-title').text();
-
-		//creating variables for the main and clicked video source
-		var main_vid_src = $('#main-video').prop('src');
-		var clicked_vid_src = this.currentSrc;
-
-		//creating variables for poster
-        var clicked_vid_poster = arr[i].poster;
-		i = 0;
-        while (main_vid_title != arr[i].title){
-        	i++
-		}
-        var main_vid_poster = arr[i].poster;
-
-		//setting titles and descriptions
-		$('#main-video-title').text(clicked_vid_title);
-		$('#main-video-description').text(clicked_vid_description);
-        $(this).prop('title', main_vid_title);
-        if ($(this).prop('id') == "rabbit-hole-vid-1")
-		{
-			$('#rabbit-hole-vid-1-title').text(main_vid_title);
-			console.log("clicked vid title is now: " + main_vid_title);
-        } else {
-            $('#rabbit-hole-vid-2-title').text(main_vid_title);
-        }
-
-		//setting main and clicked video source
-		$('#main-video').prop('src', clicked_vid_src);
-		$(this).prop('src', main_vid_src);
-
-		//setting posters
-        $(this).prop('poster', main_vid_poster);
-        $('#main-video').prop('poster', clicked_vid_poster);
+        //region AJAX Request: Get Videos
+        var clicked_vid_title = $(this).prop('title');
+        $.ajax({
+            type: "GET",
+            url: "models/getvideos.php",
+            data: {
+                videotitle: clicked_vid_title
+            },
+            //if working
+            success: function (response) {
+                //region On Success
+                console.log('%cAJAX Request Completed', 'color: green');
+                //parsing the string from the ajax request into an object
+                var main_vid = JSON.parse(response); //fixme: why isn't this working? how do i assign $response2 to rabbit_holes variable (all code below is correct, just not the 1st 2 vars below
+                console.log(main_vid);
+                var rabbit_holes = JSON.parse(response2);
+                //changing main video elements
+                $('#main-video').prop('title', main_vid.title);
+                $('#main-video').prop('description', main_vid.description);
+                $('#main-video').prop('src', main_vid.src);
+                $('#main-video').prop('poster', main_vid.poster);
+                $('#main-video-title').text(main_vid.title);
+                $('#main-video-description').text(main_vid.description);
+                //changing rabbit hole elements
+                a=1;
+                var rabbit_holes = $('.rabbit-holes');
+                rabbit_holes.html('');
+                rabbit_hole_vids.forEach(function (video, i) {
+                    //creating and displaying new video elements
+                    var video_html =
+                        "<video id='" + "rabbit-hole-vid-" + a + "' class='rabbit-hole-vid' controls" +
+                        " muted" + " " +
+                        "poster='" + rabbit_holes.poster + "'" +
+                        "title='" + rabbit_holes.title + "'" +
+                        "src='" + rabbit_holes.src + "'" +
+                        "width='" + rabbit_holes.width + "'" +
+                        "height='" + rabbit_holes.height + "'" +
+                        "Sorry, your browser doesn/'t support embedded videos." +
+                        " </video>";
+                    rabbit_holes.append(video_html);
+                    //creating and displaying new rabbit hole title elements
+                    var title_html =
+                        "<p id=rabbit-hole-vid-" + a + "-title class=rabbit-hole-titles></p>";
+                    rabbit_holes.append(title_html);
+                    a++;
+                });
+                //setting content for rabbit holes using unused video titles
+                $('#rabbit-hole-vid-1-title').text(rabbit_holes[0].title);
+                $('#rabbit-hole-vid-2-title').text(rabbit_holes[1].title);
+                //endregion
+            },
+            //if not working
+            error: function (err) {
+                //region On Failure
+                    console.log('%cAJAX Request Failed', 'color: red');
+                    //endregion
+            }
+        });
 		//endregion
 
 		//region AJAX Request: Get Comments Relative to Video
+        var clicked_vid_title = $(this).prop('title');
         $.ajax({
             type: "GET",
             url: "models/getcomment.php",
             data: {
-				videotitle: clicked_vid_title
+                videotitle: clicked_vid_title
             },
             //if working
             success: function (response) {
@@ -199,9 +217,8 @@ $(document).ready(function(){
                 //for loop to diSplay new comments based on clicked video
                 for (var i = 0; i < obj.length; i++) {
                     $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
-                }
-            },
-			//if not working
+                }},
+            //if not working
             error: function (err) {
                 console.log('%cAJAX Request Failed', 'color: red');
             }
@@ -285,7 +302,6 @@ $(document).ready(function(){
         //region Displaying Rabbit Hole Videos
         if (complete == true){
             a=1;
-            var b=0;
             var rabbit_holes = $('.rabbit-holes');
             rabbit_holes.html('');
             rabbit_hole_vids.forEach(function (video, i) {
