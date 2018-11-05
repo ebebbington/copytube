@@ -14,7 +14,7 @@
     }
 
     //if connection works, set variable to string, get all from this and encode it
-    $sql = "SELECT title, src, description, poster FROM videos";
+    $sql = "SELECT title, src, description, poster, width, height FROM videos";
 
     $result = $connection->query($sql);
 

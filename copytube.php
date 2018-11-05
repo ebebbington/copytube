@@ -162,16 +162,14 @@
                             if ($result->num_rows > 0) {
                                 $html = "";
                                 while($row = $result->fetch_assoc()) {
-                                    /*FixMe [001]: 'title' is only taking the first word of the title e.g. title="Lava" sample src="....."
-                                    So, $sql is taking "Lava Sample" but when being echoed it equals "Lava"*/
 
                                     $html = "<video id='rabbit-hole-vid-$count' class='rabbit-hole-vid' controls ".
-                                            "muted ".
-                                            "poster='$row[poster]' ".
-                                            "title='$row[title]' ".
-                                            "src='$row[src]' ".
-                                            "width='$row[width]' ".
-                                            "height='$row[height]'>".
+                                        "muted ".
+                                        "poster='$row[poster]' ".
+                                        "title='$row[title]' ".
+                                        "src='$row[src]' ".
+                                        "width='$row[width]' ".
+                                        "height='$row[height]'>".
                                         "</video>";
                                     echo $html;
 
