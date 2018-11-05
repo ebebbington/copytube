@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    window.open("imageresources/log_activity_design.png");
+    //window.open("imageresources/log_activity_design.png");
 
 	//region Getting Username, Validation & Display Welcome Message
 	//GET USERNAME, ENCODE & REPAIR

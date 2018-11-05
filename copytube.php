@@ -165,23 +165,20 @@
                                     /*FixMe [001]: 'title' is only taking the first word of the title e.g. title="Lava" sample src="....."
                                     So, $sql is taking "Lava Sample" but when being echoed it equals "Lava"*/
 
-                                    $html .= '<video id="rabbit-hole-vid-1" class="rabbit-hole-vid" controls ';
-                                    $html .= ' muted ';
-                                    $html .= 'poster=' . $row['poster'] . " ";
-                                    $html .= 'title=' . $row['title'] . " ";
-                                    $html .= 'src=' . $row['src'] ;
-                                    $html .= 'width=' . $row['width'] ;
-                                    $html .= 'height=' . $row['height'] . '>' ;
-                                    $html .= '</video>';
-
+                                    $html = "<video id='rabbit-hole-vid-$count' class='rabbit-hole-vid' controls ".
+                                            "muted ".
+                                            "poster='$row[poster]' ".
+                                            "title='$row[title]' ".
+                                            "src='$row[src]' ".
+                                            "width='$row[width]' ".
+                                            "height='$row[height]'>".
+                                        "</video>";
                                     echo $html;
 
                                     //create and display titles
-                                    echo "<p id='rabbit-hole-vid-'".$count."-title" . " class='rabbit-hole-titles>'" .$row['title']. "</p>";
-                                    $count + 1;
+                                    echo "<p id='rabbit-hole-vid-$count-title' class='rabbit-hole-titles'>$row[title]</p>";
+                                    $count++;
                                 }
-
-                                echo $html;
                             }
                             //close database connection
                             $connection->close();
