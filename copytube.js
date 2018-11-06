@@ -1,7 +1,5 @@
 $(document).ready(function(){
 
-    window.open("imageresources/log_activity_design.png");
-
 	//region Getting Username, Validation & Display Welcome Message
 	//GET USERNAME, ENCODE & REPAIR
     function getusername() {
@@ -35,7 +33,7 @@ $(document).ready(function(){
     })
 	//endregion
 
-    //region //ToDo: Removing Drop-down for Search in Prep for Auto-complete
+    //region //ToDo Feature: Removing Drop-down for Search in Prep for Auto-complete
     /*var drop_down = true;
     $(document).on('keyup', '#search-bar',function(){
         disable drop-down elements
@@ -215,7 +213,7 @@ $(document).ready(function(){
     //endregion
 
     //region On Click of Search Button
-    $(document).on('click', '#search-button',function() { //ToDo: Change Arrays to DB, Test and Complete
+    $(document).on('click', '#search-button',function() {
         //region Encoding & Validating Input
         var input = encodeURI($('#search-bar').val());
         var count = input.split('%20');
@@ -230,7 +228,6 @@ $(document).ready(function(){
         }
         //endregion
 
-        //FIXME: titles and comments are not displaying correctly in this event, sort it out
         //region GET Videos Request
         var searched_vid_title = $('#search-bar').val();
         $.ajax({
@@ -259,6 +256,7 @@ $(document).ready(function(){
                         $('#main-video0').prop('description', found.description);
                         $('#main-video-title').text(found.title);
                         $('#main-video-description').text(found.description);
+                        searched_vid_title = found.title;
                     } else {
                         //Pushes object to variable
                         rabbit_hole_vids.push(videos[i]);
@@ -270,7 +268,6 @@ $(document).ready(function(){
 
                 //region Displaying Rabbit Hole Videos
                 if (complete == true) {
-                    console.log(videos);
                     var b = 0;
                     a = 1;
                     var rabbit_holes = $('.rabbit-holes');
@@ -303,6 +300,37 @@ $(document).ready(function(){
                     alert("No video with the title of " + "'" + input + "' has been found.");
                 }
                 //endregion
+
+                //region GET Comments Request
+                $.ajax({
+                    type: "GET",
+                    url: "models/getcomment.php",
+                    data: {
+                        videotitle: found.title
+                    },
+                    //region On Success
+                    success: function (response) {
+                        console.log('%cAJAX GET Comments Relative to Video Request Completed', 'color: green');
+                        //parsing the string from the ajax request into an object
+                        var obj = JSON.parse(response);
+                        //clear all comments
+                        $('#user-comments').empty();
+                        $('#db-comments').empty();
+                        //for loop to diSplay new comments based on clicked video
+                        for (var i = 0; i < obj.length; i++) {
+                            $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
+                        }
+                    },
+                    //endregion
+
+                    //region On Failure
+                    error: function (err) {
+                        console.log('%cAJAX GET Comments Relative to Video Request Failed', 'color: red');
+                    }
+                    //endregion
+                })
+                $('#search-bar').val("");
+                //endregion
             },
             //endregion
 
@@ -312,39 +340,6 @@ $(document).ready(function(){
             }
             //endregion
         })
-        //endregion
-
-        //region GET Comments Request
-        //FIXME: NEED A VARIABLE t be assigned the title of the found video i.e. var searched vid title =....
-        console.log(searched_vid_title);
-        $.ajax({
-            type: "GET",
-            url: "models/getcomment.php",
-            data: {
-                videotitle: searched_vid_title
-            },
-            //region On Success
-            success: function (response) {
-                console.log('%cAJAX GET Comments Relative to Video Request Completed', 'color: green');
-                //parsing the string from the ajax request into an object
-                var obj = JSON.parse(response);
-                //clear all comments
-                $('#user-comments').empty();
-                $('#db-comments').empty();
-                //for loop to diSplay new comments based on clicked video
-                for (var i = 0; i < obj.length; i++) {
-                    $('#db-comments').prepend('<br>' + "Username: " + obj[i].author + "<br>" + "Date: " + obj[i].dateposted + "<br>" + "Comment: " + obj[i].comment + "<br>");
-                }
-            },
-            //endregion
-
-            //region On Failure
-            error: function (err) {
-                console.log('%cAJAX GET Comments Relative to Video Request Failed', 'color: red');
-            }
-            //endregion
-        })
-        $('#search-bar').val("");
         //endregion
     })
     //endregion
