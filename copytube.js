@@ -18,10 +18,11 @@ $(document).ready(function(){
             getusername();
         }
     }
+    //endregion
     //RUN FUNCTION
     getusername();
 
-	//generates the welcome message with the username
+	// region generates the welcome message with the username
 	$('#welcome').text("Hello " + username + ", and welcome to CopyTube, where you will find a plagiarised version of YouTube");
 	//endregion
 
@@ -258,17 +259,19 @@ $(document).ready(function(){
                         $('#main-video0').prop('description', found.description);
                         $('#main-video-title').text(found.title);
                         $('#main-video-description').text(found.description);
-                        complete = true;
                     } else {
                         //Pushes object to variable
                         rabbit_hole_vids.push(videos[i]);
                         rabbit_hole_titles.push(videos[i].title);
                     }
                 }
+                complete = true;
                 //endregion
 
                 //region Displaying Rabbit Hole Videos
                 if (complete == true) {
+                    console.log(videos);
+                    var b = 0;
                     a = 1;
                     var rabbit_holes = $('.rabbit-holes');
                     rabbit_holes.html('');
@@ -277,11 +280,11 @@ $(document).ready(function(){
                         var video_html =
                             "<video id='" + "rabbit-hole-vid-" + a + "' class='rabbit-hole-vid' controls" +
                             " muted" + " " +
-                            "poster='" + videos[a].poster + "'" +
-                            "title='" + videos[a].title + "'" +
-                            "src='" + videos[a].src + "'" +
-                            "width='" + videos[a].width + "'" +
-                            "height='" + videos[a].height + "'" +
+                            "poster='" + rabbit_hole_vids[b].poster + "'" +
+                            "title='" + rabbit_hole_vids[b].title + "'" +
+                            "src='" + rabbit_hole_vids[b].src + "'" +
+                            "width='" + rabbit_hole_vids[b].width + "'" +
+                            "height='" + rabbit_hole_vids[b].height + "'" +
                             "Sorry, your browser doesn/'t support embedded videos." +
                             " </video>";
                         rabbit_holes.append(video_html);
@@ -290,6 +293,7 @@ $(document).ready(function(){
                             "<p id=rabbit-hole-vid-" + a + "-title class=rabbit-hole-titles></p>";
                         rabbit_holes.append(title_html);
                         a++;
+                        b++;
 
                     });
                     //setting content for rabbit holes using unused array titles
@@ -299,7 +303,6 @@ $(document).ready(function(){
                     alert("No video with the title of " + "'" + input + "' has been found.");
                 }
                 //endregion
-                $('#search-bar').val("");
             },
             //endregion
 
@@ -312,7 +315,8 @@ $(document).ready(function(){
         //endregion
 
         //region GET Comments Request
-        var searched_vid_title = found.title;
+        //FIXME: NEED A VARIABLE t be assigned the title of the found video i.e. var searched vid title =....
+        console.log(searched_vid_title);
         $.ajax({
             type: "GET",
             url: "models/getcomment.php",
@@ -340,6 +344,7 @@ $(document).ready(function(){
             }
             //endregion
         })
+        $('#search-bar').val("");
         //endregion
     })
     //endregion
