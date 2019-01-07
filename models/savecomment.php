@@ -22,5 +22,5 @@
 
 	//set this data in the database
 	$connection->query($sql);
-	$connection->close();
+    $connection->close();
 ?>
