@@ -12,7 +12,6 @@ $(document).ready(function () {
     }
     //VALIDATION
     if (username.length > 80 || username == 'null' || (jQuery.trim(username)).length == 0) {
-      /* global alert */
       alert('Please enter an appropriate username between 0 and 81 characters long')
       getusername()
     }
