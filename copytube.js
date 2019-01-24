@@ -12,6 +12,7 @@ $(document).ready(function () {
     }
     //VALIDATION
     if (username.length > 80 || username == 'null' || (jQuery.trim(username)).length == 0) {
+      /* global alert */
       alert('Please enter an appropriate username between 0 and 81 characters long')
       getusername()
     }
@@ -43,24 +44,6 @@ $(document).ready(function () {
           $('.dropdown-content').prop('textContent', "");
       }
   })*/
-  //endregion
-
-  //region thank u, next loop
-  /*
-  var thank_u_next = ["thank u, next", "thank u, next"];
-  var i = 0;
-  while (i != thank_u_next.length) {
-      console.log(thank_u_next);
-      thank_u_next.push("than u, next");
-      i++;
-      if (thank_u_next.length > 10000){
-          i = thank_u_next.length;
-          console.log(thank_u_next.length + "\n" + "Is 10001 'thank u, next' enough?");
-      } else {
-          console.log("KEEP GOING");
-      }
-  }
-  */
   //endregion
 
   //region On Click of Add Comment Button
