@@ -45,6 +45,7 @@ $(document).ready(function(){
     //endregion
 
     //region thank u, next loop
+    /*
     var thank_u_next = ["thank u, next", "thank u, next"];
     var i = 0;
     while (i != thank_u_next.length) {
@@ -57,7 +58,8 @@ $(document).ready(function(){
         } else {
             console.log("KEEP GOING");
         }
-    }setTimeout(thank_u_next, 2000);
+    }
+    */
     //endregion
 
 	//region On Click of Add Comment Button
