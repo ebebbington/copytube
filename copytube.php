@@ -71,7 +71,7 @@
 						</div>
 
 						<!-- create comments section -->
-                        <p id="comment-title">Comments Section</p> <p id="comment-count"></p>
+                        <p id="comment-title">Comments Section</p> <p id="comment-count">0</p>
 						<div id="comment" class="input-group">
 							<input id="comment-bar" type="text" class="form-control my-input" placeholder="Add a comment..."/>
       						<span class="input-group-btn">
