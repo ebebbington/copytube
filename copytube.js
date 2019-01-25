@@ -9,7 +9,8 @@ function getVideos () {
     url: 'models/get_videos.php',
     // On Success
     success: function (response) {
-      response = JSON.parse(response)
+      const obj = JSON.parse(response)
+      return obj
     },
     error: function (err) {
       console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
