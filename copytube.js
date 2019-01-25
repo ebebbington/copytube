@@ -9,13 +9,14 @@ function getVideos () {
     url: 'models/get_videos.php',
     // On Success
     success: function (response) {
-      return JSON.parse(response)
+      response = JSON.parse(response)
     },
     error: function (err) {
       console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
     }
   })
-} const videos = getVideos // const videos = getVideos() // assign response to variable
+  return 'ERMAHGERD i literally have no clue how to access the data this function produces OUTSIDE of itself'
+} const videos = getVideos() // assign response to variable
 console.log(videos) // allows me to use the videos object anywhere
 
 // Adams help in showing how to make a gawj function
