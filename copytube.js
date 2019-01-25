@@ -1,6 +1,7 @@
 // Globals
 /* global alert, prompt, $ */
 'use strict'
+var ajaxdat;
 
 // Retrieve videos for re-usability
 function getVideos () {
@@ -8,17 +9,18 @@ function getVideos () {
     type: 'GET',
     url: 'models/get_videos.php',
     // On Success
+    success: handlecalLLACK(response)
     success: function (response) {
       const obj = JSON.parse(response)
       return obj
-    },
-    error: function (err) {
-      console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
     }
   })
-  return 'ERMAHGERD i literally have no clue how to access the data this function produces OUTSIDE of itself'
 } const videos = getVideos() // assign response to variable
 console.log(videos) // allows me to use the videos object anywhere
+function handlecalLLACK(data) {
+  ajaxdat = data;
+}
+// THIS COMMENTS EXPLAINS THE CODE ABOVE: Olly added a line of coe (success: handlecallback) which ill divert the response into the function listed. Then within the function i could return that data and test
 
 // Adams help in showing how to make a gawj function
 /* let videos = (function () {
