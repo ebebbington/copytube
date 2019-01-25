@@ -2,8 +2,44 @@
 /* global alert, prompt, $ */
 'use strict'
 
+// Retrieve videos for re-usability
+function getVideos () {
+  $.ajax({
+    type: 'GET',
+    url: 'models/get_videos.php',
+    // On Success
+    success: function (response) {
+      return JSON.parse(response)
+    },
+    error: function (err) {
+      console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
+    }
+  })
+} const videos = getVideos // const videos = getVideos() // assign response to variable
+console.log(videos) // allows me to use the videos object anywhere
+
+// Adams help in showing how to make a gawj function
+/* let videos = (function () {
+  let Videos = []
+  function initialise (Videos) {
+    doesSomething(Videos)
+  }
+  function doesSomething (Videos) {
+    // AJAX call
+    Videos = ['test', 'test']
+    return Videos
+  }
+  return {
+    initme: initialise(),
+    getVideos: Videos
+  }
+})()
+videos.initme()
+videos.getVideos
+console.log(videoCall) */
+
 $(document).ready(function () {
-  let username // to be used in below function
+  let username = '' // to be used in below function
   // Ensure username is correct
   function getUsername () { // todo :: turn into self executing function if i can call it again within itself
     username = encodeURI(prompt('Please enter your username below'))
@@ -92,7 +128,7 @@ $(document).ready(function () {
     const clickedVidTitle = $(this).prop('title')
     $.ajax({
       type: 'GET',
-      url: 'models/get_videos.php',
+      url: 'models/get_videos.php', // todo :: create a self-executing-anonymous function that retrieves videos at start of script, then call this aray nstead of another ajax call
       data: {
         videoTitle: clickedVidTitle
       },

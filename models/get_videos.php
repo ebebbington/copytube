@@ -6,7 +6,7 @@ $password = "password";
 $connection = new mysqli($serverName, $username, $password, 'copytube');
 //check connection
 if ($connection->connect_error) {
-    die("connection to database inside getvideos.php has failed: $connection->connect_error");
+    die("connection to database inside get_videos.php has failed: $connection->connect_error");
 }
 //if connection works, set variable to string, get all from this and encode it
 $sql = "SELECT title, src, description, poster, width, height FROM videos";
