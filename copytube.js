@@ -1,91 +1,74 @@
-$(document).ready(function () {
+// Globals
+/* global alert, prompt, $ */
 
-  //region Getting Username, Validation & Display Welcome Message
-  //GET USERNAME, ENCODE & REPAIR
-  function getusername () {
+$(document).ready(function () {
+  // Ensure username is correct
+  function getUsername () {
     username = encodeURI(prompt('Please enter your username below'))
-    var count = username.split('%20')
-    var i = 0
-    while (i != count.length) {
+    let count = username.split('%20')
+    let i = 0
+    while (i !== count.length) {
       i++
       username = username.replace('%20', ' ')
     }
-    //VALIDATION
-    if (username.length > 80 || username == 'null' || (jQuery.trim(username)).length == 0) {
+    if (username.length > 80 || username === 'null' || username.trim().length === 0) {
       alert('Please enter an appropriate username between 0 and 81 characters long')
-      getusername()
+      getUsername()
     }
+    const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
+    $('#welcome').text(welcomeMessage)
   }
-
-  //endregion
-  //RUN FUNCTION
-  getusername()
-
-  // region generates the welcome message with the username
-  $('#welcome').text('Hello ' + username + ', and welcome to CopyTube, where you will find a plagiarised version of YouTube')
-  //endregion
-
-  //region Counter for Characters While User Types a New Comment
+  // Prepare data
+  let username
   $('#comment-count').text('0')
+  getUsername()
+
+  // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
-    var string = $('#comment-bar').val()
-    var count = string.length
+    let string = $('#comment-bar').val()
+    let count = string.length
     $('#comment-count').text(count)
   })
-  //endregion
 
-  //region //ToDo Feature: Removing Drop-down for Search in Prep for Auto-complete
-  /*var drop_down = true;
+  // ToDo Feature: Removing Drop-down for Search in Prep for Auto-complete
+  /* var drop_down = true;
   $(document).on('keyup', '#search-bar',function(){
       disable drop-down elements
       drop_down = false;
       if (drop_down == false){
           $('.dropdown-content').prop('textContent', "");
       }
-  })*/
-  //endregion
+  }) */
 
-  //region On Click of Add Comment Button
+  // On Click of Add Comment Button
   $('#comment-button').on('click', function () {
-
-    //region ENCODING, REPAIRING & VALIDATING
-    var description = encodeURI($('#comment-bar').val())
-    var count = description.split('%20')
-    var i = 0
-    while (i != count.length) {
+    // Ensure comment is correct
+    let description = encodeURI($('#comment-bar').val())
+    let count = description.split('%20')
+    let i = 0
+    while (i !== count.length) {
       i++
       description = description.replace('%20', ' ')
     }
-    var max_length = 400
-    if (description == '' || description.length > max_length || (jQuery.trim(description)).length == 0) {
+    const maxLength = 400
+    if (description === '' || description.length > maxLength || description.trim().length === 0) {
       alert('Please input a comment and have it be less than 401 characters long')
       $('#comment-bar').val('')
       $('#comment-count').text('0')
-    }
-    //endregion
-
-    //region IF comment is OK
-    else {
-      //region Setting actualcomment and Displaying
-      var today = new Date()
-      var dd = today.getDate()
-      var mm = today.getMonth()
-      mm += 1 //some reason, month was 1 behind
-      var yyyy = today.getFullYear()
+    } else {
+      // Create comment date
+      let today = new Date()
+      const dd = today.getDate()
+      const mm = today.getMonth() + 1 // Month was 1 month behind
+      const yyyy = today.getFullYear()
       today = yyyy + '-' + mm + '-' + dd
-
-      //Concatenating comment, date and author
-      var actualcomment = '<br>' + '<br>' + 'Username: ' + username + '<br>' + 'Date: ' + today + '<br>' + 'Comment: ' + description + '<br>' + '<br>'
-      //assign above variable to the id for the div to display
-      $('#user-comments').prepend(actualcomment)
-      //clear comment-bar and comment-count
+      // Concatenate full comment
+      var actualComment = '<br>' + '<br>' + 'Username: ' + username + '<br>' + 'Date: ' + today + '<br>' + 'Comment: ' + description + '<br>' + '<br>'
+      $('#user-comments').prepend(actualComment)
       $('#comment-bar').val('')
       $('#comment-count').text('0')
-      //endregion
-
-      //region AJAX save-comments Request
-      //start of setting up ajax request by setting url to go to and data
-      var vid_title = $('#main-video-title').text()
+      // Save comment to database
+      const mainVidTitle = $('#main-video-title').text()
       $.ajax({
         type: 'POST',
         url: 'models/savecomment.php',
@@ -93,25 +76,17 @@ $(document).ready(function () {
           author: username,
           comment: description,
           dateposted: today,
-          videotitle: vid_title
+          videotitle: mainVidTitle
         },
-        //region On Success
         success: function (response) {
           console.log('%cAJAX POST Comment Request Completed', 'color: green')
         },
-        //endregion
-
-        //region On Failure
         error: function (err) {
           console.log('%cAJAX POST Comment Request Failed', 'color: red')
         }
-        //endregion
       }) //I can use "var_dump($_[typename])" to get props in network response which i an then do "var_dump($_POST[author])" to get value of this property
-      // endregion
     }
-    //endregion
   })
-  //endregion
 
   //region On Click of Rabbit Hole Video
   $(document).on('click', '.rabbit-hole-vid', function () {
