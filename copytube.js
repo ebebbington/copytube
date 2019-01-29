@@ -3,40 +3,8 @@
 'use strict'
 let username
 
-// todo :: create self executing function to call videos whenever
-// Allows access to videos response anywhere by calling 'videos'
-// METHOD 1 - Less code is used compared to METHOD 2
-/* $.get('models/get_videos.php', '', function (response) {
-  getVideos(response)
-  // return JSON.parse(response)
-})
-function getVideos (response) {
-  // You should do your work here that depends on the result of the request!
-  videos = JSON.parse(response)
-  return videos
-} */
-// Allows access to videos response anywhere by calling 'videos'
-// METHOD 2 - get response, send to a function, return that data
-/* function getVideosAjax () {
-  $.ajax({
-    type: 'GET',
-    url: 'models/get_videos.php',
-    // On Success
-    success: function (response) {
-      getVideosResponse(response)
-      return JSON.parse(response) // todo :: returns nothing as data being assigned to this function stops before success
-    },
-    error: function (err) {
-      console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
-    }
-  })
-} let videos = getVideosAjax() // assign response to variable - this will CALL the function and ASSIGN the data, where as using just a function call will only call it
-function getVideosResponse (response) {
-  console.log(response)
-  return response
-}
-console.log(videos) // allows me to use the videos object anywhere */
-// Adams help in showing how to make a gawj function
+// todo :: come back to adams function
+// Adams help in showing how to make a gawj function - look into at a later date as it might become useful
 /* let videos = (function () {
   let Videos = []
   function initialise (Videos) {
@@ -57,51 +25,39 @@ console.log(vids)
 videos.getVideos
 console.log(videoCall) */
 
-// todo :: Promise
-// promise is set up and resolves the response in array form. Line 81 then then calls this and passes it to the
-// retrieveVideos function but the only way to access the array is to console.log promiseObj in the function? help please
-// The flow of the below code is:
-// call getVideos(), when resolved THEN run retrieveVideos and return the promiseObj which contains the array
-// why doesn't this work fml
-// Step 1: create the promise
-function getVideos () {
-  return new Promise(function (resolve) {
-    $.ajax({
-      type: 'GET',
-      url: 'models/get_videos.php',
-      success: function (response) {
-        let videos = JSON.parse(response)
-        resolve(videos)
-      },
-      error: function (err) {
-        console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
-      }
-    })
+// todo :: Promise - replace ajax requests with below code to call
+// Set up promise to get videos for later use
+const getVideos = new Promise(function (resolve, reject) {
+  $.ajax({
+    type: 'GET',
+    url: 'models/get_videos.php',
+    success: function (response) {
+      let videos = JSON.parse(response)
+      resolve(videos) // when resolved it has an object, so this way i am just assigning the vids object to the resolve
+    },
+    error: function (err) {
+      console.log('%cAJAX GET videos Request Failed: ' + err, 'color: red')
+      reject(err)
+    }
   })
-}
-// Step 3: retrieve the promise
-function retrieveVideos (videos) {
-  // contains the videos object
-  return videos
-}
-// The below code is when i want to access the object whenever i want, when working replace ajax requests with this
-// Step 2: call the promise
-let videos = getVideos().then(retrieveVideos)
-console.log(videos)
+})
 
 $(document).ready(function () {
   // Ensure username is correct
+  // todo :: add regrex validation
   (function () {
     let [complete, username] = [false, '']
     const errorMsg = 'Please enter an appropriate username between 0 and 81 characters long'
+    const askUsernameMsg = 'Enter your username. \nUsername must be: \n- Between 0-81 characters \n- Contain only numbers and letters'
     while (complete !== true) {
-      username = encodeURI(prompt('Please enter your username below'))
-      const count = username.split('%20')
+      username = encodeURI(prompt(askUsernameMsg))
+      // Taken out as not needed but cause be useful (split, replace)
+      /* const count = username.split('%20')
       let i = 0
       while (i !== count.length) {
         i++
         username = username.replace('%20', ' ')
-      }
+      } */
       username.length > 80 || username === 'null' || username.trim().length === 0 ? alert(errorMsg) : complete = true
     }
     const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
@@ -110,9 +66,8 @@ $(document).ready(function () {
 
   // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
-    const comment = $('#comment-bar').val()
-    const count = comment.length
-    $('#comment-count').text(count)
+    const commentLength = $('#comment-bar').val().length // todo :: i realise i can add 'length' to the end, this means i dont need a counter - check the script for this and use the new method
+    $('#comment-count').text(commentLength)
   })
 
   // todo :: Removing Drop-down for Search in Prep for Auto-complete
@@ -128,14 +83,9 @@ $(document).ready(function () {
   // On Click of Add Comment Button
   $('#comment-button').on('click', function () {
     // Ensure comment is correct
-    let description = encodeURI($('#comment-bar').val())
-    let i = 0
-    const [count, maxLength] = [description.split('%20'), 400]
-    while (i !== count.length) {
-      i++
-      description = description.replace('%20', ' ')
-    }
-    if (description === '' || description.length > maxLength || description.trim().length === 0) {
+    let comment = encodeURI($('#comment-bar').val())
+    const maxLength = 400
+    if (comment.length > maxLength || comment.trim().length === 0) {
       alert('Please input a comment and have it be less than 401 characters long')
       $('#comment-bar').val('')
       $('#comment-count').text('0')
@@ -145,7 +95,7 @@ $(document).ready(function () {
       const [dd, mm, yyyy] = [today.getDate(), (today.getMonth() + 1), today.getFullYear()] // Month was 1 behind
       today = yyyy + '-' + mm + '-' + dd
       // Concatenate full comment
-      const actualComment = '<br>' + '<br>' + 'Username: ' + username + '<br>' + 'Date: ' + today + '<br>' + 'Comment: ' + description + '<br>' + '<br>'
+      const actualComment = '<br>' + '<br>' + 'Username: ' + username + '<br>' + 'Date: ' + today + '<br>' + 'Comment: ' + comment + '<br>' + '<br>'
       $('#user-comments').prepend(actualComment)
       $('#comment-bar').val('')
       $('#comment-count').text('0')
@@ -156,7 +106,7 @@ $(document).ready(function () {
         url: 'models/save_comment.php',
         data: {
           author: username,
-          comment: description,
+          comment: comment,
           datePosted: today,
           videoTitle: mainVidTitle
         },
