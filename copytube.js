@@ -67,13 +67,12 @@ $(document).ready(function () {
   (function () {
     let [ complete, username ] = [ false, '' ]
     const errorMsg = 'Please enter an appropriate username between 0 and 81 characters long'
-    const askUsernameMsg = 'Enter your username. \nUsername must be: \n- Between 0-81 characters \n- Contain only numbers and letters'
     while (complete !== true) {
-      username = encodeURIComponent(prompt(askUsernameMsg))
+      username = encodeURIComponent(prompt('Enter Temporary Username'))
       username.length > 80 || username === 'null' || username.trim().length === 0 ? alert(errorMsg) : complete = true
     }
     const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
-    $('#welcome').text(welcomeMessage)
+    $('#welcome-message').text(welcomeMessage)
   })()
 
   // Comment character count

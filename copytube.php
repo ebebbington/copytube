@@ -5,7 +5,7 @@
     <!-- Set data before DOM -->
 	<head>
 		<title>CopyTube</title>
-		<h2 id="welcome"></h2>
+		<h2 id="welcome-message"></h2>
 		<!-- allows .js code to run jquery -->
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->
@@ -19,15 +19,12 @@
 	</head>
 
 	<body>
-
 		<div class="container">
-
 			<div class="row">
                 <!-- set logo -->
 				<div class="col-xs-3">
 					<img id="logo" src="imageresources/CopyTube_Logo.png"/>
 				</div>
-
 				<!-- create search bar and button -->
 				<div class="col-xs-9">
 					<div id="search" class="input-group">
