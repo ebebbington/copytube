@@ -1,7 +1,7 @@
 // Globals
 /* global alert, prompt, $ */
 'use strict'
-let username
+let username = ''
 
 // todo :: come back to adams function
 // Adams help in showing how to make a gawj function - look into at a later date as it might become useful
@@ -25,7 +25,6 @@ console.log(vids)
 videos.getVideos
 console.log(videoCall) */
 
-// todo :: Promise - replace ajax requests with below code to call
 // Set up promise to get videos for later use
 const getVideos = new Promise(function (resolve, reject) {
   $.ajax({
@@ -44,20 +43,13 @@ const getVideos = new Promise(function (resolve, reject) {
 
 $(document).ready(function () {
   // Ensure username is correct
-  // todo :: add regrex validation
+  // todo :: implement better security practices
   (function () {
-    let [complete, username] = [false, '']
+    let [ complete, username ] = [ false, '' ]
     const errorMsg = 'Please enter an appropriate username between 0 and 81 characters long'
     const askUsernameMsg = 'Enter your username. \nUsername must be: \n- Between 0-81 characters \n- Contain only numbers and letters'
     while (complete !== true) {
-      username = encodeURI(prompt(askUsernameMsg))
-      // Taken out as not needed but cause be useful (split, replace)
-      /* const count = username.split('%20')
-      let i = 0
-      while (i !== count.length) {
-        i++
-        username = username.replace('%20', ' ')
-      } */
+      username = encodeURIComponent(prompt(askUsernameMsg))
       username.length > 80 || username === 'null' || username.trim().length === 0 ? alert(errorMsg) : complete = true
     }
     const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
@@ -66,7 +58,7 @@ $(document).ready(function () {
 
   // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
-    const commentLength = $('#comment-bar').val().length // todo :: i realise i can add 'length' to the end, this means i dont need a counter - check the script for this and use the new method
+    const commentLength = $('#comment-bar').val().length
     $('#comment-count').text(commentLength)
   })
 
@@ -85,6 +77,12 @@ $(document).ready(function () {
     // Ensure comment is correct
     let comment = encodeURI($('#comment-bar').val())
     const maxLength = 400
+    const count = comment.split('%20')
+    let i = 0
+    while (i !== count.length) {
+      i++
+      comment = comment.replace('%20', '')
+    }
     if (comment.length > maxLength || comment.trim().length === 0) {
       alert('Please input a comment and have it be less than 401 characters long')
       $('#comment-bar').val('')
@@ -92,7 +90,7 @@ $(document).ready(function () {
     } else {
       // Create comment date
       let today = new Date()
-      const [dd, mm, yyyy] = [today.getDate(), (today.getMonth() + 1), today.getFullYear()] // Month was 1 behind
+      const [ dd, mm, yyyy ] = [ today.getDate(), (today.getMonth() + 1), today.getFullYear() ] // Month was 1 behind
       today = yyyy + '-' + mm + '-' + dd
       // Concatenate full comment
       const actualComment = '<br>' + '<br>' + 'Username: ' + username + '<br>' + 'Date: ' + today + '<br>' + 'Comment: ' + comment + '<br>' + '<br>'
@@ -120,23 +118,16 @@ $(document).ready(function () {
     }
   })
 
-  // On Click of Rabbit Hole Video
+  // On Click of A Rabbit Hole Video
   $(document).on('click', '.rabbit-hole-vid', function () {
-    // Get Videos from database
-    const clickedVidTitle = $(this).prop('title')
-    $.ajax({
-      type: 'GET',
-      url: 'models/get_videos.php',
-      data: {
-        videoTitle: clickedVidTitle
-      },
-      // On Success
-      success: function (response) {
-        console.log('%cAJAX GET Videos Request Completed', 'color: green')
-        // parsing the string from the ajax request into an object so it can be used
-        const videos = JSON.parse(response)
-        // Locate clicked video
-        let [rabbitHoleVids, found] = [[], null]
+    // Get Videos from promise
+    let clickedVidTitle = $(this).prop('title')
+    getVideos
+    // Data: title, src, description, height, width, poster
+      .then(function (videos) {
+        console.log('Resolved proceeding: ' + videos)
+        // Locate main vid and store excess videos
+        let [ rabbitHoleVids, found ] = [ [], null ]
         for (let i = 0, l = videos.length; i < l; i++) {
           if (clickedVidTitle === videos[ i ].title) {
             found = videos[ i ]
@@ -148,7 +139,7 @@ $(document).ready(function () {
           }
         }
         // Change html elements to reflect found video
-        let [rabbitHoles, a] = [$('.rabbit-holes'), 1]
+        let [ rabbitHoles, a ] = [ $('.rabbit-holes'), 1 ]
         rabbitHoles.html('')
         rabbitHoleVids.forEach(function (video, i) {
           let videoHtml =
@@ -167,14 +158,11 @@ $(document).ready(function () {
           rabbitHoles.append(titleHtml)
           a++
         })
-      },
-      // On Failure
-      error: function (err) {
-        console.log('%cAJAX GET Videos Request Failed' + err, 'color: red')
-      }
-    })
-
-    // Retrieve related comments
+      })
+      .catch(function (videos) {
+        console.log('rejected: ' + videos)
+      })
+    // Retrieve related comments using ajax
     $.ajax({
       type: 'GET',
       url: 'models/get_comment.php',
@@ -185,12 +173,12 @@ $(document).ready(function () {
       success: function (response) {
         console.log('%cAJAX GET Comments Relative to Video Request Completed', 'color: green')
         // parsing the string from the ajax request into an object
-        const obj = JSON.parse(response)
+        const comments = JSON.parse(response)
         // clear all comments
         $('#user-comments, #db-comments').empty()
         // for loop to diSplay new comments based on clicked video
-        for (let i = 0; i < obj.length; i++) {
-          $('#db-comments').prepend('<br>' + 'Username: ' + obj[ i ].author + '<br>' + 'Date: ' + obj[ i ].dateposted + '<br>' + 'Comment: ' + obj[ i ].comment + '<br>')
+        for (let i = 0; i < comments.length; i++) {
+          $('#db-comments').prepend('<br>' + 'Username: ' + comments[ i ].author + '<br>' + 'Date: ' + comments[ i ].dateposted + '<br>' + 'Comment: ' + comments[ i ].comment + '<br>')
         }
       },
       // On Failure
@@ -203,34 +191,24 @@ $(document).ready(function () {
   // On Click of Search Button
   $(document).on('click', '#search-button', function () {
     // Validate input
-    let [input, i] = [encodeURI($('#search-bar').val()), 0]
+    let [ input, i ] = [ encodeURI($('#search-bar').val()), 0 ]
     const count = input.split('%20')
     while (i !== count.length) {
       i++
       input = input.replace('%20', ' ')
     }
-    if (input === '' || input === ' ' || input.trim().length === 0) {
+    if (input === '' || input.trim().length === 0) {
       alert('Please input a video title.')
       $('#search-bar').val('')
     } else {
-      // Retrieve videos
+      // Retrieve videos and check
       let searchedVidTitle = $('#search-bar').val()
-      $.ajax({
-        type: 'GET',
-        url: 'models/get_videos.php',
-        data: {
-          videoTitle: searchedVidTitle
-        },
-        // On Success
-        success: function (response) {
-          console.log('%cAJAX GET Videos Request Completed', 'color: green')
-          let [complete, found, rabbitHoleVids, rabbitHoleTitles] = [false, null, [], []]
-          // parsing the string from the ajax request into an object
-          const videos = JSON.parse(response)
-          // Looking For Videos
-          // Getting main video and rabbit hole data
+      getVideos
+        .then(function (videos) {
+          console.log('resolved: ' + videos)
+          let [ complete, found, rabbitHoleVids, rabbitHoleTitles ] = [ false, null, [], [] ]
           for (let i = 0, l = videos.length; i < l; i++) {
-            if ((videos[ i ].title.toLowerCase() === input.toLowerCase()) || videos[ i ].title.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+            if ((videos[ i ].title.toLowerCase() === searchedVidTitle.toLowerCase()) || videos[ i ].title.toLowerCase().indexOf(searchedVidTitle.toLowerCase()) > -1) {
               found = videos[ i ]
               $('#main-video').prop({
                 'title': found.title,
@@ -240,7 +218,6 @@ $(document).ready(function () {
               })
               $('#main-video-title').text(found.title)
               $('#main-video-description').text(found.description)
-              searchedVidTitle = found.title
             } else {
               // Pushes object to variable
               rabbitHoleVids.push(videos[ i ])
@@ -248,7 +225,7 @@ $(document).ready(function () {
             }
           }
           complete = true
-          if (found === null) {
+          if (found == null) {
             alert('No video has been found with that title')
           } else {
             // Displaying Rabbit Hole Videos
@@ -292,12 +269,12 @@ $(document).ready(function () {
               success: function (response) {
                 console.log('%cAJAX GET Comments Relative to Video Request Completed', 'color: green')
                 // parsing the string from the ajax request into an object
-                const obj = JSON.parse(response)
+                const comments = JSON.parse(response)
                 // clear all comments
                 $('#user-comments, #db-comments').empty()
                 // for loop to diSplay new comments based on clicked video
-                for (let i = 0; i < obj.length; i++) {
-                  $('#db-comments').prepend('<br>' + 'Username: ' + obj[ i ].author + '<br>' + 'Date: ' + obj[ i ].dateposted + '<br>' + 'Comment: ' + obj[ i ].comment + '<br>')
+                for (let i = 0; i < comments.length; i++) {
+                  $('#db-comments').prepend('<br>' + 'Username: ' + comments[ i ].author + '<br>' + 'Date: ' + comments[ i ].dateposted + '<br>' + 'Comment: ' + comments[ i ].comment + '<br>')
                 }
               },
               // On Failure
@@ -307,12 +284,10 @@ $(document).ready(function () {
             })
             $('#search-bar').val('')
           }
-        },
-        // On Failure
-        error: function (err) {
-          console.log('%cAJAX GET Videos Request Failed' + err, 'color: red')
-        }
-      })
+        })
+        .catch(function (videos) {
+          console.log('rejected: ' + videos)
+        })
     }
   })
 })

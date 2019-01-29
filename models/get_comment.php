@@ -16,7 +16,7 @@ if ($connection->connect_error) {
     die("connection to database inside getcomment.php has failed: " + $connection->connect_error);
 }
 //if connection works, set variable to string, get all from this and encode it
-$sql = "SELECT author, comment, dateposted FROM comments WHERE title='$videoTitle'";
+$sql = "SELECT title, author, comment, dateposted FROM comments WHERE title ='$videoTitle'";
 $result = $connection->query($sql);
 $response = $result->fetch_all(MYSQLI_ASSOC);
 print_r(json_encode($response));
