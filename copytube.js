@@ -63,15 +63,15 @@ console.log(videoCall) */
 // The flow of the below code is:
 // call getVideos(), when resolved THEN run retrieveVideos and return the promiseObj which contains the array
 // why doesn't this work fml
+// Step 1: create the promise
 function getVideos () {
   return new Promise(function (resolve) {
     $.ajax({
       type: 'GET',
       url: 'models/get_videos.php',
       success: function (response) {
-        let obj = JSON.parse(response)
-        resolve(obj)
-        console.log('resolved') // this does get resolved
+        let videos = JSON.parse(response)
+        resolve(videos)
       },
       error: function (err) {
         console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
@@ -79,13 +79,15 @@ function getVideos () {
     })
   })
 }
-function retrieveVideos (promiseObj) {
-  console.log(promiseObj)
-  return promiseObj
+// Step 3: retrieve the promise
+function retrieveVideos (videos) {
+  // contains the videos object
+  return videos
 }
 // The below code is when i want to access the object whenever i want, when working replace ajax requests with this
-let test = getVideos().then(retrieveVideos)
-console.log('test: ' + test)
+// Step 2: call the promise
+let videos = getVideos().then(retrieveVideos)
+console.log(videos)
 
 $(document).ready(function () {
   // Ensure username is correct
