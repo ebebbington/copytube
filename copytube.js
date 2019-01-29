@@ -4,7 +4,7 @@
 let username = ''
 
 // todo :: come back to adams function
-// Adams help in showing how to make a gawj function - look into at a later date as it might become useful
+// Adams help in showing how to make a function
 /* let videos = (function () {
   let Videos = []
   function initialise (Videos) {
@@ -24,6 +24,27 @@ const vids = videos.initme()
 console.log(vids)
 videos.getVideos
 console.log(videoCall) */
+// After researching i realised he was using the 'Revealing Module Pattern', which shall be below:
+let revealingModulePattern = (function () {
+  let firstName = 'test'
+  let lastName = 'testing'
+  function firstNameFunction () {
+    console.log('first name: ' + firstName)
+  }
+  function lastNameFunction () {
+    console.log('last name: ' + lastName)
+  }
+  function viewFullNameFunction () {
+    firstNameFunction()
+    lastNameFunction()
+  }
+  return {
+    first: firstNameFunction,
+    last: lastNameFunction,
+    view: viewFullNameFunction
+  }
+})()
+revealingModulePattern.view()
 
 // Set up promise to get videos for later use
 const getVideos = new Promise(function (resolve, reject) {
@@ -43,7 +64,6 @@ const getVideos = new Promise(function (resolve, reject) {
 
 $(document).ready(function () {
   // Ensure username is correct
-  // todo :: implement better security practices
   (function () {
     let [ complete, username ] = [ false, '' ]
     const errorMsg = 'Please enter an appropriate username between 0 and 81 characters long'
