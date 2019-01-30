@@ -4,6 +4,7 @@
 
     <!-- Set data before DOM -->
 	<head>
+        <!-- todo :: make files im accessing my own so if i have no internet then they still work -->
 		<title>CopyTube</title>
 		<h2 id="welcome-message"></h2>
 		<!-- allows .js code to run jquery -->
