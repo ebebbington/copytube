@@ -27,16 +27,20 @@ console.log(videoCall) */
 let revealingModulePattern = (function () {
   let firstName = 'test'
   let lastName = 'testing'
+
   function firstNameFunction () {
     console.log('first name: ' + firstName)
   }
+
   function lastNameFunction () {
     console.log('last name: ' + lastName)
   }
+
   function viewFullNameFunction () {
     firstNameFunction()
     lastNameFunction()
   }
+
   return {
     first: firstNameFunction,
     last: lastNameFunction,
