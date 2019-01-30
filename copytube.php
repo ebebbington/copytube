@@ -23,6 +23,8 @@
 			<div class="row">
                 <!-- set logo -->
 				<div class="col-xs-3">
+                    <!-- todo :: rename imageresources folder and copytube logo file, things to do are below:
+                    rename code below, rename poster for main vid in .php, rename in DB -->
 					<img id="logo" src="imageresources/CopyTube_Logo.png"/>
 				</div>
 				<!-- create search bar and button -->
@@ -31,13 +33,14 @@
                         <div class="dropdown">
      					    <input id="search-bar" type="text" class="form-control my-input" placeholder="Hover Over Me for a List of Videos"/>
                             <div class="dropdown-content">
+                                <!-- todo :: use ajax call for code below instead (in the DOM or .ready function?) -->
                                 <a href='#'>Something More</a>
                                 <a href='#'>Lava Sample</a>
                                 <a href='#'>An Iceland Venture</a>
                             </div>
                         </div>
       					<span class="input-group-btn">
-       						<button id="search-button" class="btn btn-default" type="button">Beep Boop Calculate!</button>
+       						<button id="search-button" class="btn btn-default" type="button">Search</button>
       					</span>
     				</div>
 				</div>
@@ -125,8 +128,7 @@
                             if ($result->num_rows > 0) {
                                 $html = "";
                                 while($row = $result->fetch_assoc()) {
-
-                                    $html = "<video id='rabbit-hole-vid-$count' class='rabbit-hole-vid' controls ".
+                                    $html = "<video id='rabbit-hole-vid-$count' class='rabbit-hole-vids' controls ".
                                         "muted ".
                                         "poster='$row[poster]' ".
                                         "title='$row[title]' ".
@@ -135,7 +137,6 @@
                                         "height='$row[height]'>".
                                         "</video>";
                                     echo $html;
-
                                     //create and display titles
                                     echo "<p id='rabbit-hole-vid-$count-title' class='rabbit-hole-titles'>$row[title]</p>";
                                     $count++;

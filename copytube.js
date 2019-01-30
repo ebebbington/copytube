@@ -3,15 +3,14 @@
 'use strict'
 let username = ''
 
-// todo :: come back to adams function
-// Adams help in showing how to make a function
+// Adams help in showing how to make a function be snazzy
 /* let videos = (function () {
   let Videos = []
   function initialise (Videos) {
     doesSomething(Videos)
   }
   function doesSomething (Videos) {
-    // AJAX call
+    // AJAX call (emulating it below)
     Videos = ['test', 'test']
     return Videos
   }
@@ -138,7 +137,7 @@ $(document).ready(function () {
   })
 
   // On Click of A Rabbit Hole Video
-  $(document).on('click', '.rabbit-hole-vid', function () {
+  $(document).on('click', '.rabbit-hole-vids', function () {
     // Get Videos from promise
     let clickedVidTitle = $(this).prop('title')
     getVideos
@@ -162,7 +161,7 @@ $(document).ready(function () {
         rabbitHoles.html('')
         rabbitHoleVids.forEach(function (video, i) {
           let videoHtml =
-            '<video id=\'' + 'rabbit-hole-vid-' + a + '\' class=\'rabbit-hole-vid\' controls' +
+            '<video id=\'' + 'rabbit-hole-vids-' + a + '\' class=\'rabbit-hole-vids\' controls' +
             ' muted' + ' ' +
             'poster=\'' + rabbitHoleVids[ i ].poster + '\'' +
             'title=\'' + rabbitHoleVids[ i ].title + '\'' +
@@ -254,7 +253,7 @@ $(document).ready(function () {
               rabbitHoleVids.forEach(function (video, i) {
                 // creating and displaying new video elements
                 let videoHtml =
-                  '<video id=\'' + 'rabbit-hole-vid-' + a + '\' class=\'rabbit-hole-vid\' controls' +
+                  '<video id=\'' + 'rabbit-hole-vid-' + a + '\' class=\'rabbit-hole-vids\' controls' +
                   ' muted' + ' ' +
                   'poster=\'' + rabbitHoleVids[ b ].poster + '\'' +
                   'title=\'' + rabbitHoleVids[ b ].title + '\'' +
