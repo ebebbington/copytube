@@ -161,7 +161,7 @@ $(document).ready(function () {
   $(document).on('click', '.dropdown-titles', function () {
     let clickedTitle = $(this).text()
     $('#search-bar').val(clickedTitle)
-    $('.rabbit-hole-vids').click()
+    $('.rabbit-hole-vids').click() // Reference: https://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
   })
 
   // On Click of A Rabbit Hole Video
