@@ -157,6 +157,12 @@ $(document).ready(function () {
       }) // I can use "var_dump($_[typename])" to get props in network response which i an then do "var_dump($_POST[author])" to get value of this property
     }
   })
+  // On click of the drodown content
+  $(document).on('click', '.dropdown-titles', function () {
+    let clickedTitle = $(this).text()
+    $('#search-bar').val(clickedTitle)
+    $('.rabbit-hole-vids').click()
+  })
 
   // On Click of A Rabbit Hole Video
   $(document).on('click', '.rabbit-hole-vids', function () {

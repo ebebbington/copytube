@@ -32,7 +32,7 @@
 				<div class="col-xs-9">
 					<div id="search" class="input-group">
                         <div class="dropdown">
-     					    <input id="search-bar" type="text" class="form-control my-input" placeholder="Hover Over Me for a List of Videos"/>
+     					    <input id="search-bar" type="text" class="form-control my-input" placeholder="Search or Hover Over Me for a List of Videos and Click"/>
                             <div class="dropdown-content">
                                 <?php
                                     // setting variables
@@ -50,10 +50,12 @@
                                     // fetch all videos from table
                                     $count = 1;
                                     if ($result->num_rows > 0) {
+                                        $count = 1;
                                         $html = "";
                                         while($row = $result->fetch_assoc()) {
-                                            $html = "<a href='#'>$row[title]</a>";
+                                            $html = "<a href='#' id='dropdown-title-$count' class='dropdown-titles'>$row[title]</a>";
                                             echo $html;
+                                            $count++;
                                         }
                                     }
                                 ?>
@@ -78,7 +80,7 @@
 							    	muted
                                     poster="imageresources/something_more.jpg"
 							    	title="Something More"
-							    	src="videos/something-more.mp4"
+							    	src="videos/something_more.mp4"
 							    	width="750"
 							    	height="400">
 							    Sorry, your browser doesn't support embedded videos.
