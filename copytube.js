@@ -232,6 +232,7 @@ $(document).ready(function () {
         console.log('%cAJAX GET Comments Relative to Video Request Failed' + err, 'color: red')
       }
     })
+    $('#search-bar').val()
   })
 
   // On Click of Search Button
