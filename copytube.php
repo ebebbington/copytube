@@ -24,8 +24,6 @@
 			<div class="row">
                 <!-- set logo -->
 				<div class="col-xs-3">
-                    <!-- todo :: rename imageresources folder and copytube logo file, things to do are below:
-                    rename code below, rename poster for main vid in .php, rename in DB -->
 					<img id="logo" src="imageresources/CopyTube_Logo.png"/>
 				</div>
 				<!-- create search bar and button -->
