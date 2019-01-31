@@ -57,7 +57,7 @@ function fibonaccisSequence () {
   console.log('Calculating Fibonaccis Sequence using baseline of [' + fibArray + '] with a max length of ' + maxLength)
   // calculate the sequence based on max length
   while (fibArray.length !== maxLength) {
-    let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array
+    let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array, reference: https://stackoverflow.com/questions/43430006/get-last-2-elements-of-an-array-in-a-selector-redux
     let n1 = lastTwoValues[0]
     let n2 = lastTwoValues[1]
     let n = n1 + n2
