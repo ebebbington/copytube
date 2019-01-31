@@ -9,9 +9,9 @@
 		<!-- allows .js code to run jquery -->
 		<script src="scripts/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->
-		<link rel="stylesheet" href="links/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="links/bootstrap.min.css" crossorigin="anonymous">
 		<!-- accesses bootstrap js files that makes js files much easier to use -->
-		<script src="scripts/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="scripts/bootstrap.min.js" crossorigin="anonymous"></script>
 		<!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
         <!-- links my style sheet (.css) so it can be used -->
 		<link rel="stylesheet" href="copytube.css"/>
@@ -34,10 +34,29 @@
                         <div class="dropdown">
      					    <input id="search-bar" type="text" class="form-control my-input" placeholder="Hover Over Me for a List of Videos"/>
                             <div class="dropdown-content">
-                                <!-- todo :: use ajax call for code below instead (in the DOM or .ready function?) -->
-                                <a href='#'>Something More</a>
-                                <a href='#'>Lava Sample</a>
-                                <a href='#'>An Iceland Venture</a>
+                                <?php
+                                    // setting variables
+                                    $servername = "localhost";
+                                    $username = "root";
+                                    $password = "password";
+                                    //create connection
+                                    $connection = new mysqli($servername, $username, $password, 'copytube');
+                                    //check connection
+                                    if ($connection->connect_error) {
+                                        die("connection failed: " + $connection->connect_error);
+                                    }
+                                    $sql = "SELECT title FROM `videos`";
+                                    $result = $connection->query($sql);
+                                    // fetch all videos from table
+                                    $count = 1;
+                                    if ($result->num_rows > 0) {
+                                        $html = "";
+                                        while($row = $result->fetch_assoc()) {
+                                            $html = "<a href='#'>$row[title]</a>";
+                                            echo $html;
+                                        }
+                                    }
+                                ?>
                             </div>
                         </div>
       					<span class="input-group-btn">
@@ -59,7 +78,7 @@
 							    	muted
                                     poster="imageresources/something_more.jpg"
 							    	title="Something More"
-							    	src="http://mazwai.com/system/posts/videos/000/000/191/original/something-more.mp4?1445788608"
+							    	src="videos/something-more.mp4"
 							    	width="750"
 							    	height="400">
 							    Sorry, your browser doesn't support embedded videos.
