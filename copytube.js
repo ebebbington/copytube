@@ -84,6 +84,17 @@ const getVideos = new Promise(function (resolve, reject) {
 })
 
 $(document).ready(function () {
+  // Try/Catch Block
+  try {
+    console.log('Try/Catch Block I will purposely throw')
+    let x = { error: 'error thrown' }
+    throw x
+  } catch (e) {
+    console.log('error has been thrown in try/catch block: ' + e)
+  } finally {
+    console.log('Error was thrown on purpose')
+  }
+
   // Ensure username is correct - SELF EXECUTING FUNCTION
   (function () {
     let [ complete, username ] = [ false, '' ]
