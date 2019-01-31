@@ -29,11 +29,11 @@ let revealingModulePattern = (function () {
   let lastName = 'testing'
 
   function firstNameFunction () {
-    console.log('first name: ' + firstName)
+    console.log('revealingModulePattern.firstNameFunction.first name: ' + firstName)
   }
 
   function lastNameFunction () {
-    console.log('last name: ' + lastName)
+    console.log('revealingModulePattern.lastNameFunction.last name: ' + lastName)
   }
 
   function viewFullNameFunction () {
@@ -48,6 +48,24 @@ let revealingModulePattern = (function () {
   }
 })()
 revealingModulePattern.view()
+
+// Fibonacci's Sequence - uses SLICE
+function fibonaccisSequence () {
+  // create variables
+  let fibArray = [0, 1, 1]
+  let maxLength = 20
+  console.log('Calculating Fibonaccis Sequence using [' + fibArray + '] with a max length of ' + maxLength)
+  // calculate the sequence based on max length
+  while (fibArray.length !== maxLength) {
+    let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array
+    let n1 = lastTwoValues[0]
+    let n2 = lastTwoValues[1]
+    let n = n1 + n2
+    fibArray.push(n)
+  }
+  console.log('Result: ' + fibArray)
+}
+fibonaccisSequence()
 
 // Set up promise to get videos for later use
 const getVideos = new Promise(function (resolve, reject) {
@@ -66,7 +84,7 @@ const getVideos = new Promise(function (resolve, reject) {
 })
 
 $(document).ready(function () {
-  // Ensure username is correct
+  // Ensure username is correct - SELF EXECUTING FUNCTION
   (function () {
     let [ complete, username ] = [ false, '' ]
     const errorMsg = 'Please enter an appropriate username between 0 and 81 characters long'
