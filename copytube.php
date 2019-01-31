@@ -4,16 +4,16 @@
 
     <!-- Set data before DOM -->
 	<head>
-        <!-- todo :: make files im accessing my own so if i have no internet then they still work -->
 		<title>CopyTube</title>
 		<h2 id="welcome-message"></h2>
 		<!-- allows .js code to run jquery -->
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="scripts/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="links/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<!-- accesses bootstrap js files that makes js files much easier to use -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-		<!-- links my style sheet (.css) so it can be used -->
+		<script src="scripts/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
+        <!-- links my style sheet (.css) so it can be used -->
 		<link rel="stylesheet" href="copytube.css"/>
 		<!-- links my javascript sheet so it can be used -->
 		<script src="copytube.js"></script>

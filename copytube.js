@@ -52,9 +52,9 @@ revealingModulePattern.view()
 // Fibonacci's Sequence - uses SLICE
 function fibonaccisSequence () {
   // create variables
-  let fibArray = [0, 1, 1]
+  let fibArray = [0, 1]
   let maxLength = 20
-  console.log('Calculating Fibonaccis Sequence using [' + fibArray + '] with a max length of ' + maxLength)
+  console.log('Calculating Fibonaccis Sequence using baseline of [' + fibArray + '] with a max length of ' + maxLength)
   // calculate the sequence based on max length
   while (fibArray.length !== maxLength) {
     let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array
