@@ -3,6 +3,21 @@
 'use strict'
 let username = ''
 
+try {
+  const node = require('node_modules/node')
+
+  const low = require('node_modules/lowdb')
+  const FileSync = require('node_modules/lowdb/adapters/FileSync')
+  const adapter = new FileSync('json_server/db.json')
+  const db = low(adapter)
+  db.get('posts')
+    .push({ id: 2, title: 'lowdb is awesome' })
+    .write()
+  console.log('successfully tried API request')
+} catch (e) {
+  console.log('%cerror loading json server api code require stuff: ' + e, 'color: red')
+}
+
 // Adams help in showing how to make a function be snazzy
 /* let videos = (function () {
   let Videos = []
@@ -27,20 +42,16 @@ console.log(videoCall) */
 let revealingModulePattern = (function () {
   let firstName = 'test'
   let lastName = 'testing'
-
   function firstNameFunction () {
     console.log('revealingModulePattern.firstNameFunction.first name: ' + firstName)
   }
-
   function lastNameFunction () {
     console.log('revealingModulePattern.lastNameFunction.last name: ' + lastName)
   }
-
   function viewFullNameFunction () {
     firstNameFunction()
     lastNameFunction()
   }
-
   return {
     first: firstNameFunction,
     last: lastNameFunction,
@@ -52,19 +63,18 @@ revealingModulePattern.view()
 // Fibonacci's Sequence - uses SLICE
 function fibonaccisSequence () {
   // create variables
-  let fibArray = [0, 1]
-  let maxLength = 20
+  let [fibArray, maxLength] = [[ 0, 1 ], 20]
   console.log('Calculating Fibonaccis Sequence using baseline of [' + fibArray + '] with a max length of ' + maxLength)
   // calculate the sequence based on max length
   while (fibArray.length !== maxLength) {
     let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array, reference: https://stackoverflow.com/questions/43430006/get-last-2-elements-of-an-array-in-a-selector-redux
-    let n1 = lastTwoValues[0]
-    let n2 = lastTwoValues[1]
+    let [n1, n2] = [lastTwoValues[ 0 ], lastTwoValues[ 1 ]]
     let n = n1 + n2
     fibArray.push(n)
   }
   console.log('Result: ' + fibArray)
 }
+
 fibonaccisSequence()
 
 // Set up promise to get videos for later use
@@ -90,7 +100,7 @@ $(document).ready(function () {
     let x = { error: 'error thrown' }
     throw x
   } catch (e) {
-    console.log('error has been thrown in try/catch block: ' + e)
+    console.log('%cerror has been thrown in try/catch block: ' + e, 'color: red')
   } finally {
     console.log('Error was thrown on purpose')
   }
@@ -243,7 +253,7 @@ $(document).ready(function () {
         console.log('%cAJAX GET Comments Relative to Video Request Failed' + err, 'color: red')
       }
     })
-    $('#search-bar').val()
+    $('#search-bar').val('')
   })
 
   // On Click of Search Button
