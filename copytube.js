@@ -42,16 +42,20 @@ console.log(videoCall) */
 let revealingModulePattern = (function () {
   let firstName = 'test'
   let lastName = 'testing'
+
   function firstNameFunction () {
     console.log('revealingModulePattern.firstNameFunction.first name: ' + firstName)
   }
+
   function lastNameFunction () {
     console.log('revealingModulePattern.lastNameFunction.last name: ' + lastName)
   }
+
   function viewFullNameFunction () {
     firstNameFunction()
     lastNameFunction()
   }
+
   return {
     first: firstNameFunction,
     last: lastNameFunction,
@@ -63,12 +67,12 @@ revealingModulePattern.view()
 // Fibonacci's Sequence - uses SLICE
 function fibonaccisSequence () {
   // create variables
-  let [fibArray, maxLength] = [[ 0, 1 ], 20]
+  let [ fibArray, maxLength ] = [ [ 0, 1 ], 20 ]
   console.log('Calculating Fibonaccis Sequence using baseline of [' + fibArray + '] with a max length of ' + maxLength)
   // calculate the sequence based on max length
   while (fibArray.length !== maxLength) {
     let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array, reference: https://stackoverflow.com/questions/43430006/get-last-2-elements-of-an-array-in-a-selector-redux
-    let [n1, n2] = [lastTwoValues[ 0 ], lastTwoValues[ 1 ]]
+    let [ n1, n2 ] = [ lastTwoValues[ 0 ], lastTwoValues[ 1 ] ]
     let n = n1 + n2
     fibArray.push(n)
   }
