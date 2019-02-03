@@ -3,6 +3,16 @@
 'use strict'
 let username = ''
 
+// Access to the API JSON Server
+// todo :: help me understand what this means and how it works
+// JSON server is set up in c:/xampp/htdocs/json_server/ but i need to start it (see .txt file in json_server/)
+// I want to access the data (e.g interact with the API)
+// I can use require in hello_server.js but i cant here, why?
+// How are these servers used?
+// BREAK DOWN
+// I want to access the data of the API in this file. Does the server need to be running? And do i need hello_server.js?
+// REALISATIONS
+// I can't used require because it ISNT SUPPORTED, i need to run it in node.js but how? And TT files use require fine O.o
 try {
   console.log('API Request [Part 1/2] - Start Try block')
   const low = require('node_modules/lowdb')
@@ -14,7 +24,7 @@ try {
     .write()
   console.log('API Request [Part 2/2] - Request completed')
 } catch (e) {
-  console.log('%cerror loading json server api code require stuff: ' + e, 'color: red')
+  console.log('%cAPI Request [Part 2/2] - Caught an error: ' + e, 'color: red')
 }
 
 // Adams help in showing how to make a function be snazzy
@@ -39,18 +49,20 @@ videos.getVideos
 console.log(videoCall) */
 // After researching i realised he was using the 'Revealing Module Pattern', which shall be below:
 let revealingModulePattern = (function () {
-  let firstName = 'test'
-  let lastName = 'testing'
+  let firstName = 'Edward'
+  let lastName = 'Bebbington'
+  console.log('RMP [Part 1/4] - Start function')
 
   function firstNameFunction () {
-    console.log('revealingModulePattern.firstNameFunction.first name: ' + firstName)
+    console.log('RMP [Part 3/4] - Running first name function: ' + firstName)
   }
 
   function lastNameFunction () {
-    console.log('revealingModulePattern.lastNameFunction.last name: ' + lastName)
+    console.log('RMP [Part 4/4] - Running last name function: ' + lastName)
   }
 
   function viewFullNameFunction () {
+    console.log('RMP [Part 2/4] - Running full name function')
     firstNameFunction()
     lastNameFunction()
   }
@@ -65,9 +77,10 @@ revealingModulePattern.view()
 
 // Fibonacci's Sequence - uses SLICE
 function fibonaccisSequence () {
+  console.log("Fibonacci's Sequence [Part 1/3] - Start")
   // create variables
-  let [ fibArray, maxLength ] = [ [ 0, 1 ], 100 ]
-  console.log('Calculating Fibonaccis Sequence using baseline of [' + fibArray + '] with a max length of ' + maxLength)
+  let [ fibArray, maxLength ] = [ [ 0, 1 ], 20 ]
+  console.log("Fibonacci's Sequence [Part 2/3] - Calculating - Baseline: [" + fibArray + '] - Max Length: ' + maxLength)
   // calculate the sequence based on max length
   while (fibArray.length !== maxLength) {
     let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array, reference: https://stackoverflow.com/questions/43430006/get-last-2-elements-of-an-array-in-a-selector-redux
@@ -75,10 +88,8 @@ function fibonaccisSequence () {
     let n = n1 + n2
     fibArray.push(n)
   }
-  console.log('Result: ' + fibArray)
-}
-
-fibonaccisSequence()
+  console.log("Fibonacci's Sequence [Part 3/3] - Result: " + fibArray)
+} fibonaccisSequence()
 
 // Set up promise to get videos for later use
 const getVideos = new Promise(function (resolve, reject) {
@@ -104,17 +115,6 @@ getVideos
  */
 
 $(document).ready(function () {
-  // Try/Catch Block
-  try {
-    console.log('Try/Catch Block I will purposely throw')
-    let x = { error: 'error thrown' }
-    throw x
-  } catch (e) {
-    console.log('%cerror has been thrown in try/catch block: ' + e, 'color: red')
-  } finally {
-    console.log('Error was thrown on purpose')
-  }
-
   // Ensure username is correct - SELF EXECUTING FUNCTION
   (function () {
     let [ complete, username ] = [ false, '' ]
