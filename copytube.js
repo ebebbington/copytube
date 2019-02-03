@@ -4,8 +4,7 @@
 let username = ''
 
 try {
-  const node = require('node_modules/node')
-
+  console.log('API Request [Part 1/2] - Start Try block')
   const low = require('node_modules/lowdb')
   const FileSync = require('node_modules/lowdb/adapters/FileSync')
   const adapter = new FileSync('json_server/db.json')
@@ -13,7 +12,7 @@ try {
   db.get('posts')
     .push({ id: 2, title: 'lowdb is awesome' })
     .write()
-  console.log('successfully tried API request')
+  console.log('API Request [Part 2/2] - Request completed')
 } catch (e) {
   console.log('%cerror loading json server api code require stuff: ' + e, 'color: red')
 }
@@ -67,7 +66,7 @@ revealingModulePattern.view()
 // Fibonacci's Sequence - uses SLICE
 function fibonaccisSequence () {
   // create variables
-  let [ fibArray, maxLength ] = [ [ 0, 1 ], 20 ]
+  let [ fibArray, maxLength ] = [ [ 0, 1 ], 100 ]
   console.log('Calculating Fibonaccis Sequence using baseline of [' + fibArray + '] with a max length of ' + maxLength)
   // calculate the sequence based on max length
   while (fibArray.length !== maxLength) {
@@ -96,6 +95,13 @@ const getVideos = new Promise(function (resolve, reject) {
     }
   })
 })
+/*
+I access this by using:
+getVideos
+  .then(function (videos) {
+    console.log(vieos) // outputs the object
+  })
+ */
 
 $(document).ready(function () {
   // Try/Catch Block
