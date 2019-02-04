@@ -3,29 +3,16 @@
 'use strict'
 let username = ''
 
-// Access to the API JSON Server
-// todo :: help me understand what this means and how it works
-// JSON server is set up in c:/xampp/htdocs/json_server/ but i need to start it (see .txt file in json_server/)
-// I want to access the data (e.g interact with the API)
-// I can use require in hello_server.js but i cant here, why? EDIT: RESOLVED - i use RequireJS now (set in html)
-// How are these servers used?
-// BREAK DOWN
-// I want to access the data of the API in this file. Does the server need to be running? And do i need hello_server.js?
-// REALISATIONS
-// I can't used require because it ISN'T SUPPORTED, i need to run it in node.js but how? And TT files use require fine O.o
-// USE OF REQUIRE IS RESOLVED
+// Access to the API JSON Server - using a Try/Catch block
 try {
-  // This code follows what is said in lowdb documentation
-  // Essentially, i just want to access the data and retrieve it
   console.log('API Request [Part 1/2] - Start Try block')
-  const low = require('c:/xampp/htdocs/node_modules/lowdb')
-  const FileSync = require('c:/xampp/htdocs/node_modules/lowdb/adapters/FileSync')
-  const adapter = new FileSync('json_server/db.json')
-  const db = low(adapter)
-  db.get('posts')
-    .push({ id: 2, title: 'lowdb is awesome' })
-    .write()
-  console.log('API Request [Part 2/2] - Request completed')
+  $.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/posts',
+    success: function (response) {
+      console.log('API Request [Part 2/2] - Request completed: ' + response)
+    }
+  })
 } catch (e) {
   console.log('%cAPI Request [Part 2/2] - Caught an error: ' + e, 'color: red')
 }
@@ -52,8 +39,8 @@ videos.getVideos
 console.log(videoCall) */
 // After researching i realised he was using the 'Revealing Module Pattern', which shall be below:
 let revealingModulePattern = (function () {
-  let firstName = 'Edward'
-  let lastName = 'Bebbington'
+  const firstName = 'Edward'
+  const lastName = 'Bebbington'
   console.log('RMP [Part 1/4] - Start function')
 
   function firstNameFunction () {

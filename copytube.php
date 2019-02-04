@@ -15,8 +15,6 @@
 		<!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
         <!-- links my style sheet (.css) so it can be used -->
 		<link rel="stylesheet" href="copytube.css"/>
-		<!-- Reference require.js so i can use 'require()' -->
-        <script src="scripts/require.js"></script>
         <!-- Link my javascript file so it can be used NOTE: AFTER the require.js -->
         <script src="copytube.js"></script>
 	</head>
