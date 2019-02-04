@@ -1,3 +1,5 @@
+/* globals $ */
+
 /* Created by Edward Bebbington
 * On 04/02/2019
  * on: 04/02/2019
@@ -24,9 +26,27 @@ const supportingFunctions = function () {
     console.log("Fibonacci's Sequence [Part 3/3] - Result: " + fibArray)
   }
 
+  // Access to the API JSON Server - using a Try/Catch block
+  function apiRequest () {
+    // todo :: first check i can connect to the api to stop an error i cant catch
+    try {
+      console.log('API Request [Part 1/2] - Start Try block')
+      $.ajax({
+        type: 'GET', // also use POST, PUT, DELETE
+        url: 'http://localhost:3000/posts',
+        success: function (response) { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
+          console.log('API Request [Part 2/2] - Request completed: ' + response)
+        }
+      })
+    } catch (e) {
+      console.log('%cAPI Request [Part 2/2] - Caught an error: ' + e, 'color: red')
+    }
+  }
+
   function runAll () {
     console.log('Supporting Functions [Part 2/3] - Run All Functions')
     fibonaccisSequence()
+    apiRequest()
     console.log('Supporting Functions [Part 3/3] - Finished')
   }
 

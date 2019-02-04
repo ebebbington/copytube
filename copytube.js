@@ -3,20 +3,6 @@
 'use strict'
 let username = ''
 
-// Access to the API JSON Server - using a Try/Catch block
-try {
-  console.log('API Request [Part 1/2] - Start Try block')
-  $.ajax({
-    type: 'GET', // also use POST, PUT, DELETE
-    url: 'http://localhost:3000/posts',
-    success: function (response) { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
-      console.log('API Request [Part 2/2] - Request completed: ' + response)
-    }
-  })
-} catch (e) {
-  console.log('%cAPI Request [Part 2/2] - Caught an error: ' + e, 'color: red')
-}
-
 // Set up promise to get videos for later use - METHOD 2: I could just handle the data within a fucntion that uses an
 // ajax call e.g. pass in arguments (ar1, arg2) and handle these if (arg1 == 1) {}, theres so many different ways using example below:
 // const test = function (arg1, arg2) { $.ajax({ ajax call; success { if (arg1 === 1) { } if (arg2 === 2) {} }})}
