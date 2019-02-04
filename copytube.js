@@ -7,9 +7,9 @@ let username = ''
 try {
   console.log('API Request [Part 1/2] - Start Try block')
   $.ajax({
-    type: 'GET',
+    type: 'GET', // also use POST, PUT, DELETE
     url: 'http://localhost:3000/posts',
-    success: function (response) {
+    success: function (response) { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
       console.log('API Request [Part 2/2] - Request completed: ' + response)
     }
   })
@@ -81,7 +81,9 @@ function fibonaccisSequence () {
   console.log("Fibonacci's Sequence [Part 3/3] - Result: " + fibArray)
 } fibonaccisSequence()
 
-// Set up promise to get videos for later use
+// Set up promise to get videos for later use - METHOD 2: I could just handle the data within a fucntion that uses an
+// ajax call e.g. pass in arguments (ar1, arg2) and handle these if (arg1 == 1) {}, theres so many different ways using example below:
+// const test = function (arg1, arg2) { $.ajax({ ajax call; success { if (arg1 === 1) { } if (arg2 === 2) {} }})}
 const getVideos = new Promise(function (resolve, reject) {
   $.ajax({
     type: 'GET',
@@ -96,6 +98,7 @@ const getVideos = new Promise(function (resolve, reject) {
     }
   })
 })
+
 /*
 I access this by using:
 getVideos
@@ -188,11 +191,11 @@ $(document).ready(function () {
   // On Click of A Rabbit Hole Video
   $(document).on('click', '.rabbit-hole-vids', function () {
     // Get Videos from promise
-    let clickedVidTitle = $(this).prop('title')
+    let clickedVidTitle = $(this).prop('title') // fixme :: this doesn't account for when the user clicks a dropdown title but ONLY for a video
     getVideos
     // Data: title, src, description, height, width, poster
       .then(function (videos) {
-        console.log('Resolved proceeding: ' + videos)
+        console.log('Promise [Part 1/?] - Display Videos Resolved')
         // Locate main vid and store excess videos
         let [ rabbitHoleVids, found ] = [ [], null ]
         for (let i = 0, l = videos.length; i < l; i++) {

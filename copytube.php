@@ -24,7 +24,7 @@
 			<div class="row">
                 <!-- set logo -->
 				<div class="col-xs-3">
-					<img id="logo" src="imageresources/CopyTube_Logo.png"/>
+					<img id="logo" src="images/copytube_logo.png"/>
 				</div>
 				<!-- create search bar and button -->
 				<div class="col-xs-9">
@@ -76,7 +76,7 @@
 							<video id='main-video' controls
 									autoplay
 							    	muted
-                                    poster="imageresources/something_more.jpg"
+                                    poster="images/something_more.jpg"
 							    	title="Something More"
 							    	src="videos/something_more.mp4"
 							    	width="750"
