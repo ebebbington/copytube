@@ -110,8 +110,9 @@ $(document).ready(function () {
   // On Click of A Rabbit Hole Video
   $(document).on('click', '.rabbit-hole-vids', function () {
     // Get Videos from promise
-    let clickedVidTitle = $(this).prop('title') // fixme :: this doesn't account for when the user clicks a dropdown title but ONLY for a video - turn into a function
-    getVideos
+    let clickedVideoTitle = $(this).prop('title') // fixme :: this doesn't account for when the user clicks a dropdown title but ONLY for a video - turn into a function
+    getVideosAndComments(clickedVideoTitle)
+    /* getVideos
     // Data: title, src, description, height, width, poster
       .then(function (videos) {
         console.log('Promise [Part 1/?] - Display Videos Resolved')
@@ -176,108 +177,109 @@ $(document).ready(function () {
       }
     })
     $('#search-bar').val('')
-  })
+  }) */
 
-  // On Click of Search Button
-  $(document).on('click', '#search-button', function () {
-    // Validate input
-    let [ input, i ] = [ encodeURI($('#search-bar').val()), 0 ]
-    const count = input.split('%20')
-    while (i !== count.length) {
-      i++
-      input = input.replace('%20', ' ')
-    }
-    if (input === '' || input.trim().length === 0) {
-      alert('Please input a video title.')
-      $('#search-bar').val('')
-    } else {
-      // Retrieve videos and check
-      let searchedVidTitle = $('#search-bar').val()
-      getVideos
-        .then(function (videos) {
-          console.log('resolved: ' + videos)
-          let [ complete, found, rabbitHoleVids, rabbitHoleTitles ] = [ false, null, [], [] ]
-          for (let i = 0, l = videos.length; i < l; i++) {
-            if ((videos[ i ].title.toLowerCase() === searchedVidTitle.toLowerCase()) || videos[ i ].title.toLowerCase().indexOf(searchedVidTitle.toLowerCase()) > -1) {
-              found = videos[ i ]
-              $('#main-video').prop({
-                'title': found.title,
-                'src': found.src,
-                'poster': found.poster,
-                'description': found.description
-              })
-              $('#main-video-title').text(found.title)
-              $('#main-video-description').text(found.description)
-            } else {
-              // Pushes object to variable
-              rabbitHoleVids.push(videos[ i ])
-              rabbitHoleTitles.push(videos[ i ].title)
-            }
-          }
-          complete = true
-          if (found == null) {
-            alert('No video has been found with that title')
-          } else {
-            // Displaying Rabbit Hole Videos
-            if (complete === true) {
-              let [ a, b, rabbitHoles ] = [ 1, 0, $('.rabbit-holes') ]
-              rabbitHoles.html('')
-              rabbitHoleVids.forEach(function (video, i) {
-                // creating and displaying new video elements
-                let videoHtml =
-                  '<video id=\'' + 'rabbit-hole-vid-' + a + '\' class=\'rabbit-hole-vids\' controls' +
-                  ' muted' + ' ' +
-                  'poster=\'' + rabbitHoleVids[ b ].poster + '\'' +
-                  'title=\'' + rabbitHoleVids[ b ].title + '\'' +
-                  'src=\'' + rabbitHoleVids[ b ].src + '\'' +
-                  'width=\'' + rabbitHoleVids[ b ].width + '\'' +
-                  'height=\'' + rabbitHoleVids[ b ].height + '\'' +
-                  'Sorry, your browser doesn/\'t support embedded videos.' +
-                  ' </video>'
-                rabbitHoles.append(videoHtml)
-                // creating and displaying new rabbit hole title elements
-                let titleHtml =
-                  '<p id=rabbit-hole-vid-' + a + '-title class=rabbit-hole-titles></p>'
-                rabbitHoles.append(titleHtml)
-                a++
-                b++
-              })
-              // setting content for rabbit holes using unused array titles
-              $('#rabbit-hole-vid-1-title').text(rabbitHoleTitles[ 0 ])
-              $('#rabbit-hole-vid-2-title').text(rabbitHoleTitles[ 1 ])
-            } else {
-              alert('No video with the title of ' + input + ' has been found.')
-            }
-            // GET Comments Request
-            $.ajax({
-              type: 'GET',
-              url: 'models/get_comment.php',
-              data: {
-                videoTitle: found.title
-              },
-              // On Success
-              success: function (response) {
-                console.log('%cAJAX GET Comments Relative to Video Request Completed', 'color: green')
-                // parsing the string from the ajax request into an object
-                const comments = JSON.parse(response)
-                // clear all comments
-                $('#user-comments, #db-comments').empty()
-                // for loop to diSplay new comments based on clicked video
-                for (let i = 0; i < comments.length; i++) {
-                  $('#db-comments').prepend('<br>' + 'Username: ' + comments[ i ].author + '<br>' + 'Date: ' + comments[ i ].dateposted + '<br>' + 'Comment: ' + comments[ i ].comment + '<br>')
-                }
-              },
-              // On Failure
-              error: function (err) {
-                console.log('%cAJAX GET Comments Relative to Video Request Failed' + err, 'color: red')
+    // On Click of Search Button
+    $(document).on('click', '#search-button', function () {
+      // Validate input
+      let [ input, i ] = [ encodeURI($('#search-bar').val()), 0 ]
+      const count = input.split('%20')
+      while (i !== count.length) {
+        i++
+        input = input.replace('%20', ' ')
+      }
+      if (input === '' || input.trim().length === 0) {
+        alert('Please input a video title.')
+        $('#search-bar').val('')
+      } else {
+        // Retrieve videos and check
+        let searchedVidTitle = $('#search-bar').val()
+        getVideos
+          .then(function (videos) {
+            console.log('resolved: ' + videos)
+            let [ complete, found, rabbitHoleVids, rabbitHoleTitles ] = [ false, null, [], [] ]
+            for (let i = 0, l = videos.length; i < l; i++) {
+              if ((videos[ i ].title.toLowerCase() === searchedVidTitle.toLowerCase()) || videos[ i ].title.toLowerCase().indexOf(searchedVidTitle.toLowerCase()) > -1) {
+                found = videos[ i ]
+                $('#main-video').prop({
+                  'title': found.title,
+                  'src': found.src,
+                  'poster': found.poster,
+                  'description': found.description
+                })
+                $('#main-video-title').text(found.title)
+                $('#main-video-description').text(found.description)
+              } else {
+                // Pushes object to variable
+                rabbitHoleVids.push(videos[ i ])
+                rabbitHoleTitles.push(videos[ i ].title)
               }
-            })
-            $('#search-bar').val('')
-          }
-        })
-        .catch(function (videos) {
-          console.log('rejected: ' + videos)
-        })
-    }
+            }
+            complete = true
+            if (found == null) {
+              alert('No video has been found with that title')
+            } else {
+              // Displaying Rabbit Hole Videos
+              if (complete === true) {
+                let [ a, b, rabbitHoles ] = [ 1, 0, $('.rabbit-holes') ]
+                rabbitHoles.html('')
+                rabbitHoleVids.forEach(function (video, i) {
+                  // creating and displaying new video elements
+                  let videoHtml =
+                    '<video id=\'' + 'rabbit-hole-vid-' + a + '\' class=\'rabbit-hole-vids\' controls' +
+                    ' muted' + ' ' +
+                    'poster=\'' + rabbitHoleVids[ b ].poster + '\'' +
+                    'title=\'' + rabbitHoleVids[ b ].title + '\'' +
+                    'src=\'' + rabbitHoleVids[ b ].src + '\'' +
+                    'width=\'' + rabbitHoleVids[ b ].width + '\'' +
+                    'height=\'' + rabbitHoleVids[ b ].height + '\'' +
+                    'Sorry, your browser doesn/\'t support embedded videos.' +
+                    ' </video>'
+                  rabbitHoles.append(videoHtml)
+                  // creating and displaying new rabbit hole title elements
+                  let titleHtml =
+                    '<p id=rabbit-hole-vid-' + a + '-title class=rabbit-hole-titles></p>'
+                  rabbitHoles.append(titleHtml)
+                  a++
+                  b++
+                })
+                // setting content for rabbit holes using unused array titles
+                $('#rabbit-hole-vid-1-title').text(rabbitHoleTitles[ 0 ])
+                $('#rabbit-hole-vid-2-title').text(rabbitHoleTitles[ 1 ])
+              } else {
+                alert('No video with the title of ' + input + ' has been found.')
+              }
+              // GET Comments Request
+              $.ajax({
+                type: 'GET',
+                url: 'models/get_comment.php',
+                data: {
+                  videoTitle: found.title
+                },
+                // On Success
+                success: function (response) {
+                  console.log('%cAJAX GET Comments Relative to Video Request Completed', 'color: green')
+                  // parsing the string from the ajax request into an object
+                  const comments = JSON.parse(response)
+                  // clear all comments
+                  $('#user-comments, #db-comments').empty()
+                  // for loop to diSplay new comments based on clicked video
+                  for (let i = 0; i < comments.length; i++) {
+                    $('#db-comments').prepend('<br>' + 'Username: ' + comments[ i ].author + '<br>' + 'Date: ' + comments[ i ].dateposted + '<br>' + 'Comment: ' + comments[ i ].comment + '<br>')
+                  }
+                },
+                // On Failure
+                error: function (err) {
+                  console.log('%cAJAX GET Comments Relative to Video Request Failed' + err, 'color: red')
+                }
+              })
+              $('#search-bar').val('')
+            }
+          })
+          .catch(function (videos) {
+            console.log('rejected: ' + videos)
+          })
+      }
+    })
   })
 })

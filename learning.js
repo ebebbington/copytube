@@ -11,6 +11,7 @@
 const supportingFunctions = function () {
   console.log('Supporting Functions [Part 1/3] - Start')
 
+  // Calculate Fibonacci's Sequence
   function fibonaccisSequence () {
     console.log("Fibonacci's Sequence [Part 1/3] - Start")
     // create variables
@@ -43,6 +44,7 @@ const supportingFunctions = function () {
     }
   }
 
+  // Run all functions above
   function runAll () {
     console.log('Supporting Functions [Part 2/3] - Run All Functions')
     fibonaccisSequence()
