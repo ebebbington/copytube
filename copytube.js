@@ -7,16 +7,19 @@ let username = ''
 // todo :: help me understand what this means and how it works
 // JSON server is set up in c:/xampp/htdocs/json_server/ but i need to start it (see .txt file in json_server/)
 // I want to access the data (e.g interact with the API)
-// I can use require in hello_server.js but i cant here, why?
+// I can use require in hello_server.js but i cant here, why? EDIT: RESOLVED - i use RequireJS now (set in html)
 // How are these servers used?
 // BREAK DOWN
 // I want to access the data of the API in this file. Does the server need to be running? And do i need hello_server.js?
 // REALISATIONS
-// I can't used require because it ISNT SUPPORTED, i need to run it in node.js but how? And TT files use require fine O.o
+// I can't used require because it ISN'T SUPPORTED, i need to run it in node.js but how? And TT files use require fine O.o
+// USE OF REQUIRE IS RESOLVED
 try {
+  // This code follows what is said in lowdb documentation
+  // Essentially, i just want to access the data and retrieve it
   console.log('API Request [Part 1/2] - Start Try block')
-  const low = require('node_modules/lowdb')
-  const FileSync = require('node_modules/lowdb/adapters/FileSync')
+  const low = require('c:/xampp/htdocs/node_modules/lowdb')
+  const FileSync = require('c:/xampp/htdocs/node_modules/lowdb/adapters/FileSync')
   const adapter = new FileSync('json_server/db.json')
   const db = low(adapter)
   db.get('posts')
