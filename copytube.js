@@ -17,70 +17,6 @@ try {
   console.log('%cAPI Request [Part 2/2] - Caught an error: ' + e, 'color: red')
 }
 
-// Adams help in showing how to make a function be snazzy
-/* let videos = (function () {
-  let Videos = []
-  function initialise (Videos) {
-    doesSomething(Videos)
-  }
-  function doesSomething (Videos) {
-    // AJAX call (emulating it below)
-    Videos = ['test', 'test']
-    return Videos
-  }
-  return {
-    initme: initialise(),
-    getVideos: Videos
-  }
-})()
-const vids = videos.initme()
-console.log(vids)
-videos.getVideos
-console.log(videoCall) */
-// After researching i realised he was using the 'Revealing Module Pattern', which shall be below:
-let revealingModulePattern = (function () {
-  const firstName = 'Edward'
-  const lastName = 'Bebbington'
-  console.log('RMP [Part 1/4] - Start function')
-
-  function firstNameFunction () {
-    console.log('RMP [Part 3/4] - Running first name function: ' + firstName)
-  }
-
-  function lastNameFunction () {
-    console.log('RMP [Part 4/4] - Running last name function: ' + lastName)
-  }
-
-  function viewFullNameFunction () {
-    console.log('RMP [Part 2/4] - Running full name function')
-    firstNameFunction()
-    lastNameFunction()
-  }
-
-  return {
-    first: firstNameFunction,
-    last: lastNameFunction,
-    view: viewFullNameFunction
-  }
-})()
-revealingModulePattern.view()
-
-// Fibonacci's Sequence - uses SLICE
-function fibonaccisSequence () {
-  console.log("Fibonacci's Sequence [Part 1/3] - Start")
-  // create variables
-  let [ fibArray, maxLength ] = [ [ 0, 1 ], 20 ]
-  console.log("Fibonacci's Sequence [Part 2/3] - Calculating - Baseline: [" + fibArray + '] - Max Length: ' + maxLength)
-  // calculate the sequence based on max length
-  while (fibArray.length !== maxLength) {
-    let lastTwoValues = fibArray.slice(-2) // this extracts the last 2 values of the array, reference: https://stackoverflow.com/questions/43430006/get-last-2-elements-of-an-array-in-a-selector-redux
-    let [ n1, n2 ] = [ lastTwoValues[ 0 ], lastTwoValues[ 1 ] ]
-    let n = n1 + n2
-    fibArray.push(n)
-  }
-  console.log("Fibonacci's Sequence [Part 3/3] - Result: " + fibArray)
-} fibonaccisSequence()
-
 // Set up promise to get videos for later use - METHOD 2: I could just handle the data within a fucntion that uses an
 // ajax call e.g. pass in arguments (ar1, arg2) and handle these if (arg1 == 1) {}, theres so many different ways using example below:
 // const test = function (arg1, arg2) { $.ajax({ ajax call; success { if (arg1 === 1) { } if (arg2 === 2) {} }})}
@@ -97,15 +33,12 @@ const getVideos = new Promise(function (resolve, reject) {
       reject(err)
     }
   })
+  // Access this by using:
+  // getVideos
+  //    .then (function (videos) {
+  //        // data is in videos
+  //    })
 })
-
-/*
-I access this by using:
-getVideos
-  .then(function (videos) {
-    console.log(vieos) // outputs the object
-  })
- */
 
 $(document).ready(function () {
   // Ensure username is correct - SELF EXECUTING FUNCTION
@@ -191,7 +124,7 @@ $(document).ready(function () {
   // On Click of A Rabbit Hole Video
   $(document).on('click', '.rabbit-hole-vids', function () {
     // Get Videos from promise
-    let clickedVidTitle = $(this).prop('title') // fixme :: this doesn't account for when the user clicks a dropdown title but ONLY for a video
+    let clickedVidTitle = $(this).prop('title') // fixme :: this doesn't account for when the user clicks a dropdown title but ONLY for a video - turn into a function
     getVideos
     // Data: title, src, description, height, width, poster
       .then(function (videos) {
