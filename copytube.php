@@ -15,7 +15,7 @@
 		<!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
         <!-- links my style sheet (.css) so it can be used -->
 		<link rel="stylesheet" href="copytube.css"/>
-        <!-- Link my learning script to repare the data -->
+        <!-- Link my learning script to prepare the data -->
         <script src="learning.js"></script>
         <!-- Link my functions script to run called functions. module is added to allow export -->
         <script src="functions.js" type="module"></script>
