@@ -109,12 +109,12 @@ function getUsername () {
     // todo :: run server side validation file
     const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
     $('#welcome-message').text(welcomeMessage)
+    return username
   }
 }
 
 // Save comments assuming input is validated
 function addComment () {
-  // todo :: doesn't pass in a user name
   const [ comment, maxLength ] = [ $('#comment-bar').val(), 400 ]
   if (comment === '' || comment > maxLength || comment.trim().length === 0 || comment === null || comment === undefined) {
     alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
@@ -150,10 +150,9 @@ function addComment () {
   }
 }
 
+const username = getUsername()
+
 $(document).ready(function () {
-  // -----------------------
-  // Run username function
-  getUsername()
   // ------------------------
   // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
@@ -179,6 +178,7 @@ $(document).ready(function () {
   // ------------------------
   // On click of the drodown content
   $(document).on('click', '.dropdown-titles', function () {
+
     getVideosAndComments($(this).text(), 80)
   })
   // On Click of A Rabbit Hole Video

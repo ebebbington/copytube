@@ -17,9 +17,7 @@
 		<link rel="stylesheet" href="copytube.css"/>
         <!-- Link my learning script to prepare the data -->
         <script src="learning.js"></script>
-        <!-- Link my functions script to run called functions. module is added to allow export -->
-        <script src="functions.js"></script>
-        <!-- Link my javascript file so it can be used NOTE: AFTER the require.js -->
+        <!-- Link my javascript file so it can be used -->
         <script src="copytube.js"></script>
 	</head>
 
