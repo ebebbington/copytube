@@ -152,7 +152,7 @@
                             if ($result->num_rows > 0) {
                                 $html = "";
                                 while($row = $result->fetch_assoc()) {
-                                    $html = "<video id='rabbit-hole-vid-$count' class='rabbit-hole-vids' controls ".
+                                    $html = "<video id='rabbit-hole-vid-$count' class='rabbit-hole-videos' controls ".
                                         "muted ".
                                         "poster='$row[poster]' ".
                                         "title='$row[title]' ".
