@@ -1,5 +1,4 @@
 /* This script handles events */
-// Globals
 /* global alert, prompt, $ */
 'use strict'
 // Importing function from functions.js so it can be used in this script without error
