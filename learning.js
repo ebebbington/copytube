@@ -27,21 +27,44 @@ const supportingFunctions = function () {
     console.log("Fibonacci's Sequence [Part 3/3] - Result: " + fibArray)
   }
 
-  // Access to the API JSON Server - using a Try/Catch block
+  // Test access to the API JSON Server - using a Try/Catch block and AJAX call
   function apiRequest () {
-    // todo :: first check i can connect to the api to stop an error i cant catch
     try {
       console.log('API Request [Part 1/2] - Start Try block')
+      const apiUrl = 'http://localhost:3000'
       $.ajax({
-        type: 'GET', // also use POST, PUT, DELETE
-        url: 'http://localhost:3000/posts',
-        success: function (response) { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
-          console.log('API Request [Part 2/2] - Request completed: ' + response)
+        // types: GET, POST, PUT, DELETE
+        url: apiUrl,
+        success: function () { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
+          console.log('API Request [Part 2/2] - AJAX Request completed')
+        },
+        error: function () {
+          console.log('%cAPI Request [Part 2/2] - AJAX Error at ' + apiUrl + ', API is most likely not running', 'color: red')
         }
       })
     } catch (e) {
       console.log('%cAPI Request [Part 2/2] - Caught an error: ' + e, 'color: red')
     }
+  }
+  // How to do a promise
+  // Set up promise to get videos for later use - METHOD 2: I could just handle the data within a fucntion that uses an
+  // ajax call e.g. pass in arguments (ar1, arg2) and handle these if (arg1 == 1) {}, theres so many different ways using example below:
+  // const test = function (arg1, arg2) { $.ajax({ ajax call; success { if (arg1 === 1) { } if (arg2 === 2) {} }})}
+  function myPromise () {
+    console.log('Promises [Part 1/3] - Start')
+    const promise = new Promise(function (resolve, reject) {
+      // Simulate an AJAX
+      const isResolved = 'Resolved'
+      setTimeout(resolve(isResolved), 3000)
+      console.log('Promises [Part 2/3] - Resolved')
+    })
+    promise
+      .then(function (isResolved) {
+        console.log('Promises [Part 3/3] - Accessing data: ' + isResolved)
+      })
+      .catch(function (reject) {
+        console.log('%cPromises [Part 3/3] - Rejected: ' + reject, 'color: red')
+      })
   }
 
   // Run all functions above
@@ -49,9 +72,14 @@ const supportingFunctions = function () {
     console.log('Supporting Functions [Part 2/3] - Run All Functions')
     fibonaccisSequence()
     apiRequest()
+    myPromise()
     console.log('Supporting Functions [Part 3/3] - Finished')
   }
 
+  // Self Executing Anonymous Function
+  (function () {
+    console.log('SEAF [Part 1/1] - Running')
+  })()
   return {
     runAll: runAll
   }

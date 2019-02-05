@@ -16,12 +16,11 @@
         <!-- links my style sheet (.css) so it can be used -->
 		<link rel="stylesheet" href="copytube.css"/>
         <!-- Link my learning script to repare the data -->
-        <script src="learning.js" type="text/javascript"></script>
+        <script src="learning.js"></script>
         <!-- Link my functions script to run called functions. module is added to allow export -->
         <script src="functions.js" type="module"></script>
         <!-- Link my javascript file so it can be used NOTE: AFTER the require.js -->
         <script src="copytube.js"></script>
-        <!-- todo :: what does text/javascript and module mean? -->
 	</head>
 
 	<body>

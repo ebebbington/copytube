@@ -1,46 +1,13 @@
 /* This script handles events */
-/* global alert, prompt, $ */
+/* global alert, $ */
 'use strict'
 // Importing function from functions.js so it can be used in this script without error
-import { getVideosAndComments } from 'functions.js' // fixme :: unexpected {. Fix this then edit rab hole event code
+import { getVideosAndComments, getUsername, validateInput } from 'functions.js' // fixme :: unexpected {. Fix this then edit rab hole event code
 let username = ''
 
-// Set up promise to get videos for later use - METHOD 2: I could just handle the data within a fucntion that uses an
-// ajax call e.g. pass in arguments (ar1, arg2) and handle these if (arg1 == 1) {}, theres so many different ways using example below:
-// const test = function (arg1, arg2) { $.ajax({ ajax call; success { if (arg1 === 1) { } if (arg2 === 2) {} }})}
-const getVideos = new Promise(function (resolve, reject) {
-  $.ajax({
-    type: 'GET',
-    url: 'models/get_videos.php',
-    success: function (response) {
-      let videos = JSON.parse(response)
-      resolve(videos) // when resolved it has an object, so this way i am just assigning the vids object to the resolve
-    },
-    error: function (err) {
-      console.log('%cAJAX GET videos Request Failed: ' + err, 'color: red')
-      reject(err)
-    }
-  })
-  // Access this by using:
-  // getVideos
-  //    .then (function (videos) {
-  //        // data is in videos
-  //    })
-})
-
 $(document).ready(function () {
-  // Ensure username is correct - SELF EXECUTING FUNCTION
-  (function () {
-    let [ complete, username ] = [ false, '' ]
-    const errorMsg = 'Please enter an appropriate username between 0 and 81 characters long'
-    while (complete !== true) {
-      username = encodeURIComponent(prompt('Enter Temporary Username'))
-      username.length > 80 || username === 'null' || username.trim().length === 0 ? alert(errorMsg) : complete = true
-    }
-    const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
-    $('#welcome-message').text(welcomeMessage)
-  })()
-
+  // Run username function
+  getUsername()
   // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
     const commentLength = $('#comment-bar').val().length
@@ -110,6 +77,7 @@ $(document).ready(function () {
   })
   // On Click of A Rabbit Hole Video
   $(document).on('click', '.rabbit-hole-vids', function () {
+    $('.rabbit-hole-vids').click(getVideosAndComments('hello'))
     // Get Videos from promise
     let clickedVideoTitle = $(this).prop('title') // todo :: use this event for handling search button, rabbit hole click and dropdown click and add validation
     getVideosAndComments(clickedVideoTitle)

@@ -1,4 +1,4 @@
-/* globals $ */
+/* globals $, prompt, alert */
 
 // Retrieve videos and comments from DB and export
 export function getVideosAndComments (arg1) {
@@ -65,4 +65,22 @@ export function getVideosAndComments (arg1) {
       console.log('%cAJAX GET Comments Failed: ' + error, 'color: red')
     }
   })
+}
+
+// todo :: add input validation function
+export function validateInput (input, status) {
+  let userInput = input
+  const requirement = status // comment, or login etc
+}
+
+export function getUsername (input) {
+  // Commented the code below cause it could be used for the above function
+  /* let [ complete, username ] = [ false, '' ]
+  const errorMsg = 'Please enter an appropriate username between 0 and 81 characters long'
+  while (complete !== true) {
+    username = encodeURIComponent(prompt('Enter Temporary Username'))
+    username.length > 80 || username === 'null' || username.trim().length === 0 ? alert(errorMsg) : complete = true
+  } */
+  const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
+  $('#welcome-message').text(welcomeMessage)
 }
