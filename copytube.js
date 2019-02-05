@@ -3,8 +3,6 @@
 /* global $, alert, prompt */
 'use strict'
 
-// All functions are listed below
-
 // Retrieve videos and comments from DB and export
 function getVideosAndComments (videoTitle, maxLength) {
   if (videoTitle === '' || videoTitle > maxLength || videoTitle.trim().length === 0 || videoTitle === null || videoTitle === undefined) {
