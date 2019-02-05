@@ -1,8 +1,7 @@
 /* globals $ */
 
-// todo :: finish of function
-// Retrieve videos and comments from DB
-function getVideosAndComments (arg1) {
+// Retrieve videos and comments from DB and export
+export function getVideosAndComments (arg1) {
   const clickedVideoTitle = arg1
   // Get Videos
   $.ajax({
@@ -10,6 +9,7 @@ function getVideosAndComments (arg1) {
     url: 'models/get_videos.php',
     success: function (response) {
       const videos = JSON.parse(response)
+      console.log(videos)
       let [ rabbitHoleVideos, found ] = [ [], null ]
       // Find video
       // todo :: add validation for if user uses search bar
