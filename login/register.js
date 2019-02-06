@@ -16,7 +16,7 @@ function validation () {
 }
 
 $(document).ready(function () {
-  $(document).on('click', '#login-button', function () {
+  $(document).on('click', '#register-button', function () {
     const output = validation()
     if (output === false) {
     } else {
@@ -26,24 +26,15 @@ $(document).ready(function () {
         data: {
           username: $('#login-username').val(),
           password: $('#login-password').val(),
-          register: false
+          register: true
         },
         success: function () {
-          // todo :: change loggedIn matching username to true
-          // todo :: set up a cookie and set logged_in = yes?
-          // todo :: after, in copytube.js, run ajax call to check username of logged in user
-          // todo :: on window close set loggedIn to false
-          window.location.replace('http://localhost/copytube/index/copytube.php')
+          window.location.replace('http://localhost/copytube/login/login.html')
         },
         error: function () {
           alert('Provide correct credentials')
         }
       })
     }
-  })
-  // On click of registering
-  $(document).on('click', '#register-new-account', function () {
-    // todo :: create register form
-    window.location.replace('http://localhost/copytube/register/register.html') // ref: https://www.w3schools.com/howto/howto_js_redirect_webpage.asp
   })
 })
