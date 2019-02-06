@@ -11,7 +11,6 @@ $(document).ready(function () {
       },
       // todo :: error, doesn't reach success or error: most likely login.php error
       success: function (response) {
-        console.log('%csuccess', 'color: blue')
         // todo :: change loggedIn matching username to true
         // todo :: after, in copytube.js, run ajax call to check username of logged in user
         // todo :: on window close set loggedIn to false

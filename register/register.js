@@ -9,7 +9,7 @@ $(document).ready(function () {
         username: $('#register-username').val(),
         password: $('#register-password').val()
       },
-      success: function () {
+      success: function (response) {
         alert('Account successfully registered')
         window.location.replace('http://localhost/copytube/login/login.html')
       },
