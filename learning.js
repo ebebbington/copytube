@@ -66,9 +66,10 @@ const supportingFunctions = function () {
         console.log('%cPromises [Part 3/3] - Rejected: ' + reject, 'color: red')
       })
   }
+  // Cookie function
   function cookies (arg1) {
     console.log('Cookies [Part 1/2] - Start')
-    const cookie = document.cookie = arg1
+    const cookie = document.cookie = 'name=' + arg1
     console.log(cookie)
     console.log('Cookies [Part 2/2] - Finished')
   }
