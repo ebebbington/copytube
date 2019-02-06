@@ -1,7 +1,7 @@
 /* global $, alert */
 
 function validation () {
-  const [ username, password, maxLength ] = [ $('#login-username').val(), $('#login-password').val(), 40 ]
+  const [ username, password, maxLength ] = [ $('#register-username').val(), $('#register-password').val(), 40 ]
   if (username === '' || username > maxLength || username.trim().length === 0 || username === null || username === undefined) {
     alert('Enter correct credentials')
     return false
@@ -18,15 +18,16 @@ function validation () {
 $(document).ready(function () {
   $(document).on('click', '#register-button', function () {
     const output = validation()
+    console.log(output)
+    console.log($('#login-username').val())
     if (output === false) {
     } else {
       $.ajax({
         type: 'POST',
-        url: 'validate-user-input.php', // todo :: create server side validation
+        url: 'register.php', // todo :: create server side validation
         data: {
           username: $('#login-username').val(),
-          password: $('#login-password').val(),
-          register: true
+          password: $('#login-password').val()
         },
         success: function () {
           window.location.replace('http://localhost/copytube/login/login.html')
