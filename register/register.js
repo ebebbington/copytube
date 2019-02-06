@@ -10,8 +10,10 @@ $(document).ready(function () {
         password: $('#register-password').val()
       },
       success: function (response) {
-        alert('Account successfully registered')
-        window.location.replace('http://localhost/copytube/login/login.html')
+        if (response === true) {
+          console.log('test')
+          window.location.replace('http://localhost/copytube/login/login.html')
+        }
       },
       error: function () {
         alert('Provide correct credentials')

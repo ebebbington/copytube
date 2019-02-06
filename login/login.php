@@ -6,6 +6,7 @@
  * Time: 13:03
  */
 
+// fixme :: not sure where processing stops - NO RESPONSE back when logging in and doesn't run success or error of AJAX call
 $serverName = "localhost";
 $username = "root";
 $password = "password";
@@ -28,7 +29,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
             die("connection failed: " . $connection->connect_error);
         }
         //Get password from db
-        $sql = "SELECT `username`, `password` FROM `users` WHERE `username`='$usernameInput'";
+        $sql = "SELECT username, password FROM `users` WHERE username='$usernameInput'";
         //$result = query of $sql
         $result = $connection->query($sql);
         //If query fails, die. If not then get results
