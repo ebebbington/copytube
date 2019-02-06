@@ -3,15 +3,16 @@
 $(document).ready(function () {
   $(document).on('click', '#login-button', function () {
     $.ajax({
-      type: 'POST',
+      type: 'GET',
       url: 'login.php',
       data: {
         username: $('#login-username').val(),
         password: $('#login-password').val()
       },
+      // todo :: error, doesn't reach success or error: most likely login.php error
       success: function (response) {
+        console.log('%csuccess', 'color: blue')
         // todo :: change loggedIn matching username to true
-        // todo :: set up a cookie and set logged_in = yes?
         // todo :: after, in copytube.js, run ajax call to check username of logged in user
         // todo :: on window close set loggedIn to false
         alert('test success')

@@ -5,12 +5,12 @@
  * Date: 06/02/2019
  * Time: 13:03
  */
-
+echo 'HELLO';
 $serverName = "localhost";
 $username = "root";
 $password = "password";
-$usernameInput = $_POST['username'];
-$passwordInput = $_POST['password'];
+$usernameInput = $_GET['username'];
+$passwordInput = $_GET['password'];
 
 // todo :: validate server side
 
@@ -23,7 +23,7 @@ if ($connection->connect_error) {
 }
 
 //Get password from db
-$sql = "SELECT username, password FROM users WHERE username='$usernameInput'";
+$sql = "SELECT `username`, `password` FROM `users` WHERE `username`='$usernameInput'";
 
 //$result = query of $sql
 $result = $connection->query($sql);
@@ -35,6 +35,7 @@ if ($result == false){
         Sql is: $sql.");
 } else {
     $response = $result->fetch_all(MYSQLI_ASSOC);
+    $connection->close();
 }
 
 //Hash user Password
@@ -44,9 +45,7 @@ $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
 if (password_verify($passwordInput, $response[0]['password'])){
     $verify = "true";
     print_r($verify);
-    $connection->close();
 } else {
     $verify = "false";
     print_r($verify);
-    $connection->close();
 }
