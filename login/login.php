@@ -6,14 +6,16 @@
  * Time: 13:03
  */
 
-$servername = "localhost";
+$serverName = "localhost";
 $username = "root";
 $password = "password";
 $usernameInput = $_POST['username'];
 $passwordInput = $_POST['password'];
 
+// todo :: validate server side
+
 //create connection to db
-$connection = new mysqli($servername, $username, $password, 'copytube');
+$connection = new mysqli($serverName, $username, $password, 'copytube');
 
 //check connection to db
 if ($connection->connect_error) {
@@ -42,7 +44,9 @@ $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
 if (password_verify($passwordInput, $response[0]['password'])){
     $verify = "true";
     print_r($verify);
+    $connection->close();
 } else {
     $verify = "false";
     print_r($verify);
+    $connection->close();
 }

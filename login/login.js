@@ -14,7 +14,7 @@ $(document).ready(function () {
         // todo :: set up a cookie and set logged_in = yes?
         // todo :: after, in copytube.js, run ajax call to check username of logged in user
         // todo :: on window close set loggedIn to false
-        alert(response)
+        alert('test success')
         window.location.replace('http://localhost/copytube/copytube.php')
       },
       error: function () {
