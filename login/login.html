@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Copytube</title>
-    <script src="scripts/jquery-3.3.1.min.js"></script>
+    <script src="../scripts/jquery-3.3.1.min.js"></script>
     <!-- accesses bootstrap css files that makes css files much easier to use -->
-    <link rel="stylesheet" href="links/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../links/bootstrap.min.css" crossorigin="anonymous">
     <!-- accesses bootstrap js files that makes js files much easier to use -->
-    <script src="scripts/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="../scripts/bootstrap.min.js" crossorigin="anonymous"></script>
     <!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
     <!-- links my style sheet (.css) so it can be used -->
     <link rel="stylesheet" href="login.css"/>
@@ -17,24 +17,19 @@
     <div class="row">
         <!-- Login fields -->
         <div class="col-xs-12">
-            <div class="col-xs-2"></div>
-            <div class="col-xs-8">
-
-                <div class="login">
-                    Username: <input id="login-username" type="text" name="username"> Password: <input id="login-password" type='password' name='password'>
-                </div>
-
-            </div>
-            <div class="col-xs-2"></div>
-        </div>
-
-        <!-- Login Button -->
-        <div class="col-xs-12">
             <div class="login">
-                <button type="button" id="login-button">Login</button>
+                <form action="validate-user-input.php" method="post">
+                    <fieldset>
+                        <legend>Login</legend>
+                        Username: <br>
+                        <input id="login-username" type="text" name="username"><br>
+                        Password: <br>
+                        <input id="login-password" type='password' name='password'>
+                        <input id="login-button" type="submit" name="submit" value="Submit">
+                    </fieldset>
+                </form>
             </div>
         </div>
-
         <div class="col-xs-12>">
             <div class="register">
                 <a href="#" id="register-new-account">Or register instead</a>
