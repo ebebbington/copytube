@@ -9,7 +9,6 @@ $(document).ready(function () {
         username: $('#login-username').val(),
         password: $('#login-password').val()
       },
-      // todo :: error, doesn't reach success or error: most likely login.php error
       success: function (response) {
         // todo :: change loggedIn matching username to true
         // todo :: after, in copytube.js, run ajax call to check username of logged in user

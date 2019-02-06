@@ -45,6 +45,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
         if (password_verify($passwordInput, $response[0]['password'])){
             $verify = "true";
             print_r($verify);
+            $sql = "UPDATE `users` SET loggedIn = 0 WHERE username='$usernameInput'";
         } else {
             $verify = "false";
             print_r($verify);
