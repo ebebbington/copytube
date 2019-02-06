@@ -26,6 +26,12 @@ if ($result == false){
         Sql is: $sql.");
 } else {
     $response = $result->fetch_all(MYSQLI_ASSOC);
-    print_r(json_encode($response));
-    $connection->close();
+    if ($response === 0) {
+        // user is logged in
+        print_r(true, json_encode($response));
+    } else {
+        // not logged in
+        print_r(false, json_encode($response));
+        $connection->close();
+    }
 }

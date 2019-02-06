@@ -3,22 +3,38 @@
 /* global $, alert, prompt */
 'use strict'
 
-// todo :: after, in copytube.js, run ajax call to check username of logged in user
-// todo :: on window close set loggedIn to false
+// check if user is logged in and redirect if needed or make username global
 $.ajax({
   type: 'GET',
-  url: '../is-logged-in.php',
-  success: function (username) {
-    alert('username (EXPORT ME): ' + username)
+  url: 'models/is-logged-in.php',
+  success: function (isLoggedIn, username) {
+    if (isLoggedIn === true) {
+      alert('username (EXPORT ME): ' + username)
+    } else {
+      alert('NOT LOGGED IN')
+      window.location.replace('http://localhost/copytube/login/login.html')
+    }
+  },
+  error: function () {
+    alert('ERROR')
   }
 })
+
+// Log Out function
+function logOut () {
+  $.ajax({
+    type: 'GET',
+    url: 'models/log-out.php',
+    success: function () {
+    }
+  })
+}
 
 // Retrieve videos and comments from DB and export
 function getVideosAndComments (videoTitle, maxLength) {
   if (videoTitle === '' || videoTitle > maxLength || videoTitle.trim().length === 0 || videoTitle === null || videoTitle === undefined) {
     alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
   } else {
-    // todo :: run server side validation file
     // Get Videos
     $.ajax({
       type: 'GET',
@@ -114,7 +130,6 @@ function getUsername () {
     alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
     getUsername()
   } else {
-    // todo :: run server side validation file
     const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
     $('#welcome-message').text(welcomeMessage)
     return username
@@ -128,7 +143,6 @@ function addComment () {
     alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
     $('#comment-bar').val('')
   } else {
-    // todo :: run server side validation file
     let today = new Date()
     const [ dd, mm, yyyy ] = [ today.getDate(), (today.getMonth() + 1), today.getFullYear() ] // Month was 1 behind
     today = yyyy + '-' + mm + '-' + dd
@@ -161,6 +175,9 @@ function addComment () {
 const username = getUsername()
 
 $(document).ready(function () {
+  // ------------------------
+  // Run log out function on close
+  window.onbeforeunload = logOut
   // ------------------------
   // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
