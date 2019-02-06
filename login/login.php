@@ -6,11 +6,14 @@
  * Time: 13:03
  */
 
+$servername = "localhost";
+$username = "root";
+$password = "password";
 $usernameInput = $_POST['username'];
 $passwordInput = $_POST['password'];
 
 //create connection to db
-$connection = new mysqli($servername, $username, $password, 'informant');
+$connection = new mysqli($servername, $username, $password, 'copytube');
 
 //check connection to db
 if ($connection->connect_error) {
@@ -30,14 +33,13 @@ if ($result == false){
         Sql is: $sql.");
 } else {
     $response = $result->fetch_all(MYSQLI_ASSOC);
-    $connection->close();
 }
 
 //Hash user Password
 $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
 
 //Compare DB and User Password
-if (password_verify($passwordInput, $response[0]['hash'])){
+if (password_verify($passwordInput, $response[0]['password'])){
     $verify = "true";
     print_r($verify);
 } else {

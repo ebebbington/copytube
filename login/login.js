@@ -9,11 +9,12 @@ $(document).ready(function () {
         username: $('#login-username').val(),
         password: $('#login-password').val()
       },
-      success: function () {
+      success: function (response) {
         // todo :: change loggedIn matching username to true
         // todo :: set up a cookie and set logged_in = yes?
         // todo :: after, in copytube.js, run ajax call to check username of logged in user
         // todo :: on window close set loggedIn to false
+        alert(response)
         window.location.replace('http://localhost/copytube/copytube.php')
       },
       error: function () {
