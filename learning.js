@@ -8,7 +8,7 @@
 // All code here has no impact on copytube and is merely for outputting data in the console
 
 // After researching what a RMP is i realised Adam was using the 'Revealing Module Pattern', credit goes to you Adam as i used your RMP template :) which shall be below:
-const supportingFunctions = function () {
+const revealingModulePattern = function () {
   console.log('Supporting Functions [Part 1/3] - Start')
 
   // Calculate Fibonacci's Sequence
@@ -92,4 +92,4 @@ const supportingFunctions = function () {
     runAll: runAll
   }
 }
-supportingFunctions().runAll()
+revealingModulePattern().runAll()
