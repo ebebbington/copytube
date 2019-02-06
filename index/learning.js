@@ -66,6 +66,12 @@ const supportingFunctions = function () {
         console.log('%cPromises [Part 3/3] - Rejected: ' + reject, 'color: red')
       })
   }
+  function cookies (arg1) {
+    console.log('Cookies [Part 1/2] - Start')
+    const cookie = document.cookie = arg1
+    console.log(cookie)
+    console.log('Cookies [Part 2/2] - Finished')
+  }
 
   // Run all functions above
   function runAll () {
@@ -73,6 +79,7 @@ const supportingFunctions = function () {
     fibonaccisSequence()
     apiRequest()
     myPromise()
+    cookies('test name')
     console.log('Supporting Functions [Part 3/3] - Finished')
   }
 
