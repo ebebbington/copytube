@@ -172,6 +172,7 @@ function addComment () {
   }
 }
 
+// todo :: set below var to the global username given by above ajax call
 const username = getUsername()
 
 $(document).ready(function () {
