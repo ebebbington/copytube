@@ -10,11 +10,10 @@ $(document).ready(function () {
         password: $('#login-password').val()
       },
       success: function (response) {
-        // todo :: change loggedIn matching username to true
-        // todo :: after, in copytube.js, run ajax call to check username of logged in user
-        // todo :: on window close set loggedIn to false
-        alert('test success')
-        window.location.replace('http://localhost/copytube/copytube.php')
+        if (response === true) {
+          alert('SUCCESSFULLY LOGGED IN')
+          window.location.replace('http://localhost/copytube/copytube.php')
+        }
       },
       error: function () {
         alert('Provide correct credentials')

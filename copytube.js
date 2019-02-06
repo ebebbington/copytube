@@ -3,6 +3,16 @@
 /* global $, alert, prompt */
 'use strict'
 
+// todo :: after, in copytube.js, run ajax call to check username of logged in user
+// todo :: on window close set loggedIn to false
+$.ajax({
+  type: 'GET',
+  url: '../is-logged-in.php',
+  success: function (username) {
+    alert('username (EXPORT ME): ' + username)
+  }
+})
+
 // Retrieve videos and comments from DB and export
 function getVideosAndComments (videoTitle, maxLength) {
   if (videoTitle === '' || videoTitle > maxLength || videoTitle.trim().length === 0 || videoTitle === null || videoTitle === undefined) {

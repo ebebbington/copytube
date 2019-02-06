@@ -11,7 +11,7 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response === true) {
-          console.log('test')
+          alert('SUCCESSFULLY REGISTERED')
           window.location.replace('http://localhost/copytube/login/login.html')
         }
       },

@@ -43,12 +43,8 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
         }
         //Compare DB and User Password
         if (password_verify($passwordInput, $response[0]['password'])){
-            $verify = "true";
-            print_r($verify);
             $sql = "UPDATE `users` SET loggedIn = 0 WHERE username='$usernameInput'";
-        } else {
-            $verify = "false";
-            print_r($verify);
+            print_r(true);
         }
     }
 }

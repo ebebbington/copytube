@@ -31,7 +31,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
 
         //set this data in the database
         $connection->query($sql);
-        // fixme :: posts new user but does NOTHING AFTER and doesn't run success or error of AJAX call
+        // fixme :: posts new user but does NOTHING AFTER and doesn't run success or error of AJAX call - code should work after
         print_r(true);
         $connection->close();
     }
