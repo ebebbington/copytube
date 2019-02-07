@@ -1,5 +1,9 @@
 /* global $, alert */
 
+function test () {
+  console.log('test')
+}
+
 $(document).ready(function () {
   $(document).on('click', '#login-button', function () {
     $.ajax({
