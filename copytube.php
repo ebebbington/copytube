@@ -4,7 +4,8 @@
     <!-- Set data before DOM -->
 	<head>
 		<title>CopyTube</title>
-		<h2 id="welcome-message"></h2>
+        <!-- todo :: i have no clue how welcome-username displays the username.... getUsername() is also never called ask someone lol -->
+        <h2 id="welcome-username"></h2><h2 id="welcome-message">Welcome to CopyTube</h2>
 		<!-- allows .js code to run jquery -->
 		<script src="scripts/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->

@@ -3,6 +3,9 @@
 /* global $, alert */
 'use strict'
 
+// todo :: combine get_videos and get_comments
+// todo :: create sessions data to allow multiple users (and to remove onbeforeunload to stop logout on refresh)
+
 // check if user is logged in and redirect if needed or make username global
 function getUsername () {
   $.ajax({
@@ -14,9 +17,8 @@ function getUsername () {
       if (username === 'false') {
         window.location.replace('http://localhost/copytube/login/login.html')
       } else {
-        const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
-        $('#welcome-message').text(welcomeMessage)
-        return username // fixme :: of course... add comments returns undefined when calling this function
+        document.cookie = 'name=' + username
+        $('#welcome-username').text(username)
       }
     },
     error: function () {
@@ -130,7 +132,7 @@ function getVideosAndComments (videoTitle, maxLength) {
 
 // Save comments assuming input is validated
 function addComment () {
-  const [ comment, maxLength, username ] = [ $('#comment-bar').val(), 400, getUsername() ]
+  const [ comment, maxLength, username ] = [ $('#comment-bar').val(), 400, $('#welcome-username').text() ]
   if (comment === '' || comment > maxLength || comment.trim().length === 0 || comment === null || comment === undefined) {
     alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
     $('#comment-bar').val('')
