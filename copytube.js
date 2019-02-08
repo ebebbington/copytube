@@ -10,7 +10,7 @@ function getUsername () {
     url: 'models/get-username.php',
     success: function (username) {
       // return username if needed
-      // if user tries to access page but not logged in
+      // if user tries to access page but not logged in divert back to login
       if (username === 'false') {
         window.location.replace('http://localhost/copytube/login/login.html')
       } else {

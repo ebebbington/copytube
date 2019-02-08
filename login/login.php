@@ -35,17 +35,23 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
         if ($result == false){
         } else {
             $response = $result->fetch_all(MYSQLI_ASSOC);
-            //Compare DB and User Password
-            $passwordHash = password_hash($passwordInput, PASSWORD_BCRYPT);
-            if (password_verify($passwordInput, $response[0]['password'])) {
-                echo "<script>alert('password verification succeeded');</script>";
-                $sql = "UPDATE users SET loggedIn = 0 WHERE username = '$usernameInput'";
-                $connection->query($sql);
-                $connection->close();
-                $open = "<script>window.location.replace('http://localhost/copytube/copytube.php')</script>";
-                echo $open;
+            // check if input is even in db
+            if (count($response) === 0) {
+                // todo :: add in element to say incorrect credentials
+                echo "<script>window.location.replace('http://localhost/copytube/login/login.html');</script>";
             } else {
-                echo "<script>alert('password not verified = wrong');</script>";
+                //Compare DB and User Password
+                $passwordHash = password_hash($passwordInput, PASSWORD_BCRYPT);
+                if (password_verify($passwordInput, $response[0]['password'])) {
+                    echo "<script>alert('password verification succeeded');</script>";
+                    $sql = "UPDATE users SET loggedIn = 0 WHERE username = '$usernameInput'";
+                    $connection->query($sql);
+                    $connection->close();
+                    $open = "<script>window.location.replace('http://localhost/copytube/copytube.php')</script>";
+                    echo $open;
+                } else {
+                    echo "<script>alert('password not verified = wrong');</script>";
+                }
             }
         }
     }
