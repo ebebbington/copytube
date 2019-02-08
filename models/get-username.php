@@ -16,7 +16,7 @@ if ($connection->connect_error) {
     die("connection failed: " . $connection->connect_error);
 }
 //Get username of logged in from db
-$sql = "SELECT loggedIn FROM users WHERE loggedIn=0";
+$sql = "SELECT username FROM users WHERE loggedIn = 0";
 //$result = query of $sql
 $result = $connection->query($sql);
 //If query fails, die. If not then get results
@@ -26,12 +26,6 @@ if ($result == false){
         Sql is: $sql.");
 } else {
     $response = $result->fetch_all(MYSQLI_ASSOC);
-    if ($response[0]['loggedIn'] == 0) {
-        // user is logged in
-        print_r(true, json_encode($response));
-    } else {
-        // not logged in
-        print_r(false, json_encode($response));
-        $connection->close();
-    }
+    print_r($response[0]['username']);
+    $connection->close();
 }
