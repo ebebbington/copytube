@@ -73,6 +73,37 @@ const revealingModulePattern = function () {
     console.log(cookie)
     console.log('Cookies [Part 2/2] - Finished')
   }
+  // RNG
+  function rng () {
+    // find a specific number without finding duplicates
+    console.log('RNG [ Part 1/2] - Start')
+    const [ chosenNumber, maxLength, minLength, rngArray ] = [ 101, 200, 1, [] ]
+    let random = 0
+    while (random !== chosenNumber) {
+      // create rng and do checks
+      random = Math.random() * (maxLength - minLength) + minLength
+      // remove decimal places
+      random = Math.round(random)
+      if (rngArray.includes(random)) {
+        random = Math.random() * (maxLength - minLength) + minLength
+      } else {
+        rngArray.push(random)
+      }
+    }
+    console.log('RNG [Part 2/2] - Finished - Result: ' + random)
+  }
+  // Get current time
+  function getTime () {
+    console.log('Get Current Time [Part 1/3] - Start')
+    let time = new Date()
+    let [ h, m ] = [ time.getHours(), time.getMinutes() ]
+    if (m < '10') { // slight problem, any minute below 10 was displayed as 15:1 or 15:8, this fixes it by adding a zero before the minute
+      m = '0' + m
+    }
+    time = h + ':' + m
+    console.log('Get Current Time [Part 2/3] - Result: ' + time)
+    console.log('Get Current Time [Part 3/3] - Finished')
+  }
 
   // Run all functions above
   function runAll () {
@@ -81,6 +112,8 @@ const revealingModulePattern = function () {
     apiRequest()
     myPromise()
     cookies('test name')
+    rng()
+    getTime()
     console.log('Supporting Functions [Part 3/3] - Finished')
   }
 

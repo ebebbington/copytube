@@ -5,6 +5,7 @@
 
 // todo :: combine get_videos and get_comments
 // todo :: create sessions data to allow multiple users (and to remove onbeforeunload to stop logout on refresh)
+// todo :: implement node
 
 // check if user is logged in and redirect if needed or make username global
 function getUsername () {
