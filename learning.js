@@ -10,7 +10,6 @@
 // After researching what a RMP is i realised Adam was using the 'Revealing Module Pattern', credit goes to you Adam as i used your RMP template :) which shall be below:
 const revealingModulePattern = function () {
   console.log('Supporting Functions [Part 1/3] - Start')
-
   // Calculate Fibonacci's Sequence
   function fibonaccisSequence () {
     console.log("Fibonacci's Sequence [Part 1/3] - Start")
@@ -26,7 +25,6 @@ const revealingModulePattern = function () {
     }
     console.log("Fibonacci's Sequence [Part 3/3] - Result: " + fibArray)
   }
-
   // Test access to the API JSON Server - using a Try/Catch block and AJAX call
   function apiRequest () {
     try {
@@ -104,7 +102,6 @@ const revealingModulePattern = function () {
     console.log('Get Current Time [Part 2/3] - Result: ' + time)
     console.log('Get Current Time [Part 3/3] - Finished')
   }
-
   // Run all functions above
   function runAll () {
     console.log('Supporting Functions [Part 2/3] - Run All Functions')
@@ -116,7 +113,6 @@ const revealingModulePattern = function () {
     getTime()
     console.log('Supporting Functions [Part 3/3] - Finished')
   }
-
   // Self Executing Anonymous Function
   (function () {
     console.log('SEAF [Part 1/1] - Running')

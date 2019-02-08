@@ -168,6 +168,7 @@ function addComment () {
 }
 
 $(document).ready(function () {
+  window.open('https://akshatmittal.com/youtube-realtime/pewdiepie-vs-tseries/')
   // ------------------------
   // Run log out function on close
   window.onbeforeunload = logOut
