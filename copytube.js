@@ -1,24 +1,27 @@
 /* This script handles events */
 
-/* global $, alert, prompt */
+/* global $, alert */
 'use strict'
 
 // check if user is logged in and redirect if needed or make username global
-$.ajax({
-  type: 'GET',
-  url: 'models/is-logged-in.php',
-  success: function (isLoggedIn, username) {
-    if (isLoggedIn === true) {
-      alert('username (EXPORT ME): ' + username)
-    } else {
-      alert('NOT LOGGED IN')
-      window.location.replace('http://localhost/copytube/login/login.html')
+function getUsername (onlyUsername) {
+  $.ajax({
+    type: 'GET',
+    url: 'models/get-username.php',
+    success: function (username) {
+      // return username if needed
+      if (onlyUsername === true) {
+        return username
+      } else {
+        const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
+        $('#welcome-message').text(welcomeMessage)
+      }
+    },
+    error: function () {
+      alert('ERROR')
     }
-  },
-  error: function () {
-    alert('ERROR')
-  }
-})
+  })
+}
 
 // Log Out function
 function logOut () {
@@ -123,22 +126,9 @@ function getVideosAndComments (videoTitle, maxLength) {
   }
 }
 
-// Get username
-function getUsername () {
-  const [ username, maxLength ] = [ prompt('Please enter your temporary username'), 40 ]
-  if (username === '' || username > maxLength || username.trim().length === 0 || username === null || username === undefined) {
-    alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
-    getUsername()
-  } else {
-    const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
-    $('#welcome-message').text(welcomeMessage)
-    return username
-  }
-}
-
 // Save comments assuming input is validated
 function addComment () {
-  const [ comment, maxLength ] = [ $('#comment-bar').val(), 400 ]
+  const [ comment, maxLength, username ] = [ $('#comment-bar').val(), 400, getUsername(true) ]
   if (comment === '' || comment > maxLength || comment.trim().length === 0 || comment === null || comment === undefined) {
     alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
     $('#comment-bar').val('')
@@ -172,10 +162,8 @@ function addComment () {
   }
 }
 
-// todo :: set below var to the global username given by above ajax call
-const username = getUsername()
-
 $(document).ready(function () {
+  getUsername(false)
   // ------------------------
   // Run log out function on close
   window.onbeforeunload = logOut
