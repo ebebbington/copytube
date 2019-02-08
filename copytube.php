@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <html>
-
     <!-- Set data before DOM -->
 	<head>
 		<title>CopyTube</title>

@@ -18,7 +18,7 @@ function getUsername (onlyUsername) {
       }
     },
     error: function () {
-      alert('ERROR')
+      alert('TESTTTTTT')
     }
   })
 }
