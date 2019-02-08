@@ -6,7 +6,6 @@
  * Time: 13:03
  */
 
-// fixme :: not sure where processing stops - NO RESPONSE back when logging in and doesn't run success or error of prior AJAX call
 $serverName = "localhost";
 $username = "root";
 $password = "password";

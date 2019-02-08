@@ -19,7 +19,6 @@ if ($connection->connect_error) {
 $sql = "SELECT username, loggedIn FROM users WHERE loggedIn = 0";
 //$result = query of $sql
 $result = $connection->query($sql);
-// returns false is no user is logged in
 if ($result == false){
     die ('broke');
 } else {
@@ -30,7 +29,7 @@ if ($result == false){
         $connection->close();
         return;
     } else {
-        print_r(true);
+        print_r($response[0]['username']);
         $connection->close();
     }
 }
