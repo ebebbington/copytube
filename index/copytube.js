@@ -11,7 +11,7 @@
 function getUsername () {
   $.ajax({
     type: 'GET',
-    url: 'models/get-username.php',
+    url: 'http://localhost/copytube/models/get-username.php',
     success: function (username) {
       // return username if needed
       // if user tries to access page but not logged in divert back to login
@@ -32,7 +32,7 @@ function getUsername () {
 function logOut () {
   $.ajax({
     type: 'GET',
-    url: 'models/log-out.php',
+    url: 'http://localhost/copytube/models/log-out.php',
     success: function () {
     }
   })
@@ -46,7 +46,7 @@ function getVideosAndComments (videoTitle, maxLength) {
     // Get Videos
     $.ajax({
       type: 'GET',
-      url: 'models/get_videos.php',
+      url: 'http://localhost/copytube/models/get_videos.php',
       success: function (response) {
         const videos = JSON.parse(response)
         let [ rabbitHoleVideos, rabbitHoleTitles, found ] = [ [], [], null ]
@@ -100,7 +100,7 @@ function getVideosAndComments (videoTitle, maxLength) {
           // GET Comments Request
           $.ajax({
             type: 'GET',
-            url: 'models/get_comment.php',
+            url: 'http://localhost/copytube/models/get_comment.php',
             data: {
               videoTitle: found.title
             },
@@ -150,7 +150,7 @@ function addComment () {
     const mainVidTitle = $('#main-video-title').text()
     $.ajax({
       type: 'POST',
-      url: 'models/save_comment.php',
+      url: 'http://localhost/copytube/models/save_comment.php',
       data: {
         author: username,
         comment: comment,
@@ -196,7 +196,6 @@ $(document).ready(function () {
   // ------------------------
   // On click of the drodown content
   $(document).on('click', '.dropdown-titles', function () {
-
     getVideosAndComments($(this).text(), 80)
   })
   // On Click of A Rabbit Hole Video

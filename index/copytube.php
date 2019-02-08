@@ -7,16 +7,16 @@
         <!-- todo :: i have no clue how welcome-username displays the username.... getUsername() is also never called ask someone lol -->
         <h2 id="welcome-username"></h2><h2 id="welcome-message">Welcome to CopyTube</h2>
 		<!-- allows .js code to run jquery -->
-		<script src="scripts/jquery-3.3.1.min.js"></script>
+		<script src="../scripts/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->
-		<link rel="stylesheet" href="links/bootstrap.min.css" crossorigin="anonymous">
+		<link rel="stylesheet" href="../links/bootstrap.min.css" crossorigin="anonymous">
 		<!-- accesses bootstrap js files that makes js files much easier to use -->
-		<script src="scripts/bootstrap.min.js" crossorigin="anonymous"></script>
+		<script src="../scripts/bootstrap.min.js" crossorigin="anonymous"></script>
 		<!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
         <!-- links my style sheet (.css) so it can be used -->
 		<link rel="stylesheet" href="copytube.css"/>
         <!-- Link my learning script to prepare the data -->
-        <script src="learning.js"></script>
+        <script src="../learning.js"></script>
         <!-- Link my javascript file so it can be used -->
         <script src="copytube.js"></script>
         <script>getUsername()</script>
@@ -27,7 +27,7 @@
 			<div class="row">
                 <!-- set logo -->
 				<div class="col-xs-3">
-					<img id="logo" src="images/copytube_logo.png"/>
+					<img id="logo" src="../images/copytube_logo.png"/>
 				</div>
 				<!-- create search bar and button -->
 				<div class="col-xs-9">
@@ -79,9 +79,9 @@
 							<video id='main-video' controls
 									autoplay
 							    	muted
-                                    poster="images/something_more.jpg"
+                                    poster="../images/something_more.jpg"
 							    	title="Something More"
-							    	src="videos/something_more.mp4"
+							    	src="../videos/something_more.mp4"
 							    	width="750"
 							    	height="400">
 							    Sorry, your browser doesn't support embedded videos.
