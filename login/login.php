@@ -36,7 +36,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
             $response = $result->fetch_all(MYSQLI_ASSOC);
             // check if input is even in db
             if (count($response) === 0) {
-                // todo :: add in element to say incorrect credentials
+                echo "<script>alert('Incorrect credentials');</script>";
                 echo "<script>window.location.replace('http://localhost/copytube/login/login.html');</script>";
             } else {
                 //Compare DB and User Password
