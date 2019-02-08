@@ -4,17 +4,19 @@
 'use strict'
 
 // check if user is logged in and redirect if needed or make username global
-function getUsername (onlyUsername) {
+function getUsername () {
   $.ajax({
     type: 'GET',
     url: 'models/get-username.php',
     success: function (username) {
       // return username if needed
-      if (onlyUsername === true) {
-        return username
+      // if user tries to access page but not logged in
+      if (username === 'false') {
+        window.location.replace('http://localhost/copytube/login/login.html')
       } else {
         const welcomeMessage = 'Hello ' + username + ', and welcome to CopyTube'
         $('#welcome-message').text(welcomeMessage)
+        return username
       }
     },
     error: function () {
@@ -163,7 +165,6 @@ function addComment () {
 }
 
 $(document).ready(function () {
-  getUsername(false)
   // ------------------------
   // Run log out function on close
   window.onbeforeunload = logOut

@@ -16,16 +16,21 @@ if ($connection->connect_error) {
     die("connection failed: " . $connection->connect_error);
 }
 //Get username of logged in from db
-$sql = "SELECT username FROM users WHERE loggedIn = 0";
+$sql = "SELECT username, loggedIn FROM users WHERE loggedIn = 0";
 //$result = query of $sql
 $result = $connection->query($sql);
-//If query fails, die. If not then get results
+// returns false is no user is logged in
 if ($result == false){
-    die("PHP Response SQL: The query of sql is false.
-        Result is: $result.
-        Sql is: $sql.");
+    die ('broke');
 } else {
+    // check if that user is logged in to isplay error
     $response = $result->fetch_all(MYSQLI_ASSOC);
-    print_r($response[0]['username']);
-    $connection->close();
+    if (count($response) === 0) {
+        print_r('false');
+        $connection->close();
+        return;
+    } else {
+        print_r(true);
+        $connection->close();
+    }
 }

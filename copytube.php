@@ -18,6 +18,7 @@
         <script src="learning.js"></script>
         <!-- Link my javascript file so it can be used -->
         <script src="copytube.js"></script>
+        <script>getUsername()</script>
 	</head>
 
 	<body>

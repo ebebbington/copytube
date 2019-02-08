@@ -42,7 +42,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
                 $sql = "UPDATE users SET loggedIn = 0 WHERE username = '$usernameInput'";
                 $connection->query($sql);
                 $connection->close();
-                $open = "<script>window.open('http://localhost/copytube/copytube.php')</script>";
+                $open = "<script>window.location.replace('http://localhost/copytube/copytube.php')</script>";
                 echo $open;
             } else {
                 echo "<script>alert('password not verified = wrong');</script>";
