@@ -7,7 +7,7 @@
 // todo :: create sessions data to allow multiple users (and to remove onbeforeunload to stop logout on refresh)
 // todo :: implement node
 
-// check if user is logged in and redirect if needed or make username global
+// check if user is logged in and redirect if needed
 function getUsername () {
   $.ajax({
     type: 'GET',

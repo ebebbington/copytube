@@ -21,7 +21,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
         // Hash
         $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
         //create connection
-        $connection = new mysqli($servername, $username, $password, 'copytube');
+        $connection = new mysqli($serverName, $username, $password, 'copytube');
         //check connection
         if ($connection->connect_error) {
             die("connection to database failed: " + $connection->connect_error);
@@ -31,7 +31,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
 
         //set this data in the database
         $connection->query($sql);
-        print_r(true);
+        echo "<script>window.location.replace('http://localhost/copytube/register/register.html')";
         $connection->close();
     }
 }
