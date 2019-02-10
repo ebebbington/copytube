@@ -18,6 +18,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
     if ($passwordInput === '' || $passwordInput >= ($maxLength + 1) || trim($passwordInput) === 0 || $passwordInput === null) {
         print_r(false);
     } else {
+        // todo :: implement proper validation
         // Hash
         $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
         //create connection
@@ -28,10 +29,9 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
         }
         //if connection works, set variable to string of inserting data
         $sql = "INSERT INTO users (username, password, loggedIn) VALUES ('$usernameInput', '$hash', 1)";
-
         //set this data in the database
         $connection->query($sql);
-        echo "<script>window.location.replace('http://localhost/copytube/register/register.html')";
         $connection->close();
+        echo "<script>window.location.replace('http://localhost/copytube/register/register.html');</script>";
     }
 }
