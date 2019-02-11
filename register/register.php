@@ -24,10 +24,13 @@
                         <legend>Register</legend>
                         Username: <br>
                         <input id="register-username" type="text" name="username"><br>
+                        <p id="incorrect-username"></p>
                         Email: <br>
                         <input id="register-email" type="email" name="email"><br>
+                        <p id="incorrect-email"></p>
                         Password: <br>
                         <input id="register-password" type='password' name='password'>
+                        <p id="incorrect-password"></p>
                         <input id="register-button" type="submit" name="submit" value="Submit">
                     </fieldset>
                 </form>
