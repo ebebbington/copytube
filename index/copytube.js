@@ -131,7 +131,7 @@ function getVideosAndComments (videoTitle, maxLength) {
   }
 }
 
-// Save comments assuming input is validated
+// Save comments assuming input is validated todo :: check and remove code one validation is complete
 function addComment () {
   const [ comment, maxLength, username ] = [ $('#comment-bar').val(), 400, $('#welcome-username').text() ]
   if (comment === '' || comment > maxLength || comment.trim().length === 0 || comment === null || comment === undefined) {
