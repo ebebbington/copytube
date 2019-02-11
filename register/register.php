@@ -12,12 +12,20 @@ $password = "password";
 $usernameInput = $_POST['username'];
 $passwordInput = $_POST['password'];
 $maxLength = 40;
+/* Validation - Start */
 if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernameInput) === 0 || $usernameInput === null) {
     print_r(false);
 } else {
     if ($passwordInput === '' || $passwordInput >= ($maxLength + 1) || trim($passwordInput) === 0 || $passwordInput === null) {
         print_r(false);
     } else {
+        if (isset($_POST['submit'])) {
+            if (empty($_POST['username'])) {
+                $usernameOrPasswordError = "<p>Please enter the correct credentials</p>";
+            } else if (!preg_match('/^[a-zA-Z ]*$/', $_POST['username'])) {
+                $usernameOrPasswordError = "<p>Only letters and whitespaces allowed</p>";
+            }
+        }
         // Hash
         $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
         //create connection
