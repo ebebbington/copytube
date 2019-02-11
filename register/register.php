@@ -19,15 +19,15 @@
         <!-- Login fields -->
         <div class="col-xs-12">
             <div class="register">
-                <form method="POST" action="register.php">
+                <form method="POST" action="register-validate.php">
                     <fieldset>
                         <legend>Register</legend>
                         Username: <br>
                         <input id="register-username" type="text" name="username"><br>
+                        Email: <br>
+                        <input id="register-email" type="email" name="email"><br>
                         Password: <br>
                         <input id="register-password" type='password' name='password'>
-                        <span id="danger"><?php echo $usernameOrPasswordError; ?></span>
-
                         <input id="register-button" type="submit" name="submit" value="Submit">
                     </fieldset>
                 </form>
