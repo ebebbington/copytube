@@ -48,6 +48,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
                     $connection->close();
                     $open = "<script>window.location.replace('http://localhost/copytube/index/copytube.php')</script>";
                     echo $open;
+                    setcookie(username, $_POST['username']);
                 } else {
                     echo "<script>alert('password not verified = wrong');</script>";
                 }
