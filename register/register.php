@@ -1,44 +1,44 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Edward
- * Date: 06/02/2019
- * Time: 12:12
- */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Copytube</title>
+    <script src="../scripts/jquery-3.3.1.min.js"></script>
+    <!-- accesses bootstrap css files that makes css files much easier to use -->
+    <link rel="stylesheet" href="../links/bootstrap.min.css" crossorigin="anonymous">
+    <!-- accesses bootstrap js files that makes js files much easier to use -->
+    <script src="../scripts/bootstrap.min.js" crossorigin="anonymous"></script>
+    <!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
+    <!-- links my style sheet (.css) so it can be used -->
+    <link rel="stylesheet" href="register.css"/>
+    <script src="register.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- Login fields -->
+        <div class="col-xs-12">
+            <div class="register">
+                <form method="POST" action="register.php">
+                    <fieldset>
+                        <legend>Register</legend>
+                        Username: <br>
+                        <input id="register-username" type="text" name="username"><br>
+                        Password: <br>
+                        <input id="register-password" type='password' name='password'>
+                        <span id="danger"><?php echo $usernameOrPasswordError; ?></span>
 
-$serverName = "localhost";
-$username = "root";
-$password = "password";
-$usernameInput = $_POST['username'];
-$passwordInput = $_POST['password'];
-$maxLength = 40;
-/* Validation - Start */
-if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernameInput) === 0 || $usernameInput === null) {
-    print_r(false);
-} else {
-    if ($passwordInput === '' || $passwordInput >= ($maxLength + 1) || trim($passwordInput) === 0 || $passwordInput === null) {
-        print_r(false);
-    } else {
-        if (isset($_POST['submit'])) {
-            if (empty($_POST['username'])) {
-                $usernameOrPasswordError = "<p>Please enter the correct credentials</p>";
-            } else if (!preg_match('/^[a-zA-Z ]*$/', $_POST['username'])) {
-                $usernameOrPasswordError = "<p>Only letters and whitespaces allowed</p>";
-            }
-        }
-        // Hash
-        $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
-        //create connection
-        $connection = new mysqli($serverName, $username, $password, 'copytube');
-        //check connection
-        if ($connection->connect_error) {
-            die("connection to database failed: " + $connection->connect_error);
-        }
-        //if connection works, set variable to string of inserting data
-        $sql = "INSERT INTO users (username, password, loggedIn) VALUES ('$usernameInput', '$hash', 1)";
-        //set this data in the database
-        $connection->query($sql);
-        $connection->close();
-        echo "<script>window.location.replace('http://localhost/copytube/register/register.html');</script>";
-    }
-}
+                        <input id="register-button" type="submit" name="submit" value="Submit">
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-12>">
+            <div class="back">
+                <a href="#" id="go-back">Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
