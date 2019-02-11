@@ -4,7 +4,7 @@
 'use strict'
 
 // check if user is logged in and redirect if needed
-function getUsername () {
+function getUsername (param) {
   $.ajax({
     type: 'GET',
     url: 'http://localhost/copytube/models/get-username.php',
@@ -14,8 +14,12 @@ function getUsername () {
       if (username === 'false') {
         window.location.replace('http://localhost/copytube/login/login.html')
       } else {
-        document.cookie = 'name=' + username
-        $('#welcome-username').text(username)
+        document.cookie = 'name=' + username + "'"
+        if (param === 'welcome message') {
+          $('#welcome').text(username + ', welcome to CopyTube')
+        } else {
+          return username
+        }
       }
     },
     error: function () {
@@ -164,23 +168,18 @@ function addComment () {
 }
 
 $(document).ready(function () {
-  window.open('https://akshatmittal.com/youtube-realtime/pewdiepie-vs-tseries/')
-  // ------------------------
   // Run log out function on close
   window.onbeforeunload = logOut
-  // ------------------------
   // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
     const commentLength = $('#comment-bar').val().length
     $('#comment-count').text(commentLength)
   })
-  // ------------------------
   // On Click of Add Comment Button
   $('#comment-button').on('click', function () {
     // Run addComment function
     addComment()
   })
-  // ------------------------
   // On click of the drodown content
   $(document).on('click', '.dropdown-titles', function () {
     getVideosAndComments($(this).text(), 80)

@@ -4,7 +4,6 @@
     <!-- Set data before DOM -->
 	<head>
 		<title>CopyTube</title>
-        <h2 id="welcome-username"></h2><h2 id="welcome-message">Welcome to CopyTube</h2>
 		<!-- allows .js code to run jquery -->
 		<script src="../scripts/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->
@@ -18,10 +17,10 @@
         <script src="../learning.js"></script>
         <!-- Link my javascript file so it can be used -->
         <script src="copytube.js"></script>
-        <script>getUsername()</script>
 	</head>
 
 	<body>
+    <h2 id="welcome"><script>getUsername('welcome message')</script></h2>
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->
