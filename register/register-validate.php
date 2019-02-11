@@ -14,10 +14,11 @@ $email = $_POST['email'];
 $pass = $_POST['password'];
 $maxLength = 40;
 $error = false;
+$errorMsg = '';
 // Validation
 /* todo :: Figure out how to append text such as: $('#username-error').append(<p>Error</p>) THEN if i figure this out
 replace scripts and embed the if statements within each other and if an input is wrong change $error to true.
-Please refer to the bottom of this first script to see what the code SHOULD be */
+Another option would be to place this code in register.php if it's safe. */
 if (isset($_POST['submit'])) {
     // Username
     if ($name >= ($maxLength + 1 || trim($name) === 0 || $name === null || empty($name))) {
