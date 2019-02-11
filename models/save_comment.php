@@ -5,7 +5,7 @@ $username = "root";
 $password = "password";
 $author = $_POST['author'];
 $comment = $_POST['comment'];
-$date = $_POST['datePosted'];
+$date = $_POST[''];
 $videoTitle = $_POST['videoTitle'];
 //create connection
 $connection = new mysqli($servername, $username, $password, 'copytube');

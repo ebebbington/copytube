@@ -25,13 +25,18 @@
 			<div class="row">
                 <!-- set logo -->
 				<div class="col-xs-3">
-					<img id="logo" src="../images/copytube_logo.png"/>
+					<img id="logo" src="../images/copytube_logo.png" alt="Error locating image"/>
 				</div>
 				<!-- create search bar and button -->
 				<div class="col-xs-9">
 					<div id="search" class="input-group">
                         <div class="dropdown">
-     					    <input id="search-bar" type="text" class="form-control my-input" placeholder="Search or Hover Over Me for a List of Videos and Click"/>
+                            <form>
+                                <span id="search"> <!-- Span is similar to <div> only span lets elements stay on the same line -->
+     					            <input id="search-bar" name="search-bar" type="search" placeholder="Search or Hover Over Me for a List of Videos and Click" size="60" required/>
+                                    <input id="search-button" name="search-button" type="submit" value="Search">
+                                </span>
+                            </form>
                             <div class="dropdown-content">
                                 <?php
                                     // setting variables
@@ -60,9 +65,6 @@
                                 ?>
                             </div>
                         </div>
-      					<span class="input-group-btn">
-       						<button id="search-button" class="btn btn-default" type="button">Search</button>
-      					</span>
     				</div>
 				</div>
 			</div>
@@ -93,11 +95,13 @@
 
 						<!-- create comments section -->
                         <p id="comment-title">Comments Section</p> <p id="comment-count">0</p>
-						<div id="comment" class="input-group">
-							<input id="comment-bar" type="text" class="form-control my-input" placeholder="Add a comment..."/>
-      						<span class="input-group-btn">
-       							<button id="comment-button" class="btn btn-default" type="button">Add</button>
-      						</span>
+						<div id="comment">
+                            <form id="comment-form" action="../models/save_comment.php" method="get">
+                                <span>
+                                    <textarea id="comment-bar" cols="110" form="comment-form" name="comment-bar" placeholder="Add a comment..." required rows="4"></textarea>
+                                    <input id="comment-button" type="submit" name="comment-button" value="Add">
+                                </span>
+                            </form>
     					</div>
     					<br>
                         <div id="user-comments"></div>
