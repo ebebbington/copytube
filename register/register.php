@@ -18,7 +18,6 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
     if ($passwordInput === '' || $passwordInput >= ($maxLength + 1) || trim($passwordInput) === 0 || $passwordInput === null) {
         print_r(false);
     } else {
-        // todo :: implement proper validation
         // Hash
         $hash = password_hash($passwordInput, PASSWORD_BCRYPT);
         //create connection

@@ -4,7 +4,6 @@
     <!-- Set data before DOM -->
 	<head>
 		<title>CopyTube</title>
-        <!-- todo :: Ok so i realised how username was displayed (calling function below) but is this the best way? -->
         <h2 id="welcome-username"></h2><h2 id="welcome-message">Welcome to CopyTube</h2>
 		<!-- allows .js code to run jquery -->
 		<script src="../scripts/jquery-3.3.1.min.js"></script>

@@ -1,6 +1,5 @@
 /* global $ */
 
-// todo :: implement lockout or reset user if tried login too many times
 /*
 password_tries_left--;
                         if (password_tries_left == 0){

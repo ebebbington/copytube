@@ -3,10 +3,6 @@
 /* global $, alert */
 'use strict'
 
-// todo :: combine get_videos and get_comments
-// todo :: create sessions data to allow multiple users (and to remove onbeforeunload to stop logout on refresh)
-// todo :: implement node
-
 // check if user is logged in and redirect if needed
 function getUsername () {
   $.ajax({
@@ -178,16 +174,6 @@ $(document).ready(function () {
     const commentLength = $('#comment-bar').val().length
     $('#comment-count').text(commentLength)
   })
-  // ------------------------
-  // todo :: Removing Drop-down for Search in Prep for Auto-complete
-  /* var drop_down = true;
-  $(document).on('keyup', '#search-bar',function(){
-      disable drop-down elements
-      drop_down = false;
-      if (drop_down == false){
-          $('.dropdown-content').prop('textContent', "");
-      }
-  }) */
   // ------------------------
   // On Click of Add Comment Button
   $('#comment-button').on('click', function () {
