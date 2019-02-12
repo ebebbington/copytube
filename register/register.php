@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../links/bootstrap.min.css" crossorigin="anonymous">
     <!-- accesses bootstrap js files that makes js files much easier to use -->
     <script src="../scripts/bootstrap.min.js" crossorigin="anonymous"></script>
-    <!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
+    <!-- NOTE: My files are placed after so they overwrite the files above if needed i.e. my css > their css styles -->
     <!-- links my style sheet (.css) so it can be used -->
     <link rel="stylesheet" href="register.css"/>
     <script src="register.js"></script>
@@ -19,19 +19,20 @@
         <!-- Login fields -->
         <div class="col-xs-12">
             <div class="register">
-                <form method="POST" action="register-validate.php">
+                <form method="post" onsubmit="return validateInput()">
                     <fieldset>
                         <legend>Register</legend>
+                        <p id="register-success"></p>
                         Username: <br>
-                        <input id="register-username" type="text" name="username"><br>
-                        <p id="incorrect-username"></p>
+                        * <input id="register-username" type="text" name="username"><br>
+                        <p id="incorrect-username" class="incorrect-errors"></p>
                         Email: <br>
-                        <input id="register-email" type="email" name="email"><br>
-                        <p id="incorrect"></p>
+                        * <input id="register-email" type="email" name="email"><br>
+                        <p id="incorrect-email" class="incorrect-errors"></p>
                         Password: <br>
-                        <input id="register-password" type='password' name='password'>
-                        <p id="incorrect-password"></p>
-                        <input id="register-button" type="submit" name="submit" value="Submit">
+                        * <input id="register-password" type='password' name='password'>
+                        <p id="incorrect-password" class="incorrect-errors"></p>
+                        <input id="register-button" type="submit" name="submit" value="Submit" act>
                     </fieldset>
                 </form>
             </div>

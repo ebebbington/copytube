@@ -31,3 +31,11 @@ fieldset{
     margin-left: 40em;
     margin-top: 2em;
 }
+.incorrect-errors{
+    font-size: 10px;
+    color: red;
+}
+#register-success{
+    font-size: 10px;
+    color: green
+}
