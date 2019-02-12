@@ -31,14 +31,21 @@ function validateInput () {
             pass: pass
           },
           success: function (output) {
-            if (output === false) {
+            alert('AJAX Success response: ' + output)
+            if (JSON.parse(output) === false) {
+              alert('reached success block')
               // false mean whn the query is completed
+              $('#incorrect-username').text('')
+              $('#incorrect-email').text('')
+              $('#incorrect-password').text('')
+              $('.register-fields').val('')
               $('#register-success').text('Successfully registered an account')
+              $('html, body').animate({ scrollTop: 0 }, 'fast') // ref: https://stackoverflow.com/questions/4147112/how-to-jump-to-top-of-browser-page
               return false
             } else {
+              alert('reached error block')
               // means there is an error and it can ONLY be name, email or pass so display the error message
               const errorArray = JSON.parse(output)
-              alert('Here is the error in array form: ' + errorArray) // todo :: elements dont change text and i think form is 'unsubmitted' (like a page refresh) which makes NO SENSE as the above code to display errors works fine and its exactly the SAME - I THINK THE ID'S ARE JUST COMPLETELY DISAPPEARING
               if (errorArray[0] === 'name') {
                 $('#incorrect-username').text(errorArray[1])
                 $('#incorrect-email').text('')

@@ -15,6 +15,7 @@ $pass = $_POST['pass'];
 $maxLength = 40;
 $error = false;
 $errorMsg = null;
+$numberFound = false;
 if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
     // Validation
     // Username
@@ -53,46 +54,127 @@ if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
                             $errorMsg = array('pass', 'Password must contain 8 or more characters');
                             print_r(json_encode($errorMsg));
                         } else {
-                            // Password
-                            if (!preg_match("#[0-9]+#", $password)) {
-                                $error = true;
-                                $errorMsg = array('pass', 'Must contain at least one number');
-                                print_r(json_encode($errorMsg));
-                            } else {
-                                // Password
-                                if (!preg_match("#[a-zA-Z]+#", $password)) {
+                            // Password - Find a number - personal algorithm
+                            while ($numberFound !== true) {
+                                for ($i = 0, $l = strlen($pass); $i < $l; $i++) {
+                                    $value = $pass[$i];
+                                    if (is_numeric($value)) {
+                                        $numberFound = true;
+                                        break;
+                                    }
+                                }
+                                if ($numberFound !== true) {
+                                    $error = true;
+                                    $errorMsg = array('pass', 'Must contain at least one number');
+                                    print_r(json_encode($errorMsg));
+                                    break;
+                                }
+                            }
+                            if ($numberFound === true) {
+                                // Password - Self created algorithm - MADE IT WORK - ctype_[] didn't account for other characters than letters
+                                // This grabs all upper and lower case letters and then makes sure the end result contains an upper and lower
+                                $letterRange1 = range('a', 'z');
+                                $letterRange2 = range('A', 'Z');
+                                $passOnlyLetters = [];
+                                for ($i=0, $l=strlen($pass); $i<$l; $i++) {
+                                    if (in_array($pass[$i], $letterRange1)) {
+                                        array_push($passOnlyLetters, $pass[$i]);
+                                    }
+                                    if (in_array($pass[$i], $letterRange2)) {
+                                        array_push($passOnlyLetters, $pass[$i]);
+                                    }
+                                }
+                                if (ctype_upper(implode($passOnlyLetters)) || ctype_lower(implode($passOnlyLetters))) {
                                     $error = true;
                                     $errorMsg = array('pass', 'Must contain at least one upper and lowercase character');
                                     print_r(json_encode($errorMsg));
                                 } else {
-                                    // Sanitization - Name
-                                    if (!filter_var($name, FILTER_SANITIZE_STRING)) {
+                                    // Password
+                                    if ($name === $pass) {
                                         $error = true;
-                                        $errorMsg = array('name', 'Remove tags');
+                                        $errorMsg = array('pass', 'Password cannot be the same as the username');
                                         print_r(json_encode($errorMsg));
                                     } else {
-                                        // Sanitization - Email
-                                        if (!filter_var($email, FILTER_SANITIZE_EMAIL)) {
+                                        // Password
+                                        if (strpos($pass, $name)) {
                                             $error = true;
-                                            $errorMsg = array('email', 'Remove tags');
+                                            $errorMsg = array('pass', 'Password cannot contain username');
                                             print_r(json_encode($errorMsg));
                                         } else {
-                                            if ($error === false) {
-                                                // All validation is correct
-                                                $hash = password_hash($pass, PASSWORD_BCRYPT);
-                                                //create connection
-                                                $connection = new mysqli($serverName, $username, $password, 'copytube');
-                                                //check connection
-                                                if ($connection->connect_error) {
-                                                    die("connection to database failed: " + $connection->connect_error);
+                                            // Sanitization - Name
+                                            if (!filter_var($name, FILTER_SANITIZE_STRING)) {
+                                                $error = true;
+                                                $errorMsg = array('name', 'Remove tags');
+                                                print_r(json_encode($errorMsg));
+                                            } else {
+                                                // Sanitization - Email
+                                                if (!filter_var($email, FILTER_SANITIZE_EMAIL)) {
+                                                    $error = true;
+                                                    $errorMsg = array('email', 'Remove tags');
+                                                    print_r(json_encode($errorMsg));
+                                                } else {
+                                                    // Sanitization - Password
+                                                    if (!filter_var($pass, FILTER_SANITIZE_STRING)) {
+                                                        $error = true;
+                                                        $errorMsg = array('pass', 'Remove tags');
+                                                        print_r(json_encode($errorMsg));
+                                                    } else {
+                                                        // Username - check if username and email already exist - Self created algo
+                                                        $connection = new mysqli($serverName, $username, $password,
+                                                          'copytube');
+                                                        if ($connection->connect_error) {
+                                                            die("connection failed: " + $connection->connect_error);
+                                                        }
+                                                        $sql
+                                                          = "SELECT username, email_address FROM users";
+                                                        $result = $connection->query($sql);
+                                                        if ($result == false){
+                                                            die ('broke');
+                                                        }
+                                                        $response = $result->fetch_all(MYSQLI_ASSOC);
+                                                        for ($i = 0, $l = sizeof($response); $i < $l; $i++) {
+                                                            // IM A GENIUS
+                                                            if ($name === $response[$i]['username']) {
+                                                                $i = $l;
+                                                                $error = true;
+                                                                $errorMsg = array(
+                                                                  'name',
+                                                                  'Username already exists'
+                                                                );
+                                                                print_r(json_encode($errorMsg));
+                                                                break;
+                                                            } else {
+                                                                if ($email === $response[$i]['email_address']) {
+                                                                    $i = $l;
+                                                                    $error = true;
+                                                                    $errorMsg = array('email', 'Email already exists');
+                                                                    print_r(json_encode($errorMsg));
+                                                                    break;
+                                                                }
+                                                            }
+
+                                                        }
+                                                        //set this data in the database
+                                                        if ($error === false) {
+                                                            // All validation is correct
+                                                            $hash = password_hash($pass, PASSWORD_BCRYPT);
+                                                            //create connection
+                                                            $connection = new mysqli($serverName, $username, $password,
+                                                              'copytube');
+                                                            //check connection
+                                                            if ($connection->connect_error) {
+                                                                die("connection failed: " + $connection->connect_error);
+                                                            }
+                                                            //if connection works, set variable to string of inserting data
+                                                            $sql
+                                                              = "INSERT INTO users (username, email_address, password, loggedIn) VALUES ('$name', '$email', '$hash', 1)";
+                                                            //set this data in the database
+                                                            $connection->query($sql);
+                                                            $connection->close();
+                                                            print_r(json_encode($error));
+                                                        }
+                                                    }
                                                 }
-                                                //if connection works, set variable to string of inserting data
-                                                $sql
-                                                  = "INSERT INTO users (username, password, loggedIn) VALUES ('$name', '$hash', 1)";
-                                                //set this data in the database
-                                                $connection->query($sql);
-                                                $connection->close();
-                                                print_r($errorMsg);
                                             }
                                         }
                                     }

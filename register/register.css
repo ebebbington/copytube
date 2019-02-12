@@ -24,7 +24,9 @@ fieldset{
     border-right-color: #333333;
     border-bottom-color: #333333;
 }
-
+.register-fields{
+    width: 90%;
+}
 #go-back{
     margin-left: 40em;
     margin-top: 2em;
@@ -34,6 +36,6 @@ fieldset{
     color: red;
 }
 #register-success{
-    font-size: 10px;
+    font-size: 20px;
     color: green
 }

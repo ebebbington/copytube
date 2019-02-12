@@ -24,13 +24,13 @@
                         <legend>Register</legend>
                         <p id="register-success"></p>
                         Username: <br>
-                        * <input id="register-username" type="text" name="username"><br>
+                        * <input id="register-username" class="register-fields" type="text" name="username"><br>
                         <p id="incorrect-username" class="incorrect-errors"></p>
                         Email: <br>
-                        * <input id="register-email" type="email" name="email"><br>
+                        * <input id="register-email" class="register-fields" type="email" name="email"><br>
                         <p id="incorrect-email" class="incorrect-errors"></p>
                         Password: <br>
-                        * <input id="register-password" type='password' name='password'>
+                        * <input id="register-password" class="register-fields" type='password' name='password'>
                         <p id="incorrect-password" class="incorrect-errors"></p>
                         <button id="register-button" type="button" name="submit" value="Submit" onclick="return validateInput()">Submit</button>
                     </fieldset>
@@ -42,6 +42,20 @@
                 <a href="#" id="go-back">Go Back</a>
             </div>
         </div>
+        <div class="col-xs-4">
+            <p>Email Validation:</p>
+            <p>Trim, null, empty</p>
+            <p>Filtered through email, removes tags, checks if it exists already in db</p>
+        </div>
+        <div class="col-xs-4">
+            <p>Username Validation:</p>
+            <p>Name is > than Max Length, trimmed = 0, equals null or empty</p>
+            <p>Needs and only allows letters and spaces, removes tags, checks if exists in db</p>
+        </div>
+        <div class="col-cs-4"></div>
+        <p>Password Validation:</p>
+        <p>Trim, null, empty, less than 8 length, make sure has number & lower+uppercse letters</p>
+        <p>Pass cannot be same or contain username, removes tags</p>
     </div>
 </div>
 </body>
