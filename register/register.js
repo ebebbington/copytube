@@ -38,7 +38,7 @@ function validateInput () {
             } else {
               // means there is an error and it can ONLY be name, email or pass so display the error message
               const errorArray = JSON.parse(output)
-              alert('Here is the error in array form: ' + errorArray) // todo :: elements dont change text and i think form is 'unsubmitted' (like a page refresh) which makes NO SENSE as the above code to display errors works fine and its exactly the SAME
+              alert('Here is the error in array form: ' + errorArray) // todo :: elements dont change text and i think form is 'unsubmitted' (like a page refresh) which makes NO SENSE as the above code to display errors works fine and its exactly the SAME - I THINK THE ID'S ARE JUST COMPLETELY DISAPPEARING
               if (errorArray[0] === 'name') {
                 $('#incorrect-username').text(errorArray[1])
                 $('#incorrect-email').val()
