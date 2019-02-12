@@ -19,7 +19,7 @@
         <!-- Login fields -->
         <div class="col-xs-12">
             <div class="register">
-                <form method="post" onsubmit="return validateInput()">
+                <form method="post">
                     <fieldset>
                         <legend>Register</legend>
                         <p id="register-success"></p>
@@ -32,7 +32,7 @@
                         Password: <br>
                         * <input id="register-password" type='password' name='password'>
                         <p id="incorrect-password" class="incorrect-errors"></p>
-                        <input id="register-button" type="submit" name="submit" value="Submit" act>
+                        <button id="register-button" type="button" name="submit" value="Submit" onclick="return validateInput()">Submit</button>
                     </fieldset>
                 </form>
             </div>

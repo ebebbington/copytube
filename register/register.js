@@ -41,20 +41,22 @@ function validateInput () {
               alert('Here is the error in array form: ' + errorArray) // todo :: elements dont change text and i think form is 'unsubmitted' (like a page refresh) which makes NO SENSE as the above code to display errors works fine and its exactly the SAME - I THINK THE ID'S ARE JUST COMPLETELY DISAPPEARING
               if (errorArray[0] === 'name') {
                 $('#incorrect-username').text(errorArray[1])
-                $('#incorrect-email').val()
-                $('#incorrect-password').val()
+                $('#incorrect-email').text('')
+                $('#incorrect-password').text('')
                 return false
               } else {
                 if (errorArray[ 0 ] === 'email') {
-                  $('#incorrect-username').val()
+                  $('#incorrect-username').text('')
                   $('#incorrect-email').text(errorArray[ 1 ])
-                  $('#incorrect-password').val()
+                  $('#incorrect-password').text('')
                   return false
                 } else {
-                  $('#incorrect-username').val()
-                  $('#incorrect-email').val()
-                  $('#incorrect-password').text(errorArray[ 1 ])
-                  return false
+                  if (errorArray[ 0 ] === 'pass') {
+                    $('#incorrect-username').text('')
+                    $('#incorrect-email').text('')
+                    $('#incorrect-password').text(errorArray[ 1 ])
+                    return false
+                  }
                 }
               }
             }
