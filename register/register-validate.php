@@ -54,7 +54,7 @@ if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
                             print_r(json_encode($errorMsg));
                         } else {
                             // Password
-                            if (!preg_match("/[0-9]$", $password)) {
+                            if (!preg_match("#[0-9]+#", $password)) {
                                 $error = true;
                                 $errorMsg = array('pass', 'Must contain at least one number');
                                 print_r(json_encode($errorMsg));
