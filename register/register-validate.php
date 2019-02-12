@@ -22,7 +22,7 @@ Another option would be to place this code in register.php if it's safe. */
 if (isset($_POST['submit'])) {
     // Username
     if ($name >= ($maxLength + 1 || trim($name) === 0 || $name === null || empty($name))) {
-        echo "<script>alert('Enter a username');</script>";
+        echo "<script>alert('Enter a correct username');</script>";
         echo "<script>window.location.replace('http://localhost/copytube/register/register.php');</script>";
     }
     // Username
@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
     }
     // Email
     if (trim($email) === 0 || $email === null || empty($email)) {
-        echo "<script>alert('Enter an email');</script>";
+        echo "<script>alert('Enter a correct email');</script>";
         echo "<script>window.location.replace('http://localhost/copytube/register/register.php');</script>";
     }
     // Email
@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
     }
     // Password
     if (empty($pass) || $pass >= ($maxLength + 1) || trim($pass) === 0 || $pass === null) {
-        echo "<script>alert('Enter a password');</script>";
+        echo "<script>alert('Enter a correct password');</script>";
         echo "<script>window.location.replace('http://localhost/copytube/register/register.php');</script>";
     }
     // Password
@@ -87,3 +87,73 @@ if (isset($_POST['submit'])) {
 }
 
 // Start of method 2
+// Username
+/* if ($name >= ($maxLength + 1 || trim($name) === 0 || $name === null || empty($name))) {
+    $error = true;
+    $usernameError = 'Enter a username';
+} else {
+    // Username
+    if (!preg_match('/^[a-zA-Z ]*$/', $name)) {
+        $error = true;
+        $usernameError = 'Only letters and white spaces allowed';
+    } else {
+        // Email
+        if (trim($email) === 0 || $email === null || empty($email)) {
+            $error = true;
+            $emailError = 'Enter an email';
+        } else {
+            // Email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error = true;
+                $emailError = 'Incorrect email format';
+            } else {
+                // Password
+                if (empty($pass) || $pass >= ($maxLength + 1) || trim($pass) === 0 || $pass === null) {
+                    $error = true;
+                    $passwordError = 'Enter a password';
+                } else {
+                    // Password
+                    if (strlen($pass) <= '8') {
+                        $error = true;
+                        $passwordError = 'Password must contain more than 8 characters';
+                    } else {
+                        // Password
+                        if(!preg_match("#[0-9]+#",$password)) {
+                            $error = true;
+                            $passwordError = 'Password must contain at least one number';
+                        } else {
+                            // Password
+                            if(!preg_match("#[A-Z]+#",$password)) {
+                                $error = true;
+                                $passwordError = 'Password must contain at least one capital letter';
+                            } else {
+                                // Password
+                                if(!preg_match("#[a-z]+#",$password)) {
+                                    $error = true;
+                                    $passwordError = 'Password must contain at least one lowercase letter';
+                                } else {
+                                    if ($error === false) {
+                                        // All validation is correct
+                                        $hash = password_hash($pass, PASSWORD_BCRYPT);
+                                        //create connection
+                                        $connection = new mysqli($serverName, $username, $password, 'copytube');
+                                        //check connection
+                                        if ($connection->connect_error) {
+                                            die("connection to database failed: " + $connection->connect_error);
+                                        }
+                                        //if connection works, set variable to string of inserting data
+                                        $sql = "INSERT INTO users (username, password, loggedIn) VALUES ('$name', '$hash', 1)";
+                                        //set this data in the database
+                                        $connection->query($sql);
+                                        $connection->close();
+                                        echo "<script>window.location.replace('http://localhost/copytube/register/register.php');</script>";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+} */

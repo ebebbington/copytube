@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="../links/bootstrap.min.css" crossorigin="anonymous">
 		<!-- accesses bootstrap js files that makes js files much easier to use -->
 		<script src="../scripts/bootstrap.min.js" crossorigin="anonymous"></script>
-		<!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
+		<!-- NOTE: My files are placed after so they overwrite the files above if needed i.e. my css > their css styles -->
         <!-- links my style sheet (.css) so it can be used -->
 		<link rel="stylesheet" href="copytube.css"/>
         <!-- Link my learning script to prepare the data -->
