@@ -31,7 +31,11 @@ function validateInput () {
             pass: pass
           },
           success: function (output) {
-            alert('AJAX Success response: ' + output)
+            try {
+              alert('AJAX Success response Non-parsed: ' + output + ' End')
+            } catch (e) {
+              alert('AJAX Success response parsed: ' + JSON.parse(output) + ' End')
+            }
             if (JSON.parse(output) === false) {
               alert('reached success block')
               // false mean whn the query is completed

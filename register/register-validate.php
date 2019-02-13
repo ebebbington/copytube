@@ -6,6 +6,8 @@
  * Time: 12:12
  */
 
+include_once '../classes/class.verifyEmail.php';
+
 $serverName = "localhost";
 $username = "root";
 $password = "password";
@@ -16,6 +18,19 @@ $maxLength = 40;
 $error = false;
 $errorMsg = null;
 $numberFound = false;
+// Set email verifying data
+try {
+    $verifyEmail = new verifyEmail();
+    $verifyEmail->setStreamTimeoutWait(20);
+    /* Below are debugging tools, disable them for verify email function to run properly */
+    // $verifyEmail->Debug = true; // Creates an alert currently with the process
+    // $verifyEmail->Debugoutput = 'html'; // Displays js code error in console
+    $verifyEmail->setEmailFrom($email);
+} catch (exception $e) {
+    $error = true;
+    $errorMsg = array('email', 'Could not validate email address');
+    print_r(json_encode($errorMsg));
+}
 if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
     // Validation
     // Username
@@ -152,32 +167,47 @@ if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
                                                                     break;
                                                                 }
                                                             }
+                                                            if ($i === $l) {
+                                                                $complete = true;
+                                                            }
 
                                                         }
-                                                        //set this data in the database
-                                                        if ($error === false) {
-                                                            // All validation is correct
-                                                            $hash = password_hash($pass, PASSWORD_BCRYPT);
-                                                            //create connection
-                                                            $connection = new mysqli($serverName, $username,
-                                                              $password,
-                                                              'copytube');
-                                                            //check connection
-                                                            if ($connection->connect_error) {
-                                                                die("connection failed: "
-                                                                  + $connection->connect_error);
-                                                            }
-                                                            // Escape the input
-                                                            $name = mysqli_real_escape_string($connection, $name);
-                                                            $email = mysqli_real_escape_string($connection, $email);
-                                                            $pass = mysqli_real_escape_string($connection, $pass);
-                                                            //if connection works, set variable to string of inserting data
-                                                            $sql
-                                                              = "INSERT INTO users (username, email_address, password, loggedIn) VALUES ('$name', '$email', '$hash', 1)";
+                                                        if ($verifyEmail->check($email)) {
                                                             //set this data in the database
-                                                            $connection->query($sql);
-                                                            $connection->close();
-                                                            print_r(json_encode($error));
+                                                            if ($error === false) {
+                                                                // All validation is correct
+                                                                $hash = password_hash($pass, PASSWORD_BCRYPT);
+                                                                //create connection
+                                                                $connection = new mysqli($serverName, $username,
+                                                                  $password,
+                                                                  'copytube');
+                                                                //check connection
+                                                                if ($connection->connect_error) {
+                                                                    die("connection failed: "
+                                                                      + $connection->connect_error);
+                                                                }
+                                                                // Escape the input
+                                                                $name = mysqli_real_escape_string($connection, $name);
+                                                                $email = mysqli_real_escape_string($connection, $email);
+                                                                $pass = mysqli_real_escape_string($connection, $pass);
+                                                                //if connection works, set variable to string of inserting data
+                                                                $sql
+                                                                  = "INSERT INTO users (username, email_address, password, loggedIn) VALUES ('$name', '$email', '$hash', 1)";
+                                                                //set this data in the database
+                                                                $connection->query($sql);
+                                                                $connection->close();
+                                                                print_r(json_encode($error));
+                                                            }
+                                                        } else {
+                                                            if ($verifyEmail::validate($email)) {
+                                                                $error = true;
+                                                                $errorMsg = array('email', 'Email valid but does not exist');
+                                                                print_r(json_encode($errorMsg));
+                                                            } else {
+                                                                $error = true;
+                                                                $errorMsg = array('email', 'Email not valid and does not exist');
+                                                                print_r(json_encode($errorMsg));
+                                                            }
                                                         }
                                                     }
                                                 }
