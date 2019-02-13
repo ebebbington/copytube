@@ -167,6 +167,10 @@ if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
                                                                 die("connection failed: "
                                                                   + $connection->connect_error);
                                                             }
+                                                            // Escape the input
+                                                            $name = mysqli_real_escape_string($connection, $name);
+                                                            $email = mysqli_real_escape_string($connection, $email);
+                                                            $pass = mysqli_real_escape_string($connection, $pass);
                                                             //if connection works, set variable to string of inserting data
                                                             $sql
                                                               = "INSERT INTO users (username, email_address, password, loggedIn) VALUES ('$name', '$email', '$hash', 1)";
