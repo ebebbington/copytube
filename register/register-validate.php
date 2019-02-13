@@ -159,11 +159,13 @@ if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
                                                             // All validation is correct
                                                             $hash = password_hash($pass, PASSWORD_BCRYPT);
                                                             //create connection
-                                                            $connection = new mysqli($serverName, $username, $password,
+                                                            $connection = new mysqli($serverName, $username,
+                                                              $password,
                                                               'copytube');
                                                             //check connection
                                                             if ($connection->connect_error) {
-                                                                die("connection failed: " + $connection->connect_error);
+                                                                die("connection failed: "
+                                                                  + $connection->connect_error);
                                                             }
                                                             //if connection works, set variable to string of inserting data
                                                             $sql

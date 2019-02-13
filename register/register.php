@@ -24,13 +24,13 @@
                         <legend>Register</legend>
                         <p id="register-success"></p>
                         Username: <br>
-                        * <input id="register-username" class="register-fields" type="text" name="username"><br>
+                        * <input id="register-username" class="register-fields" type="text" name="username" pattern="/^[a-zA-Z ]*$/"><br>
                         <p id="incorrect-username" class="incorrect-errors"></p>
                         Email: <br>
-                        * <input id="register-email" class="register-fields" type="email" name="email"><br>
+                        * <input id="register-email" class="register-fields" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"><br>
                         <p id="incorrect-email" class="incorrect-errors"></p>
                         Password: <br>
-                        * <input id="register-password" class="register-fields" type='password' name='password'>
+                        * <input id="register-password" class="register-fields" type='password' name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"> <!-- https://www.w3schools.com/tags/att_input_pattern.asp -->
                         <p id="incorrect-password" class="incorrect-errors"></p>
                         <button id="register-button" type="button" name="submit" value="Submit" onclick="return validateInput()">Submit</button>
                     </fieldset>
