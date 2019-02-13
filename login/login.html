@@ -21,11 +21,13 @@
             <div class="login">
                 <form method="POST" action="login.php">
                     <fieldset>
+                        <legend><img src="../images/copytube_logo.png"></legend>
                         <legend>Login</legend>
-                        Username: <br>
-                        <input id="login-username" type="text" name="username"><br>
+                        <p id="incorrect-credentials"></p>
+                        Email: <br>
+                        * <input id="login-email" class="login-fields" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"><br>
                         Password: <br>
-                        <input id="login-password" type='password' name='password'>
+                        * <input id="login-password" type='password' class="login-fields" name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
                         <input id="login-button" type="submit" name="submit" value="Submit">
                     </fieldset>
                 </form>

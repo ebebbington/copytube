@@ -31,3 +31,11 @@ fieldset{
     margin-left: 37em;
     margin-top: 2em;
 }
+#incorrect-credentials{
+    color: red;
+    font-size: 20px;
+}
+.login-fields{
+    width: 90%;
+    text-align: center;
+}

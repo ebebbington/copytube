@@ -22,6 +22,7 @@
                 <form method="post">
                     <fieldset>
                         <legend>Register</legend>
+                        <legend><img src="../images/copytube_logo.png"></legend>
                         <p id="register-success"></p>
                         Username: <br>
                         * <input id="register-username" class="register-fields" type="text" name="username" pattern="/^[a-zA-Z ]*$/"><br>

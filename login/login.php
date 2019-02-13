@@ -10,11 +10,11 @@ $serverName = "localhost";
 $username = "root";
 $password = "password";
 $maxLength = 40;
-$usernameInput = $_POST['username'];
+$email = $_POST['username'];
 $passwordInput = $_POST['password'];
 
 // Validation
-if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernameInput) === 0 || $usernameInput === null) {
+if ($email === '' || $usernameInput >= ($maxLength + 1) || trim($usernameInput) === 0 || $usernameInput === null) {
     print_r(false);
 } else {
     if ($passwordInput === '' || $passwordInput >= ($maxLength + 1) || trim($passwordInput) === 0 || $passwordInput === null) {
@@ -27,7 +27,7 @@ if ($usernameInput === '' || $usernameInput >= ($maxLength + 1) || trim($usernam
             die("connection failed: " . $connection->connect_error);
         }
         //Get password from db
-        $sql = "SELECT username, password FROM users WHERE username='$usernameInput'";
+        $sql = "SELECT email, password FROM users WHERE email='$email'";
         //$result = query of $sql
         $result = $connection->query($sql);
         //If query fails, die. If not then get results
