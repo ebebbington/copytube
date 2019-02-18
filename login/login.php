@@ -34,10 +34,10 @@ if ($result == false){
         $passwordHash = password_hash($passwordInput, PASSWORD_BCRYPT);
         if (password_verify($passwordInput, $response[0]['password'])) {
             $connection->close();
-            // Create a cookie of the users username - IT WORKS - the path is '/' to make it available everywhere
+            // Create a cookie of the users username - IT WORKS - the path is '/' to make it available everywhere - cookie expires in 1 hour
             // todo :: is the below the best practice to set a cookie?
             session_start();
-            setcookie('username', $response[0]['username'], null, '/');
+            setcookie('username', $response[0]['username'], time()+3200, '/');
             print_r(true);
         } else {
             print_r(false);
