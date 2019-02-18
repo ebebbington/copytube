@@ -18,7 +18,7 @@ if ($connection->connect_error) {
     die("connection failed: " . $connection->connect_error);
 }
 //Get password from db
-$sql = "SELECT email_address, password FROM users WHERE email_address='$email'";
+$sql = "SELECT username, email_address, password FROM users WHERE email_address='$email'";
 //$result = query of $sql
 $result = $connection->query($sql);
 //If query fails, die. If not then get results
@@ -33,9 +33,11 @@ if ($result == false){
         //Compare DB and User Password
         $passwordHash = password_hash($passwordInput, PASSWORD_BCRYPT);
         if (password_verify($passwordInput, $response[0]['password'])) {
-            $sql = "UPDATE users SET loggedIn = 0 WHERE email_address = '$email'"; // todo ::  remove me when user status is better
-            $connection->query($sql);
             $connection->close();
+            // Create a cookie of the users username - IT WORKS - the path is '/' to make it available everywhere
+            // todo :: is the below the best practice to set a cookie?
+            session_start();
+            setcookie('username', $response[0]['username'], null, '/');
             print_r(true);
         } else {
             print_r(false);

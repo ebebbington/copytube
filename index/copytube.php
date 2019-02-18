@@ -1,20 +1,21 @@
 <?php
-// todo :: how do i go about using cookies to allow multiple users online?
-/*
+// todo :: is below the best practice to keep a user logged in etc.?
 session_start();
-setcookie('id', $_COOKIE['PHPSESSID']);
-$session = $_COOKIE['id'];
-$servername = "localhost";
-$username = "root";
-$password = "password";
-$connection = new mysqli($servername, $username, $password, 'copytube');
-$sql = "UPDATE users SET loggedIn = 0 WHERE username = $usernamefhfdhj";
-$result = $connection->query($sql);
-if (isset($_COOKIE['PHPSESSID'])) {
-    $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-    echo "<script>window.location.replace('$url')</script>";
+$userCookie = $_COOKIE['username'];
+if (!isset($_COOKIE['PHPSESSID'])) {
+    echo "<script>window.location.replace('http://localhost/copytube/login/login.html')</script>";
+} else {
+    $servername = "localhost";
+    $username = "root";
+    $password = "password";
+    $connection = new mysqli($servername, $username, $password, 'copytube');
+    if ($connection->connect_error) {
+        die("connection failed: " + $connection->connect_error);
+    }
+    $sql = "UPDATE users SET loggedIn = 0 WHERE username = '$userCookie'";
+    $connection->query($sql);
+    $connection->close();
 }
-*/
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +39,7 @@ if (isset($_COOKIE['PHPSESSID'])) {
 	</head>
 
 	<body>
-    <h2 id="welcome"><script>getUsername('welcome message')</script></h2>
+    <h2 id="welcome"><?php echo "$userCookie, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->
