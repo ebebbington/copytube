@@ -1,7 +1,6 @@
 /* global $, alert */
 let loginTries = 3
 function login () {
-  alert('running login fucntion')
   $.ajax({
     type: 'POST',
     url: 'http://localhost/copytube/login/login.php',
@@ -10,10 +9,7 @@ function login () {
       password: $('#login-password').val()
     },
     success: function (response) {
-      alert('running success: ' + response)
-      const loginStatus = JSON.parse(response)
-      if (loginStatus === false) {
-        alert('returned false')
+      if (response === false) {
         loginTries--
         if (loginTries === 0) {
           window.close() // todo :: better lock out function
@@ -23,8 +19,7 @@ function login () {
           return false
         }
       } else {
-        alert('returned true')
-        window.location.replace('http://localhost/copytube/index/copytube.php')
+        window.location.replace('http://localhost/copytube/index/copytube.php') // todo :: implement proper cookies
         return false
       }
     },
