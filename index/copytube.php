@@ -1,9 +1,27 @@
-<!DOCTYPE html>
+<?php
+// todo :: how do i go about using cookies to allow multiple users online?
+/*
+session_start();
+setcookie('id', $_COOKIE['PHPSESSID']);
+$session = $_COOKIE['id'];
+$servername = "localhost";
+$username = "root";
+$password = "password";
+$connection = new mysqli($servername, $username, $password, 'copytube');
+$sql = "UPDATE users SET loggedIn = 0 WHERE username = $usernamefhfdhj";
+$result = $connection->query($sql);
+if (isset($_COOKIE['PHPSESSID'])) {
+    $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    echo "<script>window.location.replace('$url')</script>";
+}
+*/
+?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <!-- Set data before DOM -->
 	<head>
-		<title>CopyTube</title>
+		<title>CopyTube - Home</title>
 		<!-- allows .js code to run jquery -->
 		<script src="../scripts/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->

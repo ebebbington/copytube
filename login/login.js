@@ -19,7 +19,7 @@ function login () {
           return false
         }
       } else {
-        window.location.replace('http://localhost/copytube/index/copytube.php') // todo :: implement proper cookies
+        window.location.replace('http://localhost/copytube/index/copytube.php')
         return false
       }
     },
