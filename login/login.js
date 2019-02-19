@@ -9,18 +9,20 @@ function login () {
       password: $('#login-password').val()
     },
     success: function (response) {
-      if (response === false) {
-        loginTries--
-        if (loginTries === 0) {
-          window.close() // todo :: better lock out function
-          return false
-        } else {
-          $('#incorrect-credentials').text('Please enter the correct credentials. You have ' + loginTries + ' tries left')
-          return false
+      try {
+        if (JSON.parse(response) === false) {
+          alert('response is false, didnt match')
+          loginTries--
+          if (loginTries === 0) {
+            window.close() // todo :: better lock out function
+            return false
+          } else {
+            $('#incorrect-credentials').text('Please enter the correct credentials. You have ' + loginTries + ' tries left')
+            return false
+          }
         }
-      } else {
+      } catch (e) {
         window.location.replace('http://localhost/copytube/index/copytube.php')
-        return false
       }
     },
     error: function (error) {

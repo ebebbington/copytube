@@ -6,24 +6,8 @@
 // Fixed it with adding the php db code here using a different cookie
 session_start();
 if (empty($_COOKIE['username'])) {
-    echo "<script>alert('Session has expired - see login.php to change expiration')</script>";
-    echo "<script>$('#log-out').click()</script>";
-    $serverName = "localhost";
-    $username = "root";
-    $password = "password";
-    $id = $_COOKIE['id'];
-    $connection = new mysqli($serverName, $username, $password, 'copytube');
-    if ($connection->connect_error) {
-        die("connection failed: " . $connection->connect_error);
-    }
-    $sql = "UPDATE users SET loggedIn = 1 WHERE id = '$id'";
-    $connection->query($sql);
-    $connection->close();
-    setcookie("PHPSESSID", "", time() - 3600, '/');
-    setcookie("username", "", time() - 3600, '/');
-    setcookie("name", "", time() - 3600, '/');
-    setcookie("id", "", time() - 3600, '/');
-    session_abort();
+    echo "<script>alert('Session has expired - returning to the Login screen')</script>";
+    include '../models/log-out.php';
     echo "<script>window.location.replace('http://localhost/copytube/login/login.html')</script>";
 } else {
     $userCookie = $_COOKIE['username'];
@@ -62,7 +46,7 @@ if (empty($_COOKIE['username'])) {
 	</head>
 
 	<body>
-    <button id="log-out" type="button">Log Out</button>
+    <button id="log-out" type="button" onclick="logOut()">Log Out</button>
     <h2 id="welcome"><?php echo "$userCookie, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">

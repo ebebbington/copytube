@@ -38,11 +38,8 @@ function logOut () {
   $.ajax({
     type: 'POST',
     url: 'http://localhost/copytube/models/log-out.php',
-    success: function (response) {
-      alert(response)
-      if (JSON.parse(response) === true) {
-        window.location.replace('http://localhost/copytube/login/login.html')
-      }
+    success: function () {
+      window.location.replace('http://localhost/copytube/login/login.html')
     }
   })
 }
@@ -199,11 +196,7 @@ $(document).ready(function () {
   $(document).on('click', '#search-button', function () {
     getVideosAndComments($('#search-bar').val(), 80)
   })
-  // On click of log out button
-  $(document).on('click', '#log-out', function () {
-    logOut()
-  })
-  // Refresh page automatically to check cookies
+  // Refresh page automatically to check cookies every 10 minutes
   setInterval(function () {
     refresh()
   }, 600000)
