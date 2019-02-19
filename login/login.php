@@ -34,14 +34,25 @@ if ($result == false){
         echo "<script>alert('for some reason reach the success stage of php file')</script>";
         $passwordHash = password_hash($passwordInput, PASSWORD_BCRYPT);
         if (password_verify($passwordInput, $response[0]['password'])) {
-            $connection->close();
-            // Create a cookie of the users username - IT WORKS - the path is '/' to make it available everywhere - cookie expires in 1 hour
-            // todo :: is the below the best practice to set a cookie?
+            // Create a cookie - IT WORKS - the path is '/' to make it available everywhere - cookie expires in 1 hour
             session_start();
-            setcookie('username', $response[0]['username'], time()+3200, '/');
-            setcookie('id', $response[0]['id'], null, '/');
+            // Create data for cookies
+            $sessionId = random_bytes(16);
+            $sessionId = bin2hex($sessionId);
+            $userId = random_bytes(16);
+            $userId = bin2hex($userId);
+            $dbUserId = $response[0]['id'];
+            // Remove uneeded session cookie
+            // Assign data when creating the cookies
+            setcookie('sessionId', $sessionId, time()+3200, '/');
+            setcookie('usernameId', $userId, null, '/');
+            // Insert data into DB
+            $sql = "INSERT INTO sessions (session_id, username_id, users_username_id) VALUES ('$sessionId', '$userId', $dbUserId)";
+            $connection->query($sql);
+            $connection->close();
             print_r(json_encode(true));
         } else {
+            $connection->close();
             print_r(json_encode(false));
         }
     }

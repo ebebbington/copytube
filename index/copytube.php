@@ -1,16 +1,13 @@
 <?php
-// todo :: is below the best practice to keep a user logged in etc.?
-// fixme :: need another way to check, code still runs, logOut() returns false too as the username cookie does not exist
-// Check if cookie has expired, if it has exit, else continue
-// THE PLAN TO FIX THIS: When session expired, need to change data in DB (i.e. run log-out.php but how can i with no cookies?
-// Fixed it with adding the php db code here using a different cookie
 session_start();
-if (empty($_COOKIE['username'])) {
+if (empty($_COOKIE['sessionId'])) {
+    // Divert back to login and remove all cookies
     echo "<script>alert('Session has expired - returning to the Login screen')</script>";
     include '../models/log-out.php';
     echo "<script>window.location.replace('http://localhost/copytube/login/login.html')</script>";
 } else {
-    $userCookie = $_COOKIE['username'];
+    // Update loggedIn and display username
+    $sessionId = $_COOKIE['sessionId'];
     $servername = "localhost";
     $username = "root";
     $password = "password";
@@ -19,8 +16,17 @@ if (empty($_COOKIE['username'])) {
         die($connection->connect_error . "connection failed: ");
     }
     /** @noinspection SqlNoDataSourceInspection */
-    $sql = "UPDATE users SET loggedIn = 0 WHERE username = '$userCookie'";
+    $sql = "SELECT users_username_id FROM sessions WHERE session_id = '$sessionId'";
+    $result = $connection->query($sql);
+    $response = $result->fetch_all(MYSQLI_ASSOC);
+    $id = $response[0]['users_username_id'];
+    /** @noinspection SqlNoDataSourceInspection */
+    $sql = "UPDATE users SET loggedIn = 0 WHERE id = '$id'";
     $connection->query($sql);
+    $sql = "SELECT username FROM users WHERE id = '$id'";
+    $result = $connection->query($sql);
+    $response = $result->fetch_all(MYSQLI_ASSOC);
+    $username = $response[0]['username'];
     $connection->close();
 }
 ?>
@@ -47,7 +53,7 @@ if (empty($_COOKIE['username'])) {
 
 	<body>
     <button id="log-out" type="button" onclick="logOut()">Log Out</button>
-    <h2 id="welcome"><?php echo "$userCookie, welcome to CopyTube"; ?></h2>
+    <h2 id="welcome"><?php echo "$username, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->

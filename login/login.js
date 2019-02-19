@@ -1,5 +1,4 @@
 /* global $, alert */
-let loginTries = 3
 function login () {
   $.ajax({
     type: 'POST',
@@ -12,14 +11,6 @@ function login () {
       try {
         if (JSON.parse(response) === false) {
           alert('response is false, didnt match')
-          loginTries--
-          if (loginTries === 0) {
-            window.close() // todo :: better lock out function
-            return false
-          } else {
-            $('#incorrect-credentials').text('Please enter the correct credentials. You have ' + loginTries + ' tries left')
-            return false
-          }
         }
       } catch (e) {
         window.location.replace('http://localhost/copytube/index/copytube.php')
