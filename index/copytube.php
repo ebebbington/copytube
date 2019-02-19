@@ -1,18 +1,21 @@
 <?php
 // todo :: is below the best practice to keep a user logged in etc.?
+// fixme :: need another way to check, code still runs, logOut() returns false too as the username cookie does not exists
+// Check if cookie has expired, if it has exit, else continue
 session_start();
-$userCookie = $_COOKIE['username'];
-if (!isset($_COOKIE['username'])) {
-    include '../models/log-out.php';
-    echo "<script>window.location.replace('http://localhost/copytube/login/login.html')</script>";
+if (empty($_COOKIE['username'])) {
+    echo "<script>alert('Session has expired - see login.php to change expiration')</script>";
+    echo "<script>$('#log-out').click()</script>";
 } else {
+    $userCookie = $_COOKIE['username'];
     $servername = "localhost";
     $username = "root";
     $password = "password";
     $connection = new mysqli($servername, $username, $password, 'copytube');
     if ($connection->connect_error) {
-        die("connection failed: " + $connection->connect_error);
+        die($connection->connect_error . "connection failed: ");
     }
+    /** @noinspection SqlNoDataSourceInspection */
     $sql = "UPDATE users SET loggedIn = 0 WHERE username = '$userCookie'";
     $connection->query($sql);
     $connection->close();
