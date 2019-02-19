@@ -1,11 +1,30 @@
 <?php
 // todo :: is below the best practice to keep a user logged in etc.?
-// fixme :: need another way to check, code still runs, logOut() returns false too as the username cookie does not exists
+// fixme :: need another way to check, code still runs, logOut() returns false too as the username cookie does not exist
 // Check if cookie has expired, if it has exit, else continue
+// THE PLAN TO FIX THIS: When session expired, need to change data in DB (i.e. run log-out.php but how can i with no cookies?
+// Fixed it with adding the php db code here using a different cookie
 session_start();
 if (empty($_COOKIE['username'])) {
     echo "<script>alert('Session has expired - see login.php to change expiration')</script>";
     echo "<script>$('#log-out').click()</script>";
+    $serverName = "localhost";
+    $username = "root";
+    $password = "password";
+    $id = $_COOKIE['id'];
+    $connection = new mysqli($serverName, $username, $password, 'copytube');
+    if ($connection->connect_error) {
+        die("connection failed: " . $connection->connect_error);
+    }
+    $sql = "UPDATE users SET loggedIn = 1 WHERE id = '$id'";
+    $connection->query($sql);
+    $connection->close();
+    setcookie("PHPSESSID", "", time() - 3600, '/');
+    setcookie("username", "", time() - 3600, '/');
+    setcookie("name", "", time() - 3600, '/');
+    setcookie("id", "", time() - 3600, '/');
+    session_abort();
+    echo "<script>window.location.replace('http://localhost/copytube/login/login.html')</script>";
 } else {
     $userCookie = $_COOKIE['username'];
     $servername = "localhost";

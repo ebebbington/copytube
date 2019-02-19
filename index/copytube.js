@@ -3,6 +3,11 @@
 /* global $, alert */
 'use strict'
 
+// Refresh web page
+function refresh () {
+  window.location.replace('http://localhost/copytube/index/copytube.php')
+}
+
 // check if user is logged in and redirect if needed
 function getUsername (param) {
   $.ajax({
@@ -198,4 +203,8 @@ $(document).ready(function () {
   $(document).on('click', '#log-out', function () {
     logOut()
   })
+  // Refresh page automatically to check cookies
+  setInterval(function () {
+    refresh()
+  }, 600000)
 })
