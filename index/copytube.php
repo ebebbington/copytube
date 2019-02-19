@@ -2,7 +2,8 @@
 // todo :: is below the best practice to keep a user logged in etc.?
 session_start();
 $userCookie = $_COOKIE['username'];
-if (!isset($_COOKIE['PHPSESSID'])) {
+if (!isset($_COOKIE['username'])) {
+    include '../models/log-out.php';
     echo "<script>window.location.replace('http://localhost/copytube/login/login.html')</script>";
 } else {
     $servername = "localhost";
@@ -39,6 +40,7 @@ if (!isset($_COOKIE['PHPSESSID'])) {
 	</head>
 
 	<body>
+    <button id="log-out" type="button">Log Out</button>
     <h2 id="welcome"><?php echo "$userCookie, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">

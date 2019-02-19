@@ -31,9 +31,13 @@ function getUsername (param) {
 // Log Out function
 function logOut () {
   $.ajax({
-    type: 'GET',
+    type: 'POST',
     url: 'http://localhost/copytube/models/log-out.php',
-    success: function () {
+    success: function (response) {
+      alert(response)
+      if (JSON.parse(response) === true) {
+        window.location.replace('http://localhost/copytube/login/login.html')
+      }
     }
   })
 }
@@ -168,8 +172,6 @@ function addComment () {
 }
 
 $(document).ready(function () {
-  // Run log out function on close
-  window.onbeforeunload = logOut
   // Comment character count
   $(document).on('keyup', '#comment-bar', function () {
     const commentLength = $('#comment-bar').val().length
@@ -191,5 +193,9 @@ $(document).ready(function () {
   // On Click of Search Button
   $(document).on('click', '#search-button', function () {
     getVideosAndComments($('#search-bar').val(), 80)
+  })
+  // On click of log out button
+  $(document).on('click', '#log-out', function () {
+    logOut()
   })
 })

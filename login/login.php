@@ -37,7 +37,7 @@ if ($result == false){
             // Create a cookie of the users username - IT WORKS - the path is '/' to make it available everywhere - cookie expires in 1 hour
             // todo :: is the below the best practice to set a cookie?
             session_start();
-            setcookie('username', $response[0]['username'], time()+3200, '/');
+            setcookie('username', $response[0]['username'], time()+50, '/');
             print_r(true);
         } else {
             print_r(false);

@@ -75,3 +75,7 @@
 	word-wrap: break-word;
 	margin-left: 1em;
 }
+#log-out{
+	height: 30px;
+	width: 80px;
+}
