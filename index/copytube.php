@@ -1,11 +1,6 @@
 <?php
 // SEND EMAIL
 // Configuration is set up in php.ini and sendmail.ini. I allowed all access in google account and this is the code to do what i want.
-$receiver = 'edward.bebbington@intercity.technology';
-$subject = 'test subject';
-$message = "test message";
-$header = 'From: edward.bebbington@intericty.technology';
-$sendAnEmail = mail($receiver, $subject, $message, $header);
 session_start();
 if (empty($_COOKIE['sessionId'])) {
     // Divert back to login and remove all cookies

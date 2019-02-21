@@ -12,6 +12,8 @@ $password = "password";
 $email = $_POST['email'];
 $passwordInput = $_POST['password'];
 
+// SEND EMAIL
+// Configuration is set up in php.ini and sendmail.ini. I allowed all access in google account and this is the code to do what i want.
 function sendLockoutEmail ($email) {
     $receiver = $email;
     $subject = 'Account Locked Out';
