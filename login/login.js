@@ -8,12 +8,20 @@ function login () {
       password: $('#login-password').val()
     },
     success: function (response) {
-      try {
-        if (JSON.parse(response) === false) {
-          alert('response is false, didnt match')
+      if (response === 'false') {
+        alert('Incorrect credentials')
+        $('#login-email', '#login-password').text('')
+        return false
+      } else {
+        if (response === 'lockout') {
+          alert('Account has been locked out')
+          $('#login-email', '#login-password').text('')
+          return false
+        } else {
+          if (response === 'true') {
+            window.location.replace('http://localhost/copytube/index/copytube.php')
+          }
         }
-      } catch (e) {
-        window.location.replace('http://localhost/copytube/index/copytube.php')
       }
     },
     error: function (error) {
