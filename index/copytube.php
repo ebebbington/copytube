@@ -1,4 +1,5 @@
 <?php
+require_once '../classes/database.php';
 // SEND EMAIL
 // Configuration is set up in php.ini and sendmail.ini. I allowed all access in google account and this is the code to do what i want.
 session_start();
@@ -10,26 +11,21 @@ if (empty($_COOKIE['sessionId'])) {
 } else {
     // Update loggedIn and display username
     $sessionId = $_COOKIE['sessionId'];
-    $servername = "localhost";
-    $username = "root";
-    $password = "password";
-    $connection = new mysqli($servername, $username, $password, 'copytube');
-    if ($connection->connect_error) {
-        die($connection->connect_error . "connection failed: ");
-    }
+    $db = new Database();
+    $db->connectToDatabase();
     /** @noinspection SqlNoDataSourceInspection */
     $sql = "SELECT users_username_id FROM sessions WHERE session_id = '$sessionId'";
-    $result = $connection->query($sql);
+    $result = $db->connection->query($sql);
     $response = $result->fetch_all(MYSQLI_ASSOC);
     $id = $response[0]['users_username_id'];
     /** @noinspection SqlNoDataSourceInspection */
     $sql = "UPDATE users SET loggedIn = 0 WHERE id = '$id'";
-    $connection->query($sql);
+    $db->connection->query($sql);
     $sql = "SELECT username FROM users WHERE id = '$id'";
-    $result = $connection->query($sql);
+    $result = $db->connection->query($sql);
     $response = $result->fetch_all(MYSQLI_ASSOC);
     $username = $response[0]['username'];
-    $connection->close();
+    $db->connection->close();
 }
 ?>
 
