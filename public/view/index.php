@@ -1,5 +1,5 @@
 <?php
-require_once '../classes/database.php';
+require_once '../../classes/controllers/database.php';
 // SEND EMAIL
 // Configuration is set up in php.ini and sendmail.ini. I allowed all access in google account and this is the code to do what i want.
 session_start();
@@ -16,6 +16,7 @@ if (empty($_COOKIE['sessionId'])) {
     /** @noinspection SqlNoDataSourceInspection */
     $sql = "SELECT users_username_id FROM sessions WHERE session_id = '$sessionId'";
     $result = $db->connection->query($sql);
+    echo $result;
     $response = $result->fetch_all(MYSQLI_ASSOC);
     $id = $response[0]['users_username_id'];
     /** @noinspection SqlNoDataSourceInspection */

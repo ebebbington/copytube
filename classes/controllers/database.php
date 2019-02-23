@@ -8,8 +8,6 @@
 
 class Database
 {
-    const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
-
     private $servername;
     private $username;
     private $password;
@@ -25,6 +23,10 @@ class Database
 
     public function connectToDatabase () {
         $this->connection = new mysqli($this->servername, $this->username, $this->password, $this->databaseName);
+    }
+
+    public function closeDatabaseConnection () {
+        $this->connection->close();
     }
 
 
