@@ -4,13 +4,14 @@
 function recover () {
   $.ajax({
     type: 'POST',
-    url: 'http://localhost/copytube/recover/recover.php',
+    url: '../../../controllers/user.php',
     data: {
       email: $('#recover-email').val(),
-      password: $('#recover-password').val()
+      password: $('#recover-password').val(),
+      action: 'recover'
     },
     success: function (response) {
-      if (response === 'false') {
+      if (JSON.parse(response) === false) {
         alert('Wrong credentials')
         return false
       } else {

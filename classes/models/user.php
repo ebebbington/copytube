@@ -92,7 +92,9 @@ class User
     //
     // Run Recover function
     //
-    public function recoverAccount () {
+    public function recover () {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
         // todo :: add code to recover account
     }
 
