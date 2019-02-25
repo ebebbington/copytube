@@ -3,6 +3,7 @@ require_once '../../classes/controllers/database.php';
 require_once '../../classes/controllers/user.php';
 session_start();
 if (!empty($_COOKIE['sessionId'])) {
+    // todo :: Create new script for checking sessions and include it here?
     // Divert back to login and remove all cookies
     echo "<script>alert('Session has expired - returning to the Login screen')</script>";
     $user = new User();
