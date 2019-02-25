@@ -22,6 +22,8 @@ class User
     // Run Login Function
     //
     public function login () {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
         // todo :: run validateEmail()
         function validateEmail () {
             // todo :: add code from login relating to email and if success then run validatePassword()
