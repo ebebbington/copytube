@@ -72,6 +72,9 @@ class User
     // Run Register function
     //
     public function register () {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
         // todo :: Run register code with functions for verifying each field?
         function validateUsername() {
 

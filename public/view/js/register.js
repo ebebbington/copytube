@@ -18,27 +18,21 @@ function validateInput () {
         $('#incorrect-password').text('Enter a password')
         return false
       } else {
-        // Set all elements bakc to blank
+        // Set all elements back to blank
         $('#incorrect-username').val()
         $('#incorrect-email').val()
         $('#incorrect-password').val()
         $.ajax({
           type: 'POST',
-          url: 'register-validate.php',
+          url: '../../../classes/controllers/user.php',
           data: {
             name: name,
             email: email,
-            pass: pass
+            pass: pass,
+            action: 'register'
           },
           success: function (output) {
-            try {
-              alert('AJAX Success response Non-parsed: ' + output + ' End')
-            } catch (e) {
-              alert('AJAX Success response parsed: ' + JSON.parse(output) + ' End')
-            }
-            if (JSON.parse(output) === false) {
-              alert('reached success block')
-              // false mean whn the query is completed
+            if (JSON.parse(output) === true) {
               $('#incorrect-username').text('')
               $('#incorrect-email').text('')
               $('#incorrect-password').text('')
@@ -47,7 +41,6 @@ function validateInput () {
               $('html, body').animate({ scrollTop: 0 }, 'fast') // ref: https://stackoverflow.com/questions/4147112/how-to-jump-to-top-of-browser-page
               return false
             } else {
-              alert('reached error block')
               // means there is an error and it can ONLY be name, email or pass so display the error message
               const errorArray = JSON.parse(output)
               if (errorArray[0] === 'name') {

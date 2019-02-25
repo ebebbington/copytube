@@ -2,11 +2,11 @@
 function login () {
   $.ajax({
     type: 'POST',
-    url: 'http://localhost/copytube/classes/controllers/user.php',
+    url: '../../../classes/controllers/user.php',
     data: {
       email: $('#login-email').val(),
       password: $('#login-password').val(),
-      action: login
+      action: 'login'
     },
     success: function (response) {
       if (JSON.parse(response) === false) {
