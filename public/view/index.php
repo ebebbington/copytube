@@ -3,7 +3,7 @@ require_once '../../classes/controllers/database.php';
 // SEND EMAIL
 // Configuration is set up in php.ini and sendmail.ini. I allowed all access in google account and this is the code to do what i want.
 session_start();
-if (empty($_COOKIE['sessionId'])) {
+if (!empty($_COOKIE['sessionId'])) {
     // Divert back to login and remove all cookies
     echo "<script>alert('Session has expired - returning to the Login screen')</script>";
     include '../models/log-out.php';
@@ -26,7 +26,7 @@ if (empty($_COOKIE['sessionId'])) {
     $result = $db->connection->query($sql);
     $response = $result->fetch_all(MYSQLI_ASSOC);
     $username = $response[0]['username'];
-    $db->connection->close();
+    $db->closeDatabaseConnection();
 }
 ?>
 

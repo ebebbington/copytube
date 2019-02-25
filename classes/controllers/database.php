@@ -8,6 +8,10 @@
 
 class Database
 {
+    const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
+    // Get comments but how as i need to do it based on a title?
+    // Get user based on input
+
     private $servername;
     private $username;
     private $password;
@@ -26,7 +30,7 @@ class Database
     }
 
     public function closeDatabaseConnection () {
-        $this->connection->close();
+        $this->connection->close;
     }
 
 

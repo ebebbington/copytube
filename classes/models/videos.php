@@ -6,7 +6,23 @@
  * Time: 23:41
  */
 
-class videos
+include_once '../controllers/database.php';
+$db = new Database();
+$db = $db->connectToDatabase();
+
+class Videos extends Database
 {
-    const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
+    public function __construct() {
+        $this->db = new Database;
+    }
+
+    public function getVideos () {
+        $db = new Database;
+        $db->connectToDatabase();
+        $result = $db->connection->query($db::GET_VIDEOS);
+        $db = new Database();
+        $db->closeDatabaseConnection();
+        $response = $result->fetch_all(MYSQLI_ASSOC);
+        return json_encode($response);
+    }
 }
