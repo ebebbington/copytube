@@ -51,8 +51,11 @@ function getVideosAndComments (videoTitle, maxLength) {
   } else {
     // Get Videos
     $.ajax({
-      type: 'GET',
-      url: 'http://localhost/copytube/models/get_videos.php',
+      type: 'POST',
+      url: 'http://localhost/copytube/controllers/videos-controller.php',
+      data: {
+        action: 'getVideos'
+      },
       success: function (response) {
         const videos = JSON.parse(response)
         let [ rabbitHoleVideos, rabbitHoleTitles, found ] = [ [], [], null ]

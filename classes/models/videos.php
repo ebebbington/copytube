@@ -7,22 +7,19 @@
  */
 
 include_once '../controllers/database.php';
-$db = new Database();
-$db = $db->connectToDatabase();
 
-class Videos extends Database
+class Videos
 {
-    public function __construct() {
-        $this->db = new Database;
-    }
+    const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
 
-    public function getVideos () {
-        $db = new Database;
-        $db->connectToDatabase();
-        $result = $db->connection->query($db::GET_VIDEOS);
+    public function getAllVideos () {
         $db = new Database();
-        $db->closeDatabaseConnection();
+        $db->connectToDatabase();
+
+        $result = $db->connection->query(GET_VIDEOS);
         $response = $result->fetch_all(MYSQLI_ASSOC);
+
+        $db->closeDatabaseConnection();
         return json_encode($response);
     }
 }

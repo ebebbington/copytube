@@ -9,6 +9,7 @@
 
 $post = $_POST;
 
-if($post['action'] === ){
-
+if($post['action'] === 'getVideos'){
+    $videos = new Videos();
+    print_r($videos->getAllVideos());
 }
