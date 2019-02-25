@@ -14,6 +14,9 @@ class Database
     private $databaseName;
     public $connection;
 
+    //
+    // Initialise
+    //
     public function __construct() {
         $this->servername = "localhost";
         $this->username = "root";
@@ -21,11 +24,25 @@ class Database
         $this->databaseName = "copytube";
     }
 
-    public function connectToDatabase () {
-        $this->connection = new mysqli($this->servername, $this->username, $this->password, $this->databaseName);
+    //
+    // Create DB connection
+    //
+    public function openDatabaseConnection () {
+        try {
+            $this->connection = new mysqli($this->servername, $this->username, $this->password, $this->databaseName);
+        } catch (exception $error) {
+            die("Connection to database has failed");
+        }
     }
 
+    //
+    // Close DB connection
+    //
     public function closeDatabaseConnection () {
-        $this->connection->close;
+        try {
+            $this->connection->close;
+        } catch (exception $error) {
+            $this->closeDatabaseConnection();
+        }
     }
 }
