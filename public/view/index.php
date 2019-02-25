@@ -1,22 +1,21 @@
 <?php
 require_once '../../classes/controllers/database.php';
-// SEND EMAIL
-// Configuration is set up in php.ini and sendmail.ini. I allowed all access in google account and this is the code to do what i want.
+require_once '../../classes/controllers/user.php';
 session_start();
 if (!empty($_COOKIE['sessionId'])) {
     // Divert back to login and remove all cookies
     echo "<script>alert('Session has expired - returning to the Login screen')</script>";
-    include '../models/log-out.php';
-    echo "<script>window.location.replace('http://localhost/copytube/login/login.html')</script>";
+    $user = new User();
+    $user->logout();
+    echo "<script>window.location.replace('../public/view/login.html')</script>";
 } else {
     // Update loggedIn and display username
     $sessionId = $_COOKIE['sessionId'];
     $db = new Database();
-    $db->connectToDatabase();
+    $db->openDatabaseConnection();
     /** @noinspection SqlNoDataSourceInspection */
     $sql = "SELECT users_username_id FROM sessions WHERE session_id = '$sessionId'";
     $result = $db->connection->query($sql);
-    echo $result;
     $response = $result->fetch_all(MYSQLI_ASSOC);
     $id = $response[0]['users_username_id'];
     /** @noinspection SqlNoDataSourceInspection */
@@ -36,18 +35,18 @@ if (!empty($_COOKIE['sessionId'])) {
 	<head>
 		<title>CopyTube - Home</title>
 		<!-- allows .js code to run jquery -->
-		<script src="../scripts/jquery-3.3.1.min.js"></script>
+		<script src="../../libs/jquery-3.3.1.min.js"></script>
 		<!-- accesses bootstrap css files that makes css files much easier to use -->
-		<link rel="stylesheet" href="../links/bootstrap.min.css" crossorigin="anonymous">
+		<link rel="stylesheet" href="../../libs/bootstrap.min.css" crossorigin="anonymous">
 		<!-- accesses bootstrap js files that makes js files much easier to use -->
-		<script src="../scripts/bootstrap.min.js" crossorigin="anonymous"></script>
+		<script src="../../libs/bootstrap.min.js" crossorigin="anonymous"></script>
 		<!-- NOTE: My files are placed after so they overwrite the files above if needed i.e. my css > their css styles -->
         <!-- links my style sheet (.css) so it can be used -->
-		<link rel="stylesheet" href="copytube.css"/>
+		<link rel="stylesheet" href="css/index.css"/>
         <!-- Link my learning script to prepare the data -->
-        <script src="../learning.js"></script>
+        <script src="../../data/learning.js"></script>
         <!-- Link my javascript file so it can be used -->
-        <script src="copytube.js"></script>
+        <script src="js/index.js"></script>
 	</head>
 
 	<body>
@@ -57,7 +56,7 @@ if (!empty($_COOKIE['sessionId'])) {
 			<div class="row">
                 <!-- set logo -->
 				<div class="col-xs-3">
-					<img id="logo" src="../images/copytube_logo.png" alt="Error locating image"/>
+					<img id="logo" src="../../images/copytube_logo.png" alt="Error locating image"/>
 				</div>
 				<!-- create search bar and button -->
 				<div class="col-xs-9">
@@ -72,15 +71,8 @@ if (!empty($_COOKIE['sessionId'])) {
                             <div class="dropdown-content">
                                 <?php
                                     // setting variables
-                                    $servername = "localhost";
-                                    $username = "root";
-                                    $password = "password";
-                                    //create connection
-                                    $connection = new mysqli($servername, $username, $password, 'copytube');
-                                    //check connection
-                                    if ($connection->connect_error) {
-                                        die("connection failed: " + $connection->connect_error);
-                                    }
+                                    $db = new Database();
+                                    $db->openDatabaseConnection();
                                     $sql = "SELECT title FROM `videos`";
                                     $result = $connection->query($sql);
                                     // fetch all videos from table
