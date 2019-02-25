@@ -16,7 +16,7 @@ function sendRecoverEmail ($email) {
     $receiver = $email;
     $subject = 'Account Recovered';
     $message = "Your account $receiver has been recovered on CopyTube.";
-    $header = 'From: no-reply@copytube.com';
+    $header = 'From: noreply@copytube.com';
     mail($receiver, $subject, $message, $header);
     print_r('true');
 }

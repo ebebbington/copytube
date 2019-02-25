@@ -14,7 +14,9 @@ class User
     // SQL Queries
     //
     const GET_USER = "SELECT users_username_id FROM sessions WHERE username_id = ?";
-    const ADD_USER = ""
+    const GET_CURRENT_USER = "SELECT users_username_id FROM sessions WHERE username_id = ?";
+    const UPDATE_CURRENT_USER = "UPDATE users SET loggedIn = 1 WHERE id = ?";
+    const DELETE_SESSION = "DELETE FROM sessions WHERE users_username_id = ?";
 
     //
     // Run Login Function
@@ -38,14 +40,29 @@ class User
     // Run Logout function
     //
     public function logout () {
-        // todo :: Run logout code
         if (isset($_COOKIE['usernameId'])) {
             $db = new Database();
             $db->openDatabaseConnection();
             $id = $_COOKIE['usernameId'];
+            $query = $db->connection->prepare(self::GET_CURRENT_USER);
+            $query->execute($id);
+            $user = $query->fetch_all(MYSQLI_ASSOC);
+            $id = $user[0]['users_username_id'];
+            $query = $db->connection->prepare(self::UPDATE_CURRENT_USER);
+            $query->execute($id);
+            $query = $db->connection->prepare(self::DELETE_SESSION);
+            $query->execute($id);
+            $db->closeDatabaseConnection();
 
+            setcookie("sessionId", "", time() - 3600, '/');
+            setcookie('PHPSESSID', '', time()-3600, '/');
+            setcookie("usernameId", "", time() - 3600, '/');
+            setcookie("name", "", time() - 3600, '/');
+            session_abort();
+            session_unset();
+            return json_encode([true]);
         } else {
-            echo "<script>window.location.replace('http://localhost/copytube/login/login.html')";
+            return json_encode([true]);
         }
     }
 
@@ -70,8 +87,8 @@ class User
     //
     // Run Recover function
     //
-    public function recover () {
-        // todo :: Run recover code
+    public function recoverAccount () {
+        // todo :: add code to recover account
     }
 
 }
