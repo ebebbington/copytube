@@ -33,18 +33,7 @@ try {
 }
 if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
     // Validation
-    // Username
-    if (strlen($name) > $maxLength || trim($name) === 0 || $name === null || empty($name)) {
-        $error = true;
-        $errorMsg = array('name', 'Enter a username');
-        print_r(json_encode($errorMsg));
-    } else {
-        // Username
-        if (!preg_match('/^[a-zA-Z ]*$/', $name)) {
-            $error = true;
-            $errorMsg = array('name', 'Only letters and whitespaces allowed');
-            print_r(json_encode($errorMsg));
-        } else {
+
             // Email
             if (trim($email) === 0 || $email === null || empty($email)) {
                 $error = true;
@@ -116,12 +105,6 @@ if (isset($_POST['name'],$_POST['email'],$_POST['pass'])) {
                                             $errorMsg = array('pass', 'Password cannot contain username');
                                             print_r(json_encode($errorMsg));
                                         } else {
-                                            // Sanitization - Name
-                                            if (!filter_var($name, FILTER_SANITIZE_STRING)) {
-                                                $error = true;
-                                                $errorMsg = array('name', 'Remove tags');
-                                                print_r(json_encode($errorMsg));
-                                            } else {
                                                 // Sanitization - Email
                                                 if (!filter_var($email, FILTER_SANITIZE_EMAIL)) {
                                                     $error = true;

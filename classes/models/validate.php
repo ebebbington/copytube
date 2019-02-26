@@ -11,40 +11,214 @@ class Validate
     //
     // SQL Queries
     //
-    const ADD_NEW_USER = "INSERT INTO users (username, email_address, password, loggedIn, login_attempts) VALUES (?, ?, ?, ?)";
+    const ADD_NEW_USER = "INSERT INTO users (username, email_address, password, loggedIn, login_attempts) VALUES (?, ?, ?, ?, ?)";
+    const SELECT_ALL_USERS = "SELECT * FROM users";
 
     //
     // Initialise data
     //
-    private $maxlength;
+    private $maxlength = 40;
 
-    private function __construct() {
-        $this->maxLength = 40;
-    }
-
+    //
+    // Validate Username
+    //      v
+    // Verify Email
+    //      v
+    // Validate Email
+    //      v
+    // Validate Password
+    //      v
+    // Register User
     public function validateUsername() {
-        $username = $_POST['username'];
-        $test = $this->maxLength;
-
-        $this->verifyEmail();
+        if (isset($_POST['username'])) {
+            $username = $_POST['username'];
+            if (strlen($username) > $this->maxlength || trim($username) === 0 || $username === null
+              || empty($username)
+            ) {
+                print_r(json_encode(['username', 'Enter a username']));
+            } else {
+                if (!preg_match('/^[a-zA-Z ]*$/', $username)) {
+                    print_r(json_encode(['username', 'Only letters and whitespaces allowed']));
+                } else {
+                    if (!filter_var($username, FILTER_SANITIZE_STRING)) {
+                        print_r(json_encode(['username', 'Remove tags']));
+                    } else {
+                        // cHECK if username exists
+                        $db = new Database();
+                        $db->openDatabaseConnection();
+                        $query = $db->connection->query(self::SELECT_ALL_USERS);
+                        $users = execute($query);
+                        $users = $users->fetch_all(MYSQLI_ASSOC);
+                        $usernameExists = false;
+                        for ($i = 0, $l = sizeof($users); $i < $l; $i++) {
+                            // IM A GENIUS
+                            if ($username === $users[$i]['username']) {
+                                $usernameExists = true;
+                                print_r(json_encode(['username', 'Username already exists']));
+                                break;
+                            }
+                        }
+                        if ($usernameExists === false) {
+                            $username = mysqli_real_escape_string($db->connection, $username);
+                            $db->closeDatabaseConnection();
+                            $this->verifyEmail($username);
+                        }
+                    }
+                }
+            }
+        } else {
+            print_r(json_encode(['username', 'Please fill in the username field']));
+        }
     }
 
-    private function verifyEmail () {
+    private function verifyEmail ($username) {
         include_once 'smtp-email-check.php';
-
-        $this->validateEmail();
+        if (isset($_POST['email'])) {
+            $email = $_POST['email'];
+            // Set email verifying data
+            try {
+                $verifyEmail = new verifyEmail();
+                $verifyEmail->setStreamTimeoutWait(20);
+                /* Below are debugging tools, disable them for verify email function to run properly */
+                // $verifyEmail->Debug = true; // Creates an alert currently with the process
+                // $verifyEmail->Debugoutput = 'html'; // Displays js code error in console
+                $verifyEmail->setEmailFrom($email);
+            } catch (exception $e) {
+                print_r(json_encode(['email', 'Could not validate email address']));
+                exit();
+            }
+            if ($verifyEmail->check($email)) {
+                $this->validateEmail($username);
+            } else {
+                if ($verifyEmail::validate($email)) {
+                    print_r(json_encode(['email', 'Email is valid but does not exist']));
+                } else {
+                    print_r(json_encode(['email', 'Email is not valid and does not exist']));
+                }
+            }
+        } else {
+            print_r(json_encode(['email', 'Please fill in the email field']));
+        }
     }
 
-    private function validateEmail () {
+    private function validateEmail ($username)
+    {
         $email = $_POST['email'];
-
-        $this->validatePassword();
+        if (trim($email) === 0 || $email === null || empty($email)) {
+            print_r(json_encode(['email', 'Enter an email']));
+        } else {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                print_r(json_encode(['email', 'Incorrect email format']));
+            } else {
+                if (!filter_var($email, FILTER_SANITIZE_EMAIL)) {
+                    print_r(json_encode(['email', 'Remove tags']));
+                } else {
+                    $db = new Database();
+                    $db->openDatabaseConnection();
+                    $query = $db->connection->query(self::SELECT_ALL_USERS);
+                    $users = execute($query);
+                    $users = $users->fetch_all(MYSQLI_ASSOC);
+                    $emailExists = false;
+                    for ($i = 0, $l = sizeof($users); $i < $l; $i++) {
+                        // IM A GENIUS
+                        if ($email === $users[$i]['email_address']) {
+                            $emailExists = true;
+                            print_r(json_encode(['email', 'Email already exists']));
+                            break;
+                        }
+                    }
+                    if ($emailExists === false) {
+                        $email = mysqli_real_escape_string($db->connection, $email);
+                        $db->closeDatabaseConnection();
+                        $this->validatePassword($username, $email);
+                    }
+                }
+            }
+        }
     }
 
-    private function validatePassword () {
+    private function validatePassword ($username, $email) {
+        if (iset($_POST['password'])) {
+            $password = $_POST['password'];
+            // Password
+            if (trim($password) === 0 || $password=== null || empty($password)) {
+                print_r(json_encode(['password', 'Enter a password']));
+            } else {
+                if (strlen($password) < 8) {
+                    print_r(json_encode(['pass', 'Password must contain 8 or more characters']));
+                } else {
+                    // Password - Find a number - personal algorithm
+                    $numberFound = false;
+                    while ($numberFound !== true) {
+                        for ($i = 0, $l = strlen($password); $i < $l; $i++) {
+                            $value = $password[$i];
+                            if (is_numeric($value)) {
+                                $numberFound = true;
+                                break;
+                            }
+                        }
+                        if ($numberFound !== true) {
+                            print_r(json_encode('pass', 'Must contain at least one number'));
+                            break;
+                        }
+                    }
+                    if ($numberFound === true) {
+                        // Password - Self created algorithm - MADE IT WORK - ctype_[] didn't account for other characters than letters
+                        // This grabs all upper and lower case letters and then makes sure the end result contains an upper and lower
+                        $letterRange1 = range('a', 'z');
+                        $letterRange2 = range('A', 'Z');
+                        $passOnlyLetters = [];
+                        for ($i = 0, $l = strlen($password); $i < $l; $i++) {
+                            if (in_array($password[$i], $letterRange1)) {
+                                array_push($passOnlyLetters, $password[$i]);
+                            }
+                            if (in_array($password[$i], $letterRange2)) {
+                                array_push($passOnlyLetters, $password[$i]);
+                            }
+                        }
+                        if (ctype_upper(implode($passOnlyLetters)) || ctype_lower(implode($passOnlyLetters))) {
+                            print_r(json_encode(['pass', 'Must contain at least one upper and lowercase character']));
+                        } else {
+                            if ($username === $password) {
+                                print_r(json_encode('pass', 'Password cannot be the same as the username'));
+                            } else {
+                                // Password
+                                if (strpos($password, $username)) {
+                                    print_r(json_encode(['pass', 'Password cannot contain username']));
+                                } else {
+                                    if (!filter_var($password, FILTER_SANITIZE_STRING)) {
+                                        print_r(json_encode('pass', 'Remove tags'));
+                                    } else {
+                                        $db = new Database();
+                                        $db->openDatabaseConnection();
+                                        $password = mysqli_real_escape_string($db->connection, $password);
+                                        $db->closeDatabaseConnection();
+                                        $this->registerUser($username, $email, $password);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            print_r(json_encode(['password', 'Please set a password']));
+        }
+    }
 
-
-        $password = $_POST['password'];
+    private function registerUser ($username, $email, $password) {
+        $db = new Database();
+        $db->openDatabaseConnection();
+        $query = $db->connection->prepare(self::ADD_NEW_USER);
+        $query->execute($username, $email, $password, 1, 3);
+        $affectedRows = $query->rowCount();
+        if ($affectedRows < 1 || $affectedRows > 1) {
+            $db->closeDatabaseConnection();
+            return json_encode(['Query did not affect the database or created more than one field']);
+        } else {
+            $db->closeDatabaseConnection();
+            print_r(json_encode(['user', 'Successfully registered an account']));
+        }
     }
 
 }

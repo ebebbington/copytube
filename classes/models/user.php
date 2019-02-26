@@ -94,10 +94,8 @@ class User
     // Run Register function
     //
     public function register () {
-        $this->validateUsername();
-        $this->validateEmail();
-        $this->validatePassword();
-        // todo :: once all id done
+        $validate = new Validate();
+        $validate->validateUsername();
     }
 
     //

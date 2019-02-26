@@ -42,11 +42,12 @@ class Comments
         $db->openDatabaseConnection();
         $query = $db->connection->prepare(self::ADD_COMMENT);
         $query->execute($commentData);
-        $db->closeDatabaseConnection();
         $affectedRows = $query->rowCount();
         if ($affectedRows < 1 || $affectedRows > 1) {
+            $db->closeDatabaseConnection();
             return json_encode(['Query did not affect the database']);
         } else {
+            $db->closeDatabaseConnection();
             return json_encode([true]);
         }
     }
