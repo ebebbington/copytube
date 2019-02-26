@@ -24,15 +24,16 @@ function validateInput () {
         $('#incorrect-password').val()
         $.ajax({
           type: 'POST',
-          url: '../../../classes/controllers/user.php',
+          url: '../../classes/controllers/user.php',
           data: {
-            name: name,
+            username: name,
             email: email,
-            pass: pass,
+            password: pass,
             action: 'register'
           },
           success: function (output) {
-            if (JSON.parse(output) === true) {
+            alert('I am here: ' + output)
+            if (output === true) {
               $('#incorrect-username').text('')
               $('#incorrect-email').text('')
               $('#incorrect-password').text('')
@@ -66,7 +67,7 @@ function validateInput () {
             }
           },
           error: function (error) {
-            alert('ajax caught error in error function: ' + error)
+            alert('ajax caught error in error function: ' + JSON.parse(error))
           }
         })
       }

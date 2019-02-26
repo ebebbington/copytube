@@ -47,12 +47,15 @@ class Validate
                         $db = new Database();
                         $db->openDatabaseConnection();
                         $query = $db->connection->query(self::SELECT_ALL_USERS);
-                        $users = execute($query);
-                        $users = $users->fetch_all(MYSQLI_ASSOC);
+                        $users = $query->fetch_all(MYSQLI_ASSOC);
+                        echo 'I am here';
+                        var_dump($users);
                         $usernameExists = false;
                         for ($i = 0, $l = sizeof($users); $i < $l; $i++) {
                             // IM A GENIUS
                             if ($username === $users[$i]['username']) {
+                                echo 'I am here';
+                                var_dump($username, $users);
                                 $usernameExists = true;
                                 print_r(json_encode(['username', 'Username already exists']));
                                 break;

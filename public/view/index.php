@@ -1,14 +1,15 @@
 <?php
+echo $_SERVER['DOCUMENT_ROOT'];
 require_once '../../classes/controllers/database.php';
 require_once '../../classes/controllers/user.php';
+require_once '../../classes/models/user.php';
 session_start();
-if (!empty($_COOKIE['sessionId'])) {
+if (empty($_COOKIE['sessionId'])) {
     // todo :: Create new script for checking sessions and include it here?
     // Divert back to login and remove all cookies
     echo "<script>alert('Session has expired - returning to the Login screen')</script>";
-    $user = new User();
-    $user->logout();
-    echo "<script>window.location.replace('../public/view/login.html')</script>";
+    requestedAction('logout');
+    echo "<script>window.location.replace('../view/login.html')</script>";
 } else {
     // Update loggedIn and display username
     $sessionId = $_COOKIE['sessionId'];

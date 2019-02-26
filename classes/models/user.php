@@ -7,6 +7,7 @@
  */
 
 include_once '../controllers/database.php';
+include_once 'validate.php';
 
 class User
 {
