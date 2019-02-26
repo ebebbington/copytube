@@ -32,8 +32,8 @@ function validateInput () {
             action: 'register'
           },
           success: function (output) {
-            alert('I am here: ' + output)
-            if (output === true) {
+            const response = JSON.parse(output)
+            if (response[0] === 'user') {
               $('#incorrect-username').text('')
               $('#incorrect-email').text('')
               $('#incorrect-password').text('')
@@ -43,23 +43,22 @@ function validateInput () {
               return false
             } else {
               // means there is an error and it can ONLY be name, email or pass so display the error message
-              const errorArray = JSON.parse(output)
-              if (errorArray[0] === 'name') {
-                $('#incorrect-username').text(errorArray[1])
+              if (response[0] === 'username') {
+                $('#incorrect-username').text(response[1])
                 $('#incorrect-email').text('')
                 $('#incorrect-password').text('')
                 return false
               } else {
-                if (errorArray[ 0 ] === 'email') {
+                if (response[ 0 ] === 'email') {
                   $('#incorrect-username').text('')
-                  $('#incorrect-email').text(errorArray[ 1 ])
+                  $('#incorrect-email').text(response[ 1 ])
                   $('#incorrect-password').text('')
                   return false
                 } else {
-                  if (errorArray[ 0 ] === 'pass') {
+                  if (response[ 0 ] === 'password') {
                     $('#incorrect-username').text('')
                     $('#incorrect-email').text('')
-                    $('#incorrect-password').text(errorArray[ 1 ])
+                    $('#incorrect-password').text(response[ 1 ])
                     return false
                   }
                 }

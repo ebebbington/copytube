@@ -35,7 +35,7 @@ class Validate
             if (strlen($username) > $this->maxlength || trim($username) === 0 || $username === null
               || empty($username)
             ) {
-                print_r(json_encode(['username', 'Enter a username']));
+                print_r(json_encode(array('username', 'Enter a Username')));
             } else {
                 if (!preg_match('/^[a-zA-Z ]*$/', $username)) {
                     print_r(json_encode(['username', 'Only letters and whitespaces allowed']));
@@ -48,17 +48,12 @@ class Validate
                         $db->openDatabaseConnection();
                         $query = $db->connection->query(self::SELECT_ALL_USERS);
                         $users = $query->fetch_all(MYSQLI_ASSOC);
-                        echo 'I am here';
-                        var_dump($users);
                         $usernameExists = false;
                         for ($i = 0, $l = sizeof($users); $i < $l; $i++) {
                             // IM A GENIUS
                             if ($username === $users[$i]['username']) {
-                                echo 'I am here';
-                                var_dump($username, $users);
                                 $usernameExists = true;
                                 print_r(json_encode(['username', 'Username already exists']));
-                                break;
                             }
                         }
                         if ($usernameExists === false) {
