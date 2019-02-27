@@ -19,51 +19,63 @@ class User
     const DELETE_SESSION = "DELETE FROM sessions WHERE users_username_id = ?";
     const GET_CURRENT_USER = "SELECT * FROM users WHERE email_address = ?";
     const INSERT_NEW_SESSION = "INSERT INTO sessions (session_id, username_id, users_username_id) VALUES (?, ?, ?)";
-    const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = 3 WHERE email_address = ?";
+    const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = ? WHERE email_address = ?";
     const GET_ALL_USERS = "SELECT * FROM users";
 
     //
     // Run Login Function
     //
     public function login () {
-        $email = $_POST['email'];
+        $emailInput = $_POST['email'];
         $passwordInput = $_POST['password'];
         $db = new Database();
         $db->openDatabaseConnection();
         $query = $db->connection->prepare(self::GET_CURRENT_USER);
-        $query->bind_param('s', $email);
+        $query->bind_param('s', $emailInput);
         $query->execute();
         // todo :: Must be a better simplified way to achieve the below section?
         $user = [];
         $query->bind_result($user[0]['id'], $user[0]['username'], $user[0]['email'], $user[0]['password'], $user[0]['loggedIn'], $user[0]['loginAttempts']);
         $query->fetch(); // This is needed, otherwise if i try to access the binded variables the output is ""
-
-        if (password_verify($passwordInput, $user[0]['password'])) {
-            if ($user[0]['loginAttempts'] === '0') {
-                $db->closeDatabaseConnection();
-                $this->lockoutEmail();
-                print_r(json_encode(['lockout', true]));
-            } else {
-                session_start();
-                $sessionId = random_bytes(16);
-                $sessionId = bin2hex($sessionId);
-                $userId = random_bytes(16);
-                $userId = bin2hex($userId);
-                $dbUserId = $user[0]['id'];
-                // Remove unneeded session cookie
-                // Assign data when creating the cookies
-                setcookie('sessionId', $sessionId, time() + 3200, '/');
-                setcookie('usernameId', $userId, null, '/');
-                // Insert data into DB
-                $query = $db->connection->prepare(self::GET_FULL_USER);
-                $query->execute($sessionId, $userId, $dbUserId);
-                $db->closeDatabaseConnection();
-                print_r(json_encode(['login', true]));
-            }
-        } else {
-            // Password not the same
+        if ($user[0]['id'] === NULL) {
+            // Means ive used the wrong email
             $db->closeDatabaseConnection();
-            print_r(json_encode(['password', false]));
+            print_r(json_encode(['login', false]));
+        } else {
+            // Means correct email is given
+            if (password_verify($passwordInput, $user[0]['password'])) {
+                if ($user[0]['loginAttempts'] === '0') {
+                    $db->closeDatabaseConnection();
+                    $this->lockoutEmail();
+                    print_r(json_encode(['lockout', true]));
+                } else {
+                    session_start();
+                    $sessionId = random_bytes(16);
+                    $sessionId = bin2hex($sessionId);
+                    // TODO :: the below userId could be removed as it seems useless
+                    $userId = random_bytes(16);
+                    $userId = bin2hex($userId);
+                    // Assign data when creating the cookies
+                    setcookie('sessionId', $sessionId, time() + 3200, '/');
+                    setcookie('usernameId', $userId, null, '/');
+                    // Insert data into DB
+                    $db->openDatabaseConnection();
+                    $query = $db->connection->prepare(self::INSERT_NEW_SESSION);
+                    $query->bind_param('iii', $sessionId, $userId, $user[0]['id']);
+                    $query->execute();
+                    $db->closeDatabaseConnection();
+                    print_r(json_encode(['login', true]));
+                }
+            } else {
+                // Password not the same
+                $db->openDatabaseConnection();
+                $query = $db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
+                $loginAttempts = $user[0]['loginAttempts'] - 1;
+                $query->bind_param('is', $loginAttempts, $emailInput); // fixme :: call to member boolean - i fixed this by ading in a new db connection
+                $query->execute();
+                $db->closeDatabaseConnection();
+                print_r(json_encode(['login', false]));
+            }
         }
     }
 

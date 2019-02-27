@@ -8,19 +8,24 @@ function login () {
       password: $('#login-password').val(),
       action: 'login'
     },
-    success: function (response) {
-      if (JSON.parse(response) === false) {
-        alert('Incorrect credentials')
-        $('#login-email', '#login-password').text('')
-        return false
-      }
-      if (JSON.parse(response) === 'lockout') {
-        alert('Account has been locked out')
-        $('#login-email', '#login-password').text('')
-        return false
-      }
-      if (JSON.parse(response) === true) {
-        window.location.replace('http://localhost/copytube/public/view/index.php')
+    success: function (output) {
+      const response = JSON.parse(output)
+      if (response[0] === 'login') {
+        if (response[1] === true) {
+          window.location.replace('http://localhost/copytube/public/view/index.php')
+        } else {
+          $('#Incorrect-credentials').val('Incorrect email or password')
+          $('#login-password').text('')
+          return false
+        }
+      } else {
+        if (response[0] === 'lockout') {
+          alert('Account has been locked out')
+          $('#login-email', '#login-password').text('')
+          return false
+        } else {
+          alert('Call a psychiatrist because im broken')
+        }
       }
     },
     error: function (error) {
