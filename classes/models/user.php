@@ -30,10 +30,11 @@ class User
         $db = new Database();
         $db->openDatabaseConnection();
         $query = $db->connection->prepare(self::GET_FULL_USER);
-        $query->execute($email);
-        $user = $query->fetch_all(MYSQLI_ASSOC);
-        if (password_verify($passwordInput, $user[0]['password'])) {
-            if ($user[0]['loginAttempts'] === '0') {
+        $query->bind_param('s', $email);
+        $query->execute();
+        $users = $query->fetch_all(PDO::FETCH_ASSOC); // todo :: GOT HERE, fetch all doesn't work?
+        if (password_verify($passwordInput, $users[0]['password'])) {
+            if ($users[0]['loginAttempts'] === '0') {
                 $db->closeDatabaseConnection();
                 $this->lockoutEmail();
                 print_r(json_encode(['lockout', true]));
