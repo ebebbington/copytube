@@ -2,7 +2,7 @@
 function login () {
   $.ajax({
     type: 'POST',
-    url: '../../../classes/controllers/user.php',
+    url: '../../classes/controllers/user.php',
     data: {
       email: $('#login-email').val(),
       password: $('#login-password').val(),
