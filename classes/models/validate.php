@@ -210,8 +210,9 @@ class Validate
         $db->openDatabaseConnection();
         $loggedIn = 1;
         $loginAttempts = 3;
+        $hash = password_hash($password, PASSWORD_BCRYPT);
         $query = $db->connection->prepare(self::ADD_NEW_USER);
-        $query->bind_param('sssss', $username, $email, $password, $loggedIn, $loginAttempts);
+        $query->bind_param('sssss', $username, $email, $hash, $loggedIn, $loginAttempts);
         $query->execute();
         if ($query->affected_rows < 1 || $query->affected_rows > 1) {
             $db->closeDatabaseConnection();
