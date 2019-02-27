@@ -6,8 +6,8 @@
  * Time: 23:47
  */
 
-include_once '../controllers/database.php';
-include_once 'validate.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/validate.php';
 
 class User
 {
@@ -20,6 +20,7 @@ class User
     const GET_FULL_USER = "SELECT * FROM users WHERE email_address = ?";
     const INSERT_NEW_SESSION = "INSERT INTO sessions (session_id, username_id, users_username_id) VALUES (?, ?, ?)";
     const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = 3 WHERE email_address = ?";
+    const GET_ALL_USERS = "SELECT * FROM users";
 
     //
     // Run Login Function
@@ -29,10 +30,63 @@ class User
         $passwordInput = $_POST['password'];
         $db = new Database();
         $db->openDatabaseConnection();
+        // MAIN METHOD
+        /*
         $query = $db->connection->prepare(self::GET_FULL_USER);
         $query->bind_param('s', $email);
         $query->execute();
-        $users = $query->fetch_all(PDO::FETCH_ASSOC); // todo :: GOT HERE, fetch all doesn't work?
+        */
+
+        // METHOD 2
+        /*
+        $test1 = $db->connection->prepare(self::GET_FULL_USER);
+        $test1->bind_param('s', $email);
+        $test1->execute();
+        var_dump($test1);
+        $test2 = $test1->get_result();
+        var_dump($test2->username); // try to access object values here
+        $test3 = $test1->fetch_all(MYSQLI_ASSOC);
+        var_dump($test3);
+        */
+
+        // METHOD 3 - SO TEST1 DOES HAVE A ROW AND I ASSUME CONTAINS THE DATA
+        /*
+        $test1 = $db->connection->prepare(self::GET_FULL_USER);
+        $test1->bind_param('s', $email);
+        $test1->execute();
+        var_dump($test1);
+        $test1->store_result(); // this returns false
+        var_dump($test1->fetch()); // error: cant use an object as an array
+        $numberOfRows = $test1->num_rows;
+        var_dump('No of rows: ' . $numberOfRows);
+        $fetch = $test1->fetch();
+        var_dump('FETCHED: ' . $fetch);
+        $test3 = $fetch[0]['id'];
+        var_dump($test3);
+        */
+
+        // METHOD 4 - STANDARD SELECT
+        $query = $db->connection->prepare(self::GET_FULL_USER);
+        $query->bind_param('s', $email);
+        $query->execute();
+
+        $dbEmail = '';
+        $dbPassword = '';
+        $results4 = '';
+        $results5 = '';
+        $results6 = '';
+        $results7 = '';
+        var_dump($query->result);
+        $query->bind_result($results2, $results3, $results4, $results5, $results6, $results7); // Try BIND, STORE, GET. FETCH, FETCHALL,
+        $query->fetch(); // This is needed, otherwise if i try to access the binded variables the output is ""
+        var_dump($results4);
+        var_dump($query);
+        var_dump($results3);
+        $test2 = $query->fetch_all(MYSQLI_ASSOC);
+        var_dump($test2);
+
+
+        $users = $query->fetch_all(MYSQLI_ASSOC); // todo :: GOT HERE, fetch all doesn't work?
         if (password_verify($passwordInput, $users[0]['password'])) {
             if ($users[0]['loginAttempts'] === '0') {
                 $db->closeDatabaseConnection();
