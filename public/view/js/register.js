@@ -76,6 +76,6 @@ function validateInput () {
 
 $(document).ready(function () {
   $(document).on('click', '#go-back', function () {
-    window.location.replace('http://localhost/copytube/login/login.html')
+    window.location.replace('http://localhost/copytube/public/view/login.html')
   })
 })

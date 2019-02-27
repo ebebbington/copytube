@@ -40,7 +40,7 @@ class Database
     //
     public function closeDatabaseConnection () {
         try {
-            $this->connection->close;
+            $this->connection->close();
         } catch (exception $error) {
             $this->closeDatabaseConnection();
         }

@@ -6,6 +6,8 @@
  * Time: 11:23
  */
 
+include_once 'smtp-email-check.php';
+
 class Validate
 {
     //
@@ -70,7 +72,6 @@ class Validate
     }
 
     private function verifyEmail ($username) {
-        include_once 'smtp-email-check.php';
         if (isset($_POST['email'])) {
             $email = $_POST['email'];
             // Set email verifying data
@@ -85,7 +86,8 @@ class Validate
                 print_r(json_encode(['email', 'Could not validate email address']));
                 exit();
             }
-            if ($verifyEmail->check($email)) {
+            // todo :: this class seems a bit dodgey, it doesn't work anymore
+            if (!$verifyEmail->check($email)) {
                 $this->validateEmail($username);
             } else {
                 if ($verifyEmail::validate($email)) {
@@ -114,8 +116,7 @@ class Validate
                     $db = new Database();
                     $db->openDatabaseConnection();
                     $query = $db->connection->query(self::SELECT_ALL_USERS);
-                    $users = execute($query);
-                    $users = $users->fetch_all(MYSQLI_ASSOC);
+                    $users = $query->fetch_all(MYSQLI_ASSOC);
                     $emailExists = false;
                     for ($i = 0, $l = sizeof($users); $i < $l; $i++) {
                         // IM A GENIUS
@@ -136,14 +137,14 @@ class Validate
     }
 
     private function validatePassword ($username, $email) {
-        if (iset($_POST['password'])) {
+        if (isset($_POST['password'])) {
             $password = $_POST['password'];
             // Password
             if (trim($password) === 0 || $password=== null || empty($password)) {
                 print_r(json_encode(['password', 'Enter a password']));
             } else {
                 if (strlen($password) < 8) {
-                    print_r(json_encode(['pass', 'Password must contain 8 or more characters']));
+                    print_r(json_encode(['password', 'Password must contain 8 or more characters']));
                 } else {
                     // Password - Find a number - personal algorithm
                     $numberFound = false;
@@ -156,7 +157,7 @@ class Validate
                             }
                         }
                         if ($numberFound !== true) {
-                            print_r(json_encode('pass', 'Must contain at least one number'));
+                            print_r(json_encode(['password', 'Must contain at least one number']));
                             break;
                         }
                     }
@@ -175,17 +176,17 @@ class Validate
                             }
                         }
                         if (ctype_upper(implode($passOnlyLetters)) || ctype_lower(implode($passOnlyLetters))) {
-                            print_r(json_encode(['pass', 'Must contain at least one upper and lowercase character']));
+                            print_r(json_encode(['password', 'Must contain at least one upper and lowercase character']));
                         } else {
                             if ($username === $password) {
-                                print_r(json_encode('pass', 'Password cannot be the same as the username'));
+                                print_r(json_encode('password', 'Password cannot be the same as the username'));
                             } else {
                                 // Password
-                                if (strpos($password, $username)) {
-                                    print_r(json_encode(['pass', 'Password cannot contain username']));
+                                if (strpos($password, $username) !== false) {
+                                    print_r(json_encode(['password', 'Password cannot contain username']));
                                 } else {
                                     if (!filter_var($password, FILTER_SANITIZE_STRING)) {
-                                        print_r(json_encode('pass', 'Remove tags'));
+                                        print_r(json_encode('password', 'Remove tags'));
                                     } else {
                                         $db = new Database();
                                         $db->openDatabaseConnection();
@@ -207,10 +208,12 @@ class Validate
     private function registerUser ($username, $email, $password) {
         $db = new Database();
         $db->openDatabaseConnection();
+        $loggedIn = 1;
+        $loginAttempts = 3;
         $query = $db->connection->prepare(self::ADD_NEW_USER);
-        $query->execute($username, $email, $password, 1, 3);
-        $affectedRows = $query->rowCount();
-        if ($affectedRows < 1 || $affectedRows > 1) {
+        $query->bind_param('sssss', $username, $email, $password, $loggedIn, $loginAttempts);
+        $query->execute();
+        if ($query->affected_rows < 1 || $query->affected_rows > 1) {
             $db->closeDatabaseConnection();
             return json_encode(['Query did not affect the database or created more than one field']);
         } else {
