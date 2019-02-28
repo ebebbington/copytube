@@ -12,15 +12,20 @@ class Videos
 {
     const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
 
+    private $db;
+
+    private function __construct() {
+        $this->db = new Database();
+        $this->db->openDatabaseConnection();
+    }
+
     //
     // Retrieve all Videos
     //
     public function getAllVideos () {
-        $db = new Database();
-        $db->openDatabaseConnection();
-        $result = $db->connection->query(self::GET_VIDEOS);
+        $result = $this->db->connection->query(self::GET_VIDEOS);
         $response = $result->fetch_all(MYSQLI_ASSOC);
-        $db->closeDatabaseConnection();
-        return json_encode($response);
+        print_r(json_encode($response));
+        $this->db->closeDatabaseConnection();
     }
 }
