@@ -19,7 +19,7 @@ class User
     const DELETE_SESSION = "DELETE FROM sessions WHERE users_username_id = ?";
     const GET_CURRENT_USER = "SELECT * FROM users WHERE email_address = ?";
     const INSERT_NEW_SESSION = "INSERT INTO sessions (session_id, username_id, users_username_id) VALUES (?, ?, ?)";
-    const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = 3 WHERE email_address = ?";
+    const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = ? WHERE email_address = ?";
     const GET_ALL_USERS = "SELECT * FROM users";
 
     //
@@ -162,7 +162,8 @@ class User
                 if (password_verify($password, $user[0]['password'])) {
                     $db->openDatabaseConnection();
                     $query = $db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
-                    $query->bind_param('s', $email);
+                    $loginAttempts = 3;
+                    $query->bind_param('is', $loginAttempts, $email);
                     $query->execute();
                     $this->recoverEmail();
                     $db->closeDatabaseConnection();

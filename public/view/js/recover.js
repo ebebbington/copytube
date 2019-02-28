@@ -18,7 +18,7 @@ function recover () {
       } else {
         if (response[0] === 'password') {
           if (response[1] === true) {
-            window.location.replace('http://localhost/copytube/login/login.html')
+            window.location.replace('../login.html')
           } else {
             alert('Wrong credentials')
             return false
