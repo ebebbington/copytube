@@ -58,13 +58,12 @@ if (empty($_COOKIE['sessionId1'])) {
                                     // setting variables
                                     $videos = new Videos();
                                     $videos->getAllVideos();
-                                    echo $response[0]['src'];
 
                                     $count = 1;
-                                    if ($result->num_rows > 0) {
+                                    if ($response->num_rows > 0) {
                                         $count = 1;
                                         $html = "";
-                                        while($row = $result->fetch_assoc()) {
+                                        while($row = $response->fetch_assoc()) {
                                             $html = "<a href='#' id='dropdown-title-$count' class='dropdown-titles'>$row[title]</a>";
                                             echo $html;
                                             $count++;
