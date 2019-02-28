@@ -5,41 +5,19 @@
 
 // Refresh web page
 function refresh () {
-  window.location.replace('http://localhost/copytube/index/copytube.php')
-}
-
-// check if user is logged in and redirect if needed
-function getUsername (param) {
-  $.ajax({
-    type: 'GET',
-    url: 'http://localhost/copytube/models/get-username.php',
-    success: function (username) {
-      // return username if needed
-      // if user tries to access page but not logged in divert back to login
-      if (username === 'false') {
-        window.location.replace('http://localhost/copytube/login/login.html')
-      } else {
-        document.cookie = 'name=' + username + "'"
-        if (param === 'welcome message') {
-          $('#welcome').text(username + ', welcome to CopyTube')
-        } else {
-          return username
-        }
-      }
-    },
-    error: function () {
-      alert('TESTTTTTT')
-    }
-  })
+  window.location.replace('http://localhost/copytube/public/view/index.php')
 }
 
 // Log Out function
 function logOut () {
   $.ajax({
     type: 'POST',
-    url: 'http://localhost/copytube/models/log-out.php',
+    url: 'http://localhost/copytube/classes/controllers/user.php',
+    data: {
+      action: 'logout'
+    },
     success: function () {
-      window.location.replace('http://localhost/copytube/login/login.html')
+      window.location.replace('http://localhost/copytube/public/view/login.html')
     }
   })
 }

@@ -5,7 +5,7 @@
  * Date: 25/02/2019
  * Time: 10:34
  */
-
+require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
 
 //
 // Set data

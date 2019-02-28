@@ -1,33 +1,15 @@
 <?php
-echo $_SERVER['DOCUMENT_ROOT'];
-require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
-require_once '../../classes/controllers/user.php';
 require_once '../../classes/models/user.php';
 session_start();
-if (empty($_COOKIE['sessionId'])) {
-    // todo :: Create new script for checking sessions and include it here?
+if (empty($_COOKIE['sessionId1'])) {
     // Divert back to login and remove all cookies
+    $user = new User();
+    $user->logout();
     echo "<script>alert('Session has expired - returning to the Login screen')</script>";
-    requestedAction('logout');
     echo "<script>window.location.replace('../view/login.html')</script>";
 } else {
-    // Update loggedIn and display username
-    $sessionId = $_COOKIE['sessionId'];
-    $db = new Database();
-    $db->openDatabaseConnection();
-    /** @noinspection SqlNoDataSourceInspection */
-    $sql = "SELECT users_username_id FROM sessions WHERE session_id = '$sessionId'";
-    $result = $db->connection->query($sql);
-    $response = $result->fetch_all(MYSQLI_ASSOC);
-    $id = $response[0]['users_username_id'];
-    /** @noinspection SqlNoDataSourceInspection */
-    $sql = "UPDATE users SET loggedIn = 0 WHERE id = '$id'";
-    $db->connection->query($sql);
-    $sql = "SELECT username FROM users WHERE id = '$id'";
-    $result = $db->connection->query($sql);
-    $response = $result->fetch_all(MYSQLI_ASSOC);
-    $username = $response[0]['username'];
-    $db->closeDatabaseConnection();
+    // GET username
+    $username = 'test username';
 }
 ?>
 
