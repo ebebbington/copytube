@@ -23,9 +23,31 @@ class User
     const GET_ALL_USERS = "SELECT * FROM users";
 
     //
+    // Static Variables
+    //
+    private $db;
+    private $validate;
+    private $databaseConnectionStatus;
+
+    //
+    // Initialise Data
+    //
+    public function __construct() {
+        $this->db = new Database();
+        $this->db->openDatabaseConnection(); // DOES OPEN THE CONNECTION WITHOUT ANY OTHER LINES OF CODE AND CAN CLOSE FURTHER DOWN THE LINE
+        $this->validate = new Validate();
+    }
+
+    //
     // Run Login Function
     //
     public function login () {
+        // Check connection status on startup
+        $this->db->closeDatabaseConnection();
+        $this->databaseConnectionStatus = $this->db->connection->ping(); // This can't go in construct because it will always equal 1
+        $this->databaseConnectionStatus === NULL ? print_r('DB Status: ' . false) : print_r('DB Status: ' . true);
+        return;
+
         $emailInput = $_POST['email'];
         $passwordInput = $_POST['password'];
         $db = new Database();
@@ -113,8 +135,7 @@ class User
     // Run Register function
     //
     public function register () {
-        $validate = new Validate();
-        $validate->validateUsername();
+        $this->validate->validateUsername();
     }
 
     //

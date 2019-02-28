@@ -1,6 +1,6 @@
 <?php
 echo $_SERVER['DOCUMENT_ROOT'];
-require_once '../../classes/controllers/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
 require_once '../../classes/controllers/user.php';
 require_once '../../classes/models/user.php';
 session_start();
