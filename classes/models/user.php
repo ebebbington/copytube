@@ -44,7 +44,7 @@ class User
         } else {
             // Means correct email is given
             if (password_verify($passwordInput, $user[0]['password'])) {
-                if ($user[0]['loginAttempts'] === '0') {
+                if ($user[0]['loginAttempts'] === 0) {
                     $db->closeDatabaseConnection();
                     $this->lockoutEmail();
                     print_r(json_encode(['lockout', true]));
