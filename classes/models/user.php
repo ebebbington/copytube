@@ -122,7 +122,6 @@ class User
     //
     private function lockoutEmail () {
         $receiver = $_POST['email'];
-        var_dump($receiver);
         $subject = 'Account Locked Out';
         $message = "Your account $receiver has been locked out on CopyTube. To recover it please visit http://localhost/copytube/public/view/recover.html";
         $header = 'From: noreply@copytube.com';
@@ -154,7 +153,6 @@ class User
         $user = [];
         $query->bind_result($user[0]['id'], $user[0]['username'], $user[0]['email'], $user[0]['password'], $user[0]['loggedIn'], $user[0]['loginAttempts']);
         $query->fetch();
-        var_dump($user[0]['loginAttempts']);
         if ($user[0]['id'] === NULL){
             // User doesn't exist
             print_r(json_encode(['email', false]));

@@ -9,6 +9,7 @@ function login () {
       action: 'login'
     },
     success: function (output) {
+      alert(output)
       const response = JSON.parse(output)
       if (response[0] === 'login') {
         if (response[1] === true) {
