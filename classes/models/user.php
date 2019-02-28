@@ -9,6 +9,17 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/validate.php';
 
+/*
+ *  -----------------------------------------------------------------------------------------------------------------------------------
+ * |                   Supporting notes                                                                                                |
+ * |                                                                                                                                   |
+ * | 1. Check database connection                                                                                                      |
+ * |    $this->databaseConnectionStatus = $this->db->connection->ping(); // This can't go in construct because it will always equal 1  |
+   |    $this->databaseConnectionStatus === NULL ? print_r('DB Status: ' . false) : print_r('DB Status: ' . true);                     |
+ * |                                                                                                                                   |
+ *  -----------------------------------------------------------------------------------------------------------------------------------
+ */
+
 class User
 {
     //
@@ -42,32 +53,21 @@ class User
     // Run Login Function
     //
     public function login () {
-        // Check connection status on startup
-        $this->db->closeDatabaseConnection();
-        $this->databaseConnectionStatus = $this->db->connection->ping(); // This can't go in construct because it will always equal 1
-        $this->databaseConnectionStatus === NULL ? print_r('DB Status: ' . false) : print_r('DB Status: ' . true);
-        return;
-
         $emailInput = $_POST['email'];
         $passwordInput = $_POST['password'];
-        $db = new Database();
-        $db->openDatabaseConnection();
-        $query = $db->connection->prepare(self::GET_CURRENT_USER);
+        $query = $this->db->connection->prepare(self::GET_CURRENT_USER);
         $query->bind_param('s', $emailInput);
         $query->execute();
-        // todo :: Must be a better simplified way to achieve the below section?
         $user = [];
         $query->bind_result($user[0]['id'], $user[0]['username'], $user[0]['email'], $user[0]['password'], $user[0]['loggedIn'], $user[0]['loginAttempts']);
         $query->fetch(); // This is needed, otherwise if i try to access the binded variables the output is ""
         if ($user[0]['id'] === NULL) {
             // Means ive used the wrong email
-            $db->closeDatabaseConnection();
             print_r(json_encode(['login', false]));
         } else {
             // Means correct email is given
             if (password_verify($passwordInput, $user[0]['password'])) {
                 if ($user[0]['loginAttempts'] === 0) {
-                    $db->closeDatabaseConnection();
                     $this->lockoutEmail();
                     print_r(json_encode(['lockout', true]));
                 } else {
@@ -81,24 +81,23 @@ class User
                     setcookie('sessionId', $sessionId, time() + 3200, '/');
                     setcookie('usernameId', $userId, null, '/');
                     // Insert data into DB
-                    $db->openDatabaseConnection();
-                    $query = $db->connection->prepare(self::INSERT_NEW_SESSION);
+                    $this->db->openDatabaseConnection();
+                    $query = $this->db->connection->prepare(self::INSERT_NEW_SESSION);
                     $query->bind_param('iii', $sessionId, $userId, $user[0]['id']);
                     $query->execute();
-                    $db->closeDatabaseConnection();
                     print_r(json_encode(['login', true]));
                 }
             } else {
                 // Password not the same
-                $db->openDatabaseConnection();
-                $query = $db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
+                $this->db->openDatabaseConnection(); // todo :: some reason on attempting another query, "bind_param" will throw a wobbly, unless you 'open' the connection again EVEN if the connection is still open
+                $query = $this->db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
                 $loginAttempts = $user[0]['loginAttempts'] - 1;
                 $query->bind_param('is', $loginAttempts, $emailInput); // fixme :: call to member boolean - i fixed this by ading in a new db connection
                 $query->execute();
-                $db->closeDatabaseConnection();
                 print_r(json_encode(['login', false]));
             }
         }
+        $this->db->closeDatabaseConnection();
     }
 
     //
@@ -106,29 +105,31 @@ class User
     //
     public function logout () {
         if (isset($_COOKIE['usernameId'])) {
-            $db = new Database();
-            $db->openDatabaseConnection();
             $id = $_COOKIE['usernameId'];
-            $query = $db->connection->prepare(self::GET_USER_ID);
-            $query->execute($id);
-            $user = $query->fetch_all(MYSQLI_ASSOC);
+            $query = $this->db->connection->prepare(self::GET_USER_ID);
+            $query->bind_param('i', $id);
+            $query->execute();
+            $user = [];
+            $query->bind_result($user[0]['users_username_id']);
+            $query->fetch(); // This is needed, otherwise if i try to access the binded variables the output is ""
             $id = $user[0]['users_username_id'];
-            $query = $db->connection->prepare(self::LOGOUT_USER);
-            $query->execute($id);
-            $query = $db->connection->prepare(self::DELETE_SESSION);
-            $query->execute($id);
-            $db->closeDatabaseConnection();
-
+            $query = $this->db->connection->prepare(self::LOGOUT_USER);
+            $query->bind_param('i', $id);
+            $query->execute();
+            $query = $this->db->connection->prepare(self::DELETE_SESSION);
+            $query->bind_param('i', $id);
+            $query->execute();
             setcookie("sessionId", "", time() - 3600, '/');
             setcookie('PHPSESSID', '', time()-3600, '/');
             setcookie("usernameId", "", time() - 3600, '/');
             setcookie("name", "", time() - 3600, '/');
             session_abort();
             session_unset();
-            return json_encode([true]);
+            print_r(json_encode(['logout', true]));
         } else {
-            return json_encode([true]);
+            print_r(json_encode(['logout', true]));
         }
+        $this->db->closeDatabaseConnection();
     }
 
     //
@@ -136,6 +137,7 @@ class User
     //
     public function register () {
         $this->validate->validateUsername();
+        $this->db->closeDatabaseConnection();
     }
 
     //
@@ -166,9 +168,7 @@ class User
     public function recover () {
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $db = new Database();
-        $db->openDatabaseConnection();
-        $query = $db->connection->prepare(self::GET_CURRENT_USER);
+        $query = $this->db->connection->prepare(self::GET_CURRENT_USER);
         $query->bind_param('s', $email);
         $query->execute();
         $user = [];
@@ -181,13 +181,11 @@ class User
             // Validate
             if ($user[0]['loginAttempts'] === 0) {
                 if (password_verify($password, $user[0]['password'])) {
-                    $db->openDatabaseConnection();
-                    $query = $db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
+                    $query = $this->db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
                     $loginAttempts = 3;
                     $query->bind_param('is', $loginAttempts, $email);
                     $query->execute();
                     $this->recoverEmail();
-                    $db->closeDatabaseConnection();
                     print_r(json_encode(['password', true]));
                 } else {
                     print_r(json_encode(['password', false]));
@@ -197,6 +195,7 @@ class User
                 print_r(json_encode(['email', 'No recovering is needed']));
             }
         }
+        $this->db->closeDatabaseConnection();
     }
 
 }

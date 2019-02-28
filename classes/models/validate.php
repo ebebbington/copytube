@@ -7,6 +7,7 @@
  */
 
 include_once 'smtp-email-check.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
 
 class Validate
 {
@@ -20,6 +21,14 @@ class Validate
     // Initialise data
     //
     private $maxlength = 40;
+
+    //
+    // Initialise
+    //
+    public function __construct() {
+        $this->db = new Database();
+        $this->db->openDatabaseConnection();
+    }
 
     //
     // Validate Username
@@ -46,9 +55,7 @@ class Validate
                         print_r(json_encode(['username', 'Remove tags']));
                     } else {
                         // cHECK if username exists
-                        $db = new Database();
-                        $db->openDatabaseConnection();
-                        $query = $db->connection->query(self::SELECT_ALL_USERS);
+                        $query = $this->db->connection->query(self::SELECT_ALL_USERS);
                         $users = $query->fetch_all(MYSQLI_ASSOC);
                         $usernameExists = false;
                         for ($i = 0, $l = sizeof($users); $i < $l; $i++) {
@@ -59,8 +66,8 @@ class Validate
                             }
                         }
                         if ($usernameExists === false) {
-                            $username = mysqli_real_escape_string($db->connection, $username);
-                            $db->closeDatabaseConnection();
+                            $username = mysqli_real_escape_string($this->db->connection, $username);
+                            $this->db->closeDatabaseConnection();
                             $this->verifyEmail($username);
                         }
                     }
@@ -69,6 +76,7 @@ class Validate
         } else {
             print_r(json_encode(['username', 'Please fill in the username field']));
         }
+        $this->db->closeDatabaseConnection();
     }
 
     private function verifyEmail ($username) {
@@ -113,9 +121,8 @@ class Validate
                 if (!filter_var($email, FILTER_SANITIZE_EMAIL)) {
                     print_r(json_encode(['email', 'Remove tags']));
                 } else {
-                    $db = new Database();
-                    $db->openDatabaseConnection();
-                    $query = $db->connection->query(self::SELECT_ALL_USERS);
+                    $this->db->openDatabaseConnection();
+                    $query = $this->db->connection->query(self::SELECT_ALL_USERS);
                     $users = $query->fetch_all(MYSQLI_ASSOC);
                     $emailExists = false;
                     for ($i = 0, $l = sizeof($users); $i < $l; $i++) {
@@ -127,13 +134,13 @@ class Validate
                         }
                     }
                     if ($emailExists === false) {
-                        $email = mysqli_real_escape_string($db->connection, $email);
-                        $db->closeDatabaseConnection();
+                        $email = mysqli_real_escape_string($this->db->connection, $email);
                         $this->validatePassword($username, $email);
                     }
                 }
             }
         }
+        $this->db->closeDatabaseConnection();
     }
 
     private function validatePassword ($username, $email) {
@@ -188,10 +195,8 @@ class Validate
                                     if (!filter_var($password, FILTER_SANITIZE_STRING)) {
                                         print_r(json_encode('password', 'Remove tags'));
                                     } else {
-                                        $db = new Database();
-                                        $db->openDatabaseConnection();
-                                        $password = mysqli_real_escape_string($db->connection, $password);
-                                        $db->closeDatabaseConnection();
+                                        $this->db->openDatabaseConnection();
+                                        $password = mysqli_real_escape_string($this->db->connection, $password);
                                         $this->registerUser($username, $email, $password);
                                     }
                                 }
@@ -203,24 +208,23 @@ class Validate
         } else {
             print_r(json_encode(['password', 'Please set a password']));
         }
+        $this->db->closeDatabaseConnection();
     }
 
     private function registerUser ($username, $email, $password) {
-        $db = new Database();
-        $db->openDatabaseConnection();
+        $this->db->openDatabaseConnection();
         $loggedIn = 1;
         $loginAttempts = 3;
         $hash = password_hash($password, PASSWORD_BCRYPT);
-        $query = $db->connection->prepare(self::ADD_NEW_USER);
+        $query = $this->db->connection->prepare(self::ADD_NEW_USER);
         $query->bind_param('sssss', $username, $email, $hash, $loggedIn, $loginAttempts);
         $query->execute();
         if ($query->affected_rows < 1 || $query->affected_rows > 1) {
-            $db->closeDatabaseConnection();
             return json_encode(['Query did not affect the database or created more than one field']);
         } else {
-            $db->closeDatabaseConnection();
             print_r(json_encode(['user', 'Successfully registered an account']));
         }
+        $this->db->closeDatabaseConnection();
     }
 
 }

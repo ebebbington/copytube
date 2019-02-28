@@ -12,7 +12,9 @@ class Database
     private $username;
     private $password;
     private $databaseName;
+    /** @var mysqli $connection */
     public $connection;
+    private $isConnected;
 
     //
     // Initialise
@@ -22,16 +24,17 @@ class Database
         $this->username = "root";
         $this->password = "password";
         $this->databaseName = "copytube";
+        $this->isConnected = false;
     }
 
     //
     // Create DB connection
     //
     public function openDatabaseConnection () {
-        try {
+        // Failsafe
+        if ($this->isConnected === false) {
             $this->connection = new mysqli($this->servername, $this->username, $this->password, $this->databaseName);
-        } catch (exception $error) {
-            die("Connection to database has failed");
+            $this->isConnected = true;
         }
     }
 
@@ -39,10 +42,10 @@ class Database
     // Close DB connection
     //
     public function closeDatabaseConnection () {
-        try {
+        // Failsafe
+        if ($this->isConnected === true) {
             $this->connection->close();
-        } catch (exception $error) {
-            $this->closeDatabaseConnection();
+            $this->isConnected = false;
         }
     }
 }
