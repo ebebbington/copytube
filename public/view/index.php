@@ -1,5 +1,6 @@
 <?php
 require_once '../../classes/models/user.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
 session_start();
 if (empty($_COOKIE['sessionId1'])) {
     // Divert back to login and remove all cookies
@@ -35,7 +36,7 @@ if (empty($_COOKIE['sessionId1'])) {
 
 	<body>
     <button id="log-out" type="button" onclick="logOut()">Log Out</button>
-    <h2 id="welcome"><?php echo "$username, welcome to CopyTube"; ?></h2>
+    <h2 id="welcome" onload="alert('hello');"><?php echo "$username, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->
@@ -55,11 +56,10 @@ if (empty($_COOKIE['sessionId1'])) {
                             <div class="dropdown-content">
                                 <?php
                                     // setting variables
-                                    $db = new Database();
-                                    $db->openDatabaseConnection();
-                                    $sql = "SELECT title FROM `videos`";
-                                    $result = $connection->query($sql);
-                                    // fetch all videos from table
+                                    $videos = new Videos();
+                                    $videos->getAllVideos();
+                                    echo $response[0]['src'];
+
                                     $count = 1;
                                     if ($result->num_rows > 0) {
                                         $count = 1;

@@ -6,15 +6,13 @@
  * Time: 23:41
  */
 
-include_once '../controllers/database.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
 
 class Videos
 {
     const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
 
-    private $db;
-
-    private function __construct() {
+    public function __construct() {
         $this->db = new Database();
         $this->db->openDatabaseConnection();
     }
