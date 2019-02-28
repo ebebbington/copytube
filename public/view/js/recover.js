@@ -4,22 +4,30 @@
 function recover () {
   $.ajax({
     type: 'POST',
-    url: '../../../controllers/user.php',
+    url: '../../classes/controllers/user.php',
     data: {
       email: $('#recover-email').val(),
       password: $('#recover-password').val(),
       action: 'recover'
     },
-    success: function (response) {
-      if (JSON.parse(response) === false) {
+    success: function (output) {
+      const response = JSON.parse(output)
+      if (response[0] === 'email') {
         alert('Wrong credentials')
         return false
       } else {
-        window.location.replace('http://localhost/copytube/login/login.html')
+        if (response[0] === 'password') {
+          if (response[1] === true) {
+            window.location.replace('http://localhost/copytube/login/login.html')
+          } else {
+            alert('Wrong credentials')
+            return false
+          }
+        }
       }
     },
     error: function (error) {
-      alert('error: ' + error)
+      alert('error: ' + error[0])
       return false
     }
   })

@@ -19,7 +19,7 @@ class User
     const DELETE_SESSION = "DELETE FROM sessions WHERE users_username_id = ?";
     const GET_CURRENT_USER = "SELECT * FROM users WHERE email_address = ?";
     const INSERT_NEW_SESSION = "INSERT INTO sessions (session_id, username_id, users_username_id) VALUES (?, ?, ?)";
-    const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = ? WHERE email_address = ?";
+    const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = 3 WHERE email_address = ?";
     const GET_ALL_USERS = "SELECT * FROM users";
 
     //
@@ -148,26 +148,33 @@ class User
         $password = $_POST['password'];
         $db = new Database();
         $db->openDatabaseConnection();
-        $query = $db->connection->prepare(self::GET_FULL_USER);
-        $query->execute($email);
-        $user = $query->fetch_all(MYSQLI_ASSOC);
-        if ($query === false || count($user) === 0){
+        $query = $db->connection->prepare(self::GET_CURRENT_USER);
+        $query->bind_param('s', $email);
+        $query->execute();
+        $user = [];
+        $query->bind_result($user[0]['id'], $user[0]['username'], $user[0]['email'], $user[0]['password'], $user[0]['loggedIn'], $user[0]['loginAttempts']);
+        $query->fetch();
+        var_dump($user[0]['loginAttempts']);
+        if ($user[0]['id'] === NULL){
             // User doesn't exist
-            print_r(json_encode(['user', false]));
+            print_r(json_encode(['email', false]));
         } else {
             // Validate
-            if ($user[0]['login_attempts'] === '0') {
+            if ($user[0]['loginAttempts'] === 0) {
                 if (password_verify($password, $user[0]['password'])) {
+                    $db->openDatabaseConnection();
                     $query = $db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
-                    $query->execute($email);
+                    $query->bind_param('s', $email);
+                    $query->execute();
                     $this->recoverEmail();
-                    print_r(json_encode(['recover', true]));
+                    $db->closeDatabaseConnection();
+                    print_r(json_encode(['password', true]));
                 } else {
-                    print_r(json_encode(['recover', false]));
+                    print_r(json_encode(['password', false]));
                 }
             } else {
-                // User should not be recovering
-                exit();
+                // User should not be recovering as it's already recovered
+                print_r(json_encode(['email', 'No recovering is needed']));
             }
         }
     }
