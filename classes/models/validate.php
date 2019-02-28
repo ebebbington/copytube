@@ -87,7 +87,7 @@ class Validate
                 exit();
             }
             // todo :: this class seems a bit dodgey, it doesn't work anymore
-            if (!$verifyEmail->check($email)) {
+            if ($verifyEmail->check($email)) {
                 $this->validateEmail($username);
             } else {
                 if ($verifyEmail::validate($email)) {

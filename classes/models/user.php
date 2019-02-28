@@ -122,6 +122,7 @@ class User
     //
     private function lockoutEmail () {
         $receiver = $_POST['email'];
+        var_dump($receiver);
         $subject = 'Account Locked Out';
         $message = "Your account $receiver has been locked out on CopyTube. To recover it please visit http://localhost/copytube/public/view/recover.html";
         $header = 'From: noreply@copytube.com';
