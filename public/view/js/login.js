@@ -14,13 +14,13 @@ function login () {
         if (response[1] === true) {
           window.location.replace('http://localhost/copytube/public/view/index.php')
         } else {
-          $('#Incorrect-credentials').val('Incorrect email or password')
+          $('#incorrect-credentials').text('Incorrect credentials')
           $('#login-password').text('')
           return false
         }
       } else {
         if (response[0] === 'lockout') {
-          alert('Account has been locked out')
+          $('#incorrect-credentials').text('Account has been locked out')
           $('#login-email', '#login-password').text('')
           return false
         } else {
