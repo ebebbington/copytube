@@ -77,7 +77,7 @@ class User
             // Means correct email is given
             if (password_verify($passwordInput, $user[0]['password'])) {
                 if ($user[0]['loginAttempts'] === 0) {
-                    $this->lockoutEmail();
+                    $this->lockoutEmail($postData);
                     print_r(json_encode(['lockout', true]));
                 } else {
                     session_start();
@@ -151,8 +151,8 @@ class User
     //
     // Run Register function
     //
-    public function register () {
-        $this->validate->validateUsername();
+    public function register ($postData) {
+        $this->validate->validateUsername($postData);
         $this->db->closeDatabaseConnection();
     }
 
@@ -201,7 +201,7 @@ class User
                     $loginAttempts = 3;
                     $query->bind_param('is', $loginAttempts, $email);
                     $query->execute();
-                    $this->recoverEmail();
+                    $this->recoverEmail($postData);
                     print_r(json_encode(['password', true]));
                 } else {
                     print_r(json_encode(['password', false]));

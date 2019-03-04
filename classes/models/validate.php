@@ -44,7 +44,7 @@ class Validate
         if (isset($postData['username'])) {
             $username = $postData['username'];
             $email = $postData['email'];
-            $password = $postData['passwod'];
+            $password = $postData['password'];
             if (strlen($username) > $this->maxlength || trim($username) === 0 || $username === null
               || empty($username)
             ) {
@@ -143,7 +143,7 @@ class Validate
         $this->db->closeDatabaseConnection();
     }
 
-    private function validatePassword ($username, $email) {
+    private function validatePassword ($username, $email, $password) {
         if (isset($password)) {
             // Password
             if (trim($password) === 0 || $password=== null || empty($password)) {

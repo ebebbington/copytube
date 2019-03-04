@@ -2,6 +2,7 @@
 require_once '../../classes/models/user.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
 $user = new User();
+$username = $user->username;
 session_start();
 if (empty($_COOKIE['sessionId1'])) {
     // Divert back to login and remove all cookies
@@ -33,7 +34,7 @@ if (empty($_COOKIE['sessionId1'])) {
 
 	<body>
     <button id="log-out" type="button" onclick="logOut()">Log Out</button>
-    <h2 id="welcome"><?php echo "$user->username, welcome to CopyTube"; ?></h2>
+    <h2 id="welcome"><?php echo "$username, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->
@@ -108,6 +109,8 @@ if (empty($_COOKIE['sessionId1'])) {
                         <div id="user-comments"></div>
                         <div id="db-comments">
                             <?php
+                            $comments = new Comments();
+                            $comments->getComments($title['Something More']);
                                 // setting variables
                                 $servername = "localhost";
                                 $username = "root";
