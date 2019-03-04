@@ -6,35 +6,20 @@
  * Time: 11:25
  */
 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/comments.php';
+
 //
 // Set data
 //
-$post = $_POST;
+$postData = $_POST;
 $comments = new Comments();
 $possibleActions = ['getComments', 'addComment'];
 
 //
-// Retrieve Comments
-//
-if ($post['action'] === 'getComments') {
-    print_r($comments->getComments($_POST['videoTitle']));
-}
-
-//
-// Add a comment
-//
-if ($post['action'] === 'addComment') {
-    try{
-        $commentData = [ $_POST['comment'], $_POST['author'], $_POST['datePosted'], $_POST['videoTitle'] ];
-        $comments->addComment($commentData);
-    } catch (exception $error) {
-        print_r(json_encode(['Please provide a comment']));
-    }
-}
-
-//
 // Check if action has even been created for request
 //
-if (!in_array($post['action'], $possibleActions)) {
+if (!in_array($postData['action'], $possibleActions)) {
     print_r(json_encode(['Requested action does not exist']));
+} else {
+    $comments->$postData['action']($postData);
 }

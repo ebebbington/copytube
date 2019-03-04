@@ -86,9 +86,9 @@ if (empty($_COOKIE['sessionId1'])) {
 							<video id='main-video' controls
 									autoplay
 							    	muted
-                                    poster="../images/something_more.jpg"
+                                    poster="../../images/something_more.jpg"
 							    	title="Something More"
-							    	src="../videos/something_more.mp4"
+							    	src="../../videos/something_more.mp4"
 							    	width="750"
 							    	height="400">
 							    Sorry, your browser doesn't support embedded videos.
@@ -103,10 +103,10 @@ if (empty($_COOKIE['sessionId1'])) {
 						<!-- create comments section -->
                         <p id="comment-title">Comments Section</p> <p id="comment-count">0</p>
 						<div id="comment">
-                            <form id="comment-form" action="../models/save_comment.php" method="get">
+                            <form id="comment-form" method="get">
                                 <span>
                                     <textarea id="comment-bar" cols="110" form="comment-form" name="comment-bar" placeholder="Add a comment..." required rows="4"></textarea>
-                                    <input id="comment-button" type="submit" name="comment-button" value="Add">
+                                    <input id="comment-button" type="submit" name="comment-button" value="Add" onclick="addComment()">
                                 </span>
                             </form>
     					</div>

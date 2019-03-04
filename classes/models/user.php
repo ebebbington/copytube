@@ -53,9 +53,9 @@ class User
     //
     // Run Login Function
     //
-    public function login () {
-        $emailInput = $_POST['email'];
-        $passwordInput = $_POST['password'];
+    public function login ($postData) {
+        $emailInput = $postData['email'];
+        $passwordInput = $postData['password'];
         $query = $this->db->connection->prepare(self::GET_CURRENT_USER);
         $query->bind_param('s', $emailInput);
         $query->execute();
@@ -151,8 +151,8 @@ class User
     //
     // Tell user Account is Locked
     //
-    private function lockoutEmail () {
-        $receiver = $_POST['email'];
+    private function lockoutEmail ($postData) {
+        $receiver = $postData['email'];
         $subject = 'Account Locked Out';
         $message = "Your account $receiver has been locked out on CopyTube. To recover it please visit http://localhost/copytube/public/view/recover.html";
         $header = 'From: noreply@copytube.com';
@@ -162,8 +162,8 @@ class User
     //
     // Tell user Account is Recovered
     //
-    private function recoverEmail () {
-        $receiver = $_POST['email'];
+    private function recoverEmail ($postData) {
+        $receiver = $postData['email'];
         $subject = 'Account Recovered';
         $message = "Your account $receiver has been recovered on CopyTube.";
         $header = 'From: noreply@copytube.com';
@@ -173,9 +173,9 @@ class User
     //
     // Run Recover function
     //
-    public function recover () {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+    public function recover ($postData) {
+        $email = $postData['email'];
+        $password = $postData['password'];
         $query = $this->db->connection->prepare(self::GET_CURRENT_USER);
         $query->bind_param('s', $email);
         $query->execute();

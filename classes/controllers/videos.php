@@ -10,20 +10,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
 //
 // Set data
 //
-$post = $_POST;
+$postData = $_POST;
 $videos = new Videos();
-$possibleActions = ['getVideos'];
-
-//
-// Retrieve Videos
-//
-if($post['action'] === 'getVideos'){
-    print_r($videos->getAllVideos());
-}
+$possibleActions = ['getAllVideos'];
 
 //
 // Check if action has even been created for the request
 //
-if (!in_array($post['action'], $possibleActions)) {
+if (!in_array($postData['action'], $possibleActions)) {
     print_r(json_encode(['Requested action does not exists']));
+} else {
+    print_r($videos->$postData['action']($postData));
 }

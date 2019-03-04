@@ -40,9 +40,11 @@ class Validate
     // Validate Password
     //      v
     // Register User
-    public function validateUsername() {
-        if (isset($_POST['username'])) {
-            $username = $_POST['username'];
+    public function validateUsername($postData) {
+        if (isset($postData['username'])) {
+            $username = $postData['username'];
+            $email = $postData['email'];
+            $password = $postData['passwod'];
             if (strlen($username) > $this->maxlength || trim($username) === 0 || $username === null
               || empty($username)
             ) {
@@ -68,7 +70,7 @@ class Validate
                         if ($usernameExists === false) {
                             $username = mysqli_real_escape_string($this->db->connection, $username);
                             $this->db->closeDatabaseConnection();
-                            $this->verifyEmail($username);
+                            $this->verifyEmail($username, $email, $password);
                         }
                     }
                 }
@@ -79,9 +81,8 @@ class Validate
         $this->db->closeDatabaseConnection();
     }
 
-    private function verifyEmail ($username) {
-        if (isset($_POST['email'])) {
-            $email = $_POST['email'];
+    private function verifyEmail ($username, $email, $password) {
+        if (isset($email)) {
             // Set email verifying data
             try {
                 $verifyEmail = new verifyEmail();
@@ -96,7 +97,7 @@ class Validate
             }
             // todo :: this class seems a bit dodgey, it doesn't work anymore
             if ($verifyEmail->check($email)) {
-                $this->validateEmail($username);
+                $this->validateEmail($username, $email, $password);
             } else {
                 if ($verifyEmail::validate($email)) {
                     print_r(json_encode(['email', 'Email is valid but does not exist']));
@@ -109,9 +110,8 @@ class Validate
         }
     }
 
-    private function validateEmail ($username)
+    private function validateEmail ($username, $email, $password)
     {
-        $email = $_POST['email'];
         if (trim($email) === 0 || $email === null || empty($email)) {
             print_r(json_encode(['email', 'Enter an email']));
         } else {
@@ -135,7 +135,7 @@ class Validate
                     }
                     if ($emailExists === false) {
                         $email = mysqli_real_escape_string($this->db->connection, $email);
-                        $this->validatePassword($username, $email);
+                        $this->validatePassword($username, $email, $password);
                     }
                 }
             }
@@ -144,8 +144,7 @@ class Validate
     }
 
     private function validatePassword ($username, $email) {
-        if (isset($_POST['password'])) {
-            $password = $_POST['password'];
+        if (isset($password)) {
             // Password
             if (trim($password) === 0 || $password=== null || empty($password)) {
                 print_r(json_encode(['password', 'Enter a password']));
