@@ -120,7 +120,7 @@ function getVideosAndComments (videoTitle, maxLength) {
 
 // Save comments assuming input is validated todo :: check and remove code one validation is complete
 function addComment () {
-  const [ comment, maxLength, username ] = [ $('#comment-bar').val(), 400, $('#welcome-username').text() ]
+  const [ comment, maxLength ] = [ $('#comment-bar').val(), 400 ]
   if (comment === '' || comment > maxLength || comment.trim().length === 0 || comment === null || comment === undefined) {
     alert('Enter correct information you lil rascal with a max length of: ' + maxLength)
     $('#comment-bar').val('')
@@ -128,24 +128,31 @@ function addComment () {
     let today = new Date()
     const [ dd, mm, yyyy ] = [ today.getDate(), (today.getMonth() + 1), today.getFullYear() ] // Month was 1 behind
     today = yyyy + '-' + mm + '-' + dd
-    // Concatenate full comment
-    const actualComment = '<br>' + '<br>' + 'Username: ' + username + '<br>' + 'Date: ' + today + '<br>' + 'Comment: ' + comment + '<br>' + '<br>'
-    $('#user-comments').prepend(actualComment)
-    $('#comment-bar').val('')
-    $('#comment-count').text('0')
     // Save comment to database
     const mainVidTitle = $('#main-video-title').text()
     $.ajax({
       type: 'POST',
-      url: 'http://localhost/copytube/models/save_comment.php',
+      url: '../../classes/controllers/comments.php',
       data: {
-        author: username,
         comment: comment,
         datePosted: today,
-        videoTitle: mainVidTitle
+        videoTitle: mainVidTitle,
+        action: 'addComment'
       },
-      success: function () {
+      success: function (response) {
         console.log('%cAJAX POST Comment Request Completed', 'color: green')
+        // Concatenate full comment
+        const output = JSON.parse(response)
+        if (output === false) {
+          $('#comment-error').text('Unable to save comment')
+          return false
+        } else {
+          const actualComment = '<br>' + '<br>' + 'Username: ' + output + '<br>' + 'Date: ' + today + '<br>' + 'Comment: ' + comment + '<br>' + '<br>'
+          $('#user-comments').prepend(actualComment)
+          $('#comment-bar').val('')
+          $('#comment-count').text('0')
+          return false
+        }
       },
       error: function (err) {
         console.log('%cAJAX POST Comment Request Failed: ' + err, 'color: red')
@@ -159,11 +166,6 @@ $(document).ready(function () {
   $(document).on('keyup', '#comment-bar', function () {
     const commentLength = $('#comment-bar').val().length
     $('#comment-count').text(commentLength)
-  })
-  // On Click of Add Comment Button
-  $('#comment-button').on('click', function () {
-    // Run addComment function
-    addComment()
   })
   // On click of the drodown content
   $(document).on('click', '.dropdown-titles', function () {

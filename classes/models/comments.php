@@ -7,6 +7,7 @@
  */
 
 include_once '../controllers/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
 
 class Comments
 {
@@ -20,7 +21,7 @@ class Comments
     // SQL Strings
     //
     const GET_COMMENTS = "SELECT title, author, comment, dateposted FROM comments WHERE title = ? ORDER BY ASC";
-    const ADD_COMMENT = "INSERT INTO comments (comment, author, dateposted, title) VALUES (?, ?, ?, ?)";
+    const ADD_COMMENT = "INSERT INTO comments (author, comment, dateposted, title) VALUES (?, ?, ?, ?)";
 
     public function __construct() {
         $this->db = new Database();
@@ -42,14 +43,19 @@ class Comments
     // Add a Comment to DB
     //
     public function addComment ($postData) {
+        $user = new User();
+        $author = $user->username;
+        $comment = $postData['comment'];
+        $datePosted = $postData['datePosted'];
+        $title = $postData['videoTitle'];
         $query = $this->db->connection->prepare(self::ADD_COMMENT);
-        $query->execute($postData);
-        $affectedRows = $query->rowCount();
-        if ($affectedRows < 1 || $affectedRows > 1) {
-            print_r(json_encode(['Query did not affect the database']));
-        } else {
-            print_r(json_encode([true]));
-        }
+        $query->bind_param('ssss', $author, $comment, $datePosted, $title);
+        $query->execute();
         $this->db->closeDatabaseConnection();
+        if ($query->affected_rows > 1 || $query->affected_rows < 1) {
+            return json_encode($author);
+        } else {
+            return json_encode(false);
+        }
     }
 }

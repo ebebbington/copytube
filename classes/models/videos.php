@@ -20,10 +20,10 @@ class Videos
     //
     // Retrieve all Videos
     //
-    public function getAllVideos ($postData) {
+    public function getAllVideos () {
         $result = $this->db->connection->query(self::GET_VIDEOS);
         $response = $result->fetch_all(MYSQLI_ASSOC);
-        print_r(json_encode($response));
         $this->db->closeDatabaseConnection();
+        return $response;
     }
 }

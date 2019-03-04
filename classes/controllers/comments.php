@@ -12,14 +12,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/comments.php'
 // Set data
 //
 $postData = $_POST;
+$postAction = $_POST['action'];
 $comments = new Comments();
 $possibleActions = ['getComments', 'addComment'];
 
 //
 // Check if action has even been created for request
 //
-if (!in_array($postData['action'], $possibleActions)) {
+if (!in_array($postAction, $possibleActions)) {
     print_r(json_encode(['Requested action does not exist']));
 } else {
-    $comments->$postData['action']($postData);
+    $comments->$postAction($postData);
 }

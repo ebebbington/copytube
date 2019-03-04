@@ -1,16 +1,13 @@
 <?php
 require_once '../../classes/models/user.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
+$user = new User();
 session_start();
 if (empty($_COOKIE['sessionId1'])) {
     // Divert back to login and remove all cookies
-    $user = new User();
     $user->logout();
     echo "<script>alert('Session has expired - returning to the Login screen')</script>";
     echo "<script>window.location.replace('../view/login.html')</script>";
-} else {
-    // GET username
-    $username = 'test username';
 }
 ?>
 
@@ -36,7 +33,7 @@ if (empty($_COOKIE['sessionId1'])) {
 
 	<body>
     <button id="log-out" type="button" onclick="logOut()">Log Out</button>
-    <h2 id="welcome" onload="alert('hello');"><?php echo "$username, welcome to CopyTube"; ?></h2>
+    <h2 id="welcome"><?php echo "$user->username, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->
@@ -55,20 +52,16 @@ if (empty($_COOKIE['sessionId1'])) {
                             </form>
                             <div class="dropdown-content">
                                 <?php
-                                    // setting variables
-                                    $videos = new Videos();
-                                    $videos->getAllVideos();
-
-                                    $count = 1;
-                                    if ($response->num_rows > 0) {
-                                        $count = 1;
-                                        $html = "";
-                                        while($row = $response->fetch_assoc()) {
-                                            $html = "<a href='#' id='dropdown-title-$count' class='dropdown-titles'>$row[title]</a>";
-                                            echo $html;
-                                            $count++;
-                                        }
-                                    }
+                                require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
+                                $videos = new Videos();
+                                $videoTitles = $videos->getAllVideos();
+                                $count = 1;
+                                $html = "";
+                                for ($i = 0, $l = sizeof($videoTitles); $i < $l; $i++) {
+                                    $html = "<a href='#' id='dropdown-title-$count' class='dropdown-titles'>" . $videoTitles[$i]['title'] . "</a>";
+                                    echo $html;
+                                    $count++;
+                                }
                                 ?>
                             </div>
                         </div>
@@ -103,10 +96,11 @@ if (empty($_COOKIE['sessionId1'])) {
 						<!-- create comments section -->
                         <p id="comment-title">Comments Section</p> <p id="comment-count">0</p>
 						<div id="comment">
-                            <form id="comment-form" method="get">
+                            <form id="comment-form">
+                                <p id="comment-error"></p>
                                 <span>
                                     <textarea id="comment-bar" cols="110" form="comment-form" name="comment-bar" placeholder="Add a comment..." required rows="4"></textarea>
-                                    <input id="comment-button" type="submit" name="comment-button" value="Add" onclick="addComment()">
+                                    <input id="comment-button" type="submit" name="comment-button" value="Add" onclick="return addComment()">
                                 </span>
                             </form>
     					</div>

@@ -40,6 +40,7 @@ class User
     private $db;
     private $validate;
     private $databaseConnectionStatus;
+    public $username = '';
 
     //
     // Initialise Data
@@ -48,6 +49,13 @@ class User
         $this->db = new Database();
         $this->db->openDatabaseConnection(); // DOES OPEN THE CONNECTION WITHOUT ANY OTHER LINES OF CODE AND CAN CLOSE FURTHER DOWN THE LINE
         $this->validate = new Validate();
+    }
+
+    //
+    // Create the user data
+    //
+    public function createUser ($username) {
+        $this->username = $username;
     }
 
     //
@@ -75,7 +83,6 @@ class User
                     session_start();
                     $sessionId1 = random_bytes(16);
                     $sessionId1 = bin2hex($sessionId1);
-                    // TODO :: the below userId could be removed as it seems useless
                     $sessionId2 = random_bytes(16);
                     $sessionId2 = bin2hex($sessionId2);
                     // Assign data when creating the cookies
@@ -91,6 +98,7 @@ class User
                     $query = $this->db->connection->prepare(self::SET_LOGGED_IN);
                     $query->bind_param('s', $user[0]['email']);
                     $query->execute();
+                    $this->createUser($user[0]['username']);
                     print_r(json_encode(['login', true]));
                 }
             } else {
