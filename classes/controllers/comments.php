@@ -20,7 +20,14 @@ $possibleActions = ['getComments', 'addComment'];
 // Check if action has even been created for request
 //
 if (!in_array($postAction, $possibleActions)) {
-    print_r(json_encode(['Requested action does not exist']));
+    exit();
 } else {
-    $comments->$postAction($postData);
+
+    if ($postAction === 'getComments') {
+        $comments->getComments($postData);
+    }
+
+    if ($postAction === 'addComment') {
+        $comments->getComments($postData);
+    }
 }

@@ -22,8 +22,8 @@ class Videos
     //
     public function getAllVideos () {
         $result = $this->db->connection->query(self::GET_VIDEOS);
-        $response = $result->fetch_all(MYSQLI_ASSOC);
+        $videos = $result->fetch_all(MYSQLI_ASSOC);
         $this->db->closeDatabaseConnection();
-        return $response;
+        return $videos;
     }
 }

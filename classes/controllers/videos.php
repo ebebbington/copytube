@@ -19,7 +19,10 @@ $possibleActions = ['getAllVideos'];
 // Check if action has even been created for the request
 //
 if (!in_array($postAction, $possibleActions)) {
-    print_r(json_encode(['Requested action does not exists']));
+    exit();
 } else {
-    print_r($videos->$postAction());
+
+    if ($postAction === 'getAllVideos') {
+        $videos->getAllVideos();
+    }
 }

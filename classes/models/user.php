@@ -52,13 +52,6 @@ class User
     }
 
     //
-    // Create the user data
-    //
-    public function createUser ($username) {
-        $this->username = $username;
-    }
-
-    //
     // Run Login Function
     //
     public function login ($postData) {
@@ -98,7 +91,6 @@ class User
                     $query = $this->db->connection->prepare(self::SET_LOGGED_IN);
                     $query->bind_param('s', $user[0]['email']);
                     $query->execute();
-                    $this->createUser($user[0]['username']);
                     print_r(json_encode(['login', true]));
                 }
             } else {

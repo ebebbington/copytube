@@ -6,7 +6,7 @@
  * Time: 23:56
  */
 
-include_once '../controllers/database.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
 
 class Comments
@@ -33,16 +33,18 @@ class Comments
     //
     public function getComments ($postData) {
         $query = $this->db->connection->prepare(self::GET_COMMENTS);
-        $query->execute($postData['videoTitle']);
+        $query->bind_param('s', $postData['videoTitle']);
+        $query->execute();
         $comments = $query->fetch_all(MYSQLI_ASSOC);
         $this->db->closeDatabaseConnection();
-        print_r(json_encode($comments));
+        return json_encode($comments);
     }
 
     //
     // Add a Comment to DB
     //
     public function addComment ($postData) {
+        // todo :: create validation
         $user = new User();
         $author = $user->username;
         $comment = $postData['comment'];

@@ -1,6 +1,7 @@
 <?php
 require_once '../../classes/models/user.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
+require_once '../../classes/models/comments.php';
 $user = new User();
 $username = $user->username;
 session_start();
@@ -110,7 +111,8 @@ if (empty($_COOKIE['sessionId1'])) {
                         <div id="db-comments">
                             <?php
                             $comments = new Comments();
-                            $comments->getComments($title['Something More']);
+                            $videoTitle['videoTitle'] = 'Something More';
+                            $comments->getComments($videoTitle);
                                 // setting variables
                                 $servername = "localhost";
                                 $username = "root";

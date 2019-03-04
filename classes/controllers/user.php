@@ -10,15 +10,28 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
 //
 // Set Data
 //
-// todo :: Problem with this controller is AJAX requests need to pass in an action and run script, but when i include this script i don't want it to run but i need to call a function within
 $postData = $_POST;
 $postAction = $_POST['action'];
 $user = new User();
 $possibleActions = ['login', 'logout', 'register', 'recover'];
 
 if (!in_array($postAction, $possibleActions)) {
-    print_r(json_encode(['Requested action does not exist']));
+    exit();
 } else {
-    // Run specified action/function i.e. send to the function it needs
-    print_r($user->$postAction($postData));
+
+    if ($postAction === 'login') {
+        $user->login($postData);
+    }
+
+    if ($postAction === 'register') {
+        $user->register($postData);
+    }
+
+    if ($postAction === 'logout') {
+        $user->logout();
+    }
+
+    if ($postAction === 'recover') {
+        $user->recover($postData);
+    }
 }
