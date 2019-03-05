@@ -21,7 +21,7 @@ class Comments
     // SQL Strings
     //
     //const GET_COMMENTS = "SELECT title, author, comment, dateposted FROM comments WHERE title = ? ORDER BY ASC";
-    const GET_COMMENTS = "SELECT title, author, comment, dateposted FROM comments ORDER BY ASC";
+    const GET_COMMENTS = "SELECT title, author, comment, dateposted FROM comments ORDER BY dateposted ASC";
     const ADD_COMMENT = "INSERT INTO comments (author, comment, dateposted, title) VALUES (?, ?, ?, ?)";
 
     public function __construct() {
@@ -35,12 +35,7 @@ class Comments
     public function getComments () {
         $query = $this->db->connection->prepare(self::GET_COMMENTS);
         $query->execute();
-        $comments = [[]];
-        for ($i = 0, $l = $query->affected_rows; $i < $l; $i++) {
-            $query->bind_result($comments[$i]['title'], $comments[$i]['author'], $comments[$i]['comment'],
-              $comments[$i]['description']);
-            $query->fetch();
-        }
+        $comments = $query->get_result()->fetch_all(MYSQLI_ASSOC);
         $this->db->closeDatabaseConnection();
         print_r(json_encode($comments));
     }

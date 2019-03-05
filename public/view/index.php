@@ -35,7 +35,7 @@ if (empty($_COOKIE['sessionId1'])) {
 	</head>
 
 	<body>
-    <button id="log-out" type="button" onclick="logOut()">Log Out</button>
+    <button id="log-out" type="button">Log Out</button>
     <h2 id="welcome"><?php echo "$username, welcome to CopyTube"; ?></h2>
 		<div class="container">
 			<div class="row">
@@ -67,6 +67,7 @@ if (empty($_COOKIE['sessionId1'])) {
 						<br>
 						<br>
 						<div class="my-video col-xs-12">
+                            <!--
 							<video id='main-video' controls
 									autoplay
 							    	muted
@@ -80,6 +81,7 @@ if (empty($_COOKIE['sessionId1'])) {
 							<p id="main-video-title">Something More</p>
 							<br>
 							<p id="main-video-description">Watch this inspirational video as we look at all of the beautiful things inside this world</p>
+							-->
 						<br>
 						<br>
 						</div>
@@ -91,7 +93,7 @@ if (empty($_COOKIE['sessionId1'])) {
                                 <p id="comment-error"></p>
                                 <span>
                                     <textarea id="comment-bar" cols="110" form="comment-form" name="comment-bar" placeholder="Add a comment..." required rows="4"></textarea>
-                                    <input id="comment-button" type="submit" name="comment-button" value="Add" onclick="return addComment()">
+                                    <input id="comment-button" type="submit" name="comment-button" value="Add">
                                 </span>
                             </form>
     					</div>
@@ -113,7 +115,7 @@ if (empty($_COOKIE['sessionId1'])) {
 				</div>
 
                 <!-- set rabbit hole -->
-				<div class="col-xs-3">
+				<div class="col-xs-3 rabbit-hole-content">
 					<div class="rabbit-holes col-xs-12">
                         <!--
                         $videos = new Videos();
@@ -138,6 +140,7 @@ if (empty($_COOKIE['sessionId1'])) {
                         ?>
                         -->
                     </div>
+                    <p id='rabbit-hole-titles'></p>
 				</div>
 			</div>
 		</div>
