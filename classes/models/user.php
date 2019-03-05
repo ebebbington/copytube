@@ -40,7 +40,8 @@ class User
     private $db;
     private $validate;
     private $databaseConnectionStatus;
-    public $username = '';
+    public $username;
+    public $email;
 
     //
     // Initialise Data

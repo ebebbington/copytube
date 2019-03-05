@@ -1,10 +1,4 @@
 <?php
-require_once '../../classes/models/user.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
-require_once '../../classes/models/comments.php';
-// todo :: username
-$user = new User();
-$username = $user->username;
 session_start();
 if (empty($_COOKIE['sessionId1'])) {
     // Divert back to login and remove all cookies
@@ -36,7 +30,7 @@ if (empty($_COOKIE['sessionId1'])) {
 
 	<body>
     <button id="log-out" type="button">Log Out</button>
-    <h2 id="welcome"><?php echo "$username, welcome to CopyTube"; ?></h2>
+    <h2 id="welcome">TEST USERNAME, welcome to CopyTube</h2> <!-- todo :: display username using JS -->
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->

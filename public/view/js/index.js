@@ -71,7 +71,6 @@ function logOut () {
 // Save comments
 //
 function addComment () {
-  // todo :: Create server side section for this (send to controller, sends to validation, sends to comments model and OUTPUT USERNAME)
   // noinspection JSJQueryEfficiency
   const [ comment, maxLength ] = [ $('#comment-bar').val(), 400 ]
   // noinspection JSJQueryEfficiency
@@ -104,6 +103,7 @@ function addComment () {
           $('#db-comments').prepend(newComment)
           $('#comment-bar').val('')
           $('#comment-count').text(0)
+          alert(output)
         }
       },
       error: function (err) {

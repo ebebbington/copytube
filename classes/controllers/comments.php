@@ -7,6 +7,7 @@
  */
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/comments.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/validate.php';
 
 //
 // Set data
@@ -28,6 +29,7 @@ if (!in_array($postAction, $possibleActions)) {
     }
 
     if ($postAction === 'addComment') {
-        $comments->addComment($postData);
+        $validate = new Validate();
+        $validate->validateComment($postData);
     }
 }

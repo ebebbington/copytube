@@ -44,20 +44,20 @@ class Comments
     // Add a Comment to DB
     //
     public function addComment ($postData) {
-        // todo :: create validation
+        var_dump($postData);
+        $comment = $postData[0];
+        $datePosted = $postData[1];
+        $videoTitle = $postData[2];
         $user = new User();
-        $author = $user->username; // todo :: username
-        $comment = $postData['comment'];
-        $datePosted = $postData['datePosted'];
-        $title = $postData['videoTitle'];
+        $author = $user->getUserData(); // todo :: username
         $query = $this->db->connection->prepare(self::ADD_COMMENT);
-        $query->bind_param('ssss', $author, $comment, $datePosted, $title);
+        $query->bind_param('ssss', $author, $comment, $datePosted, $videoTitle);
         $query->execute();
-        $this->db->closeDatabaseConnection();
         if ($query->affected_rows > 1 || $query->affected_rows < 1) {
             print_r(json_encode($author));
         } else {
-            return json_encode(false);
+            print_r(json_encode(false));
         }
+        $this->db->closeDatabaseConnection();
     }
 }

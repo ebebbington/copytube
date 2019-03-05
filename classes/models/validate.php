@@ -8,6 +8,7 @@
 
 include_once 'smtp-email-check.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/comments.php';
 
 class Validate
 {
@@ -28,6 +29,27 @@ class Validate
     public function __construct() {
         $this->db = new Database();
         $this->db->openDatabaseConnection();
+    }
+
+    public function validateComment ($postData) {
+        if (isset($postData)) {
+            $comment = $postData['comment'];
+            if (strlen($comment) > 400 || trim($comment) === 0 || $comment === null || empty($comment)) {
+                print_r(json_encode(false));
+            } else {
+                if (!filter_var($comment, FILTER_SANITIZE_STRING)) {
+                    print_r(json_encode(false));
+                } else {
+                    $comment = mysqli_real_escape_string($this->db->connection, $comment);
+                    $commentData = array($comment, $postData['datePosted'], $postData['videoTitle']);
+                    $comments = new Comments();
+                    $comments->addComment($commentData);
+                }
+            }
+        } else {
+            print_r(json_encode(false));
+        }
+        $this->db->closeDatabaseConnection();
     }
 
     //
@@ -100,9 +122,9 @@ class Validate
                 $this->validateEmail($username, $email, $password);
             } else {
                 if ($verifyEmail::validate($email)) {
-                    print_r(json_encode(['email', 'Email is valid but does not exist']));
+                    print_r(json_encode(['email', 'Email is valid but does not exist IRL']));
                 } else {
-                    print_r(json_encode(['email', 'Email is not valid and does not exist']));
+                    print_r(json_encode(['email', 'Email is not valid and does not exist IRL']));
                 }
             }
         } else {

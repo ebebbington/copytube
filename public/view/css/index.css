@@ -62,7 +62,9 @@
 	margin-left: 82em;
 	opacity: 0.5;
 }
-
+#comment-error{
+	margin-left: 13px;
+}
 #comment-bar{
 	margin-left: 13px;
 }
