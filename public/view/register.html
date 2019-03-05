@@ -23,7 +23,7 @@
                     <fieldset>
                         <legend><img src="../../images/copytube_logo.png"></legend>
                         <legend>Register</legend>
-                        <p id="register-success"></p>
+                        <p id="register-success" class="alert alert-success" hidden>Successfully Registered an Account</p>
                         Username: <br>
                         * <input id="register-username" class="register-fields" type="text" name="username" pattern="/^[a-zA-Z ]*$/"><br>
                         <p id="incorrect-username" class="incorrect-errors"></p>
@@ -43,20 +43,6 @@
                 <a href="#" id="go-back">Go Back</a>
             </div>
         </div>
-        <div class="col-xs-4">
-            <p>Email Validation:</p>
-            <p>Trim, null, empty</p>
-            <p>Filtered through email, removes tags, checks if it exists already in db</p>
-        </div>
-        <div class="col-xs-4">
-            <p>Username Validation:</p>
-            <p>Name is > than Max Length, trimmed = 0, equals null or empty</p>
-            <p>Needs and only allows letters and spaces, removes tags, checks if exists in db</p>
-        </div>
-        <div class="col-cs-4"></div>
-        <p>Password Validation:</p>
-        <p>Trim, null, empty, less than 8 length, make sure has number & lower+uppercse letters</p>
-        <p>Pass cannot be same or contain username, removes tags</p>
     </div>
 </div>
 </body>

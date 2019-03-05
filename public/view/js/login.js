@@ -1,5 +1,9 @@
 /* global $, alert */
 function login () {
+  // noinspection JSJQueryEfficiency
+  $('#incorrect-credentials').text('')
+  // noinspection JSJQueryEfficiency
+  $('#incorrect-credentials').attr('hidden')
   $.ajax({
     type: 'POST',
     url: '../../classes/controllers/user.php',
@@ -14,7 +18,10 @@ function login () {
         if (response[1] === true) {
           window.location.replace('http://localhost/copytube/public/view/index.php')
         } else {
+          // noinspection JSJQueryEfficiency
           $('#incorrect-credentials').text('Incorrect credentials')
+          // noinspection JSJQueryEfficiency
+          $('#incorrect-credentials').removeAttr('hidden')
           $('#login-password').text('')
           return false
         }

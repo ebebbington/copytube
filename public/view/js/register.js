@@ -38,7 +38,7 @@ function validateInput () {
               $('#incorrect-email').text('')
               $('#incorrect-password').text('')
               $('.register-fields').val('')
-              $('#register-success').text('Successfully registered an account')
+              $('#register-success').removeAttr('hidden')
               $('html, body').animate({ scrollTop: 0 }, 'fast') // ref: https://stackoverflow.com/questions/4147112/how-to-jump-to-top-of-browser-page
               return false
             } else {
