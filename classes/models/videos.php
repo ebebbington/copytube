@@ -21,9 +21,15 @@ class Videos
     // Retrieve all Videos
     //
     public function getAllVideos () {
-        $result = $this->db->connection->query(self::GET_VIDEOS);
-        $videos = $result->fetch_all(MYSQLI_ASSOC);
+        $query = $this->db->connection->prepare(self::GET_VIDEOS);
+        $query->execute();
+        $videos = [[]];
+        for ($i = 0, $l = $query->affected_rows; $i < $l; $i++) {
+            $query->bind_result($videos[$i]['title'], $videos[$i]['src'], $videos[$i]['description'],
+              $videos[$i]['poster'], $videos[$i]['width'], $videos[$i]['height']);
+            $query->fetch();
+        }
         $this->db->closeDatabaseConnection();
-        return $videos;
+        print_r(json_encode($videos));
     }
 }

@@ -3,10 +3,41 @@
 /* global $, alert */
 'use strict'
 
-// Refresh web page
-function refresh () {
-  window.location.replace('http://localhost/copytube/public/view/index.php')
-}
+const getVideos = new Promise(function (resolve, reject) {
+  $.ajax({
+    type: 'POST',
+    url: '../../classes/controllers/videos.php',
+    data: {
+      action: 'getAllVideos'
+    },
+    success: function (response) {
+      const videos = JSON.parse(response)
+      resolve(videos)
+    },
+    error: function (error) {
+      console.log(error + '\n' + reject)
+      reject(error)
+    }
+  })
+})
+
+const getComments = new Promise(function (resolve, reject) {
+  $.ajax({
+    type: 'POST',
+    url: '../../classes/controllers/comments.php',
+    data: {
+      action: 'getComments'
+    },
+    success: function (response) {
+      const comments = JSON.parse(response)
+      resolve(comments)
+    },
+    error: function (error) {
+      console.log(error + '\n' + reject)
+      reject(error)
+    }
+  })
+})
 
 // Log Out function
 function logOut () {
@@ -162,25 +193,68 @@ function addComment () {
 }
 
 $(document).ready(function () {
+  //
+  // Display all DB data
+  //
+  getVideos
+    .then(function (videos) {
+      let count = 1
+      for (let i = 0, l = videos.length; i < l; i++) {
+        // Dropdown titles
+        let title = "<a href='#' id='dropdown-title-'" + count + "class='dropdown-titles'>" + videos[ i ][ 'title' ] + '</a>'
+        $('.dropdown-content').prepend(title)
+        // Rabbit hole videos
+        if (videos[0]['title'] !== 'Something More') {
+          let video = "<video id='rabbit-hole-vid-'" + count + " class='rabbit-hole-videos' controls " +
+            ' muted ' +
+            ' poster=' + videos[i]['poster'] + ' title=' + videos[i]['title'] + ' src=' + videos[i]['src'] +
+            'width=' + videos[i]['width'] + 'height=' + videos[i]['height'] + '></video>'
+          let videoTitle = "<p id='rabbit-hole-vid-'" + count + "'-title' class='rabbit-hole-titles'>" + videos[i]['title'] + '</p>'
+          $('.rabbit-holes').prepend(video, videoTitle)
+        }
+        count++
+      }
+    })
+  getComments
+    .then(function (comments) {
+      for (let i = 0, l = comments.length; i < l; i++) {
+        if (comments[i]['title'] === 'Something More') {
+          let newComment = "<div class='well'>Username: " + comments[i]['author'] + '<br>Date: ' + comments[i]['dateposted'] + '<br>Comment: ' + comments[i]['comment'] + '<br><br><br>'
+          $('#db-comments').prepend(newComment)
+        }
+      }
+    })
+  //
   // Comment character count
+  //
   $(document).on('keyup', '#comment-bar', function () {
     const commentLength = $('#comment-bar').val().length
     $('#comment-count').text(commentLength)
   })
+  //
   // On click of the drodown content
+  //
   $(document).on('click', '.dropdown-titles', function () {
-    getVideosAndComments($(this).text(), 80)
+    const videoTitle = $(this).text()
+    getVideos
+    // Data: title, src, description, height, width, poster
+      .then(function (videos) {
+        console.log('resolved: ' + videos)
+      }) // above runs if resolved
+      .catch(function (videos) {
+        console.log('rejected: ' + videos)
+      })
   })
+  //
   // On Click of A Rabbit Hole Video
+  //
   $(document).on('click', '.rabbit-hole-videos', function () {
     getVideosAndComments($(this).prop('title'), 80)
   })
+  //
   // On Click of Search Button
+  //
   $(document).on('click', '#search-button', function () {
     getVideosAndComments($('#search-bar').val(), 80)
   })
-  // Refresh page automatically to check cookies every 10 minutes
-  setInterval(function () {
-    refresh()
-  }, 600000)
 })

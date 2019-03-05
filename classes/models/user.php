@@ -191,7 +191,7 @@ class User
                 if (password_verify($password, $user[0]['password'])) {
                     $query = $this->db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
                     $loginAttempts = 3;
-                    $query->bind_param('is', $loginAttempts, $email);
+                    $query->bind_param('is', $loginAttempts, $email); // fixme :: Query returns false above
                     $query->execute();
                     $this->recoverEmail($postData);
                     print_r(json_encode(['password', true]));

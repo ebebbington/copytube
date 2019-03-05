@@ -20,7 +20,8 @@ class Comments
     //
     // SQL Strings
     //
-    const GET_COMMENTS = "SELECT title, author, comment, dateposted FROM comments WHERE title = ? ORDER BY ASC";
+    //const GET_COMMENTS = "SELECT title, author, comment, dateposted FROM comments WHERE title = ? ORDER BY ASC";
+    const GET_COMMENTS = "SELECT title, author, comment, dateposted FROM comments ORDER BY ASC";
     const ADD_COMMENT = "INSERT INTO comments (author, comment, dateposted, title) VALUES (?, ?, ?, ?)";
 
     public function __construct() {
@@ -31,13 +32,17 @@ class Comments
     //
     // Retrieve Comments from DB
     //
-    public function getComments ($postData) {
+    public function getComments () {
         $query = $this->db->connection->prepare(self::GET_COMMENTS);
-        $query->bind_param('s', $postData['videoTitle']);
         $query->execute();
-        $comments = $query->fetch_all(MYSQLI_ASSOC);
+        $comments = [[]];
+        for ($i = 0, $l = $query->affected_rows; $i < $l; $i++) {
+            $query->bind_result($comments[$i]['title'], $comments[$i]['author'], $comments[$i]['comment'],
+              $comments[$i]['description']);
+            $query->fetch();
+        }
         $this->db->closeDatabaseConnection();
-        return json_encode($comments);
+        print_r(json_encode($comments));
     }
 
     //
@@ -46,7 +51,7 @@ class Comments
     public function addComment ($postData) {
         // todo :: create validation
         $user = new User();
-        $author = $user->username;
+        $author = $user->username; // todo :: username
         $comment = $postData['comment'];
         $datePosted = $postData['datePosted'];
         $title = $postData['videoTitle'];
@@ -55,7 +60,7 @@ class Comments
         $query->execute();
         $this->db->closeDatabaseConnection();
         if ($query->affected_rows > 1 || $query->affected_rows < 1) {
-            return json_encode($author);
+            print_r(json_encode($author));
         } else {
             return json_encode(false);
         }

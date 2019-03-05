@@ -2,6 +2,7 @@
 require_once '../../classes/models/user.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
 require_once '../../classes/models/comments.php';
+// todo :: username
 $user = new User();
 $username = $user->username;
 session_start();
@@ -53,18 +54,6 @@ if (empty($_COOKIE['sessionId1'])) {
                                 </span>
                             </form>
                             <div class="dropdown-content">
-                                <?php
-                                require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/videos.php';
-                                $videos = new Videos();
-                                $videoTitles = $videos->getAllVideos();
-                                $count = 1;
-                                $html = "";
-                                for ($i = 0, $l = sizeof($videoTitles); $i < $l; $i++) {
-                                    $html = "<a href='#' id='dropdown-title-$count' class='dropdown-titles'>" . $videoTitles[$i]['title'] . "</a>";
-                                    echo $html;
-                                    $count++;
-                                }
-                                ?>
                             </div>
                         </div>
     				</div>
@@ -109,73 +98,45 @@ if (empty($_COOKIE['sessionId1'])) {
     					<br>
                         <div id="user-comments"></div>
                         <div id="db-comments">
-                            <?php
+                            <!--
                             $comments = new Comments();
-                            $videoTitle['videoTitle'] = 'Something More';
-                            $comments->getComments($videoTitle);
-                                // setting variables
-                                $servername = "localhost";
-                                $username = "root";
-                                $password = "password";
-                                //create connection
-                                $connection = new mysqli($servername, $username, $password, 'copytube');
-                                //check connection
-                                if ($connection->connect_error) {
-                                    die("connection failed: " + $connection->connect_error);
+                            $allComments = $comments->getComments();
+                            for ($i = 0, $l = sizeof($allComments); $i < $l; $i++) {
+                                if ($allComments[$i]['title'] === 'Something More') {
+                                    echo "Username: $allComments[$i]['author'] <br> Date: $allComments[$i]['dateposted'] <br> Comment: $allComments[$i]['comment'] <br> <br> <br>";
                                 }
-                                // variables to equal all rows of comments and result of this
-                                $sql = "SELECT * FROM `comments` WHERE title='Something More' ORDER BY `dateposted` DESC";
-                                $result = $connection->query($sql);
-                                // fetch all comments from table
-                                if ($result->num_rows > 0) {
-                                    while($row = $result->fetch_assoc()) {
-                                        echo "Username: " . $row["author"]. "<br>" . "Date: " . $row["dateposted"] . "<br>" . "Comment: " . $row["comment"]. "<br>" . "<br>" . "<br>";
-                                    }
-                                }
-                                //close database connection
-                                $connection->close();
-                            ?>
+                            }
+                            $db = new Database();
+                            $db->closeDatabaseConnection();
+                            -->
                         </div>
 				</div>
 
                 <!-- set rabbit hole -->
 				<div class="col-xs-3">
 					<div class="rabbit-holes col-xs-12">
-                        <?php
-                            // setting variables
-                            $servername = "localhost";
-                            $username = "root";
-                            $password = "password";
-                            //create connection
-                            $connection = new mysqli($servername, $username, $password, 'copytube');
-                            //check connection
-                            if ($connection->connect_error) {
-                                die("connection failed: " + $connection->connect_error);
+                        <!--
+                        $videos = new Videos();
+                        $allVideos = $videos->getAllVideos();
+                        $count = 1;
+                        for ($i = 0, $l = sizeof($allVideos); $i < $l; $i++) {
+                            if ($allVideos[$i]['title'] === 'Something More') {
+                            } else {
+                                echo "<video id='rabbit-hole-vid-$count' class='rabbit-hole-videos' controls ".
+                                  "muted ".
+                                  "poster=$allVideos[$i]['poster'] ".
+                                  "title=$allVideos[$i]['title'] ".
+                                  "src=$allVideos[$i]['src'] ".
+                                  "width=$allVideos[$i]['width'] ".
+                                  "height=$allVideos[$i]['height']>".
+                                  "</video>";
+                                echo "<p id='rabbit-hole-vid-$count-title' class='rabbit-hole-titles'>$allVideos[0]['title']</p>";
                             }
-                            $sql = "SELECT poster, title, src, width, height FROM `videos` WHERE title<>'Something More'";
-                            $result = $connection->query($sql);
-                            // fetch all videos from table
-                            $count = 1;
-                            if ($result->num_rows > 0) {
-                                $html = "";
-                                while($row = $result->fetch_assoc()) {
-                                    $html = "<video id='rabbit-hole-vid-$count' class='rabbit-hole-videos' controls ".
-                                        "muted ".
-                                        "poster='$row[poster]' ".
-                                        "title='$row[title]' ".
-                                        "src='$row[src]' ".
-                                        "width='$row[width]' ".
-                                        "height='$row[height]'>".
-                                        "</video>";
-                                    echo $html;
-                                    //create and display titles
-                                    echo "<p id='rabbit-hole-vid-$count-title' class='rabbit-hole-titles'>$row[title]</p>";
-                                    $count++;
-                                }
-                            }
-                            //close database connection
-                            $connection->close();
+                            $count++;
+                        }
+                        $db->closeDatabaseConnection();
                         ?>
+                        -->
                     </div>
 				</div>
 			</div>

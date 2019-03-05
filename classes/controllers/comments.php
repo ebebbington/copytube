@@ -24,10 +24,10 @@ if (!in_array($postAction, $possibleActions)) {
 } else {
 
     if ($postAction === 'getComments') {
-        $comments->getComments($postData);
+        $comments->getComments();
     }
 
     if ($postAction === 'addComment') {
-        $comments->getComments($postData);
+        $comments->addComment($postData);
     }
 }
