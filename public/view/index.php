@@ -43,8 +43,8 @@ if (empty($_COOKIE['sessionId1'])) {
                         <div class="dropdown">
                             <form>
                                 <span id="search"> <!-- Span is similar to <div> only span lets elements stay on the same line -->
-     					            <input id="search-bar" name="search-bar" type="search" placeholder="Search or Hover Over Me for a List of Videos and Click" size="60" required/>
-                                    <input id="search-button" name="search-button" type="submit" value="Search">
+     					            <input id="search-bar" class="form-control" name="search-bar" type="search" placeholder="Search or Hover Over Me for a List of Videos and Click" size="60" required/>
+                                    <input id="search-button" class="btn btn-primary" name="search-button" type="submit">
                                 </span>
                             </form>
                             <div class="dropdown-content">
@@ -82,12 +82,13 @@ if (empty($_COOKIE['sessionId1'])) {
 
 						<!-- create comments section -->
                         <p id="comment-title">Comments Section</p> <p id="comment-count">0</p>
+                    <hr>
 						<div id="comment">
                             <form id="comment-form">
                                 <p id="comment-error"></p>
                                 <span>
-                                    <textarea id="comment-bar" cols="110" form="comment-form" name="comment-bar" placeholder="Add a comment..." required rows="4"></textarea>
-                                    <input id="comment-button" type="submit" name="comment-button" value="Add">
+                                    <textarea id="comment-bar" class="form-control" cols="110" form="comment-form" name="comment-bar" placeholder="Add a comment..." required rows="4"></textarea>
+                                    <input id="comment-button" class="btn btn-primary" type="submit" name="comment-button" value="Add">
                                 </span>
                             </form>
     					</div>

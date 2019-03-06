@@ -11,11 +11,12 @@
 	font-style: italic;
 	font-weight: bold;
 	margin-top: 1em;
-	max-width: 100em;
+	max-width: 80%;
 }
 #search-button{
-	margin-top: 1em;
 	cursor: pointer;
+	background-color: red;
+	margin-top: 1em;
 }
 
 .dropdown-content{
@@ -67,10 +68,12 @@
 }
 #comment-bar{
 	margin-left: 13px;
+	resize: vertical;
 }
 #comment-button{
 	margin-left: 57em;
 	cursor: pointer;
+	background-color: red;
 }
 
 #user-comments, #db-comments{

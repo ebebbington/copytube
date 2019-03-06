@@ -17,8 +17,7 @@ fieldset{
     width: 40%;
     font: bold 11px Arial;
     text-decoration: none;
-    background-color: #EEEEEE;
-    color: #333333;
+    background-color: red;
     padding: 10px 10px 10px 10px;
     border: 1px solid #CCCCCC;
     border-right-color: #333333;
