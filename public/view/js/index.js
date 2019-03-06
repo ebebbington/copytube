@@ -6,6 +6,27 @@
 // /////////////////////////////////////////
 
 //
+// User promise
+//
+const getUser = new Promise(function (resolve, reject) {
+  $.ajax({
+    type: 'POST',
+    url: '../../classes/controllers/user.php',
+    data: {
+      action: 'getUser'
+    },
+    success: function (response) {
+      const user = JSON.parse(response)
+      resolve(user)
+    },
+    error: function (error) {
+      console.log(error + reject)
+      reject(error)
+    }
+  })
+})
+
+//
 // Videos promise
 //
 const getVideos = new Promise(function (resolve, reject) {
@@ -199,6 +220,14 @@ function getContent (videoTitle) {
   $('#search-bar').val('')
 } // fixme :: When called from an event, 'poster' is undefined SOMEHOW
 
+function user () {
+  getUser
+    .then(function (user) {
+      $('#welcome').text(user[ 0 ][ 'username' ] + ' , welcome to CopyTube')
+      alert('I have access to the user now: ' + user[0])
+    })
+}
+
 // /////////////////////////////////////////
 //                Events
 // /////////////////////////////////////////
@@ -207,7 +236,11 @@ function getContent (videoTitle) {
 // On document load
 //
 $(document).ready(function () {
+  //
+  // Call promises
+  //
   getContent('Something More')
+  user()
   //
   // Comment character count
   //

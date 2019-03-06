@@ -53,6 +53,22 @@ class User
     }
 
     //
+    // Get User
+    //
+    public function getUser() {
+        $sessionId2 = $_COOKIE['sessionId2'];
+        $query = $this->db->connection->prepare(self::GET_USER_ID);
+        $query->bind_param('s', $sessionId2);
+        $query->execute();
+        $user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+        $userId = $user[0]['user_id'];
+        $query = $this->db->connection->prepare("SELECT username, email_address FROM users WHERE id = $userId");
+        $query->execute();
+        $user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+        print_r(json_encode($user));
+    }
+
+    //
     // Run Login Function
     //
     public function login ($postData) {

@@ -1,4 +1,6 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
+$user = new User();
 session_start();
 if (empty($_COOKIE['sessionId1'])) {
     // Divert back to login and remove all cookies
