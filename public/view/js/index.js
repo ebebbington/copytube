@@ -182,8 +182,17 @@ function getContent (videoTitle) {
       $('#user-comments, #db-comments').empty()
       for (let i = 0, l = comments.length; i < l; i++) {
         if (comments[ i ][ 'title' ] === videoTitle) {
-          let newComment = "<div class='well'>Username: " + comments[ i ][ 'author' ] + '<br>Date: ' + comments[ i ][ 'dateposted' ] + '<br>Comment: ' + comments[ i ][ 'comment' ]
-          $('#db-comments').prepend(newComment)
+          let test = "<div class='media'>" +
+            "<div class='media-left'>" +
+            "<img src='../../images/sample.jpg' class='media-object' style='width:45px; height:45px; border-radius:80%'>" +
+            '</div>' +
+            "<div class='media-body'>" +
+            "<h4 class='media-heading'>" + comments[ i ][ 'author' ] +
+            '<small><i> ' + comments[ i ][ 'dateposted' ] + '</i></small></h4>' +
+            '<p style="word-break: break-all">' + comments[ i ][ 'comment' ] + '</p>' +
+            '</div>' +
+            '</div>' + '<br>'
+          $('#db-comments').prepend(test)
         }
       }
     })
