@@ -32,3 +32,9 @@ function recover () {
     }
   })
 }
+
+$(document).ready(function () {
+  $('#recover-button').on('click', function () {
+    return recover()
+  })
+})

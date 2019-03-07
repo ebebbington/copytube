@@ -52,6 +52,14 @@ class User
         $this->validate = new Validate();
     }
 
+    public function checkSession () {
+        if (empty($_COOKIE['sessionId1'])) {
+            // Divert back to login and remove all cookies
+            $this->logout();
+        } else {
+        }
+    }
+
     //
     // Get User
     //
@@ -62,9 +70,10 @@ class User
         $query->execute();
         $user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
         $userId = $user[0]['user_id'];
-        $query = $this->db->connection->prepare("SELECT username, email_address FROM users WHERE id = $userId");
+        $query = $this->db->connection->prepare("SELECT * FROM users WHERE id = $userId");
         $query->execute();
         $user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+        unset($user[0]['password']);
         print_r(json_encode($user));
     }
 

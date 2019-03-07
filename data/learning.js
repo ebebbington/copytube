@@ -121,6 +121,7 @@ const revealingModulePattern = function () {
       }
       stop (vehicle) {
         this.speed = 0
+        console.log(vehicle + ' stopped')
       }
     }
     class Motorbike extends Vehicle {
@@ -136,7 +137,9 @@ const revealingModulePattern = function () {
     let motorbike = new Motorbike()
     let car = new Car()
     motorbike.moveForward(10)
+    motorbike.stop('motorbike')
     car.moveForward(5)
+    car.stop('car')
   }
   function runAll () {
     console.log('Supporting Functions [Part 2/3] - Run All Functions')

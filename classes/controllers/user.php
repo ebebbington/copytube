@@ -13,7 +13,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
 $postData = $_POST;
 $postAction = $_POST['action'];
 $user = new User();
-$possibleActions = ['login', 'logout', 'register', 'recover', 'getUser'];
+$possibleActions = ['login', 'logout', 'register', 'recover', 'getUser', 'checkSession'];
 
 if (!in_array($postAction, $possibleActions)) {
     exit();
@@ -37,5 +37,9 @@ if (!in_array($postAction, $possibleActions)) {
 
     if ($postAction === 'getUser') {
         $user->getUser();
+    }
+
+    if ($postAction === 'checkSession') {
+        $user->checkSession();
     }
 }

@@ -75,7 +75,11 @@ function validateInput () {
 }
 
 $(document).ready(function () {
-  $(document).on('click', '#go-back', function () {
+  $('#go-back').on('click', function () {
     window.location.replace('http://localhost/copytube/public/view/login.html')
+  })
+
+  $('#register-button').on('click', function () {
+    return validateInput()
   })
 })

@@ -43,8 +43,10 @@ function login () {
 }
 
 $(document).ready(function () {
-  // On click of registering
-  $(document).on('click', '#register-new-account', function () {
+  $('#register-new-account').on('click', function () {
     window.location.replace('http://localhost/copytube/public/view/register.html') // ref: https://www.w3schools.com/howto/howto_js_redirect_webpage.asp
+  })
+  $('#login-button').on('click', function () {
+    return login()
   })
 })

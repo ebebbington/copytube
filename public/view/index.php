@@ -1,15 +1,3 @@
-<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
-$user = new User();
-session_start();
-if (empty($_COOKIE['sessionId1'])) {
-    // Divert back to login and remove all cookies
-    $user->logout();
-    echo "<script>alert('Session has expired - returning to the Login screen')</script>";
-    echo "<script>window.location.replace('../view/login.html')</script>";
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
     <!-- Set data before DOM -->
@@ -17,6 +5,7 @@ if (empty($_COOKIE['sessionId1'])) {
 		<title>CopyTube - Home</title>
 		<!-- allows .js code to run jquery -->
 		<script src="../../libs/jquery-3.3.1.min.js"></script>
+		<!-- accesses bootstrap css files that makes css files much easier to use -->
 		<!-- accesses bootstrap css files that makes css files much easier to use -->
 		<link rel="stylesheet" href="../../libs/bootstrap.min.css" crossorigin="anonymous">
 		<!-- accesses bootstrap js files that makes js files much easier to use -->
@@ -32,7 +21,7 @@ if (empty($_COOKIE['sessionId1'])) {
 
 	<body>
     <button id="log-out" type="button">Log Out</button>
-    <h2 id="welcome">TEST USERNAME, welcome to CopyTube</h2> <!-- todo :: display username using JS -->
+    <h2 id="welcome"></h2>
 		<div class="container">
 			<div class="row">
                 <!-- set logo -->
