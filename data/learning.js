@@ -103,6 +103,41 @@ const revealingModulePattern = function () {
     console.log('Get Current Time [Part 3/3] - Finished')
   }
   // Run all functions above
+  //
+  // Classes
+  //
+  function myClasses () {
+    console.log('Classes [Part 1/2] - Run classes')
+    class Vehicle {
+      constructor (size) {
+        // Children use all properties from parent constructor i.e this mist hold all the methods needed
+        this.speed = 0
+        this.size = size
+      }
+      moveForward (vehicle, speed) {
+        this.speed = speed
+        this.vehicle = vehicle
+        console.log('Classes Part[2/2] - ' + vehicle + ' class moves forward with ' + speed + ' speed')
+      }
+      stop (vehicle) {
+        this.speed = 0
+      }
+    }
+    class Motorbike extends Vehicle {
+      moveForward (speed) {
+        super.moveForward('Motorbike', speed)
+      }
+    }
+    class Car extends Vehicle {
+      moveForward (speed) {
+        super.moveForward('Car', speed)
+      }
+    }
+    let motorbike = new Motorbike()
+    let car = new Car()
+    motorbike.moveForward(10)
+    car.moveForward(5)
+  }
   function runAll () {
     console.log('Supporting Functions [Part 2/3] - Run All Functions')
     fibonaccisSequence()
@@ -111,6 +146,7 @@ const revealingModulePattern = function () {
     cookies('test name')
     rng()
     getTime()
+    myClasses()
     console.log('Supporting Functions [Part 3/3] - Finished')
   }
   // Self Executing Anonymous Function
