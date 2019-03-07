@@ -191,7 +191,7 @@ let IndexFunctionality = (function () {
             html = '<video id=rabbit-hole-vid-' + count + " class='rabbit-hole-videos' controls " +
               ' muted ' +
               ' poster=' + rabbitHoleVideos[ i ][ 'poster' ] +
-              ' title="' + rabbitHoleVideos[ i ][ 'title' ] + '" src=' + rabbitHoleVideos[ i ][ 'src' ] +
+              ' title="' + rabbitHoleVideos[ i ][ 'title' ] + '"' + ' src=' + rabbitHoleVideos[ i ][ 'src' ] +
               ' width=' + rabbitHoleVideos[ i ][ 'width' ] + ' height="' + rabbitHoleVideos[ i ][ 'height' ] + '"></video>'
             eContainer.append(html)
             html = "<p id='rabbit-hole-vid-'" + count + "'-title' class='rabbit-hole-titles'>" + rabbitHoleVideos[ i ][ 'title' ] + '</p>'
@@ -245,18 +245,24 @@ let IndexFunctionality = (function () {
       // On click of Rabbit Hole
       //
       $('.rabbit-hole-content').on('click', function () {
+        alert($(this).prop('src'))
+        return
         getContent($(this).prop('title'))
       })
       //
       // On click of Search Button
       //
       $('#search-button').on('click', function () {
+        alert($('#search-bar').val())
+        return
         getContent($('#search-bar').val())
       })
       //
       // On click of Dropdown
       //
       $('.dropdown-content').on('click', function () {
+        alert($(this).text())
+        return
         getContent($(this).text())
       })
       //
