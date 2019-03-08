@@ -70,6 +70,8 @@
 						<br>
 						<br>
 						</div>
+                        <div class="well" id="my-video-info">
+                        </div>
 
 						<!-- create comments section -->
                         <p id="comment-title">Comments Section</p> <p id="comment-count">0</p>

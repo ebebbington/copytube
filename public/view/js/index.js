@@ -172,7 +172,7 @@ let IndexFunctionality = (function () {
           html = "<p id='main-video-title'>" + mainVideo[ 0 ][ 'title' ] + '</p>' +
             '<br>' +
             "<p id='main-video-description'>" + mainVideo[ 0 ][ 'description' ] + '</p>' + '<br>'
-          eContainer.append(html)
+          $('#my-video-info').append(html)
           //
           // Dropdown titles
           //
