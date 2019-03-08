@@ -36,7 +36,7 @@ if (!in_array($postAction, $possibleActions)) {
     }
 
     if ($postAction === 'getUser') {
-        $user->getUser();
+        $user->getUser('');
     }
 
     if ($postAction === 'checkSession') {

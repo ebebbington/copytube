@@ -63,7 +63,7 @@ class User
     //
     // Get User
     //
-    public function getUser() {
+    public function getUser($purpose) {
         $sessionId2 = $_COOKIE['sessionId2'];
         $query = $this->db->connection->prepare(self::GET_USER_ID);
         $query->bind_param('s', $sessionId2);
@@ -74,7 +74,11 @@ class User
         $query->execute();
         $user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
         unset($user[0]['password']);
-        print_r(json_encode($user));
+        if ($purpose === 'return') {
+            return $user[0]['username'];
+        } else {
+            print_r(json_encode($user));
+        }
     }
 
     //
@@ -215,9 +219,10 @@ class User
             // Validate
             if ($user[0]['loginAttempts'] === 0) {
                 if (password_verify($password, $user[0]['password'])) {
+                    $this->db->connection = new mysqli('localhost', 'root', 'password', 'copytube');
                     $query = $this->db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
                     $loginAttempts = 3;
-                    $query->bind_param('is', $loginAttempts, $email); // fixme :: Query returns false above
+                    $query->bind_param('is', $loginAttempts, $email);
                     $query->execute();
                     $this->recoverEmail($postData);
                     print_r(json_encode(['password', true]));

@@ -11,6 +11,7 @@ function recover () {
       action: 'recover'
     },
     success: function (output) {
+      alert(output)
       const response = JSON.parse(output)
       if (response[0] === 'email') {
         alert('Wrong credentials')
@@ -18,7 +19,7 @@ function recover () {
       } else {
         if (response[0] === 'password') {
           if (response[1] === true) {
-            window.location.replace('../login.html')
+            window.location.replace('login.html')
           } else {
             alert('Wrong credentials')
             return false

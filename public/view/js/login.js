@@ -16,7 +16,7 @@ function login () {
       const response = JSON.parse(output)
       if (response[0] === 'login') {
         if (response[1] === true) {
-          window.location.replace('http://localhost/copytube/public/view/index.php')
+          window.location.replace('http://localhost/copytube/public/view/index.html')
         } else {
           // noinspection JSJQueryEfficiency
           $('#incorrect-credentials').text('Incorrect credentials')

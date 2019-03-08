@@ -125,11 +125,19 @@ let IndexFunctionality = (function () {
             if (output === false) {
               $('#comment-error').text('Unable to save comment')
             } else {
-              const newComment = "<div class='well'>Username: " + output + '<br>Date: ' + today + '<br>Comment: ' + comment
-              $('#db-comments').prepend(newComment)
+              let test = "<div class='media'>" +
+                "<div class='media-left'>" +
+                "<img src='../../images/sample.jpg' class='media-object' style='width:45px; height:45px; border-radius:80%'>" +
+                '</div>' +
+                "<div class='media-body'>" +
+                "<h4 class='media-heading'>" + output[ 0 ] +
+                '<small><i> ' + output[ 2 ] + '</i></small></h4>' +
+                '<p style="word-break: break-all">' + output[ 1 ] + '</p>' +
+                '</div>' +
+                '</div>' + '<br>'
+              $('#db-comments').prepend(test)
               $('#comment-bar').val('')
               $('#comment-count').text(0)
-              alert(output)
             }
           },
           error: function (err) {
@@ -160,6 +168,7 @@ let IndexFunctionality = (function () {
           //
           // Main Video
           //
+          $('#my-video-info').html('')
           let eContainer = $('.my-video').html('')
           let html = "<div class='my-video col-xs-12'>" +
             "<video id='main-video' controls " + 'autoplay' + ' muted' +
@@ -220,7 +229,7 @@ let IndexFunctionality = (function () {
           }
         })
       $('#search-bar').val('')
-    } // fixme :: When called from an event, 'poster' is undefined SOMEHOW
+    }
     // /////////////////////////////////////////
     //                Load content
     // /////////////////////////////////////////
@@ -493,7 +502,7 @@ function getContent (videoTitle) {
       }
     })
   $('#search-bar').val('')
-} // fixme :: When called from an event, 'poster' is undefined SOMEHOW
+}
 
 // /////////////////////////////////////////
 //                Events

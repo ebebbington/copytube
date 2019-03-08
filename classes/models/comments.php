@@ -16,6 +16,7 @@ class Comments
     //
     public $commentData;
     private $db;
+    private $user;
 
     //
     // SQL Strings
@@ -44,17 +45,16 @@ class Comments
     // Add a Comment to DB
     //
     public function addComment ($postData) {
-        var_dump($postData);
         $comment = $postData[0];
         $datePosted = $postData[1];
         $videoTitle = $postData[2];
         $user = new User();
-        $author = $user->getUserData(); // todo :: username
+        $author = $user->getUser('return');
         $query = $this->db->connection->prepare(self::ADD_COMMENT);
         $query->bind_param('ssss', $author, $comment, $datePosted, $videoTitle);
         $query->execute();
-        if ($query->affected_rows > 1 || $query->affected_rows < 1) {
-            print_r(json_encode($author));
+        if ($query->affected_rows === 1) {
+            print_r(json_encode([$author, $comment, $datePosted, $videoTitle]));
         } else {
             print_r(json_encode(false));
         }

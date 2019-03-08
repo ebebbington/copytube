@@ -117,7 +117,6 @@ class Validate
                 print_r(json_encode(['email', 'Could not validate email address']));
                 exit();
             }
-            // todo :: this class seems a bit dodgey, it doesn't work anymore
             if ($verifyEmail->check($email)) {
                 $this->validateEmail($username, $email, $password);
             } else {
