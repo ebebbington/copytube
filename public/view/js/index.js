@@ -179,7 +179,7 @@ let IndexFunctionality = (function () {
           eContainer = $('.dropdown-content').html('')
           let count = 1
           for (let i = 0, l = videos.length; i < l; i++) {
-            html = "<a href='#' id='dropdown-title-'" + count + " class='dropdown-titles'>" + videos[ i ][ 'title' ] + '</a>'
+            html = "<a href='#' id='dropdown-title-" + count + "'" + ' class="dropdown-titles">' + videos[ i ][ 'title' ] + '</a>'
             eContainer.prepend(html)
           }
           //
@@ -188,7 +188,8 @@ let IndexFunctionality = (function () {
           eContainer = $('.rabbit-hole-content').html('')
           count = 1
           for (let i = 0, l = rabbitHoleVideos.length; i < l; i++) {
-            html = '<video id=rabbit-hole-vid-' + count + " class='rabbit-hole-videos' controls " +
+            html = '<div id="video-' + count + '">' +
+              '<video id=rabbit-hole-vid-' + count + " class='rabbit-hole-videos' controls " +
               ' muted ' +
               ' poster=' + rabbitHoleVideos[ i ][ 'poster' ] +
               ' title="' + rabbitHoleVideos[ i ][ 'title' ] + '"' + ' src=' + rabbitHoleVideos[ i ][ 'src' ] +
@@ -244,25 +245,19 @@ let IndexFunctionality = (function () {
       //
       // On click of Rabbit Hole
       //
-      $('.rabbit-hole-content').on('click', function () {
-        alert($(this).prop('src'))
-        return
-        getContent($(this).prop('title'))
+      $('.rabbit-hole-videos').on('click', function () {
+        getContent($(this).attr('title'))
       })
       //
       // On click of Search Button
       //
       $('#search-button').on('click', function () {
-        alert($('#search-bar').val())
-        return
         getContent($('#search-bar').val())
       })
       //
       // On click of Dropdown
       //
-      $('.dropdown-content').on('click', function () {
-        alert($(this).text())
-        return
+      $('.dropdown-titles').on('click', function () {
         getContent($(this).text())
       })
       //

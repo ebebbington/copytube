@@ -102,7 +102,6 @@
 
                 <!-- set rabbit hole -->
 				<div class="col-xs-3 rabbit-hole-content">
-					<div class="rabbit-holes col-xs-12">
                         <!--
                         $videos = new Videos();
                         $allVideos = $videos->getAllVideos();
@@ -125,7 +124,6 @@
                         $db->closeDatabaseConnection();
                         ?>
                         -->
-                    </div>
                     <p id='rabbit-hole-titles'></p>
 				</div>
 			</div>
