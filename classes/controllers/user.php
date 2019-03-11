@@ -8,6 +8,17 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
 
 //
+// todo :: possibly filter out GETs and POSTs
+//
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $postData = $_POST;
+}
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $getData = $_GET;
+}
+
+
+//
 // Set Data
 //
 $postData = $_POST;

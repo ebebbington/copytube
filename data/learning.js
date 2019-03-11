@@ -29,12 +29,13 @@ const revealingModulePattern = function () {
   function apiRequest () {
     try {
       console.log('API Request [Part 1/2] - Start Try block')
-      const apiUrl = 'http://localhost:3000'
+      const apiUrl = 'http://localhost:3000/posts'
       $.ajax({
         // types: GET, POST, PUT, DELETE
         url: apiUrl,
-        success: function () { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
+        success: function (response) { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
           console.log('API Request [Part 2/2] - AJAX Request completed')
+          console.log(response)
         },
         error: function () {
           console.log('%cAPI Request [Part 2/2] - AJAX Error at ' + apiUrl + ', API is most likely not running', 'color: red')
