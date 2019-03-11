@@ -284,7 +284,7 @@ let IndexFunctionality = (function () {
     })
   }
   return {
-    init: init()
+    init: init
   }
 })()
 
