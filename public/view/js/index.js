@@ -1,6 +1,24 @@
 /* global $, alert */
 'use strict'
 
+const apiUrl = 'http://localhost:3002'
+setInterval(function () {
+  $.ajax({
+    type: 'GET',
+    url: apiUrl,
+    data: {
+      'name': 'HELLO',
+      'age': 60
+    },
+    success: function (response) {
+      console.log(response)
+    },
+    error: function (error) {
+      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
+    }
+  })
+}, 5000)
+
 //
 // Check if user is logged in
 //

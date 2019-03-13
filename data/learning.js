@@ -27,26 +27,6 @@ const revealingModulePattern = function () {
     }
     outputArray.push("Fibonacci's Sequence [Part 3/3] - Result: " + fibArray)
   }
-  // Test access to the API JSON Server - using a Try/Catch block and AJAX call
-  function apiRequest () {
-    try {
-      outputArray.push('API Request [Part 1/2] - Start Try block')
-      const apiUrl = 'http://localhost:3000/posts'
-      $.ajax({
-        // types: GET, POST, PUT, DELETE
-        url: apiUrl,
-        success: function (response) { // Instead of this block use "data: { id: 1, title: 'title' }" for POST
-          outputArray.push('API Request [Part 2/2] - AJAX Request completed')
-          outputArray.push(response)
-        },
-        error: function () {
-          outputArray.push('%cAPI Request [Part 2/2] - AJAX Error at ' + apiUrl + ', API is most likely not running', 'color: red')
-        }
-      })
-    } catch (e) {
-      outputArray.push('%cAPI Request [Part 2/2] - Caught an error: ' + e, 'color: red')
-    }
-  }
   // How to do a promise
   // Set up promise to get videos for later use - METHOD 2: I could just handle the data within a fucntion that uses an
   // ajax call e.g. pass in arguments (ar1, arg2) and handle these if (arg1 == 1) {}, theres so many different ways using example below:
@@ -147,7 +127,6 @@ const revealingModulePattern = function () {
   function runAll () {
     outputArray.push('Supporting Functions [Part 2/3] - Run All Functions')
     fibonaccisSequence()
-    apiRequest()
     myPromise()
     cookies('test name')
     rng()
