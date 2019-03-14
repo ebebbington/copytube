@@ -7,8 +7,7 @@ setInterval(function () {
     type: 'GET',
     url: apiUrl,
     data: {
-      'name': 'HELLO',
-      'age': 60
+      name: 'Edward'
     },
     success: function (response) {
       console.log(response)
