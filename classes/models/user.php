@@ -64,6 +64,11 @@ class User
     // Get User
     //
     public function getUser($purpose) {
+        // ///////////////////////////////////////////////////////
+        // Note: User can now be grabbed using $_SERVER['user'] //
+        // Using the session object is a more efficient way of  //
+        // getting the user data needed                         //
+        // ///////////////////////////////////////////////////////
         $sessionId2 = $_COOKIE['sessionId2'];
         $query = $this->db->connection->prepare(self::GET_USER_ID);
         $query->bind_param('s', $sessionId2);
@@ -121,6 +126,8 @@ class User
                     $query = $this->db->connection->prepare(self::SET_LOGGED_IN);
                     $query->bind_param('s', $user[0]['email']);
                     $query->execute();
+                    unset($user[0]['password']);
+                    $_SESSION['user'] = $user;
                     print_r(json_encode(['login', true]));
                 }
             } else {

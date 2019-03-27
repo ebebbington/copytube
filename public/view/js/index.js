@@ -1,11 +1,10 @@
 /* global $, alert */
 'use strict'
 
-const apiUrl = 'http://localhost:3002'
-setInterval(function () {
+const API = function () {
   $.ajax({
     type: 'GET',
-    url: apiUrl,
+    url: 'http://localhost:3003/users',
     data: {
       name: 'Edward'
     },
@@ -16,7 +15,7 @@ setInterval(function () {
       console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
     }
   })
-}, 5000)
+}
 
 //
 // Check if user is logged in
@@ -47,6 +46,7 @@ let IndexFunctionality = (function () {
     // /////////////////////////////////////////
     //              Promises data
     // /////////////////////////////////////////
+    // Thi
     const getUser = new Promise(function (resolve, reject) {
       $.ajax({
         type: 'POST',
