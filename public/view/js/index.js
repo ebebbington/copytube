@@ -1,13 +1,55 @@
 /* global $, alert */
 'use strict'
-
-const API = function () {
+function get (name) {
   $.ajax({
     type: 'GET',
+    url: 'http://localhost:3003/users/' + name,
+    success: function (response) {
+      console.log(response)
+    },
+    error: function (error) {
+      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
+    }
+  })
+}
+function post (name, age) {
+  $.ajax({
+    type: 'POST',
     url: 'http://localhost:3003/users',
     data: {
-      name: 'Edward'
+      id: 0,
+      name: name,
+      age: age
     },
+    success: function (response) {
+      console.log(response)
+    },
+    error: function (error) {
+      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
+    }
+  })
+}
+function put (oldName, name, age) {
+  $.ajax({
+    type: 'PUT',
+    url: 'http://localhost:3003/users',
+    data: {
+      oldName: oldName,
+      name: name,
+      age: age
+    },
+    success: function (response) {
+      console.log(response)
+    },
+    error: function (error) {
+      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
+    }
+  })
+}
+function del (name) {
+  $.ajax({
+    type: 'DELETE',
+    url: 'http://localhost:3003/users/' + name,
     success: function (response) {
       console.log(response)
     },
