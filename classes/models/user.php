@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  * Created by PhpStorm.
  * User: Edward
@@ -61,6 +62,48 @@ class User
     }
 
     //
+    // Generate API Key
+    //
+    private function generateKey () {
+        try {
+            $key = bin2hex(random_bytes(32));
+            return $key;
+        } catch (exception $e) {
+            return ['login', false, 'Could not generate an API key'];
+        }
+    }
+
+    //
+    // Get API Key
+    //
+    public function getKey () {
+        $userKey = array($_SESSION['key'][0], $_SESSION['key'][1]);
+        print_r(json_encode($userKey));
+    }
+
+    //
+    // Save API Key
+    //
+    private function saveKey ($key, $uid) {
+        // Save key in memory
+        $userKey = array($uid, $key);
+        $_SESSION['key'] = $userKey;
+        // Save to API
+        $apiUrl = 'localhost:3003/keys';
+        $curl = curl_init($apiUrl);
+        $data = new stdClass();
+        $data->id = 0;
+        $data->uid = $uid;
+        $data->key = $key;
+        $json = json_encode($data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+        curl_exec($curl);
+        curl_close($curl);
+    }
+
+    //
     // Get User
     //
     public function getUser($purpose) {
@@ -108,7 +151,7 @@ class User
                     $this->lockoutEmail($postData);
                     print_r(json_encode(['lockout', true]));
                 } else {
-                    session_start();
+
                     $sessionId1 = random_bytes(16);
                     $sessionId1 = bin2hex($sessionId1);
                     $sessionId2 = random_bytes(16);
@@ -128,7 +171,13 @@ class User
                     $query->execute();
                     unset($user[0]['password']);
                     $_SESSION['user'] = $user;
-                    print_r(json_encode(['login', true]));
+                    $key = $this->generateKey();
+                    if (is_array($key)) {
+                        print_r(json_encode($key));
+                    } else {
+                        $this->saveKey($key, $user[0]['id']);
+                        print_r(json_encode(['login', true]));
+                    }
                 }
             } else {
                 // Password not the same

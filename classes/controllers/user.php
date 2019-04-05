@@ -17,14 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $getData = $_GET;
 }
 
-
 //
 // Set Data
 //
 $postData = $_POST;
 $postAction = $_POST['action'];
 $user = new User();
-$possibleActions = ['login', 'logout', 'register', 'recover', 'getUser', 'checkSession'];
+$possibleActions = ['login', 'logout', 'register', 'recover', 'getUser', 'checkSession', 'getKey'];
 
 if (!in_array($postAction, $possibleActions)) {
     exit();
@@ -52,5 +51,9 @@ if (!in_array($postAction, $possibleActions)) {
 
     if ($postAction === 'checkSession') {
         $user->checkSession();
+    }
+
+    if ($postAction === 'getKey') {
+        $user->getKey();
     }
 }

@@ -1,9 +1,14 @@
 /* global $, alert */
 'use strict'
+
 function get (name) {
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3003/users/' + name,
+    url: 'http://localhost:3003',
+    data: {
+      uid: 1,
+      key: 'hellloooo'
+    },
     success: function (response) {
       console.log(response)
     },
@@ -140,6 +145,20 @@ let IndexFunctionality = (function () {
         }
       })
     })
+    const getKey = new Promise(function (resolve, reject) {
+      $.ajax({
+        type: 'POST',
+        url: '../../classes/controllers/user.php',
+        data: { action: 'getKey' },
+        success: function (response) {
+          const key = JSON.parse(response)
+          resolve(key)
+        },
+        error: function (error) {
+          reject(error)
+        }
+      })
+    })
     // /////////////////////////////////////////
     //                Functions data
     // /////////////////////////////////////////
@@ -244,6 +263,7 @@ let IndexFunctionality = (function () {
           //
           // Dropdown titles
           //
+          // Below it throws a wobbly on unused variables
           eContainer = $('.dropdown-content').html('')
           let count = 1
           for (let i = 0, l = videos.length; i < l; i++) {
@@ -299,6 +319,10 @@ let IndexFunctionality = (function () {
           console.table(user)
         })
       getContent('Something More')
+      getKey
+        .then(function (key) {
+          console.log('Get key from php session variable on load as a promise. This is the result of the promise: ' + key)
+        })
     })()
     // /////////////////////////////////////////
     //                Event Handler
