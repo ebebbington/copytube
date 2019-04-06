@@ -1,67 +1,35 @@
 /* global $, alert */
 'use strict'
 
-function get (name) {
-  $.ajax({
-    type: 'GET',
-    url: 'http://localhost:3003',
-    data: {
-      uid: 1,
-      key: 'hellloooo'
-    },
-    success: function (response) {
-      console.log(response)
-    },
-    error: function (error) {
-      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
-    }
-  })
-}
-function post (name, age) {
+const getKey = new Promise(function (resolve, reject) {
   $.ajax({
     type: 'POST',
-    url: 'http://localhost:3003/users',
-    data: {
-      id: 0,
-      name: name,
-      age: age
-    },
+    url: '../../classes/controllers/user.php',
+    data: { action: 'getKey' },
     success: function (response) {
-      console.log(response)
+      const key = JSON.parse(response)
+      resolve(key)
     },
     error: function (error) {
-      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
+      reject(error)
     }
   })
-}
-function put (oldName, name, age) {
-  $.ajax({
-    type: 'PUT',
-    url: 'http://localhost:3003/users',
-    data: {
-      oldName: oldName,
-      name: name,
-      age: age
-    },
-    success: function (response) {
-      console.log(response)
-    },
-    error: function (error) {
-      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
-    }
-  })
-}
-function del (name) {
-  $.ajax({
-    type: 'DELETE',
-    url: 'http://localhost:3003/users/' + name,
-    success: function (response) {
-      console.log(response)
-    },
-    error: function (error) {
-      console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
-    }
-  })
+})
+function api () {
+  getKey
+    .then(function (key) {
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost:3003/users',
+        data: {id: key.uid, key: key.key},
+        success: function (response) {
+          console.log(response)
+        },
+        error: function (error) {
+          console.log('error accessing api server ' + Object.getOwnPropertyNames(error))
+        }
+      })
+    })
 }
 
 //
@@ -141,20 +109,6 @@ let IndexFunctionality = (function () {
         },
         error: function (error) {
           console.log(error + '\n' + reject)
-          reject(error)
-        }
-      })
-    })
-    const getKey = new Promise(function (resolve, reject) {
-      $.ajax({
-        type: 'POST',
-        url: '../../classes/controllers/user.php',
-        data: { action: 'getKey' },
-        success: function (response) {
-          const key = JSON.parse(response)
-          resolve(key)
-        },
-        error: function (error) {
           reject(error)
         }
       })
@@ -319,10 +273,6 @@ let IndexFunctionality = (function () {
           console.table(user)
         })
       getContent('Something More')
-      getKey
-        .then(function (key) {
-          console.log('Get key from php session variable on load as a promise. This is the result of the promise: ' + key)
-        })
     })()
     // /////////////////////////////////////////
     //                Event Handler
@@ -367,7 +317,8 @@ let IndexFunctionality = (function () {
     })
   }
   return {
-    init: init
+    init: init,
+    key: init.getKey
   }
 })()
 

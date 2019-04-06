@@ -89,15 +89,29 @@ class User
         $userKey = array($uid, $key);
         $_SESSION['key'] = $userKey;
         // Save to API
-        $apiUrl = 'localhost:3003/keys';
+        $apiUrl = 'http://localhost:3003/keys';
         $curl = curl_init($apiUrl);
         $data = new stdClass();
-        $data->id = 0;
         $data->uid = $uid;
         $data->key = $key;
         $json = json_encode($data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+        curl_exec($curl);
+        curl_close($curl);
+    }
+
+    public function deleteKey () { // todo :: might need some finishing touches
+        $key = $_SESSION['key'][1];
+        unset($_SESSION['key']);
+        $apiUrl = 'http://localhost:3003/keys';
+        $curl = curl_init($apiUrl);
+        $data = new stdClass();
+        $data->key = $key;
+        $json = json_encode($data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
         curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
         curl_exec($curl);
         curl_close($curl);
@@ -213,6 +227,7 @@ class User
             $query = $this->db->connection->prepare(self::DELETE_SESSION);
             $query->bind_param('i', $userId);
             $query->execute();
+            $this->deleteKey();
             setcookie("sessionId1", "", time() - 3600, '/');
             setcookie('PHPSESSID', '', time()-3600, '/');
             setcookie("sessionId2", "", time() - 3600, '/');
