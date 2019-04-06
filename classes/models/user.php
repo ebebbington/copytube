@@ -98,6 +98,7 @@ class User
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         curl_exec($curl);
         curl_close($curl);
     }
@@ -113,6 +114,7 @@ class User
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
         curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         curl_exec($curl);
         curl_close($curl);
     }
