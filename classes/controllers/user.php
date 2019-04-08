@@ -7,9 +7,6 @@
  */
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
 
-//
-// todo :: possibly filter out GETs and POSTs
-//
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = $_POST;
     $action = $_POST['action'];
@@ -25,26 +22,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 if (!isset($data)) {
     print_r(json_encode(['No data has been sent']));
 }
-//
-// Set Data
-//
-$postAction = $_POST['action'];
 $user = new User();
 $possibleActions = ['login', 'logout', 'register', 'recover', 'getUser', 'checkSession', 'getKey'];
 
-if (!in_array($postAction, $possibleActions)) {
+if (!in_array($action, $possibleActions)) {
     exit();
 } else {
     if ($action === 'login') {
-        $user->login($data);
+        $response = $user->login($data);
+        print_r($response);
+        $db = new Database();
+        $db->closeDatabaseConnection();
     }
 
     if ($action === 'register') {
         $user->register($data);
+        $db = new Database();
+        $db->closeDatabaseConnection();
     }
 
     if ($action === 'logout') {
-        $user->logout();
+        $response = $user->logout();
+        print_r($response);
+        $db = new Database();
+        $db->closeDatabaseConnection();
     }
 
     if ($action === 'recover') {

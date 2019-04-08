@@ -158,13 +158,13 @@ class User
         $query->fetch(); // This is needed, otherwise if i try to access the binded variables the output is ""
         if ($user[0]['id'] === NULL) {
             // Means ive used the wrong email
-            print_r(json_encode(['login', false]));
+            return json_encode(['login', false]);
         } else {
             // Means correct email is given
             if (password_verify($passwordInput, $user[0]['password'])) {
                 if ($user[0]['loginAttempts'] === 0) {
                     $this->lockoutEmail($postData);
-                    print_r(json_encode(['lockout', true]));
+                    return json_encode(['lockout', true]);
                 } else {
                     $sessionId1 = random_bytes(16);
                     $sessionId1 = bin2hex($sessionId1);
@@ -187,10 +187,10 @@ class User
                     $_SESSION['user'] = $user;
                     $key = $this->generateKey();
                     if (is_array($key)) {
-                        print_r(json_encode($key));
+                        return json_encode($key);
                     } else {
                         $this->saveKey($key, $user[0]['id']);
-                        print_r(json_encode(['login', true]));
+                        return json_encode(['login', true]);
                     }
                 }
             } else {
@@ -200,10 +200,9 @@ class User
                 $loginAttempts = $user[0]['loginAttempts'] - 1;
                 $query->bind_param('is', $loginAttempts, $emailInput);
                 $query->execute();
-                print_r(json_encode(['login', false]));
+                return json_encode(['login', false]);
             }
         }
-        $this->db->closeDatabaseConnection();
     }
 
     //
@@ -234,11 +233,10 @@ class User
             setcookie("name", "", time() - 3600, '/');
             session_abort();
             session_unset();
-            print_r(json_encode(['logout', true]));
+            return json_encode(['logout', true]);
         } else {
-            print_r(json_encode(['logout', true]));
+            return json_encode(['logout', true]);
         }
-        $this->db->closeDatabaseConnection();
     }
 
     //
@@ -246,7 +244,6 @@ class User
     //
     public function register ($postData) {
         $this->validate->validateUsername($postData);
-        $this->db->closeDatabaseConnection();
     }
 
     //

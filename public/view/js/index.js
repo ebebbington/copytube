@@ -7,6 +7,7 @@ const getKey = new Promise(function (resolve, reject) {
     url: '../../classes/controllers/user.php',
     data: { action: 'getKey' },
     success: function (response) {
+      console.log(response)
       const key = JSON.parse(response)
       resolve(key)
     },
@@ -73,6 +74,7 @@ let IndexFunctionality = (function () {
           action: 'getUser'
         },
         success: function (response) {
+          console.log(response)
           const user = JSON.parse(response)
           resolve(user)
         },
@@ -260,6 +262,7 @@ let IndexFunctionality = (function () {
                 '<p style="word-break: break-all">' + comments[ i ][ 'comment' ] + '</p>' +
                 '</div>' +
                 '</div>' + '<br>'
+              console.log(test)
               $('#db-comments').prepend(test)
             }
           }
@@ -290,7 +293,7 @@ let IndexFunctionality = (function () {
       //
       // On click of Rabbit Hole
       //
-      $('.rabbit-hole-videos').on('click', function () {
+      $('.rabbit-hole-content').on('click', '.rabbit-hole-videos', function () {
         getContent($(this).attr('title'))
       })
       //
@@ -302,10 +305,9 @@ let IndexFunctionality = (function () {
       //
       // On click of Dropdown
       //
-      $('.dropdown-titles').on('click', function () {
+      $('.dropdown-content').on('click', '.dropdown-titles', function () {
         getContent($(this).text())
       })
-      //
       // On click of log out
       //
       $('#log-out').on('click', function () {
