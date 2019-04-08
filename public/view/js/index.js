@@ -20,8 +20,11 @@ function api () {
     .then(function (key) {
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:3003/users',
-        data: {id: key.uid, key: key.key},
+        url: 'http://localhost:3003/users/Edward',
+        data: {
+          uid: key[0],
+          key: key[1]
+        },
         success: function (response) {
           console.log(response)
         },

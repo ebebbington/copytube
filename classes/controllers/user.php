@@ -11,16 +11,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
 // todo :: possibly filter out GETs and POSTs
 //
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $postData = $_POST;
+    $data = $_POST;
+    $action = $_POST['action'];
 }
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $getData = $_GET;
+    $data = $_GET;
+    try {
+        $action = $_POST['action'];
+    } catch (Exception $e) {
+        $action = $_POST['action'];
+    }
 }
-
+if (!isset($data)) {
+    print_r(json_encode(['No data has been sent']));
+}
 //
 // Set Data
 //
-$postData = $_POST;
 $postAction = $_POST['action'];
 $user = new User();
 $possibleActions = ['login', 'logout', 'register', 'recover', 'getUser', 'checkSession', 'getKey'];
@@ -28,32 +35,32 @@ $possibleActions = ['login', 'logout', 'register', 'recover', 'getUser', 'checkS
 if (!in_array($postAction, $possibleActions)) {
     exit();
 } else {
-
-    if ($postAction === 'login') {
-        $user->login($postData);
+    if ($action === 'login') {
+        $user->login($data);
     }
 
-    if ($postAction === 'register') {
-        $user->register($postData);
+    if ($action === 'register') {
+        $user->register($data);
     }
 
-    if ($postAction === 'logout') {
+    if ($action === 'logout') {
         $user->logout();
     }
 
-    if ($postAction === 'recover') {
-        $user->recover($postData);
+    if ($action === 'recover') {
+        $user->recover($data);
     }
 
-    if ($postAction === 'getUser') {
+    if ($action === 'getUser') {
         $user->getUser('');
     }
 
-    if ($postAction === 'checkSession') {
+    if ($action === 'checkSession') {
         $user->checkSession();
     }
 
-    if ($postAction === 'getKey') {
-        $user->getKey();
+    if ($action === 'getKey') {
+        $response = $user->getKey();
+        print_r($response);
     }
 }

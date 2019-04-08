@@ -57,7 +57,6 @@ class User
         if (empty($_COOKIE['sessionId1'])) {
             // Divert back to login and remove all cookies
             $this->logout();
-        } else {
         }
     }
 
@@ -78,7 +77,7 @@ class User
     //
     public function getKey () {
         $userKey = array($_SESSION['key'][0], $_SESSION['key'][1]);
-        print_r(json_encode($userKey));
+        return json_encode($userKey);
     }
 
     //
@@ -103,7 +102,7 @@ class User
         curl_close($curl);
     }
 
-    public function deleteKey () { // todo :: might need some finishing touches
+    public function deleteKey () {
         $key = $_SESSION['key'][1];
         unset($_SESSION['key']);
         $apiUrl = 'http://localhost:3003/keys';
@@ -167,7 +166,6 @@ class User
                     $this->lockoutEmail($postData);
                     print_r(json_encode(['lockout', true]));
                 } else {
-
                     $sessionId1 = random_bytes(16);
                     $sessionId1 = bin2hex($sessionId1);
                     $sessionId2 = random_bytes(16);
