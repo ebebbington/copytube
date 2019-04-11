@@ -145,6 +145,28 @@ class User
     }
 
     //
+    // Create Cookies
+    //
+    private function createCookies () {
+        $sessionId1 = random_bytes(16);
+        $sessionId1 = bin2hex($sessionId1);
+        $sessionId2 = random_bytes(16);
+        $sessionId2 = bin2hex($sessionId2);
+        // Assign data when creating the cookies
+        setcookie('sessionId1', $sessionId1, time() + 3200, '/');
+        setcookie('sessionId2', $sessionId2, null, '/');
+    }
+    //
+    // Unset cookies
+    //
+    private function unsetCookies () {
+        setcookie("sessionId1", "", time() - 3600, '/');
+        setcookie('PHPSESSID', '', time()-3600, '/');
+        setcookie("sessionId2", "", time() - 3600, '/');
+        setcookie("name", "", time() - 3600, '/');
+    }
+
+    //
     // Run Login Function
     //
     public function login ($postData) {
@@ -166,13 +188,7 @@ class User
                     $this->lockoutEmail($postData);
                     return json_encode(['lockout', true]);
                 } else {
-                    $sessionId1 = random_bytes(16);
-                    $sessionId1 = bin2hex($sessionId1);
-                    $sessionId2 = random_bytes(16);
-                    $sessionId2 = bin2hex($sessionId2);
-                    // Assign data when creating the cookies
-                    setcookie('sessionId1', $sessionId1, time() + 3200, '/');
-                    setcookie('sessionId2', $sessionId2, null, '/');
+                    $this->createCookies();
                     // Insert data into DB
                     $this->db->connection = new mysqli('localhost', 'root', 'password', 'copytube');
                     $query = $this->db->connection->prepare(self::INSERT_NEW_SESSION);
@@ -227,10 +243,7 @@ class User
             $query->bind_param('i', $userId);
             $query->execute();
             $this->deleteKey();
-            setcookie("sessionId1", "", time() - 3600, '/');
-            setcookie('PHPSESSID', '', time()-3600, '/');
-            setcookie("sessionId2", "", time() - 3600, '/');
-            setcookie("name", "", time() - 3600, '/');
+            $this->unsetCookies();
             session_abort();
             session_unset();
             return json_encode(['logout', true]);
