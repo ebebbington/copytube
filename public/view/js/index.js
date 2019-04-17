@@ -46,15 +46,31 @@ $.ajax({
     action: 'checkSession'
   },
   success: function (response) {
+    let output = null
+    try {
+      output = JSON.parse(response)
+    } catch (e) {
+      output = response
+    }
+    alert(output[0])
+    alert(output[1])
     if (response === '') {
-    } else {
-      const output = JSON.parse(response)
-      if (output[ 0 ] === 'logout' && output[ 1 ] === true) {
-        window.location.replace('login.html')
-      } else {
-      }
+      return false
+    }
+    if (output[ 1 ] === 'User is not logged in') {
+      window.location.replace('login.html')
+    }
+    if (output[ 0 ] === 'logout' && output[ 1 ] === true) {
+      window.location.replace('login.html')
     }
   }
+})
+
+//
+// Display DOM on ready
+//
+$(window).on('load', function () {
+  $('#cover').hide()
 })
 
 //
@@ -74,7 +90,8 @@ let IndexFunctionality = (function () {
           action: 'getUser'
         },
         success: function (response) {
-          console.log(response)
+          alert(response)
+          alert(JSON.parse(response))
           const user = JSON.parse(response)
           resolve(user)
         },

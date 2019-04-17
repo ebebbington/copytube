@@ -56,7 +56,11 @@ class User
     public function checkSession () {
         if (empty($_COOKIE['sessionId1'])) {
             // Divert back to login and remove all cookies
-            $this->logout();
+            $response = $this->logout();
+            return $response;
+            //return ['login', 'User is not logged in'];
+        } else {
+            return ['login', 'User is logged in'];
         }
     }
 
@@ -76,8 +80,11 @@ class User
     // Get API Key
     //
     public function getKey () {
-        $userKey = array($_SESSION['key'][0], $_SESSION['key'][1]);
-        return json_encode($userKey);
+        if (isset($_SESSION['key'])) {
+            $userKey = array($_SESSION['key'][0], $_SESSION['key'][1]);
+            return json_encode($userKey);
+        }
+        return json_encode(['key', 'Session key is not set']);
     }
 
     //
@@ -127,6 +134,9 @@ class User
         // Using the session object is a more efficient way of  //
         // getting the user data needed                         //
         // ///////////////////////////////////////////////////////
+        if (!isset($_COOKIE['sessionId2'])) {
+            return json_encode(['session id 2', 'not set']);
+        }
         $sessionId2 = $_COOKIE['sessionId2'];
         $query = $this->db->connection->prepare(self::GET_USER_ID);
         $query->bind_param('s', $sessionId2);
@@ -152,9 +162,18 @@ class User
         $sessionId1 = bin2hex($sessionId1);
         $sessionId2 = random_bytes(16);
         $sessionId2 = bin2hex($sessionId2);
-        // Assign data when creating the cookies
-        setcookie('sessionId1', $sessionId1, time() + 3200, '/');
-        setcookie('sessionId2', $sessionId2, null, '/');
+        return [$sessionId1, $sessionId2];
+    }
+    //
+    // Set Cookies
+    //
+    private function setCookies ($cookies, $id) {
+        setcookie('sessionId1', $cookies[0], time() + 3200, '/');
+        setcookie('sessionId2', $cookies[1], null, '/');
+        $this->db->connection = new mysqli('localhost', 'root', 'password', 'copytube');
+        $query = $this->db->connection->prepare(self::INSERT_NEW_SESSION);
+        $query->bind_param('ssi', $cookies[0], $cookies[1], $id);
+        $query->execute();
     }
     //
     // Unset cookies
@@ -188,13 +207,10 @@ class User
                     $this->lockoutEmail($postData);
                     return json_encode(['lockout', true]);
                 } else {
-                    $this->createCookies();
-                    // Insert data into DB
-                    $this->db->connection = new mysqli('localhost', 'root', 'password', 'copytube');
-                    $query = $this->db->connection->prepare(self::INSERT_NEW_SESSION);
-                    $id = $user[0]['id'];
-                    $query->bind_param('ssi', $sessionId1, $sessionId2, $id);
-                    $query->execute();
+                    // Create the cookies
+                    $cookies = $this->createCookies();
+                    // Set in global var and save to db
+                    $this->setCookies($cookies, $user[0]['id']);
                     // Update loggedIn
                     $query = $this->db->connection->prepare(self::SET_LOGGED_IN);
                     $query->bind_param('s', $user[0]['email']);
@@ -246,9 +262,9 @@ class User
             $this->unsetCookies();
             session_abort();
             session_unset();
-            return json_encode(['logout', true]);
+            return ['logout', true];
         } else {
-            return json_encode(['logout', true]);
+            return ['logout', true];
         }
     }
 

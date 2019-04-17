@@ -43,6 +43,7 @@ if (!in_array($action, $possibleActions)) {
 
     if ($action === 'logout') {
         $response = $user->logout();
+        $response = json_encode($response);
         print_r($response);
         $db = new Database();
         $db->closeDatabaseConnection();
@@ -53,11 +54,14 @@ if (!in_array($action, $possibleActions)) {
     }
 
     if ($action === 'getUser') {
-        $user->getUser('');
+        $userArray = $user->getUser('');
+        print_r($userArray);
     }
 
     if ($action === 'checkSession') {
-        $user->checkSession();
+        $isLoggedIn = $user->checkSession();
+        $isLoggedIn = json_encode($isLoggedIn);
+        print_r($isLoggedIn);
     }
 
     if ($action === 'getKey') {
