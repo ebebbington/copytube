@@ -52,8 +52,6 @@ $.ajax({
     } catch (e) {
       output = response
     }
-    alert(output[0])
-    alert(output[1])
     if (response === '') {
       return false
     }
@@ -90,8 +88,6 @@ let IndexFunctionality = (function () {
           action: 'getUser'
         },
         success: function (response) {
-          alert(response)
-          alert(JSON.parse(response))
           const user = JSON.parse(response)
           resolve(user)
         },
@@ -279,7 +275,6 @@ let IndexFunctionality = (function () {
                 '<p style="word-break: break-all">' + comments[ i ][ 'comment' ] + '</p>' +
                 '</div>' +
                 '</div>' + '<br>'
-              console.log(test)
               $('#db-comments').prepend(test)
             }
           }
