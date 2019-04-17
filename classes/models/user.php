@@ -7,6 +7,21 @@ session_start();
  * Time: 23:47
  */
 
+//
+// Error Handler - Log them
+//
+set_error_handler(function ($code, $text, $file, $line, $content) {
+   $fileSize = (filesize('../../data/error.txt') / 1000) / 1000; // in megabytes
+   $fileSize > 10 ? $writeType = 'w' : $writeType = 'a';
+   $errorArray = ["\nError: $code", "\nDescription: $text", "\nFile with error: $file", "\nLine: $line"];
+   $errorLogFile = fopen('../../data/error.txt', $writeType);
+   for ($i = 0; $i < sizeof($errorArray); $i++) {
+       fwrite($errorLogFile, $errorArray[$i]);
+   }
+   fclose($errorLogFile);
+   return true;
+}, E_ALL | E_STRICT);
+
 include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/controllers/database.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/validate.php';
 

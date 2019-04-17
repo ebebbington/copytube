@@ -3,4 +3,5 @@
 .idea/
 imageresources/
 node_modules/
+data/error.txt
 package-lock.json
