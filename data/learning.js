@@ -124,6 +124,9 @@ const revealingModulePattern = function () {
     car.moveForward(5)
     car.stop('car')
   }
+  //
+  // Run all functions
+  //
   function runAll () {
     outputArray.push('Supporting Functions [Part 2/3] - Run All Functions')
     fibonaccisSequence()
@@ -132,6 +135,7 @@ const revealingModulePattern = function () {
     rng()
     getTime()
     myClasses()
+    assert('hello', 'string', null, 'hello')
     outputArray.push('Supporting Functions [Part 3/3] - Finished')
   }
   // Self Executing Anonymous Function
