@@ -135,7 +135,6 @@ const revealingModulePattern = function () {
     rng()
     getTime()
     myClasses()
-    assert('hello', 'string', null, 'hello')
     outputArray.push('Supporting Functions [Part 3/3] - Finished')
   }
   // Self Executing Anonymous Function

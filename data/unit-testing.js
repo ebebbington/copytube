@@ -5,7 +5,7 @@
 // Call this method like so:
 //    assert().[function]([params])
 //
-// j
+//
 function assert () {
   console.log('Assert function started')
   //
@@ -55,7 +55,7 @@ function assert () {
   //
   // Check an object
   //
-  function object (data, expectedType, expectedLength, expectedProps) {
+  function object (data, expectedType, expectedLength, expectedProps, expectedValues) {
     console.log('Reached check of object')
     checkTypeAndLength(data, expectedType)
     const objectLength = Object.keys(data).length
@@ -63,7 +63,7 @@ function assert () {
       throw Error(msg.start + expectedLength + msg.end + objectLength)
     }
     //
-    // Check property names and values
+    // Check property names
     //
     for (let i = 0; i < expectedProps.length; i++) {
       // Properties
@@ -71,11 +71,20 @@ function assert () {
         throw Error(msg.start + expectedProps[i] + msg.end + data)
       }
     }
+    //
+    // Check property values
+    //
+    Object.keys(data).forEach((key, index) => {
+      if (data[key] !== expectedValues[index]) {
+        throw Error(msg.start + expectedValues[key] + msg.end + data[key])
+      }
+    })
     console.log('Test Passed', {
       Results: {
         data: data,
         expectedType: expectedType,
-        expectedProps: expectedProps
+        expectedProps: expectedProps,
+        expectedValues: expectedValues
       }
     })
   }
@@ -105,7 +114,7 @@ function assert () {
   //
   // Check an object array
   //
-  function objectArray (data, expectedType, expectedLength, expectedProps) {
+  function objectArray (data, expectedType, expectedLength, expectedProps, expectedValues) {
     console.log('Reached check of object array')
     checkTypeAndLength(data, expectedType, expectedLength)
     if (!Array.isArray(data)) {
@@ -116,12 +125,21 @@ function assert () {
         throw Error(msg.start + expectedProps[i] + msg.end + data[i])
       }
     }
+    //
+    // Check property values
+    //
+    Object.keys(data).forEach((key, index) => {
+      if (data[key] !== expectedValues[index]) {
+        throw Error(msg.start + expectedValues[key] + msg.end + data[key])
+      }
+    })
     console.log('Test Passed', {
       Results: {
         data: data,
         expectedType: expectedType,
         expectedLength: expectedLength,
-        expectedProps: expectedProps
+        expectedProps: expectedProps,
+        expectedValues: expectedValues
       }
     })
   }
