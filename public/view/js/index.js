@@ -79,7 +79,6 @@ let IndexFunctionality = (function () {
     // /////////////////////////////////////////
     //              Promises data
     // /////////////////////////////////////////
-    // Thi
     const getUser = new Promise(function (resolve, reject) {
       $.ajax({
         type: 'POST',
@@ -276,6 +275,7 @@ let IndexFunctionality = (function () {
                 '</div>' +
                 '</div>' + '<br>'
               $('#db-comments').prepend(test)
+              console.log(test)
             }
           }
         })
@@ -610,3 +610,46 @@ $(document).ready(function () {
   })
 })
 */
+
+function bubbleSort (array) {
+  let len = array.length
+  for (let i = len - 1; i >= 0; i--) {
+    for (let j = 1; j <= i; j++) {
+      if (array[j - 1] > array[j]) {
+        let temp = array[j - 1]
+        array[j - 1] = array[j]
+        array[j] = temp
+      }
+    }
+  }
+  console.log(array)
+}
+function numbers (maxLength, maxNumber) {
+  let result = []
+  while (result.length !== maxLength) {
+    result.push(Math.floor(Math.random() * maxNumber) + 1)
+  }
+  bubbleSort(result)
+}
+numbers(100, 94)
+
+//
+// Data Structure
+//
+let myObject = {
+  firstName: '',
+  lastName: '',
+  age: 0,
+  jobTitle: '',
+  learntProgrammingLangs: [],
+  speak: function (person) {
+    console.log(person + ' says hello')
+  }
+}
+myObject.firstName = 'Edward'
+myObject.lastName = 'Bebbington'
+myObject.age = 20
+myObject.jobTitle = 'Apprentice Developer'
+myObject.learntProgrammingLangs = ['PHP', 'JS', 'C#']
+const fullName = myObject.firstName + ' ' + myObject.lastName
+myObject.speak(fullName)

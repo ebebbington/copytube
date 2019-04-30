@@ -49,4 +49,10 @@ $(document).ready(function () {
   $('#login-button').on('click', function () {
     return login()
   })
+  let myString = 'hello'
+  myString = myString + ' world'
+  let myObject = {}
+  myObject.name = 'Edward'
+  let myArray = []
+  myArray[0] = 'Edward'
 })
