@@ -234,7 +234,6 @@ let IndexFunctionality = (function () {
           //
           // Dropdown titles
           //
-          // Below it throws a wobbly on unused variables
           eContainer = $('.dropdown-content').html('')
           let count = 1
           for (let i = 0, l = videos.length; i < l; i++) {
@@ -632,6 +631,11 @@ function numbers (maxLength, maxNumber) {
   bubbleSort(result)
 }
 numbers(100, 94)
+
+// djhdjhdjhdjhdjh
+// BLAHBLAH
+// fjfjfjfjfhf
+// fufhfjhfdjdf
 
 //
 // Data Structure
