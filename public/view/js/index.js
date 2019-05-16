@@ -621,7 +621,7 @@ function bubbleSort (array) {
       }
     }
   }
-  console.log(array)
+  console.log(1)
 }
 function numbers (maxLength, maxNumber) {
   let result = []
