@@ -16,7 +16,7 @@ function login () {
       const response = JSON.parse(output)
       if (response[0] === 'login') {
         if (response[1] === true) {
-          window.location.replace('http://localhost/copytube/public/view/index.html')
+          window.location.replace('../index.html')
         } else {
           // noinspection JSJQueryEfficiency
           $('#incorrect-credentials').text('Incorrect credentials')
@@ -44,7 +44,7 @@ function login () {
 
 $(document).ready(function () {
   $('#register-new-account').on('click', function () {
-    window.location.replace('http://localhost/copytube/public/view/register.html') // ref: https://www.w3schools.com/howto/howto_js_redirect_webpage.asp
+    window.location.replace('../register.html') // ref: https://www.w3schools.com/howto/howto_js_redirect_webpage.asp
   })
   $('#login-button').on('click', function () {
     return login()

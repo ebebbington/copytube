@@ -39,7 +39,7 @@ function validateInput () {
               $('#incorrect-password').text('')
               $('.register-fields').val('')
               $('#register-success').removeAttr('hidden')
-              $('html, body').animate({ scrollTop: 0 }, 'fast') // ref: https://stackoverflow.com/questions/4147112/how-to-jump-to-top-of-browser-page
+              $('html', 'body').animate({ scrollTop: 0 }, 'fast') // ref: https://stackoverflow.com/questions/4147112/how-to-jump-to-top-of-browser-page
               return false
             } else {
               // means there is an error and it can ONLY be name, email or pass so display the error message
@@ -76,7 +76,7 @@ function validateInput () {
 
 $(document).ready(function () {
   $('#go-back').on('click', function () {
-    window.location.replace('http://localhost/copytube/public/view/login.html')
+    window.location.replace('../login.html')
   })
 
   $('#register-button').on('click', function () {

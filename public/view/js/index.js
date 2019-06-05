@@ -136,12 +136,12 @@ let IndexFunctionality = (function () {
     function logOut () {
       $.ajax({
         type: 'POST',
-        url: 'http://localhost/copytube/classes/controllers/user.php',
+        url: '../../../classes/controllers/user.php',
         data: {
           action: 'logout'
         },
         success: function () {
-          window.location.replace('http://localhost/copytube/public/view/login.html')
+          window.location.replace('../login.html')
         }
       })
     }
@@ -176,7 +176,7 @@ let IndexFunctionality = (function () {
             } else {
               let test = "<div class='media'>" +
                 "<div class='media-left'>" +
-                "<img src='../../images/sample.jpg' class='media-object' style='width:45px; height:45px; border-radius:80%'>" +
+                "<img alt='whuddup' src='../../images/sample.jpg' class='media-object' style='width:45px; height:45px; border-radius:80%'>" +
                 '</div>' +
                 "<div class='media-body'>" +
                 "<h4 class='media-heading'>" + output[ 0 ] +

@@ -6,7 +6,6 @@
  * Time: 13:20
  */
 require_once $_SERVER['DOCUMENT_ROOT'] . '/copytube/classes/models/user.php';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = $_POST;
     $action = $_POST['action'];
