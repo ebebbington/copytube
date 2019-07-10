@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Copytube - Login</title>
+    <script type="text/javascript" src="../public/libs/jquery-3.3.1.min.js"></script>
+    <!-- accesses bootstrap css files that makes css files much easier to use -->
+    <link type="text/css" rel="stylesheet" href="../public/libs/bootstrap.min.css" crossorigin="anonymous">
+    <!-- accesses bootstrap js files that makes js files much easier to use -->
+    <script type="text/javascript" src="../public/libs/bootstrap.min.js" crossorigin="anonymous"></script>
+    <!-- NOTE: My files are placed after so they overwrite the files above if needed i.e. my css > their css styles -->
+    <!-- links my style sheet (.css) so it can be used -->
+    <link type="text/css" rel="stylesheet" href="../public/css/login.css"/>
+    <script type="text/javascript" src="../public/js/login.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- Login fields -->
+        <div class="col-xs-12">
+            <div class="login">
+                <form method="post">
+                    <fieldset>
+                        <legend><img src="../public/images/copytube_logo.png"></legend>
+                        <legend>Login</legend>
+                        <p id="incorrect-credentials" class="alert alert-danger" hidden></p>
+                        Email: <br>
+                        * <input id="login-email" class="login-fields form-control" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"><br>
+                        Password: <br>
+                        * <input id="login-password" type='password' class="login-fields form-control" name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                        <button id="login-button" class="btn btn-primary" type="button" name="submit" value="Submit">Submit</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-12>">
+            <div class="register">
+                <a href="#" id="register-new-account">Register Instead</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

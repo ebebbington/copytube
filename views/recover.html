@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CopyTube - Recover Account</title>
+    <script src="../public/libs/jquery-3.3.1.min.js"></script>
+    <!-- accesses bootstrap css files that makes css files much easier to use -->
+    <link rel="stylesheet" href="../public/libs/bootstrap.min.css" crossorigin="anonymous">
+    <!-- accesses bootstrap js files that makes js files much easier to use -->
+    <script src="../public/libs/bootstrap.min.js" crossorigin="anonymous"></script>
+    <!-- NOTE: My files are placed after so they overite the files above if needed i.e. my css > their css styles -->
+    <!-- links my style sheet (.css) so it can be used -->
+    <link rel="stylesheet" href="../public/css/recover.css"/>
+    <script src="../public/js/recover.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- Login fields -->
+        <div class="col-xs-12">
+            <div class="recover">
+                <form method="post">
+                    <fieldset>
+                        <legend><img src="../public/images/copytube_logo.png"></legend>
+                        <legend>Recover</legend>
+                        Email: <br>
+                        * <input id="recover-email" class="recover-fields form-control" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"><br>
+                        Password: <br>
+                        * <input id="recover-password" type='password' class="recover-fields form-control" name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                        <button id="recover-button" class="btn btn-primary" type="button" name="submit" value="Submit">Submit</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
