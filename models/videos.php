@@ -8,33 +8,35 @@
 
 // todo Add nice beautiful comments
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/database.php';
+include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/controllers/database.php';
 
 class Videos
 {
-    const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
-
     private $videos;
     private $db;
 
-    public function __construct() {
+    const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
+
+    public function __construct()
+    {
         $this->db = new Database();
     }
 
     //
     // Retrieve all Videos
     //
-    public function getAllVideos () {
+    public function getAllVideos()
+    {
         try {
             $query = $this->db->connection->prepare(self::GET_VIDEOS);
             $query->execute();
             $this->videos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+            return [true, 'Retrieved all videos', $this->videos];
         } catch (error $e) {
-            // todo gather details of error and log/email
-            $this->videos = false;
+            new Mail('edward.bebbington@intercity.technology', 'Error: DB', $e);
+            return [false, 'Database error when retrieving videos', null];
         } finally {
             $this->db->closeDatabaseConnection();
-            return $this->videos;
         }
         // Returned data is: title, src, description, poster, width, height
     }
