@@ -19,7 +19,6 @@ class Comments
     private $comments;
     private $db;
     private $user;
-    private $result;
 
     //
     // SQL Strings
@@ -64,7 +63,6 @@ class Comments
     //
     public function addComment($data)
     {
-
         $comment    = $data[ 'comment' ];
         $datePosted = $data[ 'datePosted' ];
         $videoTitle = $data[ 'videoTitle' ];
@@ -80,13 +78,11 @@ class Comments
                 $query->bind_param('ssss', $author, $comment, $datePosted, $videoTitle);
                 $query->execute();
                 if ($query->affected_rows !== 1) {
-                    return false;
+                    return [false, 'Database was not affected after trying to add a comment', null];
                 }
-
-                // todo don't add a comment using JS, i should make ths seamless, possibly call the getComments function in JS at success of ajax call?
                 return [true, 'Added a comment', null];
             } catch (error $e) {
-                // todo log or email this error
+                new Mail('edward.bebbington@intercity.technology', 'Error: DB', $e);
                 return [false, 'Database error', null];
             }
         }
