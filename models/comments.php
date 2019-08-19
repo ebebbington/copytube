@@ -18,6 +18,7 @@ class Comments
   private $comments;
   private $db;
   private $user;
+  private $error;
 
   //
   // SQL Strings
@@ -42,7 +43,11 @@ class Comments
       $query->execute();
       $this->comments = $query->get_result()->fetch_all(MYSQLI_ASSOC);
     } catch (error $e) {
-      // todo handle error with email or something
+      new Mail(
+        'edward.bebbington@intercity.technology',
+        'Error: getComments',
+        $e
+      );
       $this->comments = false;
     } finally {
       $this->db->closeDatabaseConnection();
@@ -53,14 +58,21 @@ class Comments
   //
   // Add a Comment to DB
   //
-  public function addComment($postData)
+  public function addComment($data)
   {
-    $comment = $postData['comment'];
-    $datePosted = $postData['datePosted'];
-    $videoTitle = $postData['videoTitle'];
+    $comment = $data['comment'];
+    $datePosted = $data['datePosted'];
+    $videoTitle = $data['videoTitle'];
     $User = new User();
     $this->user = $User->getUser();
     $author = $this->user[0]['author'];
+    if (!author) {
+      error.success = false
+      return {
+        success: false,
+        message: 'No author was found'
+      };
+    }
 
     try {
       $query = $this->db->connection->prepare(self::ADD_COMMENT);
