@@ -71,10 +71,10 @@ class Comments
         $User       = new User();
         $this->user = $User->getUser();
         $author     = $this->user[ 0 ][ 'author' ];
-        if ( ! $comment || ! $datePosted) {
-            return false;
+        if ( ! $comment || ! $datePosted || !$videoTitle || !$author) {
+            return [false, 'Data is missing when trying to add a comment', null];
         }
-        if ($author) {
+        if ($author && $comment && $datePosted && $videoTitle) {
             try {
                 $query = $this->db->connection->prepare(self::ADD_COMMENT);
                 $query->bind_param('ssss', $author, $comment, $datePosted, $videoTitle);
@@ -84,9 +84,10 @@ class Comments
                 }
 
                 // todo don't add a comment using JS, i should make ths seamless, possibly call the getComments function in JS at success of ajax call?
-                return [$author, $comment, $datePosted, $videoTitle];
+                return [true, 'Added a comment', null];
             } catch (error $e) {
                 // todo log or email this error
+                return [false, 'Database error', null];
             }
         }
     }

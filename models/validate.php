@@ -33,6 +33,8 @@ class Validate
 
     private $db;
 
+    private $usernames;
+
     //
     // Initialise
     //
@@ -74,6 +76,7 @@ class Validate
             $this->db->closeDatabaseConnection();
             return [true, 'Successfully validated comment', $comment];
         } catch (Exception $e) {
+            new Mail('edward.bebbington@intercity.technology', 'Error: DB', $e);
             return [false, 'Error produced when using the DB to sanitise comment', $e];
         }
     }
@@ -96,32 +99,36 @@ class Validate
           || empty($username)
           || ! isset($username)
         ) {
-            return ['username', 'Enter a Username'];
+            return [false, 'Could not validate username', 'username'];
         }
         // Check RegEx
         if ( ! preg_match('/^[a-zA-Z ]*$/', $username)) {
-            return ['username', 'Only letters and whitespaces allowed'];
+            return [false, 'Only letters and whitespaces allowed', 'username'];
         }
         // Sanitise
         if ( ! filter_var($username, FILTER_SANITIZE_STRING)) {
-            return ['username', 'Remove tags'];
+            return [false, 'Remove tags', 'username'];
         }
         // Check if username exists
-        // todo :: add try/catch block
-        $this->db->openDatabaseConnection();
-        $query     = $this->db->connection->query(self::GET_ALL_USERNAMES);
-        $usernames = $query->fetch_all(MYSQLI_ASSOC);
-        $this->db->closeDatabaseConnection();
-        for ($i = 0, $l = sizeof($usernames); $i < $l; $i++) {
+        try {
+            $this->db->openDatabaseConnection();
+            $query     = $this->db->connection->query(self::GET_ALL_USERNAMES);
+            $this->usernames = $query->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            return [false, 'Database connection failed when getting usernames', $e];
+        } finally {
+            $this->db->closeDatabaseConnection();
+        }
+        for ($i = 0, $l = sizeof($this->usernames); $i < $l; $i++) {
             // IM A GENIUS
-            if ($username === $usernames[ $i ]) {
-                return ['username', 'Username already exists'];
+            if ($username === $this->usernames[ $i ]) {
+                return [false, 'Username already exists', 'username'];
                 break;
             }
         }
         $username = mysqli_real_escape_string($this->db->connection, $username);
 
-        return $username;
+        return [true, 'Successfully validated username', $username];
     }
 
     private function verifyEmail(
