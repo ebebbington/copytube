@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  nginx:
+    container_name: copytube_nginx
+    build:
+      context: .
+      dockerfile: .docker/nginx.dockerfile
+    volumes:
+      - ./src/copytube:/var/www/copytube
+    working_dir: /var/www/copytube
+    ports:
+      - "9002:9002"
+    networks:
+      - copytube-network
+
+  phpfpm:
+    container_name: copytube_phpfpm
+    build:
+      context: .
+      dockerfile: .docker/phpfpm.dockerfile
+    ports:
+      - "9003:9003"
+    volumes:
+      - ./src/copytube:/var/www/copytube
+    working_dir: /var/www/copytube
+    networks:
+      - copytube-network
+
+networks:
+  copytube-network:
+    driver: bridge
