@@ -8,48 +8,59 @@
 
 require_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/models/comments.php';
 require_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/models/validate.php';
+require_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/controllers/response.php';
 
 //
 // Set data
 //
-$data     = $_POST ?? $_GET;
-$action   = $data[ 'action' ];
-$Comments = new Comments();
-
-//
-// Quick null checks
-//
-if ( ! isset($data) || ! isset($action)) {
-  print_r(json_encode(FALSE));
-}
+$data            = $_POST ?? $_GET;
+$action          = $data[ 'action' ];
+$Comments        = new Comments();
 
 //
 // Handle the different actions
 //
 switch ($action) {
-  case 'getComments':
-    // Checks
-    if ( ! $data[ 'videoTitle' ]) {
-      print_r(json_encode(FALSE));
-    }
-    $comments = $Comments->getComments($data[ 'videoTitle' ]);
-    print_r(json_encode($comments));
-    break;
-  case 'addComment':
-    // Checks
-    if ( ! $data[ 'author' ] || ! $data[ 'comment' ] || $data[ 'datePosted' ] || ! $data[ 'videoTitle' ]) {
-      print_r(json_encode(FALSE));
-    }
-    $Validate = new Validate();
-    $comment  = $Validate->validateComment($data);
-    if ( ! $comment) {
-      print_r(json_encode(FALSE));
-    }
-    $Comments->addComment($data);
-    print_r(json_encode($comment));
-    break;
+    case 'getComments':
+        $result = $Comments->getComments($data[ 'videoTitle' ]);
+        new Response($result);
+        break;
+    case 'addComment':
+        $Validate = new Validate();
+        $checkComment  = $Validate->validateComment($data);
+        if ( ! $checkComment) {
+            $requestResponse->returnResponse(
+              false,
+              'Comment could not be validated',
+              null
+            );
+        }
+        if ($checkComment) {
+            $addComment = $Comments->addComment($data);
+            if (!$addComment) {
+                $requestResponse->returnResponse(
+                  false,
+                  'Comment could not be added to the database',
+                  null
+                );
+            }
+            if ($addComment) {
+                $requestResponse->returnResponse(
+                  true,
+                  'Comment was successfully added to the database',
+                  $addComment
+                );
+            }
+        }
+        $Comments->addComment($data);
+        print_r(json_encode($comment));
+        break;
 
-  default:
-
-    print_r(json_encode(FALSE));
+    default:
+        $requestResponse->returnResponse(
+          false,
+          'Action requested does not exist',
+          null
+        );
+        break;
 }
