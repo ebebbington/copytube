@@ -25,7 +25,7 @@ services:
     depends_on:
       - sql
     ports:
-      - "9003:9003"
+      - "9000:9000"
     volumes:
       - ./src/copytube:/var/www/copytube
     working_dir: /var/www/copytube
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: .docker/sql.dockerfile
     ports:
-      - "9004:3006"
+      - "3007:3006"
     env_file:
       - ./.docker/env/sql.env
     networks:
