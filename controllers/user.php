@@ -14,7 +14,6 @@ require_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/models/user.php';
 $data   = $_POST ?? $_GET;
 $action = $data[ 'action' ];
 $User   = new User();
-
 //
 // Quick null checks
 //
@@ -27,10 +26,8 @@ if ( ! isset($data) || ! isset($action)) {
 //
 switch ($data[ "action" ]) {
   case 'checkSession':
-    $isLoggedIn = $user->checkSession();
-    $db         = new Database();
-    $db->closeDatabaseConnection();
-    print_r(json_encode($isLoggedIn));
+    $result = $user->checkSession();
+    print json_encode($result);
     break;
   case 'login':
     $login = $user->login($data);
@@ -41,7 +38,7 @@ switch ($data[ "action" ]) {
   case 'register':
     $usernamePass = $User->register($data);
     if ($usernamePass[1] === false)  {
-      print_r(json_encode([$usernamePass[0], $user]))
+      print_r(json_encode([$usernamePass[0], $user]));
     }
     $db         = new Database();
     $db->closeDatabaseConnection();

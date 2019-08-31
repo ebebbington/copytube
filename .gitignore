@@ -4,3 +4,4 @@ data/error.txt
 package-lock.json
 .git
 mysql*
+data

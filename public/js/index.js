@@ -41,36 +41,12 @@ function api () {
 }
 
 //
-// Check if user is logged in
-//
-$.ajax({
-  type: 'POST',
-  url: '../controllers/user.php',
-  data: {
-    action: 'checkSession'
-  },
-  success: function (response) {
-    if (!JSON.parse(response)) {
-      alert(response)
-      window.location.href = '/views/login.html'
-    }
-  }
-})
-
-//
-// Display DOM on ready
-//
-$(window).on('load', function () {
-  $('#cover').hide()
-})
-
-//
 // Module Design Pattern
 //
-let IndexFunctionality = (function () {
+let Index = (function () {
   function init () {
     // /////////////////////////////////////////
-    //              Promises data
+    //              Initiate Promises
     // /////////////////////////////////////////
     const getUser = new Promise(function (resolve, reject) {
       $.ajax({
@@ -139,8 +115,37 @@ let IndexFunctionality = (function () {
       })
     })
     // /////////////////////////////////////////
-    //                Functions data
+    //                Initiate Functions
     // /////////////////////////////////////////
+    function isLoggedIn () {
+      $.ajax({
+        type: 'GET',
+        url: '../controllers/user.php?action=checkSession',
+        dataType: 'json',
+        success: function (data, state, response) {
+          const result = {
+            data: data,
+            state: state,
+            statusCode: response.status
+          }
+          // if an error occured or if user is not logged in
+          if (result.data.success === false || result.data === false) {
+            window.location.href = '/views/login.html'
+          }
+          console.table(result)
+        },
+        error: function (err, state, msg) {
+          alert('weyoooooo')
+          const errDetails = {
+            response: err.responseText,
+            message: msg,
+            state: state,
+             statusCode: err.status
+          }
+          console.table(errDetails)
+        }
+      })
+    }
     function logOut () {
       $.ajax({
         type: 'POST',
@@ -292,6 +297,7 @@ let IndexFunctionality = (function () {
     //                Load content
     // /////////////////////////////////////////
     (function () {
+      isLoggedIn()
       getUser
         .then(function (user) {
           $('#welcome').text(user[0]['username'] + ', welcome to CopyTube')
@@ -300,7 +306,7 @@ let IndexFunctionality = (function () {
       getContent('Something More')
     })()
     // /////////////////////////////////////////
-    //                Event Handler
+    //                Event Handlers
     // /////////////////////////////////////////
     $(document).ready(function () {
       //
@@ -345,8 +351,7 @@ let IndexFunctionality = (function () {
     key: init.getKey
   }
 })()
-
-IndexFunctionality.init()
+Index.init()
 
 /*
 // /////////////////////////////////////////

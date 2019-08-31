@@ -11,7 +11,7 @@ class Database
     private $servername;
     private $username;
     private $password;
-    private $databaseName;
+    private $database;
     /** @var mysqli $connection */
     public $connection;
     private $isConnected;
@@ -20,10 +20,12 @@ class Database
     // Initialise
     //
     public function __construct() {
-        $this->servername = "192.168.56.101";
-        $this->username = "root";
-        $this->password = "JahRastafarI1298";
-        $this->databaseName = "copytube";
+        $configPath = $_SERVER['DOCUMENT_ROOT']. '/config/copytube.ini';
+        $config = parse_ini_file($configPath, true);
+        $this->server = $config['Database']['servername'];
+        $this->username = $config['Database']['username'];
+        $this->password = $config['Database']['password'];
+        $this->database = $config['Database']['database'];
         $this->isConnected = false;
     }
 
@@ -33,7 +35,7 @@ class Database
     public function openDatabaseConnection () {
         // Failsafe
         if ($this->isConnected === false) {
-            $this->connection = new mysqli($this->servername, $this->username, $this->password, $this->databaseName);
+            $this->connection = new mysqli($this->server, $this->username, $this->password, $this->database);
             $this->isConnected = true;
         }
     }

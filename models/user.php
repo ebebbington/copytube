@@ -7,15 +7,18 @@ session_start();
  * Date: 22/02/2019
  * Time: 23:47
  */
+
 //
 // Error Handler - Log them
 //
-
 set_error_handler(function ($code, $text, $file, $line, $content) {
-  $fileSize = (filesize('../../data/error.txt') / 1000) / 1000; // in megabytes
+  $configPath = $_SERVER['DOCUMENT_ROOT']. '/config/copytube.ini';
+  $config = parse_ini_file($configPath, true);
+  $errorLogPath = $config['Logging']['error_log_file'];
+  $fileSize = (filesize($errorLogPath) / 1000) / 1000; // in megabytes
   $fileSize > 10 ? $writeType = 'w' : $writeType = 'a';
   $errorArray   = ["\nError: $code", "\nDescription: $text", "\nFile with error: $file", "\nLine: $line"];
-  $errorLogFile = fopen('../../data/error.txt', $writeType);
+  $errorLogFile = fopen($errorLogPath, $writeType);
   for ($i = 0; $i < sizeof($errorArray); $i++) {
     fwrite($errorLogFile, $errorArray[ $i ]);
   }
@@ -68,6 +71,7 @@ class User {
   public $email;
   private $user;
   private $userId;
+  private $result;
 
   //
   // Initialise Data
@@ -76,18 +80,26 @@ class User {
     $this->db = new Database();
     $this->db->openDatabaseConnection(); // DOES OPEN THE CONNECTION WITHOUT ANY OTHER LINES OF CODE AND CAN CLOSE FURTHER DOWN THE LINE
     $this->validate = new Validate();
+    $this->result = [
+      'success' => false,
+      'message' => '',
+      'data' => null
+    ];
   }
 
-  public function checkSession () {
+  public function isLoggedIn () {
     if (empty($_COOKIE[ 'sessionId1' ]) || empty($_COOKIE[ 'sessionId2' ])) {
-      // Divert back to login and remove all cookies
-      $this->logout();
-
-      return FALSE;
-      //return ['login', 'User is not logged in'];
+      // Clean all cookies
+      $this->unsetCookies();
+      $this->result['success'] = true;
+      $this->result['message'] = 'User is not logged in';
+      $this->result['data'] = false;
     } else {
-      return TRUE;
+      $this->result['success'] = true;
+      $this->result['message'] = 'User is logged in';
+      $this->result['data'] = true;
     }
+    return $this->result;
   }
 
   //
@@ -311,7 +323,6 @@ class User {
       session_abort();
       session_unset();
     }
-
     return FALSE;
   }
 
