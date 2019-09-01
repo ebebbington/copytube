@@ -207,6 +207,7 @@ class Validate
         // }
         // Check email against current emails
         try {
+            // todo :: getting all emails is so inefficient smh... just get them WHERE email = ? you pleb
             $this->db->openDatabaseConnection();
             $query  = $this->db->connection->query(self::GET_ALL_EMAILS);
             $emails = $query->fetch_all(MYSQLI_ASSOC);

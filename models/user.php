@@ -51,7 +51,7 @@ class User {
 
   const DELETE_SESSION = "DELETE FROM sessions WHERE user_id = ?";
 
-  const GET_CURRENT_USER = "SELECT * FROM users WHERE email_address = ?";
+  const FIND_USER = "SELECT * FROM users WHERE email_address = ? LIMIT 1";
 
   const INSERT_NEW_SESSION = "INSERT INTO sessions (session_id_1, session_id_2, user_id) VALUES (?, ?, ?)";
 
@@ -168,6 +168,29 @@ class User {
     curl_close($curl);
   }
 
+  /**
+   * Find a User
+   * 
+   * Find an account in the database with the email and password
+   * 
+   * @param string $email Used to look for a user with the password
+   * @param string $password Used to look for a user with the email
+   * @return bool true if user is found, false if not
+   */
+  public function findMatch ($email = '', $password = '') {
+    // Run a prepared SELECT statement (that would return data)
+    $this->db->openDatabaseConnection();
+    $query = $this->db->connection->prepare(self::FIND_USER);
+    $query->bind_param('s', $email);
+    $query->execute();
+    $user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+    if ($user && password_verify($password, $user[0]['password'])) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   //
   // Get User
   //
@@ -233,13 +256,15 @@ class User {
     setcookie("name", "", time() - 3600, '/');
   }
 
-  //
-  // Run Login Function
-  //
-  public function login ($postData) {
-    $emailInput    = $postData[ 'email' ];
-    $passwordInput = $postData[ 'password' ];
-    $user          = [];
+  /**
+   * Login using email
+   * 
+   * Log in a user after all checks have been made e.g. find()
+   * 
+   * @param string $email Email to use when logging in
+   * @return 
+   */
+  public function login ($email = '') {
     try {
       $query = $this->db->connection->prepare(self::GET_CURRENT_USER);
       $query->bind_param('s', $emailInput);

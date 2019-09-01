@@ -31,7 +31,7 @@ fieldset{
     text-align: center;
 }
 .incorrect-errors{
-    font-size: 10px;
+    font-size: 1.5em;
     color: red;
 }
 #register-success{

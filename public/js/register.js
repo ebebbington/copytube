@@ -76,6 +76,7 @@ function validateInput () {
         },
         dataType: 'json',
         success: function (data, status, jqXHR) {
+          alert('heyo')
           const response = {
             success: data.success,
             message: data.message,

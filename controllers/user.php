@@ -30,11 +30,20 @@ switch ($data[ "action" ]) {
     print json_encode($result);
     break;
   case 'login':
-    $login = $user->login($data);
-    $db    = new Database();
-    $db->closeDatabaseConnection();
-    print_r(json_encode($login));
-    break;
+    $foundAccount = $User->findMatch($data['email'], $data['password']);
+    switch ($foundAccount) {
+      case false:
+        print json_encode([
+          'success' => false,
+          'message' => 'Incorrect Email or Password',
+          'data' => null
+        ]);
+        break;
+      case true:
+        $result = $User->login($data['email']);
+        print json_encode($result);
+        break;
+    }
   case 'register':
     $Validate = new Validate();
     // Username

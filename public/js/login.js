@@ -1,4 +1,7 @@
 /* global $, alert */
+'use strict'
+
+// todo :: GLOBAL replace px with em
 function login () {
   // noinspection JSJQueryEfficiency
   $('#incorrect-credentials').text('')
@@ -12,44 +15,44 @@ function login () {
       password: $('#login-password').val(),
       action: 'login'
     },
-    success: function (output) {
-      let response = null
-      try {
-        response = JSON.parse(output)
-      } catch (e) {
-        response = output
+    dataType: 'json',
+    success: function (data, status, jqXHR) {
+      const response = {
+        success: data.success,
+        message: data.message,
+        data: data.data,
+        statusCode: jqXHR.status,
       }
-      switch (response) {
+      console.table(response)
+      switch (response.success) {
         case false:
           // noinspection JSJQueryEfficiency
-          $('#incorrect-credentials').text('Incorrect credentials')
+          $('#login-error').text(response.message)
           // noinspection JSJQueryEfficiency
           $('#incorrect-credentials').removeAttr('hidden')
-          $('#login-password').val('')
+          $('html', 'body').animate({scrollTop: 0}, 'slow')
+          //$('#login-form').trigger('reset')
           return false
         case true:
-          if (response[0] === 'login') {
-            window.location.href = '../views/index.html'
-          }
-          if (response[0] === 'lockout') {
-            $('#incorrect-credentials').text('Account has been locked out')
-            $('#login-email', '#login-password').text('')
-            return false
-          }
+          window.location.href = '../views/index.html'
       }
     },
     error: function (error) {
-      console.log(error)
-      return false
+      $('#login-error').removeAttr('hidden')
+      //$('#login-form').trigger('reset')
+      $('html', 'body').animate({scrollTop: 0}, 'slow')
+      // todo :: Log server side using email?
+      console.table(error)
     }
   })
 }
 
 $(function () {
-  $('#register-new-account').on('click', function () {
+  $('#go-to-register').on('click', function () {
     window.location.href = '../views/register.html' // ref: https://www.w3schools.com/howto/howto_js_redirect_webpage.asp
   })
-  $('#login-button').on('click', function () {
+  $('#login').on('click', function () {
+    $('#login-error').attr('hidden', 'hidden')
     return login()
   })
 })
