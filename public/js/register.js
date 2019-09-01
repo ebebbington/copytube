@@ -1,38 +1,69 @@
 /* global $, alert */
 
 function validateInput () {
+  function clearAndHideErrorFields () {
+    $('.incorrect-errors').text('')
+    $('.incorrect-errors').attr('hidden', 'hidden')
+  }
 
-  function checkUsername (username) {
+  function showError (field = '', msg = '') {
+    clearAndHideErrorFields()
+    $('#incorrect-' + field).removeAttr('hidden')
+    $('#incorrect-' + field).text(msg)
+    // Below was my approach as of 01/09/2019 after the full refactorment, after inspection i realise it could be done easier (see above)
+    // switch (field) {
+    //   case 'username':
+    //     $('#incorrect-username').removeAttr('hidden')
+    //     $('#incorrect-username').text(msg)
+    //     break
+    //   case 'email':
+    //       $('#incorrect-email').removeAttr('hidden')
+    //       $('#incorrect-email').text(msg)
+    //       break
+    //   case 'password':
+    //       $('#incorrect-password').removeAttr('hidden')
+    //       $('#incorrect-password').text(msg)
+    //       break
+    // }
+  }
+
+  function checkUsername (username = '') {
     if (username === null || username === undefined || username === '' || username.trim() === 0) {
-      $('.incorrect-errors').val('')
-      $('#incorrect-username').text('Enter a username')
+      showError('username', 'Enter a Username')
       return false
     }
     return username
   }
 
-  function checkEmail (email) {
+  function checkEmail (email = '') {
     if (email === null || email === undefined || email === '' || email.trim().length === 0) {
-      $('.incorrect-errors').val('')
-      $('#incorrect-email').text('Enter an email')
+      showError('email', 'Enter an Email')
       return false
     }
     return email
   }
 
-  function checkPassword (password) {
+  function checkPassword (password = '') {
     if (password === null || password === undefined || password === '' || password.trim().length === 0) {
-      $('.incorrect-errors').val('')
-      $('#incorrect-password').text('Enter a password')
+      showError('password', 'Enter a Password')
       return false
     }
     return password
   }
 
   (function () {
-    const username = checkUsername($('#register-username').val())
-    const email = checkEmail($('#register-email').val())
-    const password = checkPassword($('#register-password').val())
+    const username = checkUsername($('#username').val())
+    if (!username) {
+      return false
+    }
+    const email = checkEmail($('#email').val())
+    if (!email) {
+      return false
+    }
+    const password = checkPassword($('#password').val())
+    if (!password) {
+      return false
+    }
     if (username && email && password) {
       $.ajax({
         type: 'POST',
@@ -43,42 +74,31 @@ function validateInput () {
           password: password,
           action: 'register'
         },
-        success: function (output) {
-          let response = null
-          try {
-            response = JSON.parse(output)
-          } catch (e) {
-            response = output
+        dataType: 'json',
+        success: function (data, status, jqXHR) {
+          const response = {
+            success: data.success,
+            message: data.message,
+            data: data.data,
+            statusCode: jqXHR.status,
           }
-          if (response[0] === true) {
-            $('.register-fields').val('')
+          console.table(response)
+          if (response.success === true) {
             $('.incorrect-errors').text('')
+            $('#register-form').trigger('reset')
             $('#register-success').removeAttr('hidden')
-            $('html', 'body').animate({scrollTop: 0}, 'slow') // ref: https://stackoverflow.com/questions/4147112/how-to-jump-to-top-of-browser-page
+            $('html', 'body').animate({scrollTop: 0}, 'slow')
             return false
           }
-          // means there is an error and it can ONLY be name, email or pass so display the error message
-          $('.incorrect-errors').text('') // prepare for an error to show
-          switch (response[0]) {
-            case 'username':
-              $('#incorrect-username').text(response[1])
-              $('#incorrect-username').focus()
-              break
-            case 'email':
-              $('#incorrect-email').text(response[1])
-              $('#incorrect-email').focus()
-              break
-            case 'password':
-              $('#incorrect-password').text(response[1])
-              $('#incorrect-password').focus()
-              break
-            default:
-              alert('theres an error here')
-              alert(response)
-          }
+          // else theres a problem
+          showError(response.data, response.message)
         },
         error: function (error) {
-          alert('ajax caught error in error function: ' + JSON.parse(error))
+          $('#register-error').removeAttr('hidden')
+          $('#register-form').trigger('reset')
+          $('html', 'body').animate({scrollTop: 0}, 'slow')
+          // todo :: Log server side using email?
+          console.table(error)
         }
       })
     }
@@ -161,11 +181,13 @@ function validateInput () {
 
 $(document).ready(function () {
   // Allow the user to go to the login page
-  $('#go-back').on('click', function () {
+  $('#go-to-login').on('click', function () {
     window.location.href = '/views/login.html'
   })
   // Validate input and try to register user
-  $('#register-button').on('click', function () {
+  $('#register').on('click', function () {
+    // CLEAR THE SUCCESS ABNNER IF ACTIVE
+    $('.register-alerts').attr('hidden', 'hidden')
     return validateInput()
   })
 })

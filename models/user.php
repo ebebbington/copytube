@@ -61,6 +61,8 @@ class User {
 
   const SET_LOGGED_IN = "UPDATE users SET loggedIn = 0 WHERE email_address = ?";
 
+  const ADD_NEW_USER = "INSERT INTO users (username, email_address, password, loggedIn, login_attempts) VALUES (?, ?, ?, ?, ?)";
+
   //
   // Static Variables
   //
@@ -329,8 +331,31 @@ class User {
   //
   // Run Register function
   //
-  public function register ($postData) {
-    return $this->validate->validateUsername($postData);
+  public function register ($username = '', $email = '', $password = '') {
+    $loggedIn      = 1; // For not logged in
+    $loginAttempts = 3;
+    $hash          = password_hash($password, PASSWORD_BCRYPT);
+    try {
+      $this->db->openDatabaseConnection();
+      $query = $this->db->connection->prepare(self::ADD_NEW_USER);
+      $query->bind_param('sssii', $username, $email, $hash, $loggedIn, $loginAttempts);
+      $query->execute();
+      $this->db->closeDatabaseConnection();
+      if ($query->affected_rows < 1 || $query->affected_rows > 1) {
+        return [
+          'success' => false,
+          'message' => 'There was a problem creating an account',
+          'data' => 'register'
+        ];
+      }
+      return [
+        'success' => true,
+        'message' => 'Account successfully created',
+        'data' => 'register'
+      ];
+    } catch (Exception $e) {
+      var_dump($e);
+    } 
   }
 
   //

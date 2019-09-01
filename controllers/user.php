@@ -36,13 +36,40 @@ switch ($data[ "action" ]) {
     print_r(json_encode($login));
     break;
   case 'register':
-    $usernamePass = $User->register($data);
-    if ($usernamePass[1] === false)  {
-      print_r(json_encode([$usernamePass[0], $user]));
+    $Validate = new Validate();
+    // Username
+    $usernameResult = $Validate->validateUsername($data['username']);
+    if ($usernameResult['success'] === false) {
+      print json_encode($usernameResult);
+      exit();
     }
-    $db         = new Database();
-    $db->closeDatabaseConnection();
-    print_r(json_encode($registered));
+    // Email
+    $emailResult = $Validate->validateEmail($data['email']);
+    if ($emailResult['success'] === false) {
+      print json_encode($emailResult);
+      exit();
+    }
+    // Password
+    $passwordResult = $Validate->validatePassword($data['password']);
+    if ($passwordResult['success'] === false) {
+      print json_encode($passwordResult);
+      exit();
+    }
+    // Compare username and password
+    $username = $usernameResult['data'];
+    $email = $emailResult['data'];
+    $password = $passwordResult['data'];
+    $isSimilar = $Validate->compareStrings($username, $password);
+    if ($isSimilar) {
+      print json_encode([
+        'success' => false,
+        'message' => 'Username and password cannot be the same or contain eachother',
+        'data' => 'username'
+      ]);
+    }
+    // Register account
+    $result = $User->register($username, $email, $password);
+    print json_encode($result);
     break;
   case 'logout':
     $logout = $user->logout();

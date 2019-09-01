@@ -3,16 +3,13 @@ fieldset{
 }
 
 .register{
-    margin-left: 22em;
-    margin-top: 2em;
-    padding: 2px 6px 2px 6px;
-    border: 1px solid #CCCCCC;
-    border-right-color: #333333;
-    border-bottom-color: #333333;
-    margin-right: 22.2em;
+    border: 0.2em solid rgb(190, 46, 46);
+    border-radius: 0.5em;
+    width: 100%;
+    margin-top: 1em;
 }
 
-#register-button{
+#register {
     margin: 2em;
     width: 40%;
     font: bold 11px Arial;
@@ -23,13 +20,15 @@ fieldset{
     border-right-color: #333333;
     border-bottom-color: #333333;
 }
+
 .register-fields{
-    width: 100%;
+    width: 50%;
+    margin: auto;
     text-align: center;
 }
 #go-back{
-    margin-left: 40em;
-    margin-top: 2em;
+    margin-top: 1em;
+    text-align: center;
 }
 .incorrect-errors{
     font-size: 10px;
@@ -37,5 +36,9 @@ fieldset{
 }
 #register-success{
     font-size: 20px;
-    color: green
+    color: green;
+}
+#register-error {
+    font-size: 20px;
+    color: red;
 }

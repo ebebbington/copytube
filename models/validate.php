@@ -18,13 +18,11 @@ class Validate
     //
     // SQL Queries
     //
-    const ADD_NEW_USER = "INSERT INTO users (username, email_address, password, loggedIn, login_attempts) VALUES (?, ?, ?, ?, ?)";
-
     const SELECT_ALL_USERS = "SELECT * FROM users";
 
     const GET_ALL_USERNAMES = "SELECT username FROM users";
 
-    const GET_ALL_EMAILS = "SELECT email FROM users";
+    const GET_ALL_EMAILS = "SELECT email_address FROM users";
 
     //
     // Initialise data
@@ -91,7 +89,7 @@ class Validate
     // Validate Password
     //      v
     // Register User
-    public function validateUsername($username)
+    public function validateUsername($username = '')
     {
         // Validate
         if (strlen($username) > $this->maxlength || trim($username) === 0
@@ -99,15 +97,16 @@ class Validate
           || empty($username)
           || ! isset($username)
         ) {
-            return [false, 'Could not validate username', 'username'];
+            return ['success' => false, 'message' => 'Username is either empty or too long', 'data' => 'username'];
         }
         // Check RegEx
-        if ( ! preg_match('/^[a-zA-Z ]*$/', $username)) {
-            return [false, 'Only letters and whitespaces allowed', 'username'];
+        if (preg_match("/^[a-zA-Z ]*$/", $username) !== 1) {
+            return ['success' => false, 'message' => 'Only letters and whitespaces are allowed', 'data' => 'username'];
         }
         // Sanitise
-        if ( ! filter_var($username, FILTER_SANITIZE_STRING)) {
-            return [false, 'Remove tags', 'username'];
+        $username = filter_var($username, FILTER_SANITIZE_STRING);
+        if (!$username) {
+            return ['success' => false, 'message' => 'Tags are not allowed', 'data' => 'username'];
         }
         // Check if username exists
         try {
@@ -122,13 +121,22 @@ class Validate
         for ($i = 0, $l = sizeof($this->usernames); $i < $l; $i++) {
             // IM A GENIUS
             if ($username === $this->usernames[ $i ]) {
-                return [false, 'Username already exists', 'username'];
+                return [
+                    'success' => false,
+                    'message' => 'Username already exists',
+                    'data' => 'username'
+                ];
                 break;
             }
         }
+        $this->db->openDatabaseConnection();
         $username = mysqli_real_escape_string($this->db->connection, $username);
-
-        return [true, 'Successfully validated username', $username];
+        $this->db->closeDatabaseConnection();
+        return [
+            'success' => true,
+            'message' => 'Username successfuly validated',
+            'data' => $username
+        ];
     }
 
     private function verifyEmail(
@@ -160,64 +168,114 @@ class Validate
         }
     }
 
-    private function validateEmail($email)
+    public function validateEmail($email)
     {
         // Validate
-        if (trim($email) === 0 || $email === null || empty($email)
-          || ! filter_var($email, FILTER_VALIDATE_EMAIL)
-        ) {
-            return ['email', 'Enter an email following the correct format'];
+        if (trim($email) === 0 || $email === null || empty($email)) {
+            return [
+                'success' => false,
+                'message' => 'Enter a correct format',
+                'data' => 'email'
+            ];
         }
         // Sanitise
-        if ( ! filter_var($email, FILTER_SANITIZE_EMAIL)) {
-            return ['email', 'Remove tags'];
+        // todo :: use FILTER_VALIDATE_EMAIL too
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!$email) {
+            return [
+                'success' => false,
+                'message' => 'Emaildoes not follow the policy',
+                'data' => 'email'
+            ];
+        }
+        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+        if (!$email) {
+            return [
+                'success' => false,
+                'message' => 'Remove tags',
+                'data' => 'email'
+            ];
         }
         // RegEx
-        if ( ! preg_match("[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$", $email)) {
-            return ['email', false, 'Doesnt match regular expression'];
-        }
+        // todo :: find a working email regex
+        // if (preg_match("[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]{2,}", $email) !== 1) {
+        //     return [
+        //         'success' => false,
+        //         'message' => 'Doesnt match expression',
+        //         'data' => 'email'
+        //     ];
+        // }
         // Check email against current emails
-        // todo :: add try/catch block
-        $this->db->openDatabaseConnection();
-        $query  = $this->db->connection->query(self::GET_ALL_EMAILS);
-        $emails = $query->fetch_all(MYSQLI_ASSOC);
-        for ($i = 0, $l = sizeof($emails); $i < $l; $i++) {
-            // IM A GENIUS
-            if ($email === $emails[ $i ]) {
-                return ['email', false, 'Email already exists'];
-                break;
+        try {
+            $this->db->openDatabaseConnection();
+            $query  = $this->db->connection->query(self::GET_ALL_EMAILS);
+            $emails = $query->fetch_all(MYSQLI_ASSOC);
+            for ($i = 0, $l = sizeof($emails); $i < $l; $i++) {
+                $existingEmail = $emails[1]['email_address'];
+                // IM A GENIUS
+                if ($email === $existingEmail) {
+                    return [
+                        'success' => false,
+                        'message' => 'Email already exists',
+                        'data' => 'email'
+                    ];
+                    break;
+                }
             }
-        }
+        } catch (Exception $e) { var_dump($e); };
         $email = mysqli_real_escape_string($this->db->connection, $email);
 
-        return $email;
+        return [
+            'success' => true,
+            'message' => 'Scuessfully validated email',
+            'data' => $email
+        ];
     }
 
-    private function validatePassword($password)
+    public function compareStrings ($string1 = '', $string2 = '') {
+        if (!$string1 || !$string2) {
+            return true;
+        }
+        if ($string1 === $string2 || strpos($string2, $string1) !== false) {
+            return true;
+        }
+        return false;
+    }
+
+    public function validatePassword($password)
     {
         // Validate
         if (trim($password) === 0 || $password === null || empty($password)
           || ! isset($password)
         ) {
-            return ['password', false, 'Enter a password'];
+            return [
+                'success' => false,
+                'message' => 'Enter a password',
+                'data' => 'password'
+            ];
         }
         if (strlen($password) < 8) {
-            return ['password', false, 'Password must contain 8 or more characters'];
+            return [
+                'success' => false,
+                'message' => 'Password must cotain 8 or more characters',
+                'data' => 'password'
+            ];
         }
         // Password - Find a number - personal algorithm
         $numberFound = false;
-        while ($numberFound !== true) {
-            for ($i = 0, $l = strlen($password); $i < $l; $i++) {
-                $value = $password[ $i ];
-                if (is_numeric($value)) {
-                    $numberFound = true;
-                    break;
-                }
-            }
-            if ($numberFound !== true) {
-                return ['password', 'Must contain at least one number'];
+        for ($i = 0, $l = strlen($password); $i < $l; $i++) {
+            $value = $password[ $i ];
+            if (is_numeric($value)) {
+                $numberFound = true;
                 break;
             }
+        }
+        if ($numberFound !== true) {
+            return [
+                'success' => false,
+                'message' => 'Password must contain at least 1 number',
+                'data' => 'password'
+            ];
         }
         if ($numberFound === true) {
             // Password - Self created algorithm - MADE IT WORK - ctype_[] didn't account for other characters than letters
@@ -237,59 +295,33 @@ class Validate
               || ctype_lower(implode($passOnlyLetters))
             ) {
                 return [
-                  'password',
-                  'Must contain at least one upper and lowercase character',
+                    'success' => false,
+                    'message' => 'Must contain at least 1 or more uppercase and lowercase letters',
+                    'data' => 'password'
                 ];
-            } /* PLACE THIS SECTION IN CONTROLLER
-      else {
-        if ($username === $password) {
-          return [
-            'password',
-            'Password cannot be the same as the username',
-          ];
-        }
-        else {
-          // Password
-          if (strpos($password, $username) !== FALSE) {
-            return ['password', 'Password cannot contain username'];
-          }
-      */
-            else {
-                if ( ! filter_var($password, FILTER_SANITIZE_STRING)) {
-                    return ['password', 'Remove tags'];
-                } else {
-                    $this->db->openDatabaseConnection();
-                    $password = mysqli_real_escape_string($this->db->connection,
-                      $password);
-
-                    return $password;
-                }
+            }
+            if ( ! filter_var($password, FILTER_SANITIZE_STRING)) {
+                return [
+                    'success' => false,
+                    'message' => 'Remove tags',
+                    'data' => 'password'
+                ];
+            } else {
+                $this->db->openDatabaseConnection();
+                $password = mysqli_real_escape_string($this->db->connection,
+                    $password);
+                $this->db->closeDatabaseConnection();
+                return [
+                    'success' => true,
+                    'message' => 'Successfully validated',
+                    'data' => $password
+                ];
             }
         }
-
-        return false;
+        return [
+            'success' => false,
+            'message' => 'Please enter at least one number',
+            'data' => 'password'
+        ];
     }
-
-    private
-    function registerUser(
-      $username,
-      $email,
-      $password
-    ) {
-        $loggedIn      = 1; // For not logged in
-        $loginAttempts = 3;
-        $hash          = password_hash($password, PASSWORD_BCRYPT);
-        // todo :: try block
-        $query = $this->db->connection->prepare(self::ADD_NEW_USER);
-        $query->bind_param('sssii', $username, $email, $hash, $loggedIn,
-          $loginAttempts);
-        $query->execute();
-        if ($query->affected_rows < 1 || $query->affected_rows > 1) {
-            return ['Query did not affect the database or created more than one field'];
-        }
-        $this->db->closeDatabaseConnection();
-
-        return [true];
-    }
-
 }
