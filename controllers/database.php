@@ -123,7 +123,7 @@ class Database
      *      bool success If the query succeeded
      *      string message The message to be passed back with the success property
      */
-    public function runQuery ($sql = '', $data = []) {
+    public function runQuery (String $sql = '', Array $data = []) {
         // The database already makes a connection below, no need to specifically open it
         $result = [
             'rowCount' => 0,
@@ -134,6 +134,10 @@ class Database
         try {
             $query = $this->pdo->prepare($sql);
             $query->execute($data); // Not a problem if there isnt any
+            // Check any data was found to respond with a problem
+            if ($query->rowCount() < 1) {
+                return $result;
+            }
             // Grab the results
             $result['rowCount'] = $query->rowCount();
             $result['data'] = $query->fetchAll(PDO::FETCH_ASSOC);

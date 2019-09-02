@@ -6,38 +6,40 @@
  * Time: 23:41
  */
 
-// todo Add nice beautiful comments
-
 include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/controllers/database.php';
 
 class Videos
 {
-    private $videos;
-    private $db;
-
-    const GET_VIDEOS = "SELECT title, src, description, poster, width, height FROM videos";
+    const GET_VIDEO_BY_TITLE = "SELECT * FROM videos WHERE title = ?";
+    const GET_VIDEOS_FOR_RABBIT_HOLE = "SELECT * FROM videos WHERE title != ? LIMIT 2" // not main video title
 
     public function __construct()
     {
-        $this->db = new Database();
     }
 
-    //
-    // Retrieve all Videos
-    //
-    public function getAllVideos()
-    {
-        try {
-            $query = $this->db->connection->prepare(self::GET_VIDEOS);
-            $query->execute();
-            $this->videos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-            return [true, 'Retrieved all videos', $this->videos];
-        } catch (error $e) {
-            new Mail('edward.bebbington@intercity.technology', 'Error: DB', $e);
-            return [false, 'Database error when retrieving videos', null];
-        } finally {
-            $this->db->closeDatabaseConnection();
-        }
-        // Returned data is: title, src, description, poster, width, height
+    /**
+     * Get a single video matching the clicked one
+     * 
+     * @param String $videoTitle The clicked video's title
+     * @return Array [rowCount, data, success, message]
+     */
+    public function getClickedVideo (String $videoTitle = '') {
+        $db = new Database();
+        $result = $db->runQuery(self::GET_VIDEO_BY_TITLE, [$videoTitle]);
+        return $result;
+    }
+
+    /**
+     * Get rabbit hole videos that arent the clicked video
+     * 
+     * This section is executed when a main video is found i.e. find the main video then get the rabbit hole videos
+     * 
+     * @param String $mainVideoTitle The main video's title to NOT grab
+     * @return Array [rowCount, data, success, message]
+     */
+    public function getVideosForRabbitHole (String $mainVideoTitle = '') {
+        $db = new Database();
+        $result = $db->query->runQuery(self::GET_VIDEOS_FOR_RABBIT_HOLE, [$mainVideoTitle]);
+        return $result;
     }
 }
