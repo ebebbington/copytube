@@ -18,7 +18,11 @@ $User   = new User();
 // Quick null checks
 //
 if ( ! isset($data) || ! isset($action)) {
-  print_r(json_encode(FALSE));
+  print json_encode([
+    'success' => false,
+    'message' => 'Some data hasnt been passed in with the AJAX request',
+    'data' => null
+  ]));
 }
 
 //

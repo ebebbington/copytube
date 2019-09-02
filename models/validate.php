@@ -27,7 +27,7 @@ class Validate
     //
     // Initialise data
     //
-    private $maxlength = 40;
+    private $usernameMaxLen = 40;
 
     private $db;
 
@@ -79,20 +79,22 @@ class Validate
         }
     }
 
-    //
-    // Validate Username
-    //      v
-    // Verify Email
-    //      v
-    // Validate Email
-    //      v
-    // Validate Password
-    //      v
-    // Register User
+    /**
+     * Validate and Sanitise a Username
+     * 
+     * This is for specifically validating and sanitising a username upon registering an
+     * account, or for more further into the future
+     * 
+     * @param string $username The username field in the register form
+     * @return array $result Array holding the result information of function call
+     * bool ['success'] If the execution followed through as expected
+     * string ['message'] Message to be accompanied with the success
+     * any ['data'] data to be passed back containing needed information
+     */
     public function validateUsername($username = '')
     {
         // Validate
-        if (strlen($username) > $this->maxlength || trim($username) === 0
+        if (strlen($username) > $this->usernameMaxLen || trim($username) === 0
           || $username === null
           || empty($username)
           || ! isset($username)
@@ -109,18 +111,15 @@ class Validate
             return ['success' => false, 'message' => 'Tags are not allowed', 'data' => 'username'];
         }
         // Check if username exists
-        try {
-            $this->db->openDatabaseConnection();
-            $query     = $this->db->connection->query(self::GET_ALL_USERNAMES);
-            $this->usernames = $query->fetch_all(MYSQLI_ASSOC);
-        } catch (Exception $e) {
-            return [false, 'Database connection failed when getting usernames', $e];
-        } finally {
-            $this->db->closeDatabaseConnection();
+        $db = new Database();
+        $result = $db->runQuery(self::GET_ALL_USERNAMES)
+        if ($result['success'] === false) {
+            return $result;
         }
-        for ($i = 0, $l = sizeof($this->usernames); $i < $l; $i++) {
+        $usernames = $result['data'];
+        for ($i = 0, $l = sizeof($usernames); $i < $l; $i++) {
             // IM A GENIUS
-            if ($username === $this->usernames[ $i ]) {
+            if ($username === $usernames[ $i ]) {
                 return [
                     'success' => false,
                     'message' => 'Username already exists',
@@ -129,9 +128,6 @@ class Validate
                 break;
             }
         }
-        $this->db->openDatabaseConnection();
-        $username = mysqli_real_escape_string($this->db->connection, $username);
-        $this->db->closeDatabaseConnection();
         return [
             'success' => true,
             'message' => 'Username successfuly validated',

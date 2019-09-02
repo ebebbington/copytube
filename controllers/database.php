@@ -80,26 +80,31 @@ class Database
     // Initialise
     //
     public function __construct() {
-        // Set database credentials
-        $configPath = $_SERVER['DOCUMENT_ROOT'] . '/config/copytube.ini';
-        $config = parse_ini_file($configPath, true);
-        $this->server = $config['Database']['server'];
-        $this->username = $config['Database']['username'];
-        $this->password = $config['Database']['password'];
-        $this->database = $config['Database']['database'];
+        try {
+            // Set database credentials
+            $configPath = $_SERVER['DOCUMENT_ROOT'] . '/config/copytube.ini';
+            $config = parse_ini_file($configPath, true);
+            $this->server = $config['Database']['server'];
+            $this->username = $config['Database']['username'];
+            $this->password = $config['Database']['password'];
+            $this->database = $config['Database']['database'];
 
-        // Pepare options for PDO
-        $this->options = [
-            PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ];
+            // Pepare options for PDO
+            $this->options = [
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ];
 
-        // Prepare dsn for PDO
-        $this->dsn = "mysql:host=$this->server;dbname=$this->database;charset=utf8mb4";
+            // Prepare dsn for PDO
+            $this->dsn = "mysql:host=$this->server;dbname=$this->database;charset=utf8mb4";
 
-        // Set pdo
-        $this->pdo = new PDO($this->dsn, $this->username, $this->password, $this->options);
+            // Set pdo
+            $this->pdo = new PDO($this->dsn, $this->username, $this->password, $this->options);
+        } catch (Exception $e) {
+            // todo :: log and handle
+            throw new Exception($e);
+        }
     }
 
     /**
