@@ -34,15 +34,15 @@ CREATE TABLE `comments` (
   `id` int(11) NOT NULL,
   `comment` varchar(400) NOT NULL,
   `author` varchar(80) NOT NULL,
-  `dateposted` date NOT NULL,
-  `title` varchar(200) NOT NULL
+  `date_posted` date NOT NULL,
+  `video_posted_on` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `comments`
 --
 
-INSERT INTO `comments` (`id`, `comment`, `author`, `dateposted`, `title`) VALUES
+INSERT INTO `comments` (`id`, `comment`, `author`, `date_posted`, `video_posted_on`) VALUES
 (90, 'An Iceland Venture 1', 'h', '2018-10-24', 'An Iceland Venture'),
 (91, 'An Iceland Venture 2', 'h', '2018-10-24', 'An Iceland Venture'),
 (92, 'Lava Sample 1', 'h', '2018-10-24', 'Lava Sample'),
@@ -183,7 +183,7 @@ CREATE TABLE `users` (
   `username` varchar(40) NOT NULL,
   `email_address` varchar(50) NOT NULL,
   `password` varchar(80) NOT NULL,
-  `loggedIn` tinyint(1) NOT NULL,
+  `logged_in` tinyint(1) NOT NULL,
   `login_attempts` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -191,7 +191,7 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email_address`, `password`, `loggedIn`, `login_attempts`) VALUES
+INSERT INTO `users` (`id`, `username`, `email_address`, `password`, `logged_in`, `login_attempts`) VALUES
 (20, 'Edward Work', 'edward.bebbington@intercity.technology', '$2y$10$NItdrDuiuOpB6cdamy3NKekjvdylBjYvCoepjJPQR0d5eAC0IKxNa', 1, 2),
 (21, 'Edward Home', 'EdwardSBebbington@hotmail.com', '$2y$10$Arh7UfnUuyl8UOZlhmmiquAWtcJdq9YE0fj.bbUx4dNl5DnUW3oxS', 0, 0),
 (23, 'test', 'test@hotmail.com', '$2y$10$DCTZq7Wm4SfmAV2Bu4DVXO6MGWgE33jZ6QnKSazq7XEH6ssOCvyam', 0, 3);
