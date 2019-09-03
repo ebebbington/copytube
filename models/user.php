@@ -45,23 +45,25 @@ class User {
   //
   // SQL Queries
   //
-  const GET_USER_ID = "SELECT user_id FROM sessions WHERE session_id_2 = ?";
+  const GET_USER_ID_BY_SESSIONID2 = "SELECT user_id FROM sessions WHERE session_id_2 = ? LIMIT 1";
 
-  const LOGOUT_USER = "UPDATE users SET loggedIn = 1 WHERE id = ?";
+  const GET_USER_BY_USER_ID = "SELECT * FROM users WHERE id = ? LIMIT 1";
 
-  const DELETE_SESSION = "DELETE FROM sessions WHERE user_id = ?";
+  const LOG_USER_OUT_BY_ID = "UPDATE users SET logged_in = 1 WHERE id = ?";
 
-  const FIND_USER = "SELECT * FROM users WHERE email_address = ? LIMIT 1";
+  const DELETE_SESSION_BY_USER_ID = "DELETE FROM sessions WHERE user_id = ?";
 
-  const INSERT_NEW_SESSION = "INSERT INTO sessions (session_id_1, session_id_2, user_id) VALUES (?, ?, ?)";
+  const GET_USER_BY_EMAIL = "SELECT * FROM users WHERE email_address = ? LIMIT 1";
+
+  const CREATE_SESSION = "INSERT INTO sessions (session_id_1, session_id_2, user_id) VALUES (?, ?, ?)";
 
   const UPDATE_LOGIN_ATTEMPTS = "UPDATE users SET login_attempts = ? WHERE email_address = ?";
 
   const GET_ALL_USERS = "SELECT * FROM users";
 
-  const SET_LOGGED_IN = "UPDATE users SET loggedIn = 0 WHERE email_address = ?";
+  const LOG_USER_IN_BY_ID = "UPDATE users SET logged_in = 0 WHERE id = ?";
 
-  const ADD_NEW_USER = "INSERT INTO users (username, email_address, password, loggedIn, login_attempts) VALUES (?, ?, ?, ?, ?)";
+  const CREATE_USER = "INSERT INTO users (username, email_address, password, logged_in, login_attempts) VALUES (?, ?, ?, ?, ?)";
 
   //
   // Static Variables
@@ -73,76 +75,135 @@ class User {
   public $email;
   private $user;
   private $userId;
-  private $result;
+  private $maxLoginAttempts = 3;
 
   //
   // Initialise Data
   //
   public function __construct () {
-    $this->db = new Database();
-    $this->db->openDatabaseConnection(); // DOES OPEN THE CONNECTION WITHOUT ANY OTHER LINES OF CODE AND CAN CLOSE FURTHER DOWN THE LINE
-    $this->validate = new Validate();
-    $this->result = [
-      'success' => false,
-      'message' => '',
+  }
+
+  /**
+   * Checks the Cookies are Set
+   * 
+   * Checks if sessionId1 and sessionId2 cookies are set and valid
+   * 
+   * @return Array [success, message, data] The resulting object
+   */
+  public function areCookiesSet () {
+    $cookies = [$_COOKIE['sessionId1'], $sessionId2 = $_COOKIE['sessionId2']];
+    for ($i = 0, $l = (sizeof($cookies) - 1); $i < $l; $i++) {
+      $c = $cookies[$i];
+      if ($c === null || empty($c) || !isset($c) || !$c) {
+        return [
+          'success' => false,
+          'message' => "A require cookie is not set",
+          'data' => null
+        ];
+        break;
+      }
+    }
+    return [
+      'success' => true,
+      'message' => "Cookies are set",
       'data' => null
     ];
   }
 
-  public function isLoggedIn () {
-    if (empty($_COOKIE[ 'sessionId1' ]) || empty($_COOKIE[ 'sessionId2' ])) {
-      // Clean all cookies
-      $this->unsetCookies();
-      $this->result['success'] = true;
-      $this->result['message'] = 'User is not logged in';
-      $this->result['data'] = false;
-    } else {
-      $this->result['success'] = true;
-      $this->result['message'] = 'User is logged in';
-      $this->result['data'] = true;
-    }
-    return $this->result;
-  }
-
-  //
-  // Generate API Key
-  //
-  private function generateKey () {
+  /**
+   * Generate an API Key
+   * 
+   * Generate a key for an API, specifically the one i created
+   * 
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  private function generateKeyForAPI () {
     try {
       $key = bin2hex(random_bytes(32));
-
-      return $key;
-    } catch (exception $e) {
-      return ['login', FALSE, 'Could not generate an API key'];
+      return ['success' => true, 'message' => 'Created the API key', 'data' => $key];
+    } catch (Exception $e) {
+      return ['success', 'message' => 'Failed to generate an API key', 'data' => false];
     }
   }
 
-  //
-  // Get API Key
-  //
-  public function getKey () {
-    if (isset($_SESSION[ 'key' ])) {
-      $userKey = [$_SESSION[ 'key' ][ 0 ], $_SESSION[ 'key' ][ 1 ]];
-
-      return json_encode($userKey);
+  /**
+   * Save the API key
+   * 
+   * Save the API key that can be generated into the session object
+   * 
+   * @param Int $key The key to be used in the API request
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  public function saveAPIKey (Int $key = null) {
+    if (!$key) {
+      return [
+        'success' => false,
+        'message' => 'No API key has been set',
+        'data' => null
+      ];
     }
-
-    return json_encode(['key', 'Session key is not set']);
+    $_SESSION['APIKey'] = $key;
+    return [
+      'success' => true,
+      'message' => 'The API key has been saved into the session object',
+      'data' => null
+    ];
   }
 
-  //
-  // Save API Key
-  //
-  private function saveKey ($key, $uid) {
+  /**
+   * Get the API key from the session object
+   * 
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  public function getAPIKey () {
+    if (isset($_SESSION[ 'APIKey' ])) {
+      return [
+        'success' => true,
+        'message' => 'Got the API key',
+        'data' => $_SESSION['APIKey']
+      ];
+    }
+    return [
+      'success' => false,
+      'message' => 'Could not find the API Key',
+      'data' => null
+    ];
+  }
+
+  // COME BACK TO ME, I NEED RETHINKING
+  public function sendAPIKey ($uid) {
+    $result = $this->getAPIKey();
+    if ($result['success'] === false) {
+      return [
+        'success' => false,
+        'message' => 'Could not grab the API key to be sent',
+        'data' => null
+      ];
+    }
+    $key = $result['data'];
+    // todo :: get userID
+    $userId = 0;
     // Save key in memory
-    $userKey           = [$uid, $key];
-    $_SESSION[ 'key' ] = $userKey;
+    // $userKey           = [$uid, $key];
+    // $_SESSION[ 'key' ] = $userKey;
     // Save to API
-    $apiUrl    = 'http://localhost:3003/keys';
+    $APIUrl    = 'http://localhost:3003/keys';
     $curl      = curl_init($apiUrl);
     $data      = new stdClass();
-    $data->uid = $uid;
-    $data->key = $key;
+    $data->uid = $userId;
+    $data->key = $key();
     $json      = json_encode($data);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($curl, CURLOPT_POST, TRUE);
@@ -152,6 +213,7 @@ class User {
     curl_close($curl);
   }
 
+  // COME BACK TO ME I NEED ETHINKING
   public function deleteKey () {
     $key = $_SESSION[ 'key' ][ 1 ];
     unset($_SESSION[ 'key' ]);
@@ -169,159 +231,239 @@ class User {
   }
 
   /**
+   * Check a login password against a password in the database matching the email
+   * 
+   * @param String $rawPassword The raw password
+   * @param String $passwordHash The password taken from the database
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  public function doPasswordsMatch (String $rawPassword = null, String $passwordHash = null) {
+    if (!$password || !$passwordHash) {
+      return [
+        'success' => false,
+        'message' => 'One of the parameters is not set',
+        'data' => null
+      ];
+    }
+    if (!password_verify($password, $passwordHash)) {
+      return [
+        'success' => false,
+        'message' => 'Passwords do not match',
+        'data' => null
+      ];
+    }
+    return [
+      'success' => true,
+      'message' => 'Passwords match',
+      'data' => null
+    ];
+  }
+
+  /**
+   * Save the User Object into te Session object
+   * 
+   * @param Array $userData The array holding all details about the user. The password is removed here too
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  public function saveUserInSession (Array $userData = null) {
+    if (!$userData) {
+      return [
+        'success' => false,
+        'message' => 'No data is inside the parameter',
+        'data' => null
+      ];
+    }
+    if ($_SESSION['user']) {
+      $_SESSION['user'] = null;
+    }
+    unset($userData[0]['password']);
+    $_SESSION['user'] = $userData;
+    return [
+      'success' => true,
+      'message' => 'Saved the user object into the session',
+      'data' => null
+    ];
+  }
+
+  /**
    * Find a User
    * 
-   * Find an account in the database with the email and password
+   * Find an account in the database with the email
    * 
-   * @param string $email Used to look for a user with the password
-   * @param string $password Used to look for a user with the email
-   * @return bool true if user is found, false if not
+   * @param String $email Used to look for a user
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
    */
-  public function findMatch ($email = '', $password = '') {
-    // Run a prepared SELECT statement (that would return data)
-    $this->db->openDatabaseConnection();
-    $query = $this->db->connection->prepare(self::FIND_USER);
-    $query->bind_param('s', $email);
-    $query->execute();
-    $user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-    if ($user && password_verify($password, $user[0]['password'])) {
-      return true;
-    } else {
-      return false;
+  public function getUserByEmail (String $email = '') {
+    $db = new Database();
+    $result = $db->runQuery(self::GET_USER_BY_EMAIL, [$email]);
+    if ($result['success'] === false) {
+      return $result;
     }
+    return [
+      'success' => true,
+      'message' => 'Found a user with that email',
+      'data' => $result['data']
+    ];
   }
 
-  //
-  // Get User
-  //
-  public function getUser () {
-    // ///////////////////////////////////////////////////////
-    // Note: User can now be grabbed using $_SERVER['user'] //
-    // Using the session object is a more efficient way of  //
-    // getting the user data needed                         //
-    // ///////////////////////////////////////////////////////
+  /**
+   * Get all user data from the database using the sessionId2
+   * 
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  public function getUserBySessionId2 () {
     if ( ! isset($_COOKIE[ 'sessionId2' ])) {
-      return FALSE;
+      return [
+        'success' => false,
+        'message' => 'Sessionid2 is not set',
+        'data' => null
+      ];
     }
     $sessionId2 = $_COOKIE[ 'sessionId2' ];
-    try {
-      // Get user session data using the session id
-      $query = $this->db->connection->prepare(self::GET_USER_ID);
-      $query->bind_param('s', $sessionId2);
-      $query->execute();
-      $this->user   = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-      $this->userId = $this->user[ 0 ][ 'user_id' ];
-      // Use the user id in the session id to grab the user
-      $query = $this->db->connection->prepare("SELECT * FROM users WHERE id = $this->userId");
-      $query->execute();
-      $this->user = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-      unset($this->user[ 0 ][ 'password' ]);
-    } catch (error $e) {
-      // todo add content
-      return FALSE;
-    } finally {
-      return $this->user;
+    $db = new Database();
+    $result = $db->runQuery(self::GET_USER_ID_BY_SESSIONID2, [$sessionId2]);
+    if ($result['success'] === false) {
+      return $result;
     }
+    $result = $db->runQuery(self::GET_USER_BY_USER_ID, [$result['data'][0]['id']]);
+    if ($result['success'] === false) {
+      return $result;
+    }
+    return [
+      'success' => true,
+      'message' => 'Got the user from the database using the session id 2';
+      'data' => $result['data'][0]
+    ];
   }
 
-  //
-  // Create Cookies
-  //
-  private function createCookies () {
+  /**
+   * Create the session cookies and save them into the session
+   * 
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  private function createAndSaveSessionCookies () {
+    // create
     $sessionId1 = random_bytes(16);
     $sessionId1 = bin2hex($sessionId1);
     $sessionId2 = random_bytes(16);
     $sessionId2 = bin2hex($sessionId2);
-
-    return [$sessionId1, $sessionId2];
+    // save in session object
+    setcookie('sessionId1', $sessionId1, time() + 3200, '/');
+    setcookie('sessionId2', $sessionId2, NULL, '/');
+    // save to the database
+    $userId = $_SESSION['user']['id'];
+    if (!$userId) {
+      return [
+        'success' => false,
+        'message' => 'User id in session is not set',
+        'data' => null
+      ];
+    }
+    $db = new Database();
+    $db->runQuery(self::CREATE_SESSION, [$sessionId1, $sessionId2, $userId]);
+    if ($result['success'] === false) {
+      return $result;
+    }
+    return [
+      'success' => true,
+      'message' => 'Saved session to the database and to the session object',
+      'data' => null
+    ];
   }
-  //
-  // Set Cookies
-  //
-  private function setCookies ($cookies, $id) {
-    setcookie('sessionId1', $cookies[ 0 ], time() + 3200, '/');
-    setcookie('sessionId2', $cookies[ 1 ], NULL, '/');
-    $this->db->connection = new mysqli('192.168.56.101', 'root', 'JahRastafarI1298', 'copytube');
-    $query                = $this->db->connection->prepare(self::INSERT_NEW_SESSION);
-    $query->bind_param('ssi', $cookies[ 0 ], $cookies[ 1 ], $id);
-    $query->execute();
-  }
-  //
-  // Unset cookies
-  //
-  private function unsetCookies () {
+  
+  /**
+   * Remove all cookies created by this application
+   * 
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  private function removeAllCookies () {
     setcookie("sessionId1", "", time() - 3600, '/');
     setcookie('PHPSESSID', '', time() - 3600, '/');
     setcookie("sessionId2", "", time() - 3600, '/');
     setcookie("name", "", time() - 3600, '/');
+    return [
+      'success' => true,
+      'message' => 'Removed all cookies',
+      'data' => null
+    ];
   }
 
   /**
-   * Login using email
+   * Check if a users account has been locked before logging them in
    * 
-   * Log in a user after all checks have been made e.g. find()
-   * 
-   * @param string $email Email to use when logging in
-   * @return 
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
    */
-  public function login ($email = '') {
-    try {
-      $query = $this->db->connection->prepare(self::GET_CURRENT_USER);
-      $query->bind_param('s', $emailInput);
-      $query->execute();
-      $query->bind_result($user[ 0 ][ 'id' ], $user[ 0 ][ 'username' ], $user[ 0 ][ 'email' ], $user[ 0 ][ 'password' ],
-        $user[ 0 ][ 'loggedIn' ], $user[ 0 ][ 'loginAttempts' ]);
-      $query->fetch(); // This is needed, otherwise if i try to access the binded variables the output is ""
-      if ( ! $user[ 0 ][ 'id' ]) {
-        // Means ive used the wrong email
-      }
-    } catch (error $e) {
-      // todo handle me
-    } finally {
-      // Means correct email is given
-      // fixme the if condition is false? correct pass is given...
-      if (password_verify($passwordInput, $user[ 0 ][ 'password' ])) {
-        if ($user[ 0 ][ 'loginAttempts' ] === 0) {
-          $this->lockoutEmail($postData);
-
-          return json_encode(['lockout', TRUE]);
-        } else {
-          // Create the cookies
-          $cookies = $this->createCookies();
-          // Set in global var and save to db
-          $this->setCookies($cookies, $user[ 0 ][ 'id' ]);
-          // Update loggedIn
-          $query = $this->db->connection->prepare(self::SET_LOGGED_IN);
-          $query->bind_param('s', $user[ 0 ][ 'email' ]);
-          $query->execute();
-          unset($user[ 0 ][ 'password' ]);
-          $_SESSION[ 'user' ] = $user;
-          $key                = $this->generateKey();
-          if (is_array($key)) {
-            return json_encode($key);
-          } else {
-            $this->saveKey($key, $user[ 0 ][ 'id' ]);
-
-            return json_encode(['login', TRUE]);
-          }
-        }
-      } else {
-        // Password not the same
-        try {
-          $this->db->openDatabaseConnection();
-          //$this->db->connection = new mysqli('localhost', 'root', 'password', 'copytube');
-          $query         = $this->db->connection->prepare(self::UPDATE_LOGIN_ATTEMPTS);
-          $loginAttempts = $user[ 0 ][ 'loginAttempts' ] - 1;
-          $query->bind_param('is', $loginAttempts, $emailInput);
-          $query->execute();
-        } catch (error $e) {
-          // todo handle error
-          var_dump($e);
-        } finally {
-          return FALSE;
-        }
-      }
+  public function isAccountLocked () {
+    $db = new Database();
+    $dbResult = $db->runQuery(self::GET_USER_BY_USER_ID, [$_SESSION['user']['id']]);
+    if ($dbResult['success'] === false) {
+      return $result;
     }
+    if ($dbResult['data'][0]['login_attempts'] =< 0) {
+      return [
+        'success' => false,
+        'message' => 'Account is locked',
+        'data' => null
+      ];
+    }
+    return [
+      'success' => true,
+      'message' => 'User account is not locked',
+      'data' => $dbResult['data'][0]['login_attempts']
+    ];
+  }
+
+  /**
+   * Update the login attempts of the field if an incorrect login is given against the email
+   *
+   * @param String $email Email to educe the login attempts against
+   * @param Int $loginAttempts The current number of login attempts against the account
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  public function decreaseLoginAttempts (String $email = null, Int $login_attempts = null) {
+    $db = new Database();
+    $loginAttempts = $loginAttempts - 1;
+    $dbResult = $db->runQuery(self::UPDATE_LOGGED_IN, [$loginAttempts, $email]);
+    if ($dbResult['success'] === false) {
+      return $result;
+    }
+    return [
+      'success' => true,
+      'message' => 'Login attempts have been updated',
+      'data' => null
+    ];
   }
 
   //
@@ -398,7 +540,7 @@ class User {
   //
   // Tell user Account is Recovered
   //
-  private function recoverEmail ($postData) {
+  private function sendRecoverEmail (Array $data = null) {
     $receiver = $postData[ 'email' ];
     $subject  = 'Account Recovered';
     $message  = "Your account $receiver has been recovered on CopyTube.";

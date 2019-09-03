@@ -56,8 +56,11 @@
  * 
  * 4. When instatiating the Database class
  *      $db = new Database();
- *      $result = $db->runQuery($sql, $data);
- * Easy, the database class handles everything else
+ *      $result = $db->runQuery(self::GET_USER_BY_EMAIL, [$email]);
+ *      if ($result['success'] === false) {
+ *          return $result; // this holds the errors
+ *      }
+ *      // now do your own thing with the data, rowcount here would be set
  */
 
  /**
