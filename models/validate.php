@@ -314,7 +314,7 @@ class Validate
             ];
         }
         // Find upper and lower case
-        if (preg_match('/[a-z][A-Z]/', $password) < 1) {
+        if (preg_match('/[a-z]/', $password) !== 1 || preg_match('/[A-Z]/', $password) !== 1) {
             return [
                 'success' => false,
                 'message' => 'Must contain at least 1 or more uppercase and lowercase letters',

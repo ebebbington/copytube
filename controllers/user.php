@@ -34,7 +34,58 @@ switch ($data[ "action" ]) {
     print json_encode($result);
     break;
   case 'login':
-    $foundAccount = $User->findMatch($data['email'], $data['password']);
+    $result = [
+      'success' => false,
+      'message' => 'Incorrect Email or Password',
+      'data' => null
+    ];
+    $foundAccount = $User->getUserByEmail($data['email']);
+    if ($foundAccount['success'] === false) {
+      print json_encode($result);
+      exit();
+    }
+    $passwordsMatch = $User->doPasswordsMatch($data['password'], $foundAccount['data'][0]['password']);
+    if ($passwordsMatch['success'] === false) {
+      print json_encode($result);
+      exit();
+    }
+    // save user in session
+    $result = $User->saveUserInSession($foundAccount['data'][0]);
+    if ($result['success'] === false) {
+      print json_encode($result);
+      exit();
+    }
+    if ($_SESSION['user']) {
+      // create and save cookies
+      $result = $User->createAndSaveSessionCookies();
+      if ($result['success'] === false) {
+        print json_encode($result);
+        exit();
+      }
+      $result = $User->isAccountLocked();
+      if ($result['success'] === false) {
+        print json_encode($result);
+        exit();
+      }
+      $result = $User->updateLoggedIn(0);
+      if ($result['success'] === false) {
+        print json_encode($result);
+        exit();
+      }
+      return json_encode([
+        'success' => true,
+        'message' => 'Logged in',
+        'data' => null
+      ]);
+    } else {
+      $result = [
+        'success' => false,
+        'message' => 'There was a problem while completing this action',
+        'data' => null
+      ];
+    }
+    // set logged in for user
+
     switch ($foundAccount) {
       case false:
         print json_encode([

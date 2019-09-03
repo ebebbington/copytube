@@ -17,6 +17,7 @@ function login () {
     },
     dataType: 'json',
     success: function (data, status, jqXHR) {
+      alert('heyoo')
       const response = {
         success: data.success,
         message: data.message,
@@ -38,6 +39,7 @@ function login () {
       }
     },
     error: function (error) {
+      alert('heyooooo')
       $('#login-error').removeAttr('hidden')
       //$('#login-form').trigger('reset')
       $('html', 'body').animate({scrollTop: 0}, 'slow')

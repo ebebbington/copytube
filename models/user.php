@@ -59,7 +59,7 @@ class User {
 
   const GET_ALL_USERS = "SELECT * FROM users";
 
-  const UPDATE_LOGGED_IN_BY_ID = "UPDATE users SET logged_in = ? WHERE id = ?"; // 1 = logged out, 0 = logged in
+  const UPDATE_LOGGED_IN_BY_USER_ID = "UPDATE users SET logged_in = ? WHERE id = ?"; // 1 = logged out, 0 = logged in
 
   const CREATE_USER = "INSERT INTO users (username, email_address, password, logged_in, login_attempts) VALUES (?, ?, ?, ?, ?)";
 
@@ -231,7 +231,7 @@ class User {
   }
 
   /**
-   * Check a login password against a password in the database matching the email
+   * Check a login password against an already hashed password
    * 
    * @param String $rawPassword The raw password
    * @param String $passwordHash The password taken from the database
@@ -242,14 +242,14 @@ class User {
    * ]
    */
   public function doPasswordsMatch (String $rawPassword = null, String $passwordHash = null) {
-    if (!$password || !$passwordHash) {
+    if (!$rawPassword || !$passwordHash) {
       return [
         'success' => false,
         'message' => 'One of the parameters is not set',
         'data' => null
       ];
     }
-    if (!password_verify($password, $passwordHash)) {
+    if (!password_verify($rawPassword, $passwordHash)) {
       return [
         'success' => false,
         'message' => 'Passwords do not match',
@@ -374,7 +374,7 @@ class User {
    *  data => any data to be passed back
    * ]
    */
-  private function createAndSaveSessionCookies () {
+  public function createAndSaveSessionCookies () {
     // create
     $sessionId1 = random_bytes(16);
     $sessionId1 = bin2hex($sessionId1);
