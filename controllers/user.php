@@ -22,7 +22,7 @@ if ( ! isset($data) || ! isset($action)) {
     'success' => false,
     'message' => 'Some data hasnt been passed in with the AJAX request',
     'data' => null
-  ]));
+  ]);
 }
 
 //
@@ -73,13 +73,20 @@ switch ($data[ "action" ]) {
     $email = $emailResult['data'];
     $password = $passwordResult['data'];
     $isSimilar = $Validate->compareStrings($username, $password);
-    if ($isSimilar) {
+    if ($isSimilar['success'] === false) {
       print json_encode([
         'success' => false,
-        'message' => 'Username and password cannot be the same or contain eachother',
+        'message' => 'Username and password cannot be the same or contain each other',
         'data' => 'username'
       ]);
+      exit();
     }
+    // Hash the password
+    $result = $Validate->hashPassword($password);
+    if ($result['success'] === false) {
+      return $result;
+    }
+    $password = $result['data'];
     // Register account
     $result = $User->register($username, $email, $password);
     print json_encode($result);

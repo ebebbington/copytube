@@ -73,7 +73,7 @@ class Validate
         if (!$value) {
             return ['success' => false, 'message' => 'Tags are not allowed', 'data' => null];
         }
-        return = ['success' => true, 'message' => 'Sanitised the input', 'data' => $value];
+        return ['success' => true, 'message' => 'Sanitised the input', 'data' => $value];
     }
 
     /**
@@ -97,7 +97,7 @@ class Validate
         }
         if (strlen($comment) > $this->commentMaxLen) {
             $result['message'] = 'Comment is too long';
-            return $result
+            return $result;
         }
         $result['success'] = true;
         $result['message'] = 'Validated comment';
@@ -118,7 +118,7 @@ class Validate
     public function validateUsername(String $username = '')
     {
         // Validate
-        $usernameIsSet = $this->isSet($username);
+        $usernameIsSet = $this->isSet([$username]);
         if (!$usernameIsSet) {
             return ['success' => false, 'message' => 'Username is not set', 'data' => 'username'];
         }
@@ -175,7 +175,7 @@ class Validate
                 // $verifyEmail->Debug = true; // Creates an alert currently with the process
                 // $verifyEmail->Debugoutput = 'html'; // Displays js code error in console
                 $verifyEmail->setEmailFrom($email);
-            } catch (exception $e
+            } catch (exception $e) {
                 return ['email', 'Could not validate email address'];
             }
             if ($verifyEmail->check($email)) {
@@ -203,7 +203,7 @@ class Validate
      */
     public function validateEmail(String $email = '')
     {
-        $emailIsSet = $this->isSet($email);
+        $emailIsSet = $this->isSet([$email]);
         if ($email['success'] === false) {
             return [
                 'success' => false,
@@ -216,7 +216,7 @@ class Validate
         if (!$email) {
             return [
                 'success' => false,
-                'message' => 'Emaildoes not follow the policy',
+                'message' => 'Email does not follow the policy',
                 'data' => 'email'
             ];
         }
@@ -248,6 +248,22 @@ class Validate
         ];
     }
 
+    public function hashPassword (String $password = null) {
+        if (!$password) {
+            return [
+                'success' => false,
+                'message' => 'Password is not set when prepared for hashing',
+                'data' => 'password'
+            ];
+        }
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+        return [
+            'success' => true,
+            'message' => 'Password has been hashed',
+            'data' => $hash
+        ];
+    }
+
     /**
      * Check if 2 strings are the same or if one contains the other
      * 
@@ -256,10 +272,11 @@ class Validate
      * @return Array The resulting object
      */
     public function compareStrings (String $string1 = '', String $string2 = '') {
-        if ($string1 === $string2 || strpos($string2, $string1) !== false) {
-            return ['success' => true, 'message' => "$string1 is the same or contains $string2", 'data' => [$string1, $string2]];
+        $pos = strpos($string2, $string1);
+        if ($string1 === $string2 || $pos !== false || $pos > -1) {
+            return ['success' => false, 'message' => "$string1 is the same or contains $string2", 'data' => [$string1, $string2]];
         }
-        return ['success' => false, 'message' => "$string1 is not the same and does not contain $string2", 'data' => [$string1, $string2]];
+        return ['success' => true, 'message' => "$string1 is not the same and does not contain $string2", 'data' => [$string1, $string2]];
     }
 
     /**
@@ -273,7 +290,7 @@ class Validate
     public function validatePassword(String $password = '')
     {
         // Validate
-        $passwordIsSet = $this->isSet($password);
+        $passwordIsSet = $this->isSet([$password]);
         if ($passwordIsSet['success'] === false) {
             return [
                 'success' => false,

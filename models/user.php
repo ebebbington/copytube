@@ -49,8 +49,6 @@ class User {
 
   const GET_USER_BY_USER_ID = "SELECT * FROM users WHERE id = ? LIMIT 1";
 
-  const LOG_USER_OUT_BY_ID = "UPDATE users SET logged_in = 1 WHERE id = ?";
-
   const DELETE_SESSION_BY_USER_ID = "DELETE FROM sessions WHERE user_id = ?";
 
   const GET_USER_BY_EMAIL = "SELECT * FROM users WHERE email_address = ? LIMIT 1";
@@ -61,7 +59,7 @@ class User {
 
   const GET_ALL_USERS = "SELECT * FROM users";
 
-  const LOG_USER_IN_BY_ID = "UPDATE users SET logged_in = 0 WHERE id = ?";
+  const UPDATE_LOGGED_IN_BY_ID = "UPDATE users SET logged_in = ? WHERE id = ?"; // 1 = logged out, 0 = logged in
 
   const CREATE_USER = "INSERT INTO users (username, email_address, password, logged_in, login_attempts) VALUES (?, ?, ?, ?, ?)";
 
@@ -76,6 +74,8 @@ class User {
   private $user;
   private $userId;
   private $maxLoginAttempts = 3;
+  private $logInValue = 0;
+  private $logOutValue = 1;
 
   //
   // Initialise Data
@@ -318,6 +318,19 @@ class User {
     ];
   }
 
+  public function register (String $username = null, String $email = null, String $password = null) {
+    $db = new Database();
+    $dbResult = $db->runQuery(self::CREATE_USER, [$username, $email, $password, 1, 3]);
+    if ($dbResult['success'] === false || $dbResult['rowCount'] !== 1) {
+      return $dbResult;
+    }
+    return [
+      'success' => true,
+      'message' => 'Created a user',
+      'data' => null
+    ];
+  }
+
   /**
    * Get all user data from the database using the sessionId2
    * 
@@ -347,7 +360,7 @@ class User {
     }
     return [
       'success' => true,
-      'message' => 'Got the user from the database using the session id 2';
+      'message' => 'Got the user from the database using the session id 2',
       'data' => $result['data'][0]
     ];
   }
@@ -427,7 +440,7 @@ class User {
     if ($dbResult['success'] === false) {
       return $result;
     }
-    if ($dbResult['data'][0]['login_attempts'] =< 0) {
+    if ($dbResult['data'][0]['login_attempts'] < 1) {
       return [
         'success' => false,
         'message' => 'Account is locked',
@@ -466,86 +479,47 @@ class User {
     ];
   }
 
-  //
-  // Run Logout function
-  //
-  public function logout () {
-    if (isset($_COOKIE[ 'sessionId2' ])) {
-      $sessionId = $_COOKIE[ 'sessionId2' ];
-      $this->db->openDatabaseConnection();
-      $query = $this->db->connection->prepare(self::GET_USER_ID);
-      $query->bind_param('s', $sessionId);
-      $query->execute();
-      $user = [];
-      $query->bind_result($user[ 0 ][ 'user_id' ]);
-      $query->fetch(); // This is needed, otherwise if i try to access the binded variables the output is ""
-      $userId               = $user[ 0 ][ 'user_id' ];
-      $this->db->connection = new mysqli('localhost', 'root', 'password', 'copytube');
-      $query                = $this->db->connection->prepare(self::LOGOUT_USER);
-      $query->bind_param('i', $userId);
-      $query->execute();
-      $query = $this->db->connection->prepare(self::DELETE_SESSION);
-      $query->bind_param('i', $userId);
-      $query->execute();
-      $this->deleteKey();
-      $this->unsetCookies();
-      session_abort();
-      session_unset();
+  /**
+   * Upate the database field 'logged_in' for the user
+   * 
+   * @param Int $loggedInVal 0 to set loged in, or 1 to log out
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  public function updateLoggedIn (Int $loggedInVal = null) {
+    $db = new Database();
+    $result = $db->runQuery(self::UPDATE_LOGGED_IN_BY_USER_ID, [$loggedInVal, $_SESSION['user']['id']]);
+    if ($result['success'] === false) {
+      return $result;
     }
-    return FALSE;
+    return [
+      'success' => true,
+      'message' => "Users logged in is set to $loggedInVal",
+      'data' => null
+    ];
   }
 
-  //
-  // Run Register function
-  //
-  public function register ($username = '', $email = '', $password = '') {
-    $loggedIn      = 1; // For not logged in
-    $loginAttempts = 3;
-    $hash          = password_hash($password, PASSWORD_BCRYPT);
-    try {
-      $this->db->openDatabaseConnection();
-      $query = $this->db->connection->prepare(self::ADD_NEW_USER);
-      $query->bind_param('sssii', $username, $email, $hash, $loggedIn, $loginAttempts);
-      $query->execute();
-      $this->db->closeDatabaseConnection();
-      if ($query->affected_rows < 1 || $query->affected_rows > 1) {
-        return [
-          'success' => false,
-          'message' => 'There was a problem creating an account',
-          'data' => 'register'
-        ];
-      }
-      return [
-        'success' => true,
-        'message' => 'Account successfully created',
-        'data' => 'register'
-      ];
-    } catch (Exception $e) {
-      var_dump($e);
-    } 
-  }
-
-  //
-  // Tell user Account is Locked
-  //
-  private function lockoutEmail ($postData) {
-    $receiver = $postData[ 'email' ];
-    $subject  = 'Account Locked Out';
-    $message
-              = "Your account $receiver has been locked out on CopyTube. To recover it please visit http://localhost/copytube/public/view/recover.html";
+  /**
+   * Send an Email to the user
+   * 
+   * @param Array $mailInfo Array holding the receivers email, the subject and the message
+   * @return Array [
+   *  success => if the action worked,
+   *  message => message of the failed or successful action,
+   *  data => any data to be passed back
+   * ]
+   */
+  private function sendEmail (Array $mailInfo = null) {
     $header   = 'From: noreply@copytube.com';
-    mail($receiver, $subject, $message, $header);
-  }
-
-  //
-  // Tell user Account is Recovered
-  //
-  private function sendRecoverEmail (Array $data = null) {
-    $receiver = $postData[ 'email' ];
-    $subject  = 'Account Recovered';
-    $message  = "Your account $receiver has been recovered on CopyTube.";
-    $header   = 'From: noreply@copytube.com';
-    mail($receiver, $subject, $message, $header);
+    mail($mailInfo['receiver'], $mailInfo['subject'], $mailInfo['message'], $header);
+    return [
+      'success' => true,
+      'message' => 'Successfully sent an email to ' . $mailInfo['receiver'] . 'about ' . $mailInfo['subject'],
+      'data' => null
+    ];
   }
 
   //

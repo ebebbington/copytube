@@ -138,9 +138,10 @@ class Database
             $query = $this->pdo->prepare($sql);
             $query->execute($data); // Not a problem if there isnt any
             // Check any data was found to respond with a problem
-            if ($query->rowCount() < 1) {
-                return $result;
-            }
+            // var_dump($query->fetchAll(PDO::FETCH_ASSOC));
+            // if ($query->rowCount() < 1) {
+            //     return $result;
+            // }
             // Grab the results
             $result['rowCount'] = $query->rowCount();
             $result['data'] = $query->fetchAll(PDO::FETCH_ASSOC);
