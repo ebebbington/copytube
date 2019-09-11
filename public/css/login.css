@@ -1,0 +1,36 @@
+fieldset{
+    text-align: center;
+}
+
+.login{
+    border: 0.2em solid rgb(190, 46, 46);
+    border-radius: 0.5em;
+    width: 100%;
+    margin-top: 1em;
+}
+
+button#login{
+    margin: 2em;
+    width: 40%;
+    font: bold 11px Arial;
+    text-decoration: none;
+    background-color: red;
+    padding: 10px 10px 10px 10px;
+    border: 1px solid #CCCCCC;
+    border-right-color: #333333;
+    border-bottom-color: #333333;
+}
+
+#register-new-account{
+    margin-top: 1em;
+    text-align: center;
+}
+#login-error{
+    color: red;
+    font-size: 1.5em;
+}
+.login-fields{
+    width: 50%;
+    margin: auto;
+    text-align: center;
+}

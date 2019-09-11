@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copytube - Login</title>
+    <script type="text/javascript" src="../public/libs/jquery-3.3.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="../public/libs/bootstrap.min.css" crossorigin="anonymous">
+    <script type="text/javascript" src="../public/libs/bootstrap.min.js" crossorigin="anonymous"></script>
+    <link type="text/css" rel="stylesheet" href="../public/css/login.css"/>
+    <script type="text/javascript" src="../public/js/login.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- Login fields -->
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="login">
+                <form id="login-form">
+                    <fieldset>
+                        <legend><img src="../public/images/copytube_logo.png"></legend>
+                        <legend>Login</legend>
+                        <p id="login-error" class="alert alert-danger" hidden></p>
+                        <label>Email: *</label><input id="login-email" class="login-fields form-control" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"><br>
+                        <label>Password: *</label><input id="login-password" type='password' class="login-fields form-control" name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                        <button id="login" class="btn btn-primary" type="button" name="submit" value="Submit">Login</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div id="register-new-account" class="row col-xs-12 col-sm-12 col-md-12">
+            <div>
+                <a href="#" id="go-to-register">Register!</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

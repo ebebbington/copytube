@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copytube</title>
+    <script src="../public/libs/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../public/libs/bootstrap.min.css" crossorigin="anonymous">
+    <script src="../public/libs/bootstrap.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../public/css/register.css"/>
+    <script src="../public/js/register.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- Login fields -->
+        <div class="col-xs-12 col-md-12 col-sm-12">
+            <div class="register">
+                <form id="register-form">
+                    <fieldset>
+                        <legend><img src="../public/images/copytube_logo.png"></legend>
+                        <legend>Register</legend>
+                        <p id="register-success" class="register-alerts alert alert-success" hidden>Successfully Registered an Account</p>
+                        <p id="register-error" class="register-alerts alert alert-danger" hidden>An error was encountered, this has been logged. Please try again</p>
+                        <label>Username: *</label><input id="username" class="register-fields form-control" type="text" name="username" pattern="/^[a-zA-Z ]*$/">
+                        <p id="incorrect-username" class="incorrect-errors" hidden></p>
+                        <label>Email: *</label><input id="email" class="register-fields form-control" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                        <p id="incorrect-email" class="incorrect-errors" hidden></p>
+                        <label>Password: *</label><input id="password" class="register-fields form-control" type='password' name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"> <!-- https://www.w3schools.com/tags/att_input_pattern.asp -->
+                        <p id="incorrect-password" class="incorrect-errors" hidden></p>
+                        <button id="register" class="btn btn-primary" type="button" name="submit" value="Submit">Register Your Account!</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="go-back" class="row col-xs-12 col-sm-12 col-md-12">
+        <div>
+            <a href="#" id="go-to-login">Login!</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

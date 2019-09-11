@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Copytube - Wireframe</title>
+        <script src="../public/libs/jquery-3.3.1.min.js"></script>
+        <script src="../public/libs/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../public/libs/bootstrap.min.css">
+        <link rel="stylesheet" href="../public/css/wireframe.css">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Logo/Search -->
+            <div class="row">
+                <div class="col-sm-5 col-md-5" id="logo">
+                    <img id="logo-image" src="../public/images/copytube_logo.png" alt="CopyTube Logo">
+                </div>
+                <div class="col-sm-5 col-sm-offset-2 col-md-5 col-md-offset-2" id="search">
+                    <input id="search-bar" type="text" class="form-control" placeholder="Search a Video">
+                    <input id="search-button" class="btn form-control" type="button" value="Search">
+                </div>
+            </div>
+            <hr>
+            <!-- Main Video -->
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-7" id="main-video">
+                    <video id="main-video-video" poster="../public/images/something_more.jpg" src="../public/videos/something_more.mp4" controls>
+                    </video>
+                    <p id="main-video-title"><strong>Something More</strong></p>
+                    <p id="main-video-description"><small>I filmed this whilst I was in Columbia, i hope you enjoy! :)</small></p>
+                </div>
+                <div id="filler"></div>
+            <!-- Rabbit hole video 1 -->
+                <div class="well">
+                <div class="col-xs-6 col-sm-7 col-md-7 col-lg-7 rabbit-holes">
+                    <div id="rabbit-hole-video-1">
+                        <video class="rabbit-hole-videos" poster="../public/images/something_more.jpg" id="rabbit-hole-video-1-video" src="../../videos/something_more.mp4" controls>
+                        </video>
+                    </div>
+                </div>
+                <div class="col-xs-6 titles col-sm-1 col-md-1 col-lg-2 rabbit-holes">
+                    <p id="rabbit-hole-video-1-title" class="rabbit-hole-titles">An Iceland Venture</p>
+                </div>
+                </div>
+            </div>
+            <!-- Comments -->
+            <div class="row">
+                <div class="col-xs-12" id="comment-section">
+                    <hr>
+                    <!-- Comment bar and button -->
+                    <div class="comment">
+                        <input id="comment-bar" type="text" class="form-control" placeholder="Add a comment">
+                        <input id="comment-button" class="btn hidden form-control" type="button" value="Add">
+                    </div>
+                    <br>
+                    <br>
+                    <!-- User comments -->
+                    <div class="comments">
+                        <div class='media'>
+                            <div class='media-left'>
+                                <img src='../public/images/sample.jpg' class='media-object' style='width:45px; height:45px; border-radius:80%'>
+                            </div>
+                            <div class='media-body'>
+                                <h4 class='media-heading' id="comment-author-1">Author</h4>
+                                <p id="comment-1-text">A comment that is very long to illustrate how this body of text would look on multiple resolutions such as phones, tablets and desktops. Take oooon meeeeeeee... ((take on me)) Take MEEEEE OONNNNN N (take me on) ILL BEE GONNEEEEEEEEEEEEE</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        $('body').on('click', function (e) {
+          const id = e.target.id;
+          if (id === 'comment-bar') {
+            $('#comment-button').removeClass('hidden')
+          } else if (id === 'comment-button') {
+            return
+          } else {
+              $('#comment-button').addClass('hidden')
+          }
+        })
+    </script>
+    </body>
+</html>
