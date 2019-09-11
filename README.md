@@ -7,15 +7,15 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 * PHP/PHP-FPM
 * Nginx
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
+## Prerequisites
 
 Have Docker installed. This can be for Windows or for Mac - as long as you have Docker accessible in the command line. Docker knowledge is also essential to know commands such as `docker-compose down` and `docker system prune`.
 
-### Installing
+### Ports
+
+Make sure ports 9000 and 9002 are open for PHP-FPM and Nginx respectively.
+
+## Run the Project
 
 Clone the repository
 
@@ -31,7 +31,7 @@ Build and start Docker
 docker-compose build && docker-compose up
 ```
 
-Finally, check the Docker containers are running
+Check the Docker containers are running
 
 ```
 docker-compose ps
@@ -47,6 +47,14 @@ copytube_nginx    nginx -g daemon off;            Up      80/tcp, 0.0.0.0:9002->
 copytube_phpfpm   docker-php-entrypoint php-fpm   Up      0.0.0.0:9000->9000/tcp
 copytube_sql      docker-entrypoint.sh mysqld     Up      0.0.0.0:3007->3006/tcp, 3306/tcp
 ```
+
+Finally, go to the website
+
+* Mac
+     `0.0.0.0:9002`
+     
+* Windows
+     `127.0.0.1:9002`
 
 ## Running the tests
 
