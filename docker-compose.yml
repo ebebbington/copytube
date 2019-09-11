@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: .docker/nginx.dockerfile
     volumes:
-      - ./src/copytube:/var/www/copytube
+      - ./src:/var/www/copytube
     working_dir: /var/www/copytube
     depends_on:
       - phpfpm
@@ -27,7 +27,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./src/copytube:/var/www/copytube
+      - ./src:/var/www/copytube
     working_dir: /var/www/copytube
     networks:
       - copytube-network
