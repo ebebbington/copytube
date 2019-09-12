@@ -85,7 +85,7 @@ class Database
     public function __construct() {
         try {
             // Set database credentials
-            $configPath = $_SERVER['DOCUMENT_ROOT'] . '/config/copytube.ini';
+            $configPath = $_SERVER['DOCUMENT_ROOT'] . '/copytube.ini';
             $config = parse_ini_file($configPath, true);
             $this->server = $config['Database']['server'];
             $this->username = $config['Database']['username'];
