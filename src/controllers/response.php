@@ -4,10 +4,7 @@ class Response
 {
     private $result;
 
-    //
-    // Assign data and call the isSet function
-    //
-    public function __construct($result = [false, 'No message', null])
+    public function __construct(Array $result = [false, 'No message', null])
     {
         $this->result = [
           'success' => $result['success'],
@@ -21,9 +18,9 @@ class Response
     //
     // Return the response
     //
-    function returnResponse ()
+    private function returnResponse ()
     {
-        print_r(json_encode($this->result));
-        return false;
+        print json_encode($this->result);
+        exit();
     }
 }
