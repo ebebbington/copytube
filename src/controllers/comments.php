@@ -57,10 +57,10 @@ switch ($action) {
         break;
 
     default:
-        $requestResponse->returnResponse(
-          false,
-          'Action requested does not exist',
-          null
-        );
+        print json_encode([
+          'success' => false,
+          'message' => 'Action requested does not exist',
+          'data' => null
+        ]);
         break;
 }

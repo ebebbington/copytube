@@ -6,11 +6,7 @@
  * Time: 23:56
  */
 
-include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/controllers/database.php';
-require_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/models/user.php';
-include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/models/validate';
-
-class Comments
+class CommentsModel
 {
     //
     // Public Variables
@@ -29,8 +25,6 @@ class Comments
 
     public function __construct()
     {
-        $this->db = new Database();
-        $this->db->openDatabaseConnection();
     }
 
     //

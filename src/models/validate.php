@@ -12,7 +12,7 @@ include_once 'smtp-email-check.php';
 include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/controllers/database.php';
 include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/models/comments.php';
 
-class Validate
+class ValidateModel
 {
 
     //
