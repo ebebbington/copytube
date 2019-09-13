@@ -1,12 +1,22 @@
 /* global $, alert */
 'use strict'
 
-// todo :: GLOBAL replace px with em
-function login () {
+function cleanErrorField () {
   // noinspection JSJQueryEfficiency
-  $('#incorrect-credentials').text('')
+$('.form-error-message').text('')
+// noinspection JSJQueryEfficiency
+$('.form-error-message').attr('hidden')
+}
+function showErrorField (errorMsg = 'An error Occured') {
   // noinspection JSJQueryEfficiency
-  $('#incorrect-credentials').attr('hidden')
+  $('.form-error-message').text(errorMsg)
+  // noinspection JSJQueryEfficiency
+  $('.form-error-message').removeAttr('hidden')
+  $('html', 'body').animate({scrollTop: 0}, 'slow')
+  $('#login-form').trigger('reset')
+}
+
+function submit () {
   $.ajax({
     type: 'POST',
     url: '../controllers/user.php',
@@ -17,7 +27,6 @@ function login () {
     },
     dataType: 'json',
     success: function (data, status, jqXHR) {
-      alert('heyoo')
       const response = {
         success: data.success,
         message: data.message,
@@ -27,22 +36,16 @@ function login () {
       console.table(response)
       switch (response.success) {
         case false:
-          // noinspection JSJQueryEfficiency
-          $('#login-error').text(response.message)
-          // noinspection JSJQueryEfficiency
-          $('#incorrect-credentials').removeAttr('hidden')
-          $('html', 'body').animate({scrollTop: 0}, 'slow')
-          //$('#login-form').trigger('reset')
+          showErrorField(response.message)
           return false
         case true:
-          window.location.href = '../views/index.html'
+          // todo :: login
+          window.location.href = '/'
       }
     },
     error: function (error) {
-      alert('heyooooo')
-      $('#login-error').removeAttr('hidden')
-      //$('#login-form').trigger('reset')
-      $('html', 'body').animate({scrollTop: 0}, 'slow')
+      cleanErrorField()
+      showErrorField(error.message)
       // todo :: Log server side using email?
       console.table(error)
     }
@@ -50,11 +53,12 @@ function login () {
 }
 
 $(function () {
-  $('#go-to-register').on('click', function () {
-    window.location.href = '../views/register.html' // ref: https://www.w3schools.com/howto/howto_js_redirect_webpage.asp
+  $('#register').on('click', function () {
+    window.location.href = '/register' // ref: https://www.w3schools.com/howto/howto_js_redirect_webpage.asp
   })
-  $('#login').on('click', function () {
-    $('#login-error').attr('hidden', 'hidden')
-    return login()
+  $('#login-button').on('click', function (e) {
+    e.preventDefault()
+    cleanErrorField();
+    return submit()
   })
 })
