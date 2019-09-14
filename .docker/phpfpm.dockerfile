@@ -21,3 +21,12 @@ RUN apt-get install vim -y
 
 # Copy entry point script
 COPY ./.docker/config/phpfpm/entry-point.sh /etc/entry-point.sh
+
+# Install composer in /usr/lib folder
+WORKDIR /usr/lib
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && php composer-setup.php \
+  && php -r "unlink('composer-setup.php');"
+
+# Install PHPMailer
+RUN php /usr/lib/composer.phar require phpmailer/phpmailer @stable
