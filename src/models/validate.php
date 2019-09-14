@@ -85,6 +85,9 @@ class ValidateModel
      * 
      * Validate the username, email and password. If the result of this object after this method
      * is true, all fields are correct
+     * 
+     * @return Array/Bool Breaks the execution if fails, but sets the $result property
+     * of this object on success or fail
      */
     public function registerForm () {
         $username = $_POST['username'];
@@ -150,6 +153,8 @@ class ValidateModel
      * Check if a value is set
      * 
      * @param $data The value to check
+     * 
+     * Sets the $result property
      */
     private function isSet($data = null, String $type = '')
     {
