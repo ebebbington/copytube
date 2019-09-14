@@ -50,4 +50,18 @@ class ResponseController
         }
         exit();
     }
+
+    /**
+     * Display information on the Page Debug-wise
+     * 
+     * Used if you want to quickly display some nice info to the view
+     * 
+     * @param Array $info The object array to display
+     */
+    public function developerDebugInfo ($info) {
+        echo '<pre>';
+        echo print_r($info);
+        echo '</pre>';
+        exit();
+    }
 }
