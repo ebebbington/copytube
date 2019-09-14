@@ -4,7 +4,7 @@
 function cleanErrorField () {
   const formErrorMessage = $('.form-error-message')
   formErrorMessage.text('')
-  formErrorMessage.attr('hidden')
+  formErrorMessage.attr('hidden', 'hidden')
 }
 function showErrorField (errorMsg = 'An error Occured') {
   const formErrorMessage = $('.form-error-message')

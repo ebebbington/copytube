@@ -63,25 +63,48 @@
  *      // now do your own thing with the data, rowcount here would be set
  */
 
- /**
-  * @author Edward Bebbington
-  */
-class Database
+/**
+ *  The Database Model
+ * 
+ * Creates the database connection and will run any query if the SQL and data is passed
+ * in. The fetch is assigned to the $row var which can be checked to see if
+ * any rows were affected
+ * 
+ * @author Edward Bebbington
+ * @copyright
+ * @license
+ * @method __construct()
+ * @method runQuery() The function thats called when any query needs to run
+ */
+class DatabaseModel
 {
-    private $server;
-    private $username;
-    private $password;
-    private $database;
+    // ///////////////////////////////////////////////////////
+    // Class Properties
+    /////////////////////////////////////////////////////////
+    /** @var String $server The name of the SQL Docker container */
+    private $server = '';
+    /** @var String $username Username to log in to the database in the connection stage */
+    private $username = '';
+    /** @var String $password Password to go with the username ion login to database */
+    private $password = '';
+    /** @var String $database The name of the database to use */
+    private $database = '';
     /** @var mysqli $connection */
-    public $connection;
-
+    private $connection;
+    /** @var ? $pdo Allows the prep of prepared statements */
     private $pdo;
+    /** @var String $dsn I honestly am not sure what this means */
     private $dsn;
+    /** @var Array $options The array holding the options for PDO */
     private $options;
+    /** @var Array $row If a row was affected by a query, this will be set */
+    public $row = [];
 
-    //
-    // Initialise
-    //
+    /**
+     * Constructor
+     * 
+     * Create the properties and create the database connection and PDO class
+     */
     public function __construct() {
         try {
             // Set database credentials
@@ -105,8 +128,7 @@ class Database
             // Set pdo
             $this->pdo = new PDO($this->dsn, $this->username, $this->password, $this->options);
         } catch (Exception $e) {
-            // todo :: log and handle
-            throw new Exception($e);
+            trigger_error('Error on trying to set up the database class: ' . $e->getMessage());
         }
     }
 
@@ -118,40 +140,29 @@ class Database
      * This function came around after researching PDO, which has better implementations of database actions
      * compared to my own.
      * 
+     * The end goal will be modifying the $row property. This will be set if a row was affected
+     * 
      * @param string $sql The SQL query e.g. SELECT * FROM users
      * @param array $data An array of values to pass into prepared statements. Leave empty if not a prepared SQL
-     * @return array $result 
-     *      int rowCount containing rowCount for EDITing values
-     *      array data data from SELECTing => [0]['username], [1]['username']
-     *      bool success If the query succeeded
-     *      string message The message to be passed back with the success property
      */
     public function runQuery (String $sql = '', Array $data = []) {
-        // The database already makes a connection below, no need to specifically open it
-        $result = [
-            'rowCount' => 0,
-            'data' => [],
-            'success' => false,
-            'message' => 'There was a problem with executing the database action'
-        ];
         try {
             $query = $this->pdo->prepare($sql);
             $query->execute($data); // Not a problem if there isnt any
-            // Check any data was found to respond with a problem
-            // var_dump($query->fetchAll(PDO::FETCH_ASSOC));
-            // if ($query->rowCount() < 1) {
-            //     return $result;
-            // }
             // Grab the results
-            $result['rowCount'] = $query->rowCount();
-            $result['data'] = $query->fetchAll(PDO::FETCH_ASSOC);
-            $result['success'] = true;
-            $result['message'] = 'Successfully executed the database query';
+            $this->row = $query->fetchAll(PDO::FETCH_ASSOC);
+            // If row isnt set e.g using an update statement, then assign the row count
+            if (!$this->row) {
+                $this->row = $query->rowCount();
+                if (!$this->row) {
+                    // we got a problem
+                    trigger_error("The database wasnt affected at all when running the query $sql with the data: " . $data);
+                } 
+            }
             // Destroy the object to ensure we close the connection. PHP will do this when the script ends but for best measures
             $query = null;
         } catch (Exception $e) {
-            // todo :: log
+            trigger_error('Error when executing the runQuery function in the database class: ' . $e->getMessage());
         }
-        return $result;
     }
 }

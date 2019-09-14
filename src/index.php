@@ -21,7 +21,6 @@ $root = $_SERVER['DOCUMENT_ROOT']; // /var/www/copytube
 $url = $root . $uri;
 $method = $_SERVER['REQUEST_METHOD']; // eg GET
 $params = $_GET;
-//echo print_r($GLOBALS);
 
 /**
  * Display developer info on the page
@@ -30,6 +29,7 @@ function displayInfo ($info) {
     echo '<pre>';
     echo print_r($info);
     echo '</pre>';
+    exit();
 }
 
 /**
@@ -56,6 +56,11 @@ function autoLoadClasses () {
 
 /**
  * Set Our Custom Error Handler
+ * 
+ * USAGE: for exceptions or errors:
+ *      trigger_error(error message);
+ * The parmeters in the customer handler function still work, just the $text
+ * param is replaced with this message
  */
 function setCustomErrorHandler () {
     set_error_handler(function ($errCode, $text, $file, $line, $content) {
@@ -67,8 +72,10 @@ function setCustomErrorHandler () {
         $errorArray   = ["\n\nError Code: $errCode", "\nDescription: $text", "\nFile: $file", "\nLine: $line"];
         $errorLogFile = fopen($errorLogPath, $writeType);
         for ($i = 0; $i < sizeof($errorArray); $i++) {
-        fwrite($errorLogFile, $errorArray[ $i ]);
+            // Write into the log file
+            fwrite($errorLogFile, $errorArray[ $i ]);
         }
+        // todo :: Send email
         fclose($errorLogFile);
         return TRUE;
     }, E_ALL | E_STRICT);
@@ -81,23 +88,25 @@ function createRoutes () {
     require 'Route.php';
     // Generate the troute
     $Route = new Route($_SERVER); // used to pass in the uri
-    // Create all routes
+    // Route for Index (/) Page
     $Route->add('/', function () { // add a route uri and callback
         $IndexController = new IndexController();
-        
         //require __DIR__ . '/views/index.html';
     });
+    // Route for Login (/login) Page
     $Route->add('/login', function () { // add a route uri and callback
         require __DIR__ . '/views/login.html';
     });
+    // Route for Recover (/recover) Page
     $Route->add('/recover', function () { // add a route uri and callback
         require __DIR__ . '/views/recover.html';
     });
+    // Route for Register (/register) Page
     $Route->add('/register', function () { // add a route uri and callback
-        require __DIR__ . '/views/register.html';
+        $RegisterController = new RegisterController();
     });
     // Submit the route after initiating all routes
-    $Route->submit(); // calls the callback if one
+    $Route->submit();
 }(createRoutes());
 // switch ($request) {
 //     case '/':

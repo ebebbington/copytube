@@ -1,44 +1,11 @@
-fieldset{
+#login {
     text-align: center;
-}
-
-.register{
-    border: 0.2em solid rgb(190, 46, 46);
-    border-radius: 0.5em;
-    width: 100%;
-    margin-top: 1em;
-}
-
-#register {
     margin: 2em;
-    width: 40%;
-    font: bold 11px Arial;
-    text-decoration: none;
-    background-color: red;
-    padding: 10px 10px 10px 10px;
-    border: 1px solid #CCCCCC;
-    border-right-color: #333333;
-    border-bottom-color: #333333;
+    font: bold 1em Arial;
 }
 
-.register-fields{
-    width: 50%;
-    margin: auto;
+.incorrect-errors {
     text-align: center;
-}
-#go-back{
-    margin-top: 1em;
-    text-align: center;
-}
-.incorrect-errors{
-    font-size: 1.5em;
-    color: red;
-}
-#register-success{
-    font-size: 20px;
-    color: green;
-}
-#register-error {
-    font-size: 20px;
+    font: 1em Arial;
     color: red;
 }

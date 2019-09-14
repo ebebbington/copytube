@@ -6,7 +6,7 @@ class Route {
     public $request = '';
 
     public function __construct (Array $request = null) {
-        $this->request = $request ? '/' . basename($request['REQUEST_URI']) : '/';
+        $this->request = $request ? $request['REQUEST_URI'] : '/';
     }
 
     public function add (String $route = '', Object $callback = null) {

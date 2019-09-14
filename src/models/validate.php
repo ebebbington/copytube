@@ -6,74 +6,160 @@
  * Time: 11:23
  */
 
-// todo Add nice beautiful comments
-
-include_once 'smtp-email-check.php';
-include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/controllers/database.php';
-include_once $_SERVER[ 'DOCUMENT_ROOT' ] . '/models/comments.php';
-
+/**
+ *  The Validate Model
+ * 
+ * Respoonsible for validating user input, checking
+ * empty values and more
+ * 
+ * @author Edward Bebbington
+ * @copyright
+ * @license
+ * @method __construct()
+ * @method registerForm() The function to use when validating the registerform
+ */
 class ValidateModel
 {
-
-    //
-    // SQL Queries
-    //
+    // ///////////////////////////////////////////////////////
+    // Preapred SQL Queries
+    /////////////////////////////////////////////////////////
+    /** @var SQL Select every user in the users table */
     const SELECT_ALL_USERS = "SELECT * FROM users";
+    /** @var SQL Select all usernames in the users table by a given username */
     const GET_USERNAMES_BY_USERNAME = "SELECT username FROM users WHERE username = ?";
-    const GET_EMAILS_BY_EMAIL = "SELECT email_address FROM users WHERE email_address = ?";
+    /** @var SQL Select all emails in the users table by a given email */
+    const GET_EMAIL_ADDRESS_BY_EMAIL = "SELECT email_address FROM users WHERE email_address = ?";
 
-    //
-    // Initialise data
-    //
-    private $usernameMaxLen = 40;
-    private $commentMaxLen = 400;
-    private $usernames;
-    private $passwordMinLen = 8;
+    // ///////////////////////////////////////////////////////
+    // Class Properties
+    /////////////////////////////////////////////////////////
+    /** @var Array $usernamePolicy  Set of policies username must abide by, supplied with the rules */
+    private $usernamePolicy = [
+        'regEx' => "",
+        'description' => []
+    ];
+    /** @var Array $passwordPolicy  Set of policies password must abide by, supplied with the rules */
+    private $passwordPolicy = [
+        'regEx' => "",
+        'description' => []
+    ];
+    /** @var Int $commentMaxLen Maximum length a comment must abide by */
+    private $commentMaxLen = 0;
+    /** @var Array $result The resulting object, holding the succes, message and data of request */
+    public $result = [];
 
-    //
-    // Initialise
-    //
+    /**
+     * Constructor
+     * 
+     * Creates the policies and rules for validation
+     */
     public function __construct()
     {
-    }
-
-    /**
-     * Are a list of values set and valid
-     * 
-     * @param Array $data The arra to loop through checking each value
-     * @return Array [success, message, data] The response object
-     */
-    public function isSet(Array $data = [])
-    {
-        for ($i = 0; $i < (sizeof($data) - 1); $i++) {
-            if ( ! $data[ $i ] || ! isset($data[ $i ]) || trim($data[$i] < 1 || $data[$i] === null || empty($data[$i] ))) {
-                return [
-                    'success' => false,
-                    'message' => 'Some values are not set or dont contain anything',
-                    'data' => null
-                ];
-                break;
-            }
-        }
-        return [
-            'success' => true,
-            'message' => 'Values are set',
-            'data' => $data
+        // Create Result object
+        $this->result = [
+            'success' => false,
+            'message' => 'An error occurred',
+            'data' => null
         ];
+        // Set username policy
+        $this->usernamePolicy['regEx'] = "/^[a-zA-Z ]{1,40}$/";
+        $this->usernamePolicy['description'] = [
+            'Must be at least 8 characters long',
+            'Must contain at least 1 lower and uppcase character',
+            'Must contain at least 1 number'
+        ];
+        // Set password policy
+        $this->passwordPolicy['regEx'] = "/[0-9a-zA-Z]{8,}/";
+        $this->passwordPolicy['description'] = [
+            'Must be at least 8 characters long',
+            'Must contain at least 1 lower and uppcase character',
+            'Must contain at least 1 number',
+            'Cannot contain username'
+        ];
+        // Set settings for comments
+        $this->commentMaxLength = 400;
     }
 
     /**
-     * Prepare a string to display by sanitising it
+     * Validate All Fields in Register Form
      * 
-     * @param String $value The string to check
-     * @return Array [success, message, data] The response object
+     * Validate the username, email and password. If the result of this object after this method
+     * is true, all fields are correct
      */
-    public function prepareStringForView (String $value = '') {
-        $value = filter_var($string, FILTER_SANITIZE_STRING);
-        if (!$value) {
-            return ['success' => false, 'message' => 'Tags are not allowed', 'data' => null];
+    public function registerForm () {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        // Check username is set
+        $this->isSet($username, 'string');
+        if ($this->result['success'] === false) {
+            return;
         }
-        return ['success' => true, 'message' => 'Sanitised the input', 'data' => $value];
+        // Check email is set
+        $this->isSet($email, 'string');
+        if ($this->result['success'] === false) {
+            return;
+        }
+        // Check password is set
+        $this->isSet($password, 'string');
+        if ($this->result['success'] === false) {
+            return;
+        }
+        // Check they abide by the policies
+        if (preg_match($this->usernamePolicy['regEx'], $username) < 1) {
+            $this->result['success'] = false;
+            $this->result['message'] = 'Username does not meet the policy';
+            $this->result['data'] = 'username';
+            return;
+        }
+        if (preg_match($this->passwordPolicy['regEx'], $password) < 1) {
+            $this->result['success'] = false;
+            $this->result['message'] = 'Password does not meet the policy';
+            $this->result['data'] = 'password';
+            return;
+        }
+        // Check username and email dont already exist
+        $DatabaseModel = new DatabaseModel();
+        $DatabaseModel->runQuery(self::GET_USERNAMES_BY_USERNAME, [$username]);
+        if ($DatabaseModel->row) {
+            $this->result['success'] = false;
+            $this->result['message'] = 'Username already exists';
+            $this->result['data'] = 'username';
+            return;
+        }
+        $DatabaseModel->runQuery(self::GET_EMAIL_ADDRESS_BY_EMAIL, [$email]);
+        if ($DatabaseModel->row) {
+            $this->result['success'] = false;
+            $this->result['message'] = 'Email already exists';
+            $this->result['data'] = 'email';
+            return;
+        }
+        // Check email is valid
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->result['success'] = false;
+            $this->result['message'] = 'Email is not the required correct format';
+            $this->result['data'] = 'email';
+            return;
+        }
+        $this->result['success'] = true;
+        $this->result['message'] = 'Register fields have successfully been validated, can proceed';
+        $this->result['data'] = null;
+    }
+
+    /**
+     * Check if a value is set
+     * 
+     * @param $data The value to check
+     */
+    private function isSet($data = null, String $type = '')
+    {
+        if (!$data || !isset($data) || !trim($data) || $data === null || empty($data) || gettype($data) !== $type) {
+            $this->result['success'] = false;
+            $this->result['message'] = 'The value is not set e.g it is empty or not the right data type';
+        } else {
+            $this->result['success'] = true;
+            $this->result['message'] = 'All values passed in are set';
+        }
     }
 
     /**
@@ -115,24 +201,14 @@ class ValidateModel
      * @param string $username The username field in the register form
      * @return Array [success, message, data] The response object
      */
-    public function validateUsername(String $username = '')
+    private function username (String $username = '')
     {
-        // Validate
-        $usernameIsSet = $this->isSet([$username]);
-        if (!$usernameIsSet) {
-            return ['success' => false, 'message' => 'Username is not set', 'data' => 'username'];
-        }
-        if (strlen($username) > $this->usernameMaxLen) {
-            return ['success' => false, 'message' => 'Username is too long', 'data' => 'username'];
-        }
         // Check RegEx
-        if (preg_match("/^[a-zA-Z ]*$/", $username) < 1) {
-            return ['success' => false, 'message' => 'Only letters and whitespaces are allowed', 'data' => 'username'];
-        }
-        // Sanitise
-        $username = filter_var($username, FILTER_SANITIZE_STRING);
-        if (!$username) {
-            return ['success' => false, 'message' => 'Tags are not allowed', 'data' => 'username'];
+        if (preg_match($this->usernamePolicy['regEx'], $username) < 1) {
+            $this->result['success'] = false;
+            $this->result['message'] = 'Username does not meet the policy';
+            $this->result['data'] = 'username';
+            return;
         }
         // Check if username exists
         $db = new Database();

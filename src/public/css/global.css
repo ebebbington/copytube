@@ -37,8 +37,12 @@ form legend.form-title {
     font: bold 2em Arial;
 }
 /* Styling for Form Error Message */
-.form-error-message {
+#form-error {
     color: red;
+    font-size: 1.5em;
+}
+#form-success {
+    color: green;
     font-size: 1.5em;
 }
 /**

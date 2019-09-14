@@ -25,7 +25,7 @@
                 <fieldset>
                     <legend><img class="form-logo" src="../public/images/copytube_logo.png" alt="Logo"></legend>
                     <legend class="form-title">Login</legend>
-                    <p class="alert alert-danger form-error-message" hidden></p>
+                    <p id="form-error" class="alert alert-danger form-messages" hidden></p>
                     <label>Email: *</label><input id="login-email" class="form-fields form-control" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
                     <label>Password: *</label><input id="login-password" type='password' class="form-fields form-control" name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
                     <input id="login-button" class="form-submit btn btn-primary" type="button" name="submit" value="Submit">
