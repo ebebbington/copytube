@@ -2,16 +2,14 @@
 'use strict'
 
 function cleanErrorField () {
-  // noinspection JSJQueryEfficiency
-$('.form-error-message').text('')
-// noinspection JSJQueryEfficiency
-$('.form-error-message').attr('hidden')
+  const formErrorMessage = $('.form-error-message')
+  formErrorMessage.text('')
+  formErrorMessage.attr('hidden')
 }
 function showErrorField (errorMsg = 'An error Occured') {
-  // noinspection JSJQueryEfficiency
-  $('.form-error-message').text(errorMsg)
-  // noinspection JSJQueryEfficiency
-  $('.form-error-message').removeAttr('hidden')
+  const formErrorMessage = $('.form-error-message')
+  formErrorMessage.text(errorMsg)
+  formErrorMessage.removeAttr('hidden')
   $('html', 'body').animate({scrollTop: 0}, 'slow')
   $('#login-form').trigger('reset')
 }
@@ -46,7 +44,6 @@ function submit () {
     error: function (error) {
       cleanErrorField()
       showErrorField(error.message)
-      // todo :: Log server side using email?
       console.table(error)
     }
   })
