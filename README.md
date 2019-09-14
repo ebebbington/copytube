@@ -5,7 +5,10 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 * CSS
 * JavaScript
 * PHP/PHP-FPM
+* SQL
 * Nginx
+* Sessions
+* How Users Login
 
 ## Prerequisites
 
