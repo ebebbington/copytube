@@ -5,7 +5,20 @@
  * Date: 12/09/2019
  * Time: 18:38
  * 
- * This script is the routing file for CopyTube
+ * This script is the routing file for CopyTube.
+ * The way this app works is:
+ * 1 Developer hard codes a new route here with the callback
+ * 2 When the route is submitted, the logic inside the callback will handle the request e.g
+ *      2.1 Register will go to the register controller and check against the request
+ *          displaying whats needed, if its an AJAX post or HTTP GET
+ * 
+ * Routes has a callback
+ * Callback calls the require controller
+ * Controller handles the request
+ * End with using the Respond controller
+ * 
+ * Notes:
+ * 1 Use 'trigger_error()' for errors
 */
 
 /**
