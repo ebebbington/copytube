@@ -20,7 +20,7 @@ require_once '/usr/lib/vendor/autoload.php';
  * $Mail = new Mail(params);
  * $Mail->send();
  */
-class Mail {
+class MailModel {
 
   /////////////////////////////////////////////////////////
   // Class properties
@@ -46,11 +46,11 @@ class Mail {
    * Constructs the sender and receiever options for the Mail class.
    * Sets up the PHPMailer class to be prepared to be sent
    * @param String $subject Subject of the email
-   * @param String $message Body of the email
+   * @param Any $message Body of the email, can be a single line (string) or an array with line breaks
    * @param String $receiever Email to be sent to
    * @param String $name Name of te receiever
    */
-  public function __construct (String $subject = '', String $message = '', String $receiever = '', String $name = '') {
+  public function __construct (String $subject = '', $message, String $receiever = '', String $name = '') {
     // Assign email options
     $this->senderEmail = 'info@copytube.com';
     $this->senderName = 'CopyTube';

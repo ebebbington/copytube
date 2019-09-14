@@ -89,8 +89,8 @@ function setCustomErrorHandler () {
             fwrite($errorLogFile, $errorArray[ $i ]);
         }
         // todo :: Send email
-        $Mail = new Mail('CopyTube Error', $errorArray, 'EdwardSBebbington@hotmail.com', 'Edward Bebbington');
-        $Mail->send();
+        $MailModel = new MailModel('CopyTube Error', $errorArray, 'EdwardSBebbington@hotmail.com', 'Edward Bebbington');
+        $MailModel->send();
         fclose($errorLogFile);
         return TRUE;
     }, E_ALL | E_STRICT);
