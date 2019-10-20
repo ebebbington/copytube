@@ -2,7 +2,7 @@ FROM php:7.3-fpm
 
 # Update and install required packages and dependencies
 RUN apt-get update -y
-RUN apt-get install -y libxml2-dev libxslt-dev python-dev --no-install-recommends
+RUN apt-get install -y --no-install-recommends libxml2-dev libxslt-dev python-dev
 RUN apt-get install -y \
   apt-transport-https apt-utils libc-client-dev libzip-dev libldb-dev libldap2-dev libpng-dev zip unzip curl vim
 
@@ -13,9 +13,6 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli xml json ldap mbstring soap gd x
 
 # Configure php.ini
 COPY ./.docker/config/phpfpm/php.ini /etc/php.ini
-
-# Copy entry point script
-COPY ./.docker/config/phpfpm/entry-point.sh /etc/entry-point.sh
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
