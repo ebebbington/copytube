@@ -12,7 +12,7 @@
         <!-- Login fields -->
         <div class="col-sm-2 col-md-2"></div>
         <div class="col-xs-12 col-sm-8 col-md-8">
-            <form method="post" action="/register">
+            <form action=" {!! url('/register') !!}" method="POST">
                 <fieldset>
                     <legend><img class="form-logo" src="../public/images/copytube_logo.png" alt="Logo"></legend>
                     <legend class="form-title">Register</legend>
