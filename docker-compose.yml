@@ -9,7 +9,6 @@ services:
       dockerfile: .docker/nginx.dockerfile
     volumes:
       - ./src:/var/www/copytube
-    command: bash -c "nginx -g 'daemon off;'"
     working_dir: /var/www/copytube
     depends_on:
       - phpfpm

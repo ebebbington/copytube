@@ -12,7 +12,7 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli xml json ldap mbstring soap gd x
 # Can add mysqli
 
 # Configure php.ini
-COPY ./.docker/config/phpfpm/php.ini /etc/php.ini
+COPY ./.docker/config/php.ini /etc/php.ini
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

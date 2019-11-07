@@ -6,5 +6,5 @@ RUN     apt-get install vim -y
 
 COPY ./.docker/config/copytube.conf /etc/nginx/conf.d/copytube.conf
 
-# ENTRYPOINT ["nginx"]
-# CMD ["-g","daemon off;"]
+ENTRYPOINT ["nginx"]
+CMD ["-g","daemon off;"]
