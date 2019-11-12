@@ -7,16 +7,23 @@ use App\UserModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller {
-    public function create (Request $request)
+
+    /**
+     * Submit the register form
+     * 
+     * @param {object} $request
+     * 
+     * @return {object} response    Data and status
+     */
+    public function submit (Request $request)
     {
         // validate
         $validatedData = $request->validate([
             'username' => 'required',
-            'email' => 'required',
-            'password' => 'required'
+            'email' => 'required|email',
+            'password' => 'required|regex:/[0-9a-zA-Z]{8,}/'
         ]);
 
         // hash password
@@ -24,29 +31,21 @@ class RegisterController extends Controller {
             'rounds' => 12
         ]);
         $_POST['password'] = $hash;
-
-        // check if user exists
-        $userExists = DB::table('users')->where('password', $_POST['password'])->first();
-        if ($userExists) {
-            return 'exists';
-        }
-        if (!$userExists) {
-            // save the user
-            $User = new UserModel();
-            $User->create(
-                [
-                'username' => $_POST['username'],
-                'email_address' => $_POST['email'],
-                'password' => $_POST['password'],
-                'logged_in' => 1,
-                'login_attempts' => 3
-                ]
-            );
-            var_dump($User);
-            return 'saved';
-        }
+        
+        // save user (also checks if they exist)
+        $User = new UserModel();
+        $result = $User->checkAndSave($_POST, 1, 3);
+        
+        return response([
+            'success' => $result
+        ], 200);
     }
 
+    /**
+     * Display the register view
+     * 
+     * @return {object} View    View to display
+     */
     public function index ()
     {
         return view('register');
