@@ -184,7 +184,9 @@ CREATE TABLE `users` (
   `email_address` varchar(50) NOT NULL,
   `password` varchar(80) NOT NULL,
   `logged_in` tinyint(1) NOT NULL,
-  `login_attempts` int(10) UNSIGNED NOT NULL
+  `login_attempts` int(10) UNSIGNED NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+  `created_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

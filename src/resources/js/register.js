@@ -2,10 +2,7 @@
 'use strict'
 
 function clearAndHideMessageFields () {
-  const incorrectFields = $('.incorrect-errors')
-  incorrectFields.text('')
-  incorrectFields.attr('hidden', 'hidden')
-  const formMessages = $('.form-messages')
+ const formMessages = $('.form-messages')
   formMessages.text('')
   formMessages.attr('hidden', 'hidden')
 }
@@ -53,16 +50,20 @@ function validateInput () {
 
 function registerUser () {
   $.ajax({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
     type: 'POST',
     url: '/register',
     data: {
       username: $('#username').val(),
       email: $('#email').val(),
-      password: $('#password').val(),
-      ajax: true
+      password: $('#password').val()
     },
-    dataType: 'json',
+   
     success: function (data, status, jqXHR) {
+      alert('yep')
+      console.log(data)
       const response = {
         success: data.success,
         message: data.message,
@@ -81,28 +82,31 @@ function registerUser () {
       return false
     },
     error: function (error) {
-      $('#register-form').trigger('reset')
-      showError('An error occurred')
-      $('html', 'body').animate({scrollTop: 0}, 'slow')
-      return false
+      alert('nope')
+      console.log(error)
+      const errors = error.responseJSON.errors
+      const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
+   
+      //$('#register-form').trigger('reset')
+      showError(errMsg)
+      //$('html', 'body').animate({scrollTop: 0}, 'slow')
+      //return false
     }
   })
 }
 
 $(document).ready(function () {
-  $('#login').on('click', function () {
-    window.location.href = '/login'
-  })
   $('#register-button').on('click', function (e) {
     e.preventDefault()
     clearAndHideMessageFields()
-    const isValidInput = validateInput()
-    if (!isValidInput) {
-      return false
-    }
-    if (isValidInput) {
-      return registerUser()
-    }
+    // const isValidInput = validateInput()
+    // if (!isValidInput) {
+    //   return false
+    // }
+    // if (isValidInput) {
+    //   return registerUser()
+    // }
+    registerUser()
   })
 })
 
