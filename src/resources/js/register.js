@@ -7,26 +7,16 @@ function clearAndHideMessageFields () {
   formMessages.attr('hidden', 'hidden')
 }
 
-function showError (field = '', msg = '') {
-  clearAndHideMessageFields()
-  if (field === 'register') {
-    // problem with the whole form e.g. server error
-    alert('yep is screwed')
-    const formErrorMessage = $('#form-error')
+function showError (msg = '') {
+    const formErrorMessage = $('#error-message')
     formErrorMessage.removeAttr('hidden')
     formErrorMessage.text(msg)
-  } else {
-    const element = $('#incorrect-' + field)
-    // problem with input
-    element.removeAttr('hidden')
-    element.text(msg)
-  }
 }
 
-function showSuccess () {
-  const formSuccess = $('#form-success')
+function showSuccess (msg) {
+  const formSuccess = $('#success-message')
   formSuccess.removeAttr('hidden')
-  formSuccess.text('Successfully registered an account')
+  formSuccess.text(msg)
 }
 
 function validateInput () {
@@ -60,33 +50,22 @@ function registerUser () {
       email: $('#email').val(),
       password: $('#password').val()
     },
-   
     success: function (data, status, jqXHR) {
-      alert('yep')
-      console.log(data)
-      const response = {
-        success: data.success,
-        message: data.message,
-        data: data.data,
-        statusCode: jqXHR.status,
-      }
-      console.table(response)
-      if (response.success === true) {
+      console.table(data)
+      if (data.success === true) {
         $('#register-form').trigger('reset')
-        showSuccess()
+        showSuccess('Created an account')
         $('html', 'body').animate({scrollTop: 0}, 'slow')
         return false
       }
       // else theres a problem
-      showError(response.data, response.message)
+      showError('There was a problem')
       return false
     },
     error: function (error) {
-      alert('nope')
       console.log(error)
       const errors = error.responseJSON.errors
       const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
-   
       //$('#register-form').trigger('reset')
       showError(errMsg)
       //$('html', 'body').animate({scrollTop: 0}, 'slow')
@@ -98,6 +77,11 @@ function registerUser () {
 $(document).ready(function () {
   $('#register-button').on('click', function (e) {
     e.preventDefault()
+    const passedValidation = validateInput()
+    if (!passedValidation) {
+      showError('Please fill out the fields correctly')
+      return false
+    }
     clearAndHideMessageFields()
     // const isValidInput = validateInput()
     // if (!isValidInput) {

@@ -91,19 +91,19 @@ class UserModel extends Model
      * 
      * @return {bool} Success of the result
      */
-    public function checkAndSave (array $postData = array())
+    public function checkAndSave ($username, $email, $hash)
     {
         // first check if user exists
-        $user = $this->exists($postData['email']);
+        $user = $this->exists($email);
         if (isset($user->username)) {
             return false;
         }
         // then save
         if (!isset($user->username)) {
             $this->create([
-                'username' => $_POST['username'],
-                'email_address' => $_POST['email'],
-                'password' => $_POST['password'],
+                'username' => $username,
+                'email_address' => $email,
+                'password' => $hash,
                 'logged_in' => 1,
                 'login_attempts' => 3]
             );
