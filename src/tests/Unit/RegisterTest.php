@@ -9,16 +9,25 @@ use Illuminate\Support\Facades\DB;
 
 class RegisterTest extends TestCase
 {
+    private $validUsername = 'Mr Test Username';
+
+    private $validEmail = 'mrtestemail@hotmail.com';
+
+    private $validPassword = 'MrTestPa55word1';
+
 
     /**
-     * A basic unit test example.
+     * Remove test users from the users table
      *
      * @return void
      */
-    public function testSubmit()
+    private function removeTestUserFromDB(): void
     {
-        // 
-        $this->assertTrue(true);
+        // Remove the data
+        DB::table('users')
+            ->where('username', $this->validUsername)
+            ->where('email_address', $this->validEmail)
+            ->delete();
     }
 
     public function testGETRequest()
@@ -28,51 +37,55 @@ class RegisterTest extends TestCase
         $response->assertViewIs('register');
     }
 
-    public function testValidation ()
-    {
-         // Test the validation of data
-    }
+    // public function testValidation ()
+    // {
+    //      // Test the validation of data
+    // }
 
     public function testUpdateOfDatabase()
     {
-        // Test addings user and table havs that column
-        // Setup
-        $data = [
-            'username' => 'Edward Bebbington',
-            'email' => 'Edkjbbington@hotmail.com',
-            'password' => 'Welcome1'
-        ];
-        $headers = [
-            'HTTP_X-Requested-With' => 'XMLHttpRequest'
-        ];
-        // Send the request
-        $response = $this->post('/register', $data, $headers);
+        // Test addings user and table has that column
+        $response = $this->submitValidUser();
+
+        // Remove the data
+        $this->removeTestUserFromDB();
 
         // Assert the response
         $response->assertJson([
             'success' => true
         ]);
-
-        // Remove the data
-        DB::table('users')
-            ->where('email_address', $data['email'])
-            ->delete();
     }
 
-    public function testPasswordGetsHashed()
+    private function submitValidUser (): ?Object
     {
-        // make sure the password is hashed
+        $data = [
+            'username' => $this->validUsername,
+            'email' => $this->validEmail,
+            'password' => $this->validPassword
+        ];
+        $headers = [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest'
+        ];
+        
+        // Send the request
+        $response = $this->post('/register', $data, $headers);
+
+        return $response;
     }
+
+    // public function testPasswordGetsHashed()
+    // {
+    //     // make sure the password is hashed
+    // }
 
     public function testRawPasswordIsRemoved()
     {
         // make sure the password is removed from everywhere
-
-    }
-
-    public function testPOSTRequest()
-    {
-
-        // Test it should be an ajax request and POST
+        // and create a user so we reach the block that removes the pass
+        $response = $this->submitValidUser();
+        // Remove the data
+        $this->removeTestUserFromDB();
+        $removed = $_POST['password'] ? false : true;
+        $this->assertTrue($removed);
     }
 }

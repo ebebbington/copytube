@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserModel extends Model
 {
@@ -72,6 +73,11 @@ class UserModel extends Model
     //     // $this->login_attempts = 3;
     // }
 
+    public function __construct()
+    {
+        Log::debug('USER MODEL');
+    }
+
     /**
      * Check if a user exists
      * 
@@ -96,18 +102,29 @@ class UserModel extends Model
         // first check if user exists
         $user = $this->exists($email);
         if (isset($user->username)) {
-            return false;
+            Log::debug('User already exists');
+            return ['success' => false];
         }
         // then save
         if (!isset($user->username)) {
+            Log::debug('Saving the new user...');
             $this->create([
                 'username' => $username,
                 'email_address' => $email,
                 'password' => $hash,
                 'logged_in' => 1,
-                'login_attempts' => 3]
-            );
-            return true;
+                'login_attempts' => 3
+            ]);
+
+            // check it saved
+            $user = DB::table('users')
+                ->where('email_address', $email);
+            $success = isset($user->username) ? true : false;
+            Log::debug(['message' => "User saved to the database", 'data' => $success]);
+            return [
+                'success' => $success,
+                'data' => $user
+            ];
         }
     }
 }

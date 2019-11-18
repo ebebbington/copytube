@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller {
 
+    public function __construct()
+    {
+        Log::debug('REGISTER CONTROLLER');
+    }
+
     /**
      * Submit the register form
      * 
@@ -23,7 +28,7 @@ class RegisterController extends Controller {
         // check its an ajax call
         if ($request->ajax() === false)
         {
-            Log::debug('Not an ajax call to registering a user');
+            Log::debug('Request is not an ajax call');
             return response([
                 'success' => false
             ], 403);
@@ -35,7 +40,7 @@ class RegisterController extends Controller {
             'email' => 'required|email',
             'password' => 'required|regex:/[0-9a-zA-Z]{8,}/'
         ]);
-        Log::debug('registering an account passed server validation');
+        Log::debug('Passed server validation');
 
         // get data
         $username = $request->input('username');
@@ -44,25 +49,30 @@ class RegisterController extends Controller {
         $hash = Hash::make($request->input('password'), [
             'rounds' => 12
         ]);
-
+        Log::debug(['message' => 'Retrieved input and hashed password', 'data' => array($username, $email, $hash)]);
+        
         // remove the raw password
         $_POST['password'] = null;
         $request->merge(['password' => null]);
-        Log::debug('removed refs to raw password on register account');
+        Log::debug('Removed references to the raw password');
         
         // save user (also checks if they exist)
         $User = new UserModel();
         $result = $User->checkAndSave($username, $email, $hash);
-        if ($result === true) {
-            Log::debug('Saved a new user account');
-        }
-        if ($result === false) {
+        if ($result['success'] === true) {
+            Log::debug([
+                'message' => 'Saved a new user account',
+                'data' => array($username, $email, $hash)
+            ]);
+            return response([
+                'success' => $result['success']
+            ], 200);
+        } else {
             Log::debug('Couldnt save a new user account');
+            return response([
+                'success' => false
+            ], 500);
         }
-
-        return response([
-            'success' => $result
-        ], 200);
     }
 
     /**
