@@ -6,6 +6,8 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use App\UserModel;
 
 class RegisterTest extends TestCase
 {
@@ -37,14 +39,18 @@ class RegisterTest extends TestCase
         $response->assertViewIs('register');
     }
 
-    // public function testValidation ()
-    // {
-    //      // Test the validation of data
-    // }
+     public function todotestValidation ()
+     {
+          // Test the validation of data
+         // todo :: Get the rules from the model: Validator::make(, UserModel::$rules);
+     }
 
     public function testUpdateOfDatabase()
     {
-        // Test addings user and table has that column
+        // First remove the test user if there is one
+        $this->removeTestUserFromDB();
+
+        // Test adding a user and that table has that column
         $response = $this->submitValidUser();
 
         // Remove the data
@@ -64,12 +70,11 @@ class RegisterTest extends TestCase
             'password' => $this->validPassword
         ];
         $headers = [
-            'HTTP_X-Requested-With' => 'XMLHttpRequest'
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            'X-CSRF-TOKEN' => csrf_token()
         ];
-        
         // Send the request
         $response = $this->post('/register', $data, $headers);
-
         return $response;
     }
 

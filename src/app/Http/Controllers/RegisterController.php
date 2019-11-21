@@ -1,86 +1,101 @@
 <?php
- 
+
 namespace App\Http\Controllers;
 
 use App\UserModel;
 
+use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
-class RegisterController extends Controller {
-
-    public function __construct()
-    {
-        Log::debug('REGISTER CONTROLLER');
-    }
+class RegisterController extends Controller
+{
 
     /**
-     * Submit the register form
-     * 
-     * @param {object} $request
-     * 
-     * @return {object} response    Data and status
+     * Submitting the Register form
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function submit (Request $request)
+    public function submit(Request $request)
     {
         // check its an ajax call
-        if ($request->ajax() === false)
-        {
+        if ($request->ajax() === false) {
             Log::debug('Request is not an ajax call');
             return response([
-                'success' => false
+              'success' => false,
             ], 403);
         }
-
-        // validate
-        $validatedData = $request->validate([
-            'username' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|regex:/[0-9a-zA-Z]{8,}/'
-        ]);
-        Log::debug('Passed server validation');
+        Log::debug('Request to POST register is an ajax');
 
         // get data
         $username = $request->input('username');
-        $email = $request->input('email');
-        // hash password
+        $email    = $request->input('email');
         $hash = Hash::make($request->input('password'), [
-            'rounds' => 12
+          'rounds' => 12,
         ]);
-        Log::debug(['message' => 'Retrieved input and hashed password', 'data' => array($username, $email, $hash)]);
-        
+        Log::debug('Retrieved input and hashed password: ', [$username, $email, $hash]);
+
+        // Validate user details
+        $passedValidation = UserModel::validate([$username, $email, $request->input('password')]);
+        if ($passedValidation === false) {
+            Log::debug('Couldnt validate input');
+            return response([
+              'success' => false,
+              'message' => 'couldnt validate the input'
+            ], 401);
+        }
+
         // remove the raw password
-        $_POST['password'] = null;
+        $_POST[ 'password' ] = null;
         $request->merge(['password' => null]);
         Log::debug('Removed references to the raw password');
-        
-        // save user (also checks if they exist)
-        $User = new UserModel();
-        $result = $User->checkAndSave($username, $email, $hash);
-        if ($result['success'] === true) {
-            Log::debug([
-                'message' => 'Saved a new user account',
-                'data' => array($username, $email, $hash)
-            ]);
+
+        // Check if user already exists
+        $userExists = UserModel::exists($email);
+        if ($userExists === true) {
+            Log::debug('User already exists');
             return response([
-                'success' => $result['success']
+              'success' => false,
+              'message' => 'user already exists',
             ], 200);
-        } else {
-            Log::debug('Couldnt save a new user account');
+        }
+        Log::debug('User doesnt exists');
+
+        // Save the user
+        $User = new UserModel;
+        $user = $User->createUser($username, $email, $hash);
+        if (isset($user->exists) && $user->exists === false) {
+            Log::debug('Didnt save a user');
             return response([
-                'success' => false
+              'success' => false,
+              'message' => 'user didnt save into the database',
             ], 500);
         }
+        if (isset($user->exists) && $user->exists === true) {
+            Log::debug('Saved a user');
+            return response([
+              'success' => true,
+            ], 200);
+        }
+
+        // For precaution
+        Log::debug("I shouldnt be here");
+        return response([
+          'success' => false,
+            'message' => 'Something went wrong'
+        ], 500);
     }
 
     /**
      * Display the register view
-     * 
+     *
      * @return {object} View    View to display
      */
-    public function index ()
+    public function index()
     {
         return view('register');
     }

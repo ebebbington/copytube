@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UserModel extends Model
 {
@@ -24,107 +25,105 @@ class UserModel extends Model
 
     /**
      * Username of the user
-     * 
+     *
      * @var String
      */
     public $username;
 
     /**
      * Email address for user
-     * 
+     *
      * @var String
      */
     public $email_address;
 
     /**
      * Hashed password of user
-     * 
+     *
      * @var String
      */
     public $password;
 
     /**
      * Logged in value (0 = logged in)
-     * 
+     *
      * @var Int
      */
     public $logged_in;
-    
+
     /**
      * Number of login attempts for the user
-     * 
-     * @var Int
+     *
+     * @var int
      */
     public $login_attempts;
 
     /**
      * Fields to be populated
-     * 
-     * @var Array
+     *
+     * @var array
      */
     protected $fillable = ['username', 'email_address', 'password', 'logged_in', 'login_attempts'];
 
-    // public function __construct (array $post= array())
-    // {
-    //     // $this->username = $post['username'];
-    //     // $this->email = $post['email'];
-    //     // $this->password = $post['password'];
-    //     // $this->logged_in = 1;
-    //     // $this->login_attempts = 3;
-    // }
+    /**
+     * Rules for validation
+     *
+     * @var array
+     */
+    private static $rules = [
+      'username' => 'required',
+      'email'    => 'required|email',
+      'password' => 'required|regex:/[0-9a-zA-Z]{8,}/',
+    ];
 
-    public function __construct()
+    /**
+     * Check a user exists by a given email address
+     *
+     * @param {String} $email Email of user to find
+     *
+     * @return bool
+     */
+    public static function exists($email): bool
     {
-        Log::debug('USER MODEL');
+        $result = UserModel::where('email_address', $email)->first();
+
+        return $result ? true : false;
     }
 
     /**
-     * Check if a user exists
-     * 
-     * @param {string} $email The email to check by
-     * 
-     * @return {Object} The user object, found or not
+     * Add a new user to the database
+     *
+     * @param $username
+     * @param $email
+     * @param $hash
+     *
+     * @return mixed
      */
-    private function exists (string $email = '')
+    public function createUser($username, $email, $hash)
     {
-        return DB::table('users')->where('email_address', $email)->first();
+        Log::debug('Going to validate input');
+        Log::debug('Saving the new user...');
+        $user = $this->create([
+          'username'       => $username,
+          'email_address'  => $email,
+          'password'       => $hash,
+          'logged_in'      => 1,
+          'login_attempts' => 3,
+        ]);
+
+        return $user;
     }
 
     /**
-     * Save a user if they dont already exist
-     * 
-     * @param {array} $postData Holds the username, email and hashed pass
-     * 
-     * @return {bool} Success of the result
+     * Validate User register credentials
+     *
+     * @param {Array} $registerData containing all register field values
+     *
+     * @return bool
      */
-    public function checkAndSave ($username, $email, $hash)
+    public static function validate($registerData)
     {
-        // first check if user exists
-        $user = $this->exists($email);
-        if (isset($user->username)) {
-            Log::debug('User already exists');
-            return ['success' => false];
-        }
-        // then save
-        if (!isset($user->username)) {
-            Log::debug('Saving the new user...');
-            $this->create([
-                'username' => $username,
-                'email_address' => $email,
-                'password' => $hash,
-                'logged_in' => 1,
-                'login_attempts' => 3
-            ]);
-
-            // check it saved
-            $user = DB::table('users')
-                ->where('email_address', $email);
-            $success = isset($user->username) ? true : false;
-            Log::debug(['message' => "User saved to the database", 'data' => $success]);
-            return [
-                'success' => $success,
-                'data' => $user
-            ];
-        }
+        $validator = Validator::make($registerData, static::$rules);
+        return $validator->fails();
     }
 }
