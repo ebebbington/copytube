@@ -24,6 +24,8 @@ services:
       dockerfile: .docker/phpfpm.dockerfile
     depends_on:
       - sql
+    env_file:
+      - ./.docker/env/phpfpm.env
     ports:
       - "9000:9000"
     volumes:
