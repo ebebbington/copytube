@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="col-sm-2 col-md-2">
-            <div id="example"></div>
+            <div id="form-container"></div>
         </div>
     </div>
 </div>
