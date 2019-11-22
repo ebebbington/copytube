@@ -15,7 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test-page', 'TestPageController@index');
-
 Route::get('/register', 'RegisterController@index');
 Route::post('/register', 'RegisterController@submit');
