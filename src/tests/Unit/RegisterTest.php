@@ -17,6 +17,13 @@ class RegisterTest extends TestCase
 
     private $validPassword = 'MrTestPa55word1';
 
+    /**
+     * @test
+     */
+    public function newtest()
+    {
+
+    }
 
     /**
      * Remove test users from the users table
@@ -32,7 +39,7 @@ class RegisterTest extends TestCase
             ->delete();
     }
 
-    public function testGETRequest()
+    public function testGetRequest()
     {
         $response = $this->json('GET', '/register');
         $response->assertStatus(200);
