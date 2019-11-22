@@ -4,6 +4,7 @@
     <title>CopyTube - Register</title>
     <link type="text/css" rel="stylesheet" href="sass/register.css"/>
     <script type="text/javascript" src="js/register.js"></script>
+    <script type="text/babel" src="js/components/Form.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 @stop
 
@@ -11,7 +12,8 @@
 <div class="container">
     <div class="row">
         <!-- Login fields -->
-        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-2 col-md-2">
+        </div>
         <div class="col-xs-12 col-sm-8 col-md-8">
             <form>
                 {{ csrf_field() }}
@@ -34,7 +36,9 @@
                 <a href="/login">Login</a>
             </div>
         </div>
-        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-2 col-md-2">
+            <div id="example"></div>
+        </div>
     </div>
 </div>
 </body>
