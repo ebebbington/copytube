@@ -21,6 +21,9 @@
  * will run the config e.g. in my case it will conpile the register file.
  * this results in the register.js file shown to the user without comments etc. and the register.ts file shown but with no content,
  * but you can not show the .ts file by changing the sourceMap prop in the config file to false
+ * 
+ * with the issue 'cannot find name $', install:
+ *    npm i --save @types/jquery
  */
 function test (msg: string): void {
   alert(msg)
