@@ -9,6 +9,8 @@
         <script type="application/javascript" src="libs/react.js"></script>
         <script type="application/javascript" src="libs/react-dom.js"></script>
         <script type="application/javascript" src="libs/babel.js"></script>
+        <script type="text/javascript" src="libs/typescript.min.js"></script>
+        <script type="text/javascript" src="libs/typescript.compile.min.js"></script>
         <link rel="stylesheet" href="sass/layout.css">
         <noscript><style>.container{display: none;}</style></noscript>
         @yield('head')

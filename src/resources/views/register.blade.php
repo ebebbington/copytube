@@ -3,7 +3,7 @@
 @section('head')
     <title>CopyTube - Register</title>
     <link type="text/css" rel="stylesheet" href="sass/register.css"/>
-    <script type="text/javascript" src="js/register.js"></script>
+    <script src="js/register.js"></script>
     <script type="text/babel" src="js/components/Form.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 @stop
