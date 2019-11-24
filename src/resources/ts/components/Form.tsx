@@ -1,7 +1,7 @@
-import React = require("react"); // added by the ide to fix the type hint error for React.Component
-import ReactDOM = require("react-dom");
 
-export {};
+
+
+
 // Define the props
 const props = {
   title: 'Some dynamic title'
@@ -62,7 +62,7 @@ class GenericForm extends React.Component<IGenericForm> {
    */
   constructor(props: object) {
     super(props);
-    this.state.value = '';
+
     this.exampleProp1 = this.props.exampleProp1
     this.exampleProp2 = this.props.exampleProp2
     console.log([this.exampleProp1, this.exampleProp2])
