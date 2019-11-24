@@ -1,68 +1,43 @@
-// Define the props
-const props = {
-  title: 'Some dynamic title'
-}
-
-/**
- * Form
- *
- * The base form block any implemented form should use.
- * This would be used for types like a register from or login form,
- * and the required elememts needed within would be added - such as
- * username input, email input, select field
- *
- * To use this component, a new component should be create e.g. LoginForm,
- * and that login form should extend this, and implement the required components.
- * So take for example, the LoginForm would implement this component, the email component,
- * and the password component.
- *
- * @type {HTMLElement}
- *
- * @method handlechange   Handles the changed state of the input fields
- * @method handleClick    Handles click of submit button
- * @method render         Displays the form
- */
-class Form extends React.Component {
-
-  // Always call super() right away
-  /**
-   * Constructor
-   *
-   * Always call super(props) right away
-   * @param props
-   */
-  constructor(props) {
-    super(props);
-    this.state = {value: ''};
-    this.exampleProp1 = this.props.exampleProp1
-    this.exampleProp2 = this.props.exampleProp2
-    console.log([this.exampleProp1, this.exampleProp2])
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  /**
-   * Save the value in the event object
-   *
-   * @param event
-   */
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
-
-  /**
-   * Display last edited field value
-   *
-   * @param event
-   */
-  handleClick(event) {
-    alert('The submit was clicked, and the last added value was: ' + this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <form>
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var props = {
+    title: 'Some dynamic title'
+};
+var a = 'jj';
+var GenericForm = (function (_super) {
+    __extends(GenericForm, _super);
+    function GenericForm(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = { value: '' };
+        _this.exampleProp1 = _this.props.exampleProp1;
+        _this.exampleProp2 = _this.props.exampleProp2;
+        console.log([_this.exampleProp1, _this.exampleProp2]);
+        _this.handleChange = _this.handleChange.bind(_this);
+        _this.handleClick = _this.handleClick.bind(_this);
+        return _this;
+    }
+    GenericForm.prototype.handleChange = function (event) {
+        this.setState({ value: event.target.value });
+    };
+    GenericForm.prototype.handleClick = function (event) {
+        alert('The submit was clicked, and the last added value was: ' + this.state.value);
+        event.preventDefault();
+    };
+    GenericForm.prototype.render = function () {
+        return (<form>
         <img src="img/copytube_logo.png"/>
         <legend>Register</legend>
         <fieldset>
@@ -82,32 +57,13 @@ class Form extends React.Component {
           </label>
           <button type="button" className="btn btn-primary" onClick={this.handleClick}>Submit</button>
         </fieldset>
-      </form>
-    )
-  }
+      </form>);
+    };
+    return GenericForm;
+}(React.Component));
+function GetForm() {
+    return (<div>
+      <GenericForm exampleProp1="I am a valid property value!"/>
+    </div>);
 }
-
-// Create a function to wrap up your component
-/**
- * Grab the form component
- *
- * @returns {*}
- * @constructor
- */
-// Passing in a property here can be used in the component
-function GetForm(){
-  return(
-    <div>
-      <Form exampleProp1="I am a valid property value!"/>
-    </div>
-  )
-}
-
-const elementToAppendTo = document.getElementById('form-container')
-
-// Use the ReactDOM.render to show your component on the browser
-ReactDOM.render(
-  // Passing in a property here isn't accessible(?) inside the component
-  <GetForm exampleProp1="I show up as undefined!" />,
-  elementToAppendTo
-)
+ReactDOM.render(<GetForm exampleProp1="I show up as undefined!"/>, document.getElementById('form-container'));

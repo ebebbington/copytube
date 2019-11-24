@@ -1,19 +1,21 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        // "module": "commonjs", // removed as I THOGHT IT WAS causing the problem of 'export is not defined' for Form.js as it adding a bunch of stuff such as exports.module (it is supposed to be a client side js file which is why it played up), so i fixed it by adding <script>var exports = {};<...> to the register blade template
         "noImplicitAny": true,
+        "target": "es5",
         "removeComments": true,
         "preserveConstEnums": true,
         "allowJs": true, // allow js to be compiled
         "alwaysStrict": true, // parse in strict mode and emit use strict for each file
         "pretty": true, // :)
         "sourceMap": false, // false for not showing the .ts file in browser sources
-        "rootDir": "resources/ts",
-        "outDir": "resources/js", // where to place the js files
+        // "rootDir": "resources/ts",
+        "outDir": "resources/js/", // where to place the js files
         // outDir: 'fff'
         "watch": true
     },
-    "files": [
-        "resources/ts/register.ts"
-    ]
+    // "files": [
+    //     "resources/ts/register.ts",
+    // ]
+    "include": ["resources/ts/"]
 }

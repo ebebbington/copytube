@@ -1,5 +1,6 @@
+export {};
 // Define the props
-const props = {
+const props: object = {
   title: 'Some dynamic title'
 }
 
@@ -18,6 +19,17 @@ const a: string = 'jj'
  * and that login form should extend this, and implement the required components.
  * So take for example, the LoginForm would implement this component, the email component,
  * and the password component.
+ * 
+ * To make this file a TS file, i literally just modified to ext from .js to .tsx
+ * 
+ * To remove the error of duplicate function implementations, i just added the following and it seemed to fix it
+ *    export {};
+ * 
+ * To fix the IDE error 'property xyz does not exist on type readonly...., you must add an interface to define those props eg
+ *    interface IFormProps {
+ *      exampleProp1?: string
+ *    }
+ *    ... extends ....Component<IFormProps>
  *
  * @type {HTMLElement}
  *
@@ -27,6 +39,10 @@ const a: string = 'jj'
  */
 class GenericForm extends React.Component {
 
+  state: object
+  exampleProp1: string
+  exampleProp2: string
+  
   // Always call super() right away
   /**
    * Constructor
@@ -34,7 +50,7 @@ class GenericForm extends React.Component {
    * Always call super(props) right away
    * @param props
    */
-  constructor(props) {
+  constructor(props: object) {
     super(props);
     this.state = {value: ''};
     this.exampleProp1 = this.props.exampleProp1

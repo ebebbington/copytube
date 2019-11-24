@@ -2,6 +2,7 @@
 
 @section('head')
     <title>CopyTube - Register</title>
+    <script>var exports = {};</script> <!-- This for some reason stops the error for Form.js 'exports is not defined -->
     <link type="text/css" rel="stylesheet" href="sass/register.css"/>
     <script src="js/register.js"></script>
     <script type="text/babel" src="js/components/Form.js"></script>
