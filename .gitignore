@@ -13,3 +13,4 @@ src/yarn-error.log
 .git
 .idea
 src/data/*
+src/resources/js/*
