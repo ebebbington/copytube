@@ -1,11 +1,19 @@
+import React = require("react"); // added by the ide to fix the type hint error for React.Component
+import ReactDOM = require("react-dom");
+
 export {};
 // Define the props
-const props: object = {
+const props = {
   title: 'Some dynamic title'
 }
 
 
 const a: string = 'jj'
+
+interface IGenericForm {
+  exampleProp1?: string,
+  exampleProp2?: string
+}
 
 /**
  * Form
@@ -37,9 +45,11 @@ const a: string = 'jj'
  * @method handleClick    Handles click of submit button
  * @method render         Displays the form
  */
-class GenericForm extends React.Component {
+class GenericForm extends React.Component<IGenericForm> {
 
-  state: object
+  state: {
+    value: string
+  }
   exampleProp1: string
   exampleProp2: string
   
@@ -52,7 +62,7 @@ class GenericForm extends React.Component {
    */
   constructor(props: object) {
     super(props);
-    this.state = {value: ''};
+    this.state.value = '';
     this.exampleProp1 = this.props.exampleProp1
     this.exampleProp2 = this.props.exampleProp2
     console.log([this.exampleProp1, this.exampleProp2])
@@ -65,7 +75,7 @@ class GenericForm extends React.Component {
    *
    * @param event
    */
-  handleChange(event) {
+  handleChange(event: any) {
     this.setState({value: event.target.value});
   }
 
@@ -74,7 +84,7 @@ class GenericForm extends React.Component {
    *
    * @param event
    */
-  handleClick(event) {
+  handleClick(event: any) {
     alert('The submit was clicked, and the last added value was: ' + this.state.value);
     event.preventDefault();
   }
@@ -125,6 +135,6 @@ function GetForm () {
 // Use the ReactDOM.render to show your component on the browser
 ReactDOM.render(
   // Passing in a property here isn't accessible(?) inside the component
-  <GetForm exampleProp1="I show up as undefined!" />,
+  <GetForm />,
   document.getElementById('form-container')
 )

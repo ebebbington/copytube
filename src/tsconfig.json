@@ -12,7 +12,8 @@
         // "rootDir": "resources/ts",
         "outDir": "resources/js/", // where to place the js files
         // outDir: 'fff'
-        "watch": true
+        "watch": true,
+        "jsx": "react"
     },
     // "files": [
     //     "resources/ts/register.ts",

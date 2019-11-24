@@ -38,13 +38,13 @@ function clearAndHideMessageFields () {
   formMessages.attr('hidden', 'hidden')
 }
 
-function showError (msg = '') {
+function showError (msg: string = '') {
     const formErrorMessage = $('#error-message')
     formErrorMessage.removeAttr('hidden')
     formErrorMessage.text(msg)
 }
 
-function showSuccess (msg) {
+function showSuccess (msg: string = '') {
   const formSuccess = $('#success-message')
   formSuccess.removeAttr('hidden')
   formSuccess.text(msg)
@@ -53,12 +53,12 @@ function showSuccess (msg) {
 function validateInput () {
   const username = $('#username').val()
   if (username === null || username === undefined || username === '' || username.trim() === 0) {
-    showError('username', 'Enter a Username')
+    showError('Enter a Username')
     return false
   }
   const email = $('#email').val()
   if (email === null || email === undefined || email === '' || email.trim().length === 0) {
-    showError('email', 'Enter an Email')
+    showError('Enter an Email')
     return false
   }
   const password = $('#password').val()

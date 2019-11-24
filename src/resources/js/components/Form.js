@@ -13,6 +13,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var React = require("react");
+var ReactDOM = require("react-dom");
 var props = {
     title: 'Some dynamic title'
 };
@@ -21,7 +23,7 @@ var GenericForm = (function (_super) {
     __extends(GenericForm, _super);
     function GenericForm(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = { value: '' };
+        _this.state.value = '';
         _this.exampleProp1 = _this.props.exampleProp1;
         _this.exampleProp2 = _this.props.exampleProp2;
         console.log([_this.exampleProp1, _this.exampleProp2]);
@@ -66,4 +68,4 @@ function GetForm() {
       <GenericForm exampleProp1="I am a valid property value!"/>
     </div>);
 }
-ReactDOM.render(<GetForm exampleProp1="I show up as undefined!"/>, document.getElementById('form-container'));
+ReactDOM.render(<GetForm />, document.getElementById('form-container'));

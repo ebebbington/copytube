@@ -17,6 +17,7 @@ function showError(msg) {
     formErrorMessage.text(msg);
 }
 function showSuccess(msg) {
+    if (msg === void 0) { msg = ''; }
     var formSuccess = $('#success-message');
     formSuccess.removeAttr('hidden');
     formSuccess.text(msg);
@@ -24,12 +25,12 @@ function showSuccess(msg) {
 function validateInput() {
     var username = $('#username').val();
     if (username === null || username === undefined || username === '' || username.trim() === 0) {
-        showError('username', 'Enter a Username');
+        showError('Enter a Username');
         return false;
     }
     var email = $('#email').val();
     if (email === null || email === undefined || email === '' || email.trim().length === 0) {
-        showError('email', 'Enter an Email');
+        showError('Enter an Email');
         return false;
     }
     var password = $('#password').val();
