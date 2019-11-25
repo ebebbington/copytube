@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: .docker/nginx.dockerfile
     volumes:
-      - ./src:/var/www/copytube
+      - ./src/copytube:/var/www/copytube
     working_dir: /var/www/copytube
     depends_on:
       - phpfpm
@@ -29,7 +29,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./src:/var/www/copytube
+      - ./src/copytube:/var/www/copytube
     # Run commands after volumes are mounted. The php-fpm cmd is here so the container doesnt exit after running the composer command
     command: bash -c "composer install && php-fpm -F"
     working_dir: /var/www/copytube
