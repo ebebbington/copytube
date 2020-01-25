@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use View;
 
 class RegisterController extends Controller
 {
@@ -97,6 +98,6 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        return view('register');
+      return View::make('register')->with('title', 'Register');
     }
 }

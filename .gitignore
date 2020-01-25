@@ -16,3 +16,4 @@ src/copytube/data/*
 src/copytube/resources/js/register.js
 src/copytube/resources/js/notifier.js
 src/copytube/node_modules
+src/copytube/package-lock.json
