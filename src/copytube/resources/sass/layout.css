@@ -10,10 +10,7 @@ form {
     margin-top: 3em;
     text-align: center;
 }
-form .asterisk {color: RED;}
-/* Styling for Buttons inside Forms */
 form input.form-submit {
-    margin: 2em;
     width: auto;
     font: bold 1em Arial;
     text-decoration: none;
@@ -22,6 +19,10 @@ form input.form-submit {
 /* Ovewrite Hover Effect Boostrap Adds for Form Input Type Submits */
 form input.form-submit:hover {
     background-color: rgb(163, 47, 47);
+}
+form label {
+    display: block;
+    margin: 1em;
 }
 /* Styling for Input Fields Inside Forms */
 form input.form-field {
@@ -37,15 +38,95 @@ form legend > img.form-logo {
 form legend.form-title {
     font: bold 2em Arial;
 }
-/* Styling for Form Error Message */
-#form-error {
-    color: red;
-    font-size: 1.5em;
-}
-#form-success {
-    color: green;
-    font-size: 1.5em;
+form a:first-of-type {
+    text-align: center;
+    margin: 2em;
+    font: bold 1em Arial;
+    display: block;
 }
 /**
  * End of Form Styling
  */
+
+ /**
+  * Start of Notifier Styling
+  */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        
+    }
+}
+@keyframes fadeIn{
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+#notifier-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin: auto;
+    bottom: 20px;
+    border-radius: 10px;
+    transition-duration: 1s;
+    height: 75px;
+}
+#notifier-container.success {
+    background-color: green;
+
+    animation: fadeIn 1s forwards;
+    animation: fadeOut 1s forwards 4s;
+}
+#notifier-container.warning {
+    background-color: orange;
+
+    animation: fadeIn 1s forwards;
+    animation: fadeOut 1s forwards 4s;
+}
+#notifier-container.error {
+    background-color: red;
+
+    animation: fadeIn 1s forwards;
+    animation: fadeOut 1s forwards 4s;
+}
+#notifier-container p#notifier-title {
+    margin: auto;
+    border-bottom: 1px solid white;
+    color: white;
+}
+#notifier-container p#notifier-message {
+    color: white;
+}
+@media screen and (min-width: 320px) {
+    #notifier-container {
+        width: 90% !important;
+    }
+}
+@media screen and (min-width: 480px) {
+    #notifier-container {
+        width: 70% !important;
+    }
+}
+@media screen and (min-width: 768px) {
+    #notifier-container {
+        width: 40% !important;
+    }
+}
+@media screen and (min-width: 992px) {
+    #notifier-container {
+        width: 30% !important;
+    }
+}
+@media screen and (min-width: 1200px) {
+    #notifier-container {
+        width: 20% !important;
+    }
+}

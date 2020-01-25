@@ -1,75 +1,26 @@
 /* global $, alert */
 'use strict'
 
-/**
- * Configrting TS
- * 
- * So i installed typescript
- *    npm i --save typescript
- * And because it was locally, you have to run it like:
- *    node_modules/.bin/tsc ...
- * So change all js files to .ts extension
- * You keep the script tags the same as the compiled .js file will exist
- * So to compise you do:
- *    [...]/tsc /path/to/js/login.ts
- * 
- * BUT the bets part is how do we automate this? you have to do this every time you make a change/// so do:
- *    ...tsc /path/to/js/*.ts --watch
- * 
- * Using the config file along with the command
- *    ...tsc
- * will run the config e.g. in my case it will conpile the register file.
- * this results in the register.js file shown to the user without comments etc. and the register.ts file shown but with no content,
- * but you can not show the .ts file by changing the sourceMap prop in the config file to false
- * 
- * with the issue 'cannot find name $', install:
- *    npm i --save @types/jquery
- */
-function test (msg: string): void {
-  alert(msg)
-  alert(typeof msg)
-} 
-test('Ahoy matey')
-alert('yo moma')
-
-function clearAndHideMessageFields () {
- const formMessages = $('.form-messages')
-  formMessages.text('')
-  formMessages.attr('hidden', 'hidden')
-}
-
-function showError (msg: string = '') {
-    const formErrorMessage = $('#error-message')
-    formErrorMessage.removeAttr('hidden')
-    formErrorMessage.text(msg)
-}
-
-function showSuccess (msg: string = '') {
-  const formSuccess = $('#success-message')
-  formSuccess.removeAttr('hidden')
-  formSuccess.text(msg)
-}
-
-function validateInput () {
+function validateInput (): boolean {
   const username = $('#username').val()
   if (username === null || username === undefined || username === '' || username.trim() === 0) {
-    showError('Enter a Username')
+    Notifier.error('Username', 'Enter a Username')
     return false
   }
   const email = $('#email').val()
   if (email === null || email === undefined || email === '' || email.trim().length === 0) {
-    showError('Enter an Email')
+    Notifier.error('Email', 'Enter an Email')
     return false
   }
   const password = $('#password').val()
   if (password === null || password === undefined || password === '' || password.trim().length === 0) {
-    showError('Enter a Password')
+    Notifier.error('Password', 'Enter a Password')
     return false
   }
   return true
 }
 
-function registerUser () {
+function registerUser (): void {
   $.ajax({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -85,12 +36,12 @@ function registerUser () {
       console.table(data)
       if (data.success === true) {
         $('#register-form').trigger('reset')
-        showSuccess('Created an account')
+        Notifier.success('Register', 'Created an account')
         $('html', 'body').animate({scrollTop: 0}, 'slow')
         return false
       }
       // else theres a problem
-      showError('There was a problem')
+      Notifier.error('Error', data.message)
       return false
     },
     error: function (error) {
@@ -98,7 +49,7 @@ function registerUser () {
       const errors = error.responseJSON.errors
       const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
       //$('#register-form').trigger('reset')
-      showError(errMsg)
+      Notifier.error('Error', errMsg)
       //$('html', 'body').animate({scrollTop: 0}, 'slow')
       //return false
     }
@@ -108,19 +59,10 @@ function registerUser () {
 $(document).ready(function () {
   $('#register-button').on('click', function (e) {
     e.preventDefault()
-    const passedValidation = validateInput()
-    if (!passedValidation) {
-      showError('Please fill out the fields correctly')
+    const passed = validateInput()
+    if (!passed) {
       return false
     }
-    clearAndHideMessageFields()
-    // const isValidInput = validateInput()
-    // if (!isValidInput) {
-    //   return false
-    // }
-    // if (isValidInput) {
-    //   return registerUser()
-    // }
     registerUser()
   })
 })
