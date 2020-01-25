@@ -1,14 +1,26 @@
-# CopyTube
+# CopyTube (Project)
 
-CopyTube is an impersonation of YouTube, utilising videos, comments, a login system and sessions. This project was created to help myself understand:
-* HTML
-* CSS
-* JavaScript
-* PHP/PHP-FPM
-* SQL
+CopyTube is an impersonation of YouTube, utilising videos, comments, a login system and sessions. It provides a trainig ground or a developer application that uses the following technologies:
+
+* Docker
+
+* Linux
+
 * Nginx
-* Sessions
-* How Users Login
+
+* MySQL
+
+* PHP
+
+## Components
+
+CopyTube is currently split into 1 application (with the use of Nginx handling PHP-FPM and passing requests to the PHP container):
+
+### Copytube (Main App)
+
+This is the main application that holds this whole project, such as the views, database querying, PHP files, javascripts etc.
+
+See the `README.md` for the main app [here](https://github.com/ebebbington/copytube/blob/develop/src/copytube/README.md)
 
 ## Prerequisites
 
@@ -27,6 +39,20 @@ cd /your/chosen/dir
 git clone https://github.com/ebebbington/copytube.git
 cd copytube
 ```
+
+Create the environmental file for the PHP application
+
+```
+# ./src/copytube/.env
+# Set the not-so-secret secret key. This key is required to be set to encrypt the app
+APP_KEY=base64:JjrFWC+TGnySY2LsldPXAxuHpyjh8UuoPMt6yy2gJ8U=
+# Setup the database configurations
+DB_CONNECTION=mysql
+DB_HOST=copytube_sql
+DB_PORT=3306
+DB_DATABASE=copytube
+DB_USERNAME=user
+DB_PASSWORD=userpassword
 
 Build and start Docker
 
@@ -59,25 +85,19 @@ Finally, go to the website
 * Windows
      `127.0.0.1:9002`
 
-## Running the tests
+## Containers
 
-Explain how to run the automated tests for this system
+### Nginx
 
-### Break down into end to end tests
+Our proxy server for handling PHP requests to be passed to the PHP-FPM process, and passes all requests to the PHP container
 
-Explain what these tests test and why
+### PHP-FPM
 
-```
-Give an example
-```
+The PHP container that has PHP already configured
 
-### And coding style tests
+### SQL
 
-Explain what these tests test and why
-
-```
-Give an example
-```
+Our database container to house the database data
 
 ## Built With
 
@@ -93,7 +113,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 * **Edward Bebbington** - *Initial work* - [Place website name here](Place website url here)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/ebebbington/copytube/contributors) who participated in this project.
 
 ## License
 
@@ -101,6 +121,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Thanks to Adam for helping me learn all that I know to get this project working

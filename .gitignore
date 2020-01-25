@@ -2,7 +2,7 @@ src/copytube/node_modules
 src/copytube/public/hot
 src/copytube/public/storage
 src/copytube/storage/*.key
-src/copytubevendor
+src/copytube/vendor
 src/copytube/.env
 src/copytube/.env.backup
 src/copytube/.phpunit.result.cache
@@ -14,5 +14,3 @@ src/copytube/yarn-error.log
 .idea
 src/copytube/data/*
 src/copytube/resources/js/*
-
-src/api/node_modules

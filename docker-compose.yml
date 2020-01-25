@@ -48,28 +48,6 @@ services:
     networks:
       - copytube-network
 
-  node:
-    container_name: api_node
-    build:
-      context: .
-      dockerfile: .docker/node.dockerfile
-    volumes:
-      - ./src/api:/var/www/api
-    working_dir: /var/www/api
-    command: bash -c "npm i --verbose && pm2-runtime ecosystem.config.js"
-    networks:
-      - copytube-network
-
-  mongodb:
-    container_name: api_mongo
-    image: mongo
-    ports:
-      - "27017:27017"
-    env_file:
-      - ./.docker/env/mongodb.env
-    networks:
-      - copytube-network
-
 networks:
   copytube-network:
     driver: bridge
