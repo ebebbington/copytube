@@ -1,71 +1,109 @@
 /* global $, alert */
 'use strict'
 import Notifier from './notifier'
-function validateInput (): boolean {
-  const username = $('#username').val()
-  if (username === null || username === undefined || username === '' || username.trim() === 0) {
-    Notifier.error('Username', 'Enter a Username')
-    return false
-  }
-  const email = $('#email').val()
-  if (email === null || email === undefined || email === '' || email.trim().length === 0) {
-    Notifier.error('Email', 'Enter an Email')
-    return false
-  }
-  const password = $('#password').val()
-  if (password === null || password === undefined || password === '' || password.trim().length === 0) {
-    Notifier.error('Password', 'Enter a Password')
-    return false
-  }
-  return true
-}
 
-function registerUser (): void {
-  $.ajax({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    type: 'POST',
-    url: '/register',
-    data: {
-      username: $('#username').val(),
-      email: $('#email').val(),
-      password: $('#password').val()
-    },
-    success: function (data, status, jqXHR) {
-      console.table(data)
-      if (data.success === true) {
-        $('#register-form').trigger('reset')
-        Notifier.success('Register', 'Created an account')
-        $('html', 'body').animate({scrollTop: 0}, 'slow')
+const Register = (function () {
+
+  const Methods = (function () {
+
+    function validateInput (): boolean {
+      const username: string = $('input[name="username"]').val()
+      const email: string = $('input[name="email"]').val()
+      const password: string = $('input[name="password"]').val()
+      if (username === null || username === undefined || username === '' || username.trim().length === 0) {
+        Notifier.error('Username', 'Enter a Username')
         return false
       }
-      // else theres a problem
-      Notifier.error('Error', data.message)
-      return false
-    },
-    error: function (error) {
-      console.log(error)
-      const errors = error.responseJSON.errors
-      const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
-      //$('#register-form').trigger('reset')
-      Notifier.error('Error', errMsg)
-      //$('html', 'body').animate({scrollTop: 0}, 'slow')
-      //return false
+      if (email === null || email === undefined || email === '' || email.trim().length === 0) {
+        Notifier.error('Email', 'Enter an Email')
+        return false
+      }
+      if (password === null || password === undefined || password === '' || password.trim().length === 0) {
+        Notifier.error('Password', 'Enter a Password')
+        return false
+      }
+      return true
     }
-  })
-}
 
-$(document).ready(function () {
-  $('#register-button').on('click', function (e) {
-    e.preventDefault()
-    const passed = validateInput()
-    if (!passed) {
-      return false
+    function registerUser (): void {
+      const username: string = $('input[name="username"]').val()
+      const email: string = $('input[name="email"]').val()
+      const password: string = $('input[name="password"]').val()
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        url: '/register',
+        data: {
+          username: username,
+          email: email,
+          password: password
+        },
+        success: function (data, status, jqXHR) {
+          console.table(data)
+          if (data.success === true) {
+            $('#register-form').trigger('reset')
+            Notifier.success('Register', 'Created an account')
+            $('html', 'body').animate({scrollTop: 0}, 'slow')
+            return false
+          }
+          // else theres a problem
+          Notifier.error('Error', data.message)
+          return false
+        },
+        error: function (error) {
+          console.log(error)
+          const errors = error.responseJSON.errors
+          const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
+          //$('#register-form').trigger('reset')
+          Notifier.error('Error', errMsg)
+          //$('html', 'body').animate({scrollTop: 0}, 'slow')
+          //return false
+        }
+      })
     }
-    registerUser()
-  })
-})
+
+    return {
+      validateInput: validateInput,
+      registerUser: registerUser
+    }
+
+  })()
+
+  const Handlers = (function () {
+
+    $(document).ready(() => {
+
+      $('#register-button').on('click', function (e) {
+        e.preventDefault()
+        const passed = Methods.validateInput()
+        if (!passed) {
+          return false
+        }
+        Methods.registerUser()
+      })
+
+    })
+
+  })()
+
+  return {
+    Methods: Methods
+  }
+
+})()
+
+// $(document).ready(function () {
+//   $('#register-button').on('click', function (e) {
+//     e.preventDefault()
+//     const passed = validateInput()
+//     if (!passed) {
+//       return false
+//     }
+//     registerUser()
+//   })
+// })
 
   /* OLD WAY BEFORE I REFACTORED
   // Validation
