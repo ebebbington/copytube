@@ -83,7 +83,7 @@ class UserModel extends Model
      *
      * @return bool
      */
-    public static function exists($email): bool
+    public static function exists(string $email): bool
     {
         $result = UserModel::where('email_address', $email)->first();
 
@@ -99,7 +99,7 @@ class UserModel extends Model
      *
      * @return mixed
      */
-    public function createUser($username, $email, $hash)
+    public function createUser(string $username, string $email, string $hash)
     {
         Log::debug('Going to validate input');
         Log::debug('Saving the new user...');
@@ -121,9 +121,15 @@ class UserModel extends Model
      *
      * @return bool
      */
-    public static function validate($registerData)
+    public static function validate(array $registerData)
     {
         $validator = Validator::make($registerData, static::$rules);
         return $validator->fails();
+    }
+
+    public static function getAllUsers ()
+    {
+      $result = UserModel::get();
+      return $result;
     }
 }

@@ -67,7 +67,7 @@ class RegisterController extends Controller
         Log::debug('User doesnt exists');
 
         // Save the user
-        $User = new UserModel;
+        $User = new UserModel();
         $user = $User->createUser($username, $email, $hash);
         if (isset($user->exists) && $user->exists === false) {
             Log::debug('Didnt save a user');
@@ -98,6 +98,7 @@ class RegisterController extends Controller
      */
     public function index()
     {
+      $this->test();
       return View::make('register')->with('title', 'Register');
     }
 }
