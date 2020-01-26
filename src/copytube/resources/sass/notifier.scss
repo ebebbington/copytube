@@ -1,57 +1,7 @@
 /**
- * Start of Form Styling
- */
-
-/* Styling for Forms */
-form {
-    border: 0.2em solid rgb(190, 46, 46);
-    border-radius: 0.5em;
-    width: auto;
-    margin-top: 3em;
-    text-align: center;
-}
-form input.form-submit {
-    width: auto;
-    font: bold 1em Arial;
-    text-decoration: none;
-    background-color: red;
-}
-/* Ovewrite Hover Effect Boostrap Adds for Form Input Type Submits */
-form input.form-submit:hover {
-    background-color: rgb(163, 47, 47);
-}
-form label {
-    display: block;
-    margin: 1em;
-}
-/* Styling for Input Fields Inside Forms */
-form input.form-field {
-    width: auto;
-    margin: auto;
-    text-align: center;
-}
-/* Styling for Logo Inside Forms */
-form legend > img.form-logo {
-    margin: 1em;
-}
-/* Styling for Form Titles */
-form legend.form-title {
-    font: bold 2em Arial;
-}
-form a:first-of-type {
-    text-align: center;
-    margin: 2em;
-    font: bold 1em Arial;
-    display: block;
-}
-/**
- * End of Form Styling
- */
-
- /**
   * Start of Notifier Styling
   */
-@keyframes fadeOut {
+  @keyframes fadeOut {
     0% {
         opacity: 1;
     }

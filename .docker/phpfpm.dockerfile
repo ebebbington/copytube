@@ -4,7 +4,7 @@ ARG HOST_IP
 
 # Update and install required packages and dependencies
 RUN apt-get update -y
-RUN apt-get install -y --no-install-recommends libxml2-dev libxslt-dev python-dev
+RUN apt-get install -y --no-install-recommends libxml2-dev libxslt-dev python-dev npm
 RUN apt-get install -y \
   apt-transport-https apt-utils libc-client-dev libzip-dev libldb-dev libldap2-dev libpng-dev zip unzip curl
 

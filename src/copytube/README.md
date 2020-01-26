@@ -182,6 +182,15 @@ This is the list of all tools used here, which also act as the tools learnt, or 
 
 ## Building
 
+We use the `package.json` file to build the JS and CSS.
+
+It boils down to using webpack to compile and minify the `app.scss|ja` files, where each file imports all the other stylesheets or javascripts. The process is:
+
+* By current architecture, we import all our javascripts and stylesheets into the `app.js` and `app.scss` files, respectively.
+* Then our run command will compile and those files
+
+To do so, run: `npm run dev`. To understand a bit more, see the `webpack.mix.js` file. This also uses the `tsconfig.json` for when we write TS javascript files
+
 ## PHPUnit Tests
 
 ### Writing the Tests

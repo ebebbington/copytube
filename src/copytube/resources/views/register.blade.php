@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('head')
-    <script src="js/register.js"></script>
+
 @stop
 
 @section('content')

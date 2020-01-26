@@ -1,6 +1,6 @@
 /* global $, alert */
 'use strict'
-
+import Notifier from './notifier'
 function validateInput (): boolean {
   const username = $('#username').val()
   if (username === null || username === undefined || username === '' || username.trim() === 0) {

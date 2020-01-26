@@ -1,9 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "build": "node_modules/.bin/tsc",
         "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "development": "node_modules/.bin/cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "npm run development -- --watch",
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -13,19 +12,23 @@
     "devDependencies": {
         "@types/jquery": "^2.0.54",
         "axios": "^0.19",
-        "cross-env": "^5.1",
-        "laravel-mix": "^4.0.7",
+        "cross-env": "^5.2.1",
+        "laravel-mix": "^4.1.4",
         "lodash": "^4.17.13",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
-        "sass-loader": "^7.1.0"
+        "sass-loader": "^7.1.0",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.7.5",
+        "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
         "@types/react": "^16.9.13",
         "@types/react-dom": "^16.9.4",
         "commonjs": "0.0.1",
+        "nodejs": "0.0.0",
         "react-dom": "^16.12.0",
-        "typescript": "^3.7.5",
-        "webpack": "^4.41.2"
+        "webpack": "^4.41.5",
+        "webpack-cli": "^3.3.10"
     }
 }
