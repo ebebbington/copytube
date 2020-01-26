@@ -123,8 +123,12 @@ class UserModel extends Model
      */
     public static function validate(array $registerData)
     {
-        $validator = Validator::make($registerData, static::$rules);
-        return $validator->fails();
+        $validator = Validator::make($registerData, UserModel::$rules);
+        if ($validator->fails()) {
+          return false;
+        }
+        return true;
+        //return $validator->fails() ? false : true;
     }
 
     public static function getAllUsers ()
