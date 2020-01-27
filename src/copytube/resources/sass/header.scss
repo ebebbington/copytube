@@ -1,10 +1,17 @@
 header {
-    position: sticky;
+    position: fixed;
     display: flex;
     justify-content: space-evenly;
     width: 100%;
+    background: var(--custom-black);
+    padding: 0.3em;
+    margin-bottom: 0.5em;
 }
 header a {
     margin-top: auto;
     margin-bottom: auto;
+    color: var(--custom-white);
+    &:hover {
+        color: var(--custom-grey);
+    }
 }

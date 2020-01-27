@@ -22,7 +22,7 @@
             <a href="/register">Register</a>
             <img src="img/copytube_logo.png" alt="Logo">
             <a href="/login">Login</a>
-            <a href="Index">Index</a>
+            <a href="/">Index</a>
         </header>
         <div class="container">
             <div class="row">
