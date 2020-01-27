@@ -1,5 +1,7 @@
 'use strict'
 
+import Notifier from "./notifier"
+
 const Login = (function () {
 
     const Methods = (function () {
@@ -19,9 +21,11 @@ const Login = (function () {
                 dataType: 'json',
                 success: function (data) {
                     console.log(data)
+                    Notifier.success('Login', data.message)
                 },
-                error: function (err) {
+                error: function (err: any) {
                     console.error(err)
+                    Notifier.error('Login', err.responseJSON.message)
                 }
             })
         }

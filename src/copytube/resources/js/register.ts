@@ -43,7 +43,7 @@ const Register = (function () {
         success: function (data, status, jqXHR) {
           console.table(data)
           if (data.success === true) {
-            $('#register-form').trigger('reset')
+            $('form').trigger('reset')
             Notifier.success('Register', 'Created an account')
             $('html', 'body').animate({scrollTop: 0}, 'slow')
             return false
