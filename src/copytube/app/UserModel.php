@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use App\BaseModel;
 
 class UserModel extends BaseModel
@@ -65,6 +67,15 @@ class UserModel extends BaseModel
      * @var array
      */
     protected $fillable = ['username', 'email_address', 'password', 'logged_in', 'login_attempts'];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password'
+    ];
 
     /**
      * Rules for validation

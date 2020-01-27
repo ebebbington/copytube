@@ -18,6 +18,11 @@
     </head>
     <body>
         <header>
+            <a href="/home">Home</a>
+            <a href="/register">Register</a>
+            <img src="img/copytube_logo.png" alt="Logo">
+            <a href="/login">Login</a>
+            <a href="Index">Index</a>
         </header>
         <div class="container">
             <div class="row">
@@ -25,7 +30,7 @@
             </div>
         </div>
         <div id="notifier-container">
-            <p id="notifier-title"></h4>
+            <p id="notifier-title"></p>
             <p id="notifier-message"></p>
         </div>
         <footer>

@@ -11,10 +11,10 @@ class BaseModel extends Model
 {
     /**
      * Validate Data for a mode, such as before inserting.
-     * 
+     *
      * This method will check the passed in data with the $rules property of the INHERITED class
      * e.g. the calling class must extend this one
-     * 
+     *
      * @example
      * $UserModel = new UserModel;
      * $validated = $UserModel->validate(['name' => 'edward']);
@@ -34,16 +34,16 @@ class BaseModel extends Model
 
     /**
      * SELECT queries
-     * 
+     *
      * Will get all results based on the where clauses in the params and
      * the calling classes table name
-     * 
+     *
      * Should the result only be one, it will return a single array that can
      * be used like such: $result->id
-     * 
+     *
      * Should t retrieve multiple rows, it will return that array
      * e.g. $result[0]->name; $result[3]->name;
-     * 
+     *
      * @example
      * // No data will match this query
      * $result = $SomeModel->Select(['name' => 'i dont exist']); // false
@@ -55,7 +55,7 @@ class BaseModel extends Model
      *
      * @param array $data Key value pair array of data to use in the wher clause
      * @param boolean Find a single instance? Defaults to true
-     * 
+     *
      * @return boolean|array False when no data found, singular object if one result, array of objects when more than 1
      */
     public function SelectQuery (array $data, bool $first = true)
@@ -79,7 +79,7 @@ class BaseModel extends Model
 
     /**
      * Add data to a database
-     * 
+     *
      * @example
      * $UserModel = new UserModel;
      * $User = $UserModel->CreateQuery(['name' => 'edward', ...])
@@ -98,9 +98,9 @@ class BaseModel extends Model
 
     /**
      * Update a model BY data WITH new data
-     * 
+     *
      * Run a query using $query to find the data, then update it using $newData
-     * 
+     *
      * @example
      * $UserModel = new UserModel;
      * $updated = $UserModel->UpdateQuery([...], [...]); // true or false
@@ -113,5 +113,16 @@ class BaseModel extends Model
     {
       $result = DB::table($this->table)->where($query)->update($newData);
       return $result === 1 ? true : false;
+    }
+
+    /**
+     * @param array $query
+     *
+     * @return int
+     */
+    public function DeleteQuery (array $query)
+    {
+        $result = DB::table($this->table)->where($query)->delete();
+        return $result;
     }
 }

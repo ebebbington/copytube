@@ -48,7 +48,7 @@ class RegisterController extends Controller
             'message' => 'Some details have not bene provided'
           ]);
         }
-        
+
         // Validate user details
         $UserModel = new UserModel;
         $passedValidation = $UserModel->validate($request->all());
@@ -107,7 +107,6 @@ class RegisterController extends Controller
      */
     public function index()
     {
-      $this->test();
       return View::make('register')->with('title', 'Register');
     }
 }

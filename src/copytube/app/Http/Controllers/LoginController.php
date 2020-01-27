@@ -33,7 +33,7 @@ class LoginController extends Controller
               ], 404);
         }
         Log::debug('User exists');
-        
+
         // check if the passwords match
         $passwordsMatch = Hash::check($password, $User->password);
         if (empty($passwordsMatch)) {
@@ -49,12 +49,8 @@ class LoginController extends Controller
         if ($User->logged_in === 0) {
             return response([
                 'success' => true
-            ], 200)
+            ], 200);
         }
-
-        // Assign the user object into the sessions
-        unset($User->password);
-        session(['user' => $User]); // $request->session()->get('user'); // [{...}]
 
         // Create a session entry in the sessions table
         $SessionModel = new SessionModel;
@@ -63,12 +59,22 @@ class LoginController extends Controller
         $Session = $SessionModel->CreateQuery(['session_id' => $sessionId, 'user_id' => $userId]);
 
         // Set the user to logged in
-        $User = $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 55]);
+        $updated = $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
+        if ($updated === false) {
+            return response([
+                'success' => false,
+                'message' => 'Failed to update the model'
+            ]);
+        }
+
+        // Assign the user object into the sessions
+        unset($User->password);
+        session(['user' => $User]); // $request->session()->get('user'); // [{...}]
+        session(['session' => $Session]);
+
         return response([
             'success' => true
         ]);
-        // redirect to home
-
     }
 
     public function get (Request $request)

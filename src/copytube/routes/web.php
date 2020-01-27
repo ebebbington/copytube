@@ -20,3 +20,5 @@ Route::post('/register', 'RegisterController@submit');
 
 Route::get('/login', 'LoginController@get');
 Route::post('/login', 'LoginController@post');
+
+Route::get('/home', 'HomeController@index');
