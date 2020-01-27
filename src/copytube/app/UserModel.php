@@ -90,28 +90,4 @@ class UserModel extends BaseModel
 
         return $result ? true : false;
     }
-
-    /**
-     * Add a new user to the database
-     *
-     * @param $username
-     * @param $email
-     * @param $hash
-     *
-     * @return mixed
-     */
-    public function createUser(string $username, string $email, string $hash)
-    {
-        Log::debug('Going to validate input');
-        Log::debug('Saving the new user...');
-        $user = $this->create([
-          'username'       => $username,
-          'email_address'  => $email,
-          'password'       => $hash,
-          'logged_in'      => 1,
-          'login_attempts' => 3,
-        ]);
-
-        return $user;
-    }
 }

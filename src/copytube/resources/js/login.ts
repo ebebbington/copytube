@@ -22,6 +22,7 @@ const Login = (function () {
                 success: function (data) {
                     console.log(data)
                     Notifier.success('Login', data.message)
+                    window.location.href = '/home'
                 },
                 error: function (err: any) {
                     console.error(err)

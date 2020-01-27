@@ -23,10 +23,9 @@ class LoginController extends Controller
         $password = $request->input('password');
 
         // Check if that user exists with the same email
-        $user = DB::table('users')
-            ->where('email_address', $email)
-            ->first();
-        if (empty($user)) {
+        $UserModel = new UserModel;
+        $User = $UserModel->SelectQuery(['email_address' => $email], true);
+        if ($User === false) {
             Log::debug('User does not exist with that email');
             return response([
                 'success' => false,
@@ -36,7 +35,7 @@ class LoginController extends Controller
         Log::debug('User exists');
         
         // check if the passwords match
-        $passwordsMatch = Hash::check($password, $user->password);
+        $passwordsMatch = Hash::check($password, $User->password);
         if (empty($passwordsMatch)) {
             Log::debug('Passwords dont match');
             return response([
@@ -46,20 +45,27 @@ class LoginController extends Controller
         }
         Log::debug('Passwords match');
 
+        // Check if they are already logged in, to just send them home
+        if ($User->logged_in === 0) {
+            return response([
+                'success' => true
+            ], 200)
+        }
+
         // Assign the user object into the sessions
-        unset($user->password);
-        session(['user' => $user]); // $request->session()->get('user'); // [{...}]
+        unset($User->password);
+        session(['user' => $User]); // $request->session()->get('user'); // [{...}]
 
         // Create a session entry in the sessions table
         $SessionModel = new SessionModel;
         $sessionId = $request->session()->get('_token');
-        $userId = $user->id;
-        $session = $SessionModel->insert(['sessionId' => $sessionId, 'userId' => $userId]);
+        $userId = $User->id;
+        $Session = $SessionModel->CreateQuery(['session_id' => $sessionId, 'user_id' => $userId]);
 
         // Set the user to logged in
-        UserModel::where('email_address', $email)->update(['logged_in' => 0]);
+        $User = $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 55]);
         return response([
-            'success' => 'maybe?'
+            'success' => true
         ]);
         // redirect to home
 

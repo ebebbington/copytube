@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use View;
 
 class RegisterController extends Controller
@@ -76,16 +77,15 @@ class RegisterController extends Controller
         Log::debug('User doesnt exists');
 
         // Save the user
-        $User = new UserModel();
-        $user = $User->createUser($username, $email, $hash);
-        if (isset($user->exists) && $user->exists === false) {
+        $User = $UserModel->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
+        if (isset($User->exists) && $User->exists === false) {
             Log::debug('Didnt save a user');
             return response([
               'success' => false,
               'message' => 'user didnt save into the database',
             ], 500);
         }
-        if (isset($user->exists) && $user->exists === true) {
+        if (isset($User->exists) && $User->exists === true) {
             Log::debug('Saved a user');
             return response([
               'success' => true,

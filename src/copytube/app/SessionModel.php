@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\BaseModel;
 
-class SessionModel extends Model
+class SessionModel extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -51,18 +52,8 @@ class SessionModel extends Model
      *
      * @var array
      */
-    private static $rules = [
+    protected $rules = [
       'session_id' => 'required',
       'user_id' => 'required',
     ];
-
-    public function insert (array $data)
-    {
-      Log::debug('Going to create a new session');
-        $session = $this->create([
-            'session_id'       => $data['sessionId'],
-            'user_id'       => $data['userId']
-          ]);
-          return $session;
-    }
   }
