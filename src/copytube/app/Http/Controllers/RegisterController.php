@@ -39,9 +39,18 @@ class RegisterController extends Controller
           'rounds' => 12,
         ]);
         Log::debug('Retrieved input and hashed password: ', [$username, $email, $hash]);
+
+        // check data was passed in
+        if (empty($username) || empty($email) || empty($request->input('password'))) {
+          return response([
+            'success' => false,
+            'message' => 'Some details have not bene provided'
+          ]);
+        }
         
         // Validate user details
-        $passedValidation = UserModel::validate($request->all());
+        $UserModel = new UserModel;
+        $passedValidation = $UserModel->validate($request->all());
         if ($passedValidation === false) {
             Log::debug('Couldnt validate input');
             return response([

@@ -67,9 +67,9 @@ class LoginController extends Controller
 
     public function get (Request $request)
     {
-        session(['hi' => 'hello']);
-        $var = 'hi';
-        echo $var;
+        // session(['hi' => 'hello']);
+        // $var = 'hi';
+        // echo $var;
         // print_r($request->session()->get('_token'));
         return View::make('login')->with('title', 'Login');
     }
