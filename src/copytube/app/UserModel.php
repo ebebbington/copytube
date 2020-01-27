@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\BaseModel;
 
-class UserModel extends Model
+class UserModel extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -70,7 +71,7 @@ class UserModel extends Model
      *
      * @var array
      */
-    private static $rules = [
+    protected $rules = [
       'username' => 'required',
       'email'    => 'required|email',
       'password' => 'required|regex:/[0-9a-zA-Z]{8,}/',
@@ -112,28 +113,5 @@ class UserModel extends Model
         ]);
 
         return $user;
-    }
-
-    /**
-     * Validate User register credentials
-     *
-     * @param {Array} $registerData containing all register field values
-     *
-     * @return bool
-     */
-    public static function validate(array $registerData)
-    {
-        $validator = Validator::make($registerData, UserModel::$rules);
-        if ($validator->fails()) {
-          return false;
-        }
-        return true;
-        //return $validator->fails() ? false : true;
-    }
-
-    public static function getAllUsers ()
-    {
-      $result = UserModel::get();
-      return $result;
     }
 }
