@@ -18,11 +18,11 @@
     </head>
     <body>
         <header>
+            <img src="img/copytube_logo.png" alt="Logo">
             <a href="/home">Home</a>
             <a href="/register">Register</a>
-            <img src="img/copytube_logo.png" alt="Logo">
             <a href="/login">Login</a>
-            <a href="/">Index</a>
+            <i class="gear"></i>
         </header>
         <div class="container">
             <div class="row">

@@ -5,31 +5,30 @@
 @stop
 
 @section('content')
-    <button id="log-out" type="button">Log Out</button>
-    <h2 id="welcome"></h2>
-    <!-- set logo -->
-    <div class="col-xs-3">
-        <img id="logo" src="img/copytube_logo.png" alt="Error locating image"/>
-    </div>
-    <!-- create search bar and button -->
-    <div class="row">
-        <div class="col-xs-9">
-            <div id="search" class="input-group">
-                <div class="dropdown">
-                    <form>
-                        <span id="search"> <!-- Span is similar to <div> only span lets elements stay on the same line -->
-                            <input id="search-bar" class="form-control" name="search-bar" type="search" placeholder="Search or Hover Over Me for a List of Videos and Click" size="60" required/>
-                            <input id="search-button" class="btn btn-primary" name="search-button" type="submit">
-                        </span>
-                    </form>
-                    <div class="dropdown-content">
-                    </div>
+    <!-- search, main video, comments -->
+    <div class="col-xs-12">
+        <!-- search -->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-8">
+                <div id="search" class="input-group">
+                    <input id="search-bar" class="form-control" name="search-bar" type="search" placeholder="Search or Hover Over Me for a List of Videos and Click" size="60"/>
+                    <input id="search-button" class="btn btn-primary" name="search-button" type="submit">
                 </div>
             </div>
         </div>
+        <!-- main video -->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-8">
+                <div id="main-video">
+                </div>
+            </div>
+        </div>
+        <!-- comments -->
+        <div class="row">
+        </div>
     </div>
-
-    <div class="row">
+    <!-- rabbit hole videos -->
+    <div class="col-xs-12">
         <div class="col-xs-9">
             <!-- display main video, title and description -->
             <br>

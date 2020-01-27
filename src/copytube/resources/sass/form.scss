@@ -4,45 +4,45 @@
 
 /* Styling for Forms */
 form {
-    border: 0.2em solid rgb(190, 46, 46);
-    border-radius: 0.5em;
     width: auto;
-    margin-top: 3em;
     text-align: center;
+    background: var(--custom-light-grey);
+    border: 1px solid var(--custom-grey-border);
+    border-radius: 2px;
+    width: 316px;
+    margin: auto;
+}
+form > fieldset {
+    padding: 2em;
+    text-align: left;
+}
+form > fieldset > legend {
+    border-bottom: 1px solid var(--custom-grey-border);
+}
+form > fieldset > label, form > fieldset > input.form-submit {
+    width: 100%;
 }
 form input.form-submit {
-    width: auto;
-    font: bold 1em Arial;
+    color: var(--custom-white);
+    background-color: var(--custom-pink);
+    font: 1em Arial;
     text-decoration: none;
-    background-color: red;
+    transition-duration: .5s;
+    border: 0;
 }
 /* Ovewrite Hover Effect Boostrap Adds for Form Input Type Submits */
 form input.form-submit:hover {
-    background-color: rgb(163, 47, 47);
-}
-form label {
-    display: block;
-    margin: 1em;
+    color: var(--custom-pink);
+    background-color: var(--custom-white);
+    color: var(--custom-pink);
+    background-color: var(--custom-white);
+    box-shadow: 0px 0px 5px 2px var(--custom-pink);
 }
 /* Styling for Input Fields Inside Forms */
 form input.form-field {
     width: auto;
     margin: auto;
     text-align: center;
-}
-/* Styling for Logo Inside Forms */
-form legend > img.form-logo {
-    margin: 1em;
-}
-/* Styling for Form Titles */
-form legend.form-title {
-    font: bold 2em Arial;
-}
-form a:first-of-type {
-    text-align: center;
-    margin: 2em;
-    font: bold 1em Arial;
-    display: block;
 }
 /**
  * End of Form Styling
