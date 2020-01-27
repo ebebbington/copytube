@@ -4,7 +4,7 @@ ARG HOST_IP
 
 # Update and install required packages and dependencies
 RUN apt-get update -y
-RUN apt-get install -y --no-install-recommends libxml2-dev libxslt-dev python-dev npm
+RUN apt-get install -y --no-install-recommends libxml2-dev libxslt-dev python-dev npm vim
 RUN apt-get install -y \
   apt-transport-https apt-utils libc-client-dev libzip-dev libldb-dev libldap2-dev libpng-dev libonig-dev zip unzip curl
 
@@ -19,8 +19,8 @@ RUN yes | pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.idekey=PHPSTORM" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_host=$HOST_IP" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.idekey=VSCODE" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && docker-php-ext-enable xdebug
 

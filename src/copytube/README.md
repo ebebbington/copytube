@@ -197,6 +197,15 @@ To do so, run: `npm run dev`. To understand a bit more, see the `webpack.mix.js`
 
 ### Running the Tests
 
+## XDebug
+
+Xdebug is setup and configured for CopyTube, with the use a Chrome extension and VSCode. It has only been done so by configuring the Xdebug configuration file from a remote-host IP to `host.docker.internal`, as well as setting up VSCode.
+
+### Setup
+
+* 1. Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
+* 2. The configuration file for VSCode has already been setup (`./.vscode/*`)
+
 ## Information
 
 ## Help
