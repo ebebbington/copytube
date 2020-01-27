@@ -150,8 +150,7 @@ INSERT INTO `comments` (`id`, `comment`, `author`, `date_posted`, `video_posted_
 
 CREATE TABLE `sessions` (
   `id` bigint(20) NOT NULL,
-  `session_id_1` varchar(32) NOT NULL,
-  `session_id_2` varchar(32) NOT NULL,
+  `session_id` varchar(155) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -159,8 +158,8 @@ CREATE TABLE `sessions` (
 -- Dumping data for table `sessions`
 --
 
-INSERT INTO `sessions` (`id`, `session_id_1`, `session_id_2`, `user_id`) VALUES
-(203, '838daa633554d641aeae986451a54b09', 'c0ee5ec4731ce3fa86e8b2484f3af210', 23);
+INSERT INTO `sessions` (`id`, `session_id`, `user_id`) VALUES
+(203, '838daa633554d641aeae986451a54b09', 23);
 
 -- --------------------------------------------------------
 
