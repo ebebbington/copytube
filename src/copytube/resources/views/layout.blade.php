@@ -26,7 +26,9 @@
         </header>
         <div class="container">
             <div class="row">
-            @yield('content')
+                <div class="col-xs-12 col-md-8 col-lg-6 center-h">
+                @yield('content')
+                </div>
             </div>
         </div>
         <div id="notifier-container">
