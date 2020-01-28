@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('home')->with('title', 'Home');
+// });
+Route::get('/', 'HomeController@index');
 
 Route::get('/register', 'RegisterController@index');
 Route::post('/register', 'RegisterController@submit');

@@ -90,8 +90,8 @@ class BaseModel extends Model
      */
     public function CreateQuery (array $data)
     {
-        Log::debug('Going to validate input');
-        Log::debug('Saving the new user...');
+        Log::debug('Going to run a create query using: ');
+        Log::debug(print_r($data));
         $model = $this->create($data);
         return $model;
     }

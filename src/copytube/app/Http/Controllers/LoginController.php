@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use View;
+use Cookie;
 
 class LoginController extends Controller
 {
@@ -34,9 +35,17 @@ class LoginController extends Controller
         }
         Log::debug('User exists');
 
+        // Check if login_attempts is 0 to make them recover it
+        // todo
+
+        // if the cookie is already set and matches a user id in the sessions table then just send them to the home controller
+        // todo
+
         // check if the passwords match
         $passwordsMatch = Hash::check($password, $User->password);
         if (empty($passwordsMatch)) {
+            // Reduce the login attempts
+            // todo
             Log::debug('Passwords dont match');
             return response([
                 'success' => false,
@@ -46,35 +55,39 @@ class LoginController extends Controller
         Log::debug('Passwords match');
 
         // Check if they are already logged in, to just send them home
-        if ($User->logged_in === 0) {
-            return response([
-                'success' => true
-            ], 200);
-        }
+        // if ($User->logged_in === 0) {
+        //     return response([
+        //         'success' => true
+        //     ], 200);
+        // }
 
-        // Create a session entry in the sessions table
+        // Create a session entry in the sessions table only
         $SessionModel = new SessionModel;
         $sessionId = $request->session()->get('_token');
         $userId = $User->id;
         $Session = $SessionModel->CreateQuery(['session_id' => $sessionId, 'user_id' => $userId]);
+        Log::debug('Created the session in the database with the user id ' . $userId . ' of and the session value of ' . $sessionId);
 
         // Set the user to logged in
+        // TESTING just set logged in to 1
+        $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 1]);
         $updated = $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
         if ($updated === false) {
+            Log::debug('Failed to update the model when updating logged_in');
             return response([
                 'success' => false,
                 'message' => 'Failed to update the model'
             ]);
         }
 
-        // Assign the user object into the sessions
-        unset($User->password);
-        session(['user' => $User]); // $request->session()->get('user'); // [{...}]
-        session(['session' => $Session]);
+        // Create the cookie
+        Cookie::queue('sessionId', $sessionId, 3600);
+        Log::debug('Queued the cookie and oing to respond with a success');
 
+        // All goes well, send them to the home
         return response([
             'success' => true
-        ]);
+        ], 200);
     }
 
     public function get (Request $request)
