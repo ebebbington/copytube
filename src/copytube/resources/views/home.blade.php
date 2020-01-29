@@ -8,8 +8,8 @@
 <!-- search -->
 <div class="row pardon-me">
     <div id="search" class="input-group">
-        <input id="search-bar" class="form-control" name="search-bar" type="search" placeholder="Search or Hover Over Me for a List of Videos and Click" size="60"/>
-        <input id="search-button" class="btn btn-primary" name="search-button" type="submit">
+        <input id="search-bar" class="form-control" name="search-bar" type="search" placeholder="Search" size="60"/>
+        <button id="search-button" class="btn" name="search-button">Search</button>
     </div>
 </div>
 <!-- main video -->

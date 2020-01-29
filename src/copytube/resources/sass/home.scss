@@ -12,18 +12,29 @@
     border-radius: .25rem;
     top: 0;
     transition-duration: 1s;
+
     &.stick {
-        width: 480px;
-        box-shadow: 0px 0px 10px 8px;
         position: fixed;
-        top: 100px;
+        right: 0;
+        left: 0;
+        width: 30%;
+        margin: auto;
+        top: 87px;
         z-index: 1;
+        width: fit-content;
     }
-    input:first-of-type {
-        width: 84%;
+    & > input:first-of-type {
+        border-radius: .25rem 0 0 .25rem;
     }
-    input[name="search-button"] {
-        width: 16%;
+    & button {
+        border-radius: 0 .25rem .25rem 0;
+        color: var(--custom-white);
+        background: var(--custom-pink);
+        &:hover {
+            color: var(--custom-pink);
+            background-color: var(--custom-white);
+            box-shadow: 0px 0px 5px 2px var(--custom-pink);
+        }
     }
 }
 
