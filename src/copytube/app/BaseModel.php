@@ -53,21 +53,25 @@ class BaseModel extends Model
      * // Get all data
      * $result = $SomeModel->Select([...], false) // [[[...]], [{...}]]
      *
-     * @param array $data Key value pair array of data to use in the wher clause
+     * @param array $data Key value pair array of data to use in the wher clause, or if a select 8 query then set it to "[]"
      * @param boolean Find a single instance? Defaults to true
      *
      * @return boolean|array False when no data found, singular object if one result, array of objects when more than 1
      */
-    public function SelectQuery (array $data, bool $first = true)
+    public function SelectQuery (array $data = [], bool $first = true, int $limit = 0)
     {
       // Allow to get only a single result for dynamics, and make this a priority to limit querying
       $result = null;
       if ($first) {
         $result = DB::table($this->table)->where($data)->first();
       }
-      // then check if we arent looking for a single row
-      if ($first === false) {
+      // then check if we arent looking for a single row to get all results by query
+      if ($first === false && $limit === 0) {
         $result = DB::table($this->table)->where($data)->get();
+      }
+      // get all results by query but limit them
+      if ($first === false && !empty($limit)) {
+        $result = DB::table($this->table)->where($data)->take($limit)->get();
       }
       // No data found matching query?
       if (empty($result)) {

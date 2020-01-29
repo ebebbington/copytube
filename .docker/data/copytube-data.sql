@@ -217,10 +217,10 @@ CREATE TABLE `videos` (
 -- Dumping data for table `videos`
 --
 
-INSERT INTO `videos` (`id`, `title`, `description`, `src`, `height`, `width`, `poster`) VALUES
-(1, 'Something More', 'Watch this inspirational video as we look at all of the beautiful things inside this world', 'http://localhost/copytube/videos/something_more.mp4', 220, 230, 'http://localhost/copytube/images/something_more.jpg'),
-(2, 'Lava Sample', 'Watch this lava flow through the earth, burning and sizzling as it progresses', 'http://localhost/copytube/videos/lava_sample.mp4', 220, 230, 'http://localhost/copytube/images/lava_sample.jpg'),
-(3, 'An Iceland Venture', 'Iceland, beautiful and static, watch as we venture through this glorious place', 'http://localhost/copytube/videos/an_iceland_venture.mp4', 220, 230, 'http://localhost/copytube/images/an_iceland_venture.jpg');
+INSERT INTO `videos` (`id`, `title`, `description`, `src`, `poster`) VALUES
+(1, 'Something More', 'Watch this inspirational video as we look at all of the beautiful things inside this world', 'videos/something_more.mp4', 'img/something_more.jpg'),
+(2, 'Lava Sample', 'Watch this lava flow through the earth, burning and sizzling as it progresses', 'videos/lava_sample.mp4', 'img/lava_sample.jpg'),
+(3, 'An Iceland Venture', 'Iceland, beautiful and static, watch as we venture through this glorious place', 'videos/an_iceland_venture.mp4', 'img/an_iceland_venture.jpg');
 
 --
 -- Indexes for dumped tables

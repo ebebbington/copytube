@@ -1,6 +1,7 @@
 @use 'form';
 @use 'notifier';
 @use 'header';
+@use 'home';
 
 :root{
     --custom-white: ghostwhite;
@@ -25,100 +26,4 @@
 }
 .row.pardon-me {
     margin-bottom: 2em;
-}
-#search {
-    width: 480px;
-    border-radius: .25rem;
-    top: 0;
-    transition-duration: 1s;
-    &.stick {
-        box-shadow: 0px 0px 10px 8px;
-        position: fixed;
-        top: 100px;
-        z-index: 1;
-    }
-}
-
-#main-video-holder {
-    border-bottom: 1px solid var(--custom-grey-border);
-    padding-bottom: 1em;
-    video {
-        width: 100%;
-        box-shadow: 0px 0px 10px 1px red;
-        width: 100%;
-        margin-bottom: 1em;
-    }
-    h3 {
-        width: 100%;
-        color: var(--custom-black);
-    }
-    p {
-        margin: auto;
-        color: var(--custom-black);
-    }
-}
-
-#comment {
-    background: var(--custom-light-grey);
-    padding: 1em;
-    width: 100%;
-    span {
-        display: flex;
-        textarea {
-            padding-right: 2em;
-            height: 57px;
-            resize: none;
-        }
-        p {
-            margin-right: 1em;
-            position: absolute;
-            right: 0;
-            padding: .5em;
-            color: var(--custom-dark-grey);
-        }
-    }
-    button {
-        color: var(--custom-white);
-        background: var(--custom-pink);
-        margin-top: .5em;
-        &:hover {
-            color: var(--custom-pink);
-            background-color: var(--custom-white);
-            box-shadow: 0px 0px 5px 2px var(--custom-pink);
-        }
-    }
-}
-#comment-list {
-    padding: 1em;
-    background: var(--custom-light-grey);
-    border-radius: 5px;
-    width: 100%;
-    .media {
-        .media-left {
-            img {
-                width: 55px;
-                height: 55px;
-                border-radius:80%;
-            }
-        }
-        .media-body {
-            text-align: left;
-            margin-left: .5em;
-            h4 {
-                color: var(--custom-dark-grey);
-            }
-        }
-    }
-}
-#rabbit-hole {
-    .rabbit-hole-video-holder {
-        display: flex;
-        video {
-            width: 168px;
-            height: 94px;
-        }
-        p {
-            margin: auto auto auto 0;
-        }
-    }
 }

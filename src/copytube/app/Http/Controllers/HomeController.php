@@ -1,9 +1,5 @@
 <?php
 
-
-namespace App\Http\Controllers;
-
-
 namespace App\Http\Controllers;
 
 use App\UserModel;
@@ -15,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use View;
+use App\VideosModel;
+use App\CommentsModel;
 use Cookie;
 
 class HomeController extends Controller
@@ -50,6 +48,20 @@ class HomeController extends Controller
         session(['user' => $User]); // $request->session()->get('user'); // [{...}]
         Log::debug('Set the user inside the session object, returning home');
 
-        return View::make('home')->with('title', 'Home');
+        // Get the videos
+        $VideosModel = new VideosModel;
+        $Videos = $VideosModel->SelectQuery([], false, 3);
+        $mainVideo = $Videos[0];
+        $rabbitHoleVideos = [$Videos[1], $Videos[2]];
+
+        // Get the comments for the main video
+        $CommentsModel = new CommentsModel;
+        $Comments = $CommentsModel->SelectQuery(['video_posted_on' => $mainVideo->title], false);
+
+        return View::make('home')
+            ->with('title', 'Home')
+            ->with('mainVideo', $mainVideo)
+            ->with('rabbitHoleVideos', $rabbitHoleVideos)
+            ->with('comments', $Comments);
     }
 }

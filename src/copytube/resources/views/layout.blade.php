@@ -17,6 +17,18 @@
         @yield('head')
     </head>
     <body>
+        <div id="templates" hidden>
+            <div class="media" id="user-comment-template">
+                <div class="media-left">
+                    <img src=""" alt="">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"></h4>
+                    <small></small>
+                    <p></p>
+                </div>
+            </div>
+        </div>
         <header>
             <img src="img/copytube_logo.png" alt="Logo">
             <a href="/home">Home</a>

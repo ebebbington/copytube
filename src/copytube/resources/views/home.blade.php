@@ -14,18 +14,23 @@
 </div>
 <!-- main video -->
 <div class="row pardon-me" id="main-video-holder">
-    <video title="Something More" poster="img/something_more.jpg" src="videos/something_more.mp4" controls>
+    <video title="{{ $mainVideo->title }}" poster="{{ $mainVideo->poster }}" src="{{ $mainVideo->src }}" controls>
     </video>
-    <h3>Something More</h3>
-    <p>Sommin'?</p>
+    <h3>{{ $mainVideo->title }}</h3>
+    <p>{{ $mainVideo->description }}</p>
 </div>
 <!-- rabbit hole videos -->
 <div class="row pardon-me">
     <div id="rabbit-hole">
+    @foreach ($rabbitHoleVideos as $rabbitHoleVideo)
         <div class="rabbit-hole-video-holder">
-            <video src="videos/lava_sample.mp4" title="Lava Sample" poster="img/lava_sample.jpg"></video>
-            <p>Lava Sample
+            <video src="{{ $rabbitHoleVideo->src }}"
+                title="{{ $rabbitHoleVideo->title }}"
+                poster="{{ $rabbitHoleVideo->poster }}">
+            </video>
+            <p>{{ $rabbitHoleVideo->title }}</p>
         </div>
+    @endforeach
     </div>
 </div>
 <!-- comment -->
@@ -41,15 +46,18 @@
 <!-- list of comments -->
 <div class="row">
     <div id="comment-list">
+    @foreach ($comments as $comment)
         <div class="media">
             <div class="media-left">
                 <img src="img/lava_sample.jpg" alt="Sample.jpg">
             </div>
             <div class="media-body">
-                <h4 class="media-heading">Author</h4>
-                <p>A comment</p>
+                <h4 class="media-heading">{{ $comment->author }}</h4>
+                <small>{{ $comment->date_posted }}</small>
+                <p>{{ $comment->comment }}</p>
             </div>
         </div>
+    @endforeach
     </div>
 </div>
 @stop
