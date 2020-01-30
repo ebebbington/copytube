@@ -31,16 +31,22 @@
         </div>
         <header>
             <img src="img/copytube_logo.png" alt="Logo">
-            <a href="/home">Home</a>
-            <a href="/register">Register</a>
-            <a href="/login">Login</a>
+            <a class="menu-item" href="/home">Home</a>
+            <a class="menu-item" href="/register">Register</a>
+            <a class="menu-item" href="/login">Login</a>
+            @if (isset($username))
             <i class="gear"></i>
+            <div class="hide">
+                <p>Hello {{ $username }}</p>
+                <ul>
+                    <li><a href="/logout">Log out</a></li>
+                </ul>
+            </div>
+            @endif
         </header>
         <div class="container">
-            
-                <div class="col-xs-12 col-md-8 col-lg-6 center-h">
-                @yield('content')
-              
+            <div class="col-xs-12 col-md-8 col-lg-6 center-h">
+            @yield('content')
             </div>
         </div>
         <div id="notifier-container">
