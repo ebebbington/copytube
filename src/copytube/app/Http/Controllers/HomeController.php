@@ -27,6 +27,19 @@ class HomeController extends Controller
         // Ensure our cookie is set, if not then send to login
         $sessionId = Cookie::get('sessionId');
         if (empty($sessionId)) {
+            // and if the session has expired and the user still exists, update the db e.g. a logged in user acessedd the home page after session has expired
+            $User = $request->session()->get('user');
+            if (!empty($User)) {
+                Log::debug('user in session isnt empty so we are going to log them out');
+                session(['user' => null]);
+                $UserModel = new UserModel;
+                $UserModel->UpdateQuery(['id' => $User->id], ['logged_in' => 1]);
+                $SessionModel = new SessionModel;
+                $SessionModel->DeleteQuery(['user_id' => $User->id]);
+                // update user db
+                // remove session from db where user id is user id
+            }
+            Log::debug(json_encode($User));
             Log::debug('Session id is empty');
             return View::make('login')->with('title', 'Login');
         }
