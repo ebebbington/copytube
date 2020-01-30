@@ -30,19 +30,23 @@
             </div>
         </div>
         <header>
-            <img src="img/copytube_logo.png" alt="Logo">
-            <a class="menu-item" href="/home">Home</a>
-            <a class="menu-item" href="/register">Register</a>
-            <a class="menu-item" href="/login">Login</a>
-            @if (isset($username))
-            <i class="gear"></i>
-            <div class="hide">
-                <p>Hello {{ $username }}</p>
-                <ul>
-                    <li><a href="/logout">Log out</a></li>
-                </ul>
+            <div id="header-main">
+                <img src="img/copytube_logo.png" alt="Logo">
             </div>
-            @endif
+            <div id="header-sub">
+                <a class="menu-item" href="/home">Home</a>
+                <a class="menu-item" href="/register">Register</a>
+                <a class="menu-item" href="/login">Login</a>
+                @if (isset($username))
+                <i class="gear"></i>
+                <div class="hide gear-dropdown">
+                    <p>Hello {{ $username }}</p>
+                    <ul>
+                        <li><a href="/logout">Log out</a></li>
+                    </ul>
+                </div>
+                @endif
+            </div>
         </header>
         <div class="container">
             <div class="col-xs-12 col-md-8 col-lg-6 center-h">

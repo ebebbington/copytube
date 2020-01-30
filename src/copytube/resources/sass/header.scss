@@ -1,6 +1,7 @@
+/* todo design header for smaller screens so it isn't scrunched up */
 header {
     position: fixed;
-    display: flex;
+    display: block;
     width: 100%;
     background: var(--custom-light-grey);
     padding: 0.3em;
@@ -10,43 +11,58 @@ header {
     border-top: 3px solid #e85e77;
     margin-top: -8em;
     z-index: 2;
-}
-header a.menu-item, header > img {
-    margin: auto;
-    color: var(--custom-pink);
-    font-size: 1.5em;
-    transition-duration: 1s;
-    &:hover {
-        font-size: 1.5em;
-        text-decoration: none;
-        color: var(--custom-pink);
-    }
-}
-header > div {
-  position: absolute;
-    right: 0;
-    top: 84px;
-    background: var(--custom-grey-border);
-    border: 1px solid var(--custom-light-grey);
-  p {
-    padding: .5em;
-    border-bottom: 1px solid var(--custom-black);
-    color: var(--custom-pink);
-  }
-  ul {
-    list-style-type: none;
-    & li {
-      padding: .5em;
-      & a {
-        color: var(--custom-dark-grey);
-        &:hover {
-          text-decoration: none;
-          color: var(--custom-black);
-        }
+    #header-main {
+      width: 100%;
+      img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
-  }
+    #header-sub {
+      display: flex;
+      a.menu-item {
+        margin: auto;
+        color: var(--custom-pink);
+        font-size: 1.5em;
+        transition-duration: 1s;
+        &:hover {
+            font-size: 1.5em;
+            text-decoration: none;
+            color: var(--custom-pink);
+        }
+      }
+      i.gear {
+
+      }
+      .gear-dropdown {
+          position: absolute;
+          right: 0;
+          top: 121px;
+          background: var(--custom-grey-border);
+          border: 1px solid var(--custom-light-grey);
+          p {
+            padding: .5em;
+            border-bottom: 1px solid var(--custom-black);
+            color: var(--custom-pink);
+          }
+          ul {
+            list-style-type: none;
+            & li {
+              padding: .5em;
+              & a {
+                color: var(--custom-dark-grey);
+                &:hover {
+                  text-decoration: none;
+                  color: var(--custom-black);
+                }
+              }
+            }
+          }
+        }
+      }
 }
+
 $icon_size: 1em;
 
 .gear {

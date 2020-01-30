@@ -20,13 +20,12 @@ class LogoutController extends Controller
     {
         $User = $request->session()->get('user');
         $sessionId = Cookie::get('sessionId');
+        session(['user' => null]);
+        Cookie::forget('sessionId');
         if (empty($User) || empty($sessionId)) {
             Log::debug('User or session id is empty');
             return redirect('/login');
         }
-
-        session(['user' => null]);
-        Cookie::forget('sessionId');
 
         $UserModel = new UserModel;
         $UserModel->UpdateQuery(['email_address' => $User->email_address], ['logged_in' => 1]);

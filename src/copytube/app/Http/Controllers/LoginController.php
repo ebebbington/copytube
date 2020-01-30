@@ -40,9 +40,6 @@ class LoginController extends Controller
         }
         Log::debug('User exists');
 
-        // Check if login_attempts is 0 to make them recover it
-        // todo
-
         // check if the passwords match
         $passwordsMatch = Hash::check($password, $User->password);
         if (empty($passwordsMatch)) {
@@ -55,6 +52,9 @@ class LoginController extends Controller
             ], 403);
         }
         Log::debug('Passwords match');
+
+        // Check if login_attempts is 0 to make them recover it
+        // todo
 
         // Check if they are already logged in, to just send them home
         // if ($User->logged_in === 0) {

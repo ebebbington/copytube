@@ -5,7 +5,7 @@ const Header = (function () {
     const Handlers = (function () {
         $(document).ready(function () {
             $('header i.gear').on('click', function (event) {
-                $('header > i.gear + div').toggleClass('hide')
+                $('header div.gear-dropdown').toggleClass('hide')
             })
         })
     })()
