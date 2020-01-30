@@ -33,13 +33,18 @@ class HomeController extends Controller
 
         // Get a user by that cookie
         $SessionModel = new SessionModel;
-        $Session = $SessionModel->SelectQuery(['session_id' => $sessionId]);
+        $data = [
+            'query' => ['session_id' => $sessionId],
+            'selectOne' => true
+        ];
+        $Session = $SessionModel->SelectQuery($data);
         if (empty($Session) || !$Session) {
             Log::debug('No session was found with that session id e.g. it was never created in the db');
             return View::make('login')->with('title', 'Login');
         }
         $UserModel = new UserModel;
-        $User = $UserModel->SelectQuery(['id' => $Session->user_id]);
+        $data['query'] = ['id' => $Session->user_id];
+        $User = $UserModel->SelectQuery($data);
         if (empty($User) || !$User || $Session->user_id !== $User->id) {
             Log::debug('No user was found with a matching user id in the sessions table');
             return View::make('login')->with('title', 'Login');
@@ -53,12 +58,28 @@ class HomeController extends Controller
         // Get the videos
         $videoRequested = $request->query('requestedVideo') ?? 'Something More'; // default to some video
         $VideosModel = new VideosModel;
-        $mainVideo = $VideosModel->SelectQuery(['title' => $videoRequested], true);
-        $rabbitHoleVideos = $VideosModel->SelectQuery('title', false, 2, '!=', $videoRequested);
+        $data = [
+            'query' => ['title' => $videoRequested],
+            'selectOne' => true
+        ];
+        $mainVideo = $VideosModel->SelectQuery($data);
+        $data = [
+            'query' => 'title',
+            'conditionalOperator' => '!=',
+            'conditionalValue' => $videoRequested,
+            'selectOne' => false,
+            'count' => 2
+        ];
+        $rabbitHoleVideos = $VideosModel->SelectQuery($data);
 
         // Get the comments for the main video
         $CommentsModel = new CommentsModel;
-        $Comments = $CommentsModel->SelectQuery(['video_posted_on' => $mainVideo->title], false);
+        $data = [
+            'query' => ['video_posted_on' => $mainVideo->title],
+            'selectOne' => false,
+            'count' => null
+        ];
+        $Comments = $CommentsModel->SelectQuery($data);
 
         return View::make('home')
             ->with('title', 'Home')

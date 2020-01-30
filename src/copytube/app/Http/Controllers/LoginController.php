@@ -25,7 +25,11 @@ class LoginController extends Controller
 
         // Check if that user exists with the same email
         $UserModel = new UserModel;
-        $User = $UserModel->SelectQuery(['email_address' => $email], true);
+        $data = [
+            'query' => ['email_address' => $email],
+            'selectOne' => true
+        ];
+        $User = $UserModel->SelectQuery($data);
         if ($User === false) {
             Log::debug('User does not exist with that email');
             return response([

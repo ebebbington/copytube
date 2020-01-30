@@ -45,40 +45,72 @@ class BaseModel extends Model
      * e.g. $result[0]->name; $result[3]->name;
      *
      * @example
-     * // No data will match this query
-     * $result = $SomeModel->Select(['name' => 'i dont exist']); // false
-     * // Get single data
-     * $result = $SomeModel->Select([...], true); // defaults to true
-     * $id = $result->id;
+     * // Get a single record
+     * $data = [
+     *  'query' => ['name' => 'Edward'],
+     *  'selectOne' => true,
+     * ]
+     * $result = $SomeModel->Select($data); // {...} or false
+     * // Many records
+     * $data = [
+     *  'query' => ['username' => 'edward'],
+     *  'selectOne' => false,
+     *  'count' => 102
+     * ]
+     * $result = $SomeModel->Select($data);
      * // Get all data
-     * $result = $SomeModel->Select([...], false) // [[[...]], [{...}]]
+     * $data = [
+     *  'query' => [],
+     *  'selectOne' => false,
+     *  'count' => null
+     * ]
+     * $result = $SomeModel->Select($data) // [[[...]], [{...}]]
+     * // Use conditionals
+     * $data = [
+     *  'query' => 'name',
+     *  'conditionalOperator' => '!=',
+     *  'conditionalValue' => 'edward',
+     *  'count' => 102,
+     *  'selectOne' => false
+     * ]
+     * $result = $SomeModel->Select('title', false, 0, '!=', 'Something More')
      *
-     * @param array $data Key value pair array of data to use in the wher clause, or if a select 8 query then set it to "[]"
+     * @param array|string $data Can be a key value pair for data to find, or a string if used with conditionals, e.g. ('title', $first = false, $limit = 0, $operator = '!=', $value = 'username' )
      * @param boolean Find a single instance? Defaults to true
      *
      * @return boolean|array False when no data found, singular object if one result, array of objects when more than 1
      */
-    public function SelectQuery ($data = [], bool $first = true, int $limit = 0, string $conditionalOperator = '', $value = '')
+    public function SelectQuery (array $data = [], bool $first = true, int $limit = 0)
     {
-      // Allow to get only a single result for dynamics, and make this a priority to limit querying
-      $result = null;
-      if ($first) {
-        $result = DB::table($this->table)->where($data, $conditionalOperator, $value)->first();
+      $query = $data['query'] ?? [];
+      $conditionalOperator = $data['conditionalOperator'] ?? '';
+      $conditionalValue = $data['conditionalValue'] ?? '';
+      $count = $data['count'] ?? null;
+      $selectOne = $data['selectOne'] ?? true;
+      $passedInData = [
+        'query' => [
+          'name' => 'edward'
+        ],
+        'conditionalOperator' => '!=',
+        'conditionalValue' => 'hello',
+        'count' => 5,
+        'selectOne' => true
+      ];
+      // Get a single record if requested
+      if ($selectOne) {
+        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->first();
+        return $result ?? false; // {...} or false
       }
-      // then check if we arent looking for a single row to get all results by query
-      if ($first === false && $limit === 0) {
-        $result = DB::table($this->table)->where($data, $conditionalOperator, $value)->get();
+      // Get all by the count limiter
+      if ($selectOne === false && $count > 1) {
+        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->take($count)->get();
+        return $result ?? false; // [{...}, {...}] or false
       }
-      // get all results by query but limit them
-      if ($first === false && !empty($limit)) {
-        $result = DB::table($this->table)->where($data, $conditionalOperator, $value)->take($limit)->get();
+      // Get all if count is undefined
+      if ($selectOne === false && empty($count)) {
+        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->get();
+        return $result ?? false; // [{...}, {...}] or false
       }
-      // No data found matching query?
-      if (empty($result)) {
-        return false;
-      }
-      // Dev should know when calling it how the data is returned e.g. if first = true, a single object is returned
-      return $result;
     }
 
     /**
