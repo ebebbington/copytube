@@ -32,6 +32,7 @@ class LoginController extends Controller
         $User = $UserModel->SelectQuery($data);
         if ($User === false) {
             Log::debug('User does not exist with that email');
+            // todo :: reduce the login attempts
             return response([
                 'success' => false,
                 'message' => 'That email does not exist in our system',
@@ -40,9 +41,6 @@ class LoginController extends Controller
         Log::debug('User exists');
 
         // Check if login_attempts is 0 to make them recover it
-        // todo
-
-        // if the cookie is already set and matches a user id in the sessions table then just send them to the home controller
         // todo
 
         // check if the passwords match

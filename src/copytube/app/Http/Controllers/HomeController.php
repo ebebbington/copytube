@@ -96,6 +96,7 @@ class HomeController extends Controller
 
         return View::make('home')
             ->with('title', 'Home')
+            ->with('username', $User->username)
             ->with('mainVideo', $mainVideo)
             ->with('rabbitHoleVideos', $rabbitHoleVideos)
             ->with('comments', $Comments);

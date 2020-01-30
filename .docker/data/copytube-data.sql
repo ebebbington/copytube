@@ -193,9 +193,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email_address`, `password`, `logged_in`, `login_attempts`) VALUES
-(20, 'Edward Work', 'edward.bebbington@intercity.technology', '$2y$10$NItdrDuiuOpB6cdamy3NKekjvdylBjYvCoepjJPQR0d5eAC0IKxNa', 1, 2),
-(21, 'Edward Home', 'EdwardSBebbington@hotmail.com', '$2y$10$Arh7UfnUuyl8UOZlhmmiquAWtcJdq9YE0fj.bbUx4dNl5DnUW3oxS', 0, 0),
-(23, 'test', 'test@hotmail.com', '$2y$10$DCTZq7Wm4SfmAV2Bu4DVXO6MGWgE33jZ6QnKSazq7XEH6ssOCvyam', 0, 3);
+(20, 'Edward Work', 'edward.bebbington@intercity.technology', '$2y$10$NItdrDuiuOpB6cdamy3NKekjvdylBjYvCoepjJPQR0d5eAC0IKxNa', 1, 3),
+(21, 'Edward Home', 'EdwardSBebbington@hotmail.com', '$2y$10$Arh7UfnUuyl8UOZlhmmiquAWtcJdq9YE0fj.bbUx4dNl5DnUW3oxS', 1, 3),
+(23, 'test', 'test@hotmail.com', '$2y$10$DCTZq7Wm4SfmAV2Bu4DVXO6MGWgE33jZ6QnKSazq7XEH6ssOCvyam', 1, 3);
 
 -- --------------------------------------------------------
 
