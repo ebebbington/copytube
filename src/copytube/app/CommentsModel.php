@@ -59,7 +59,7 @@ class CommentsModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['title', 'author', 'date_posted', 'video_posted_on'];
+    protected $fillable = ['comment', 'author', 'date_posted', 'video_posted_on'];
 
     /**
      * Rules for validation
@@ -72,4 +72,6 @@ class CommentsModel extends BaseModel
       'date_posted' => 'required',
       'video_posted_on' => 'required',
     ];
+
+    public $timestamps = false;
 }

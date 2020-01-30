@@ -1,3 +1,5 @@
+import Notifier from './notifier'
+
 const Home = (function () {
 
     const Methods = (function () {
@@ -11,8 +13,57 @@ const Home = (function () {
             }
         }
 
+        /**
+         * format: yyyy-mm-dd
+         */
+        function getCurrentDate () {
+            const today: Date = new Date()
+            const year = today.getFullYear()
+            const month = (today.getMonth() + 1) > 9 ? today.getMonth() + 1 : '0' + (today.getMonth() + 1)
+            const day = today.getDate()
+            const date: string = year + '-' + month + '-' + day
+            return date
+        }
+
+        function postComment (comment: string, date: string, videoPostedOn: string, newCommentHtml: any) {
+            console.log('comment: ' + comment)
+            console.log('date: ' + date)
+            console.log(videoPostedOn)
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/video/comment',
+                method: 'POST',
+                data: {
+                    comment: comment,
+                    datePosted: date,
+                    videoPostedOn: videoPostedOn
+                },
+                success: function (data) {
+                    console.log('success')
+                    console.log(data)
+                    if (data.success) {
+                        Notifier.success('Add Comment', 'Success')
+                        //newCommentHtml[0].children[0].children[0].src = data.data.image
+                        newCommentHtml[0].children[0].children[0].src = 'img/lava_sample.jpg'
+                        newCommentHtml[0].children[1].children[0].textContent = data.data
+                        $('#comment-list').prepend(newCommentHtml)
+                    }
+                },
+                error: function (err) {
+                    console.log('error')
+                    Notifier.success('Add Comment', 'Failed')
+                    console.error(err)
+                    console.log(JSON.parse(err.responseText))
+                }
+            })
+        }
+
         return {
-            handleScroll: handleScroll
+            handleScroll: handleScroll,
+            getCurrentDate: getCurrentDate,
+            postComment: postComment
         }
 
     })()
@@ -29,28 +80,45 @@ const Home = (function () {
                 /// search?
             })
 
-            $('.rabbit-holde-video-holder > video').on('click', function (event: any) {
+            $('.rabbit-hole-video-holder > video').on('click', function (event: any) {
                 // Make this the main video
+                console.log('clicked rabbuit hole vid')
+                const rabbitHoleVideo = $(this)
+                const clickedVideoTitle = rabbitHoleVideo.attr('title')
+                const form = document.createElement('form')
+                form.method = 'GET'
+                form.action = '/home'
+                const data = document.createElement('input')
+                data.name = 'requestedVideo'
+                data.value = clickedVideoTitle
+                form.appendChild(data)
+                document.body.appendChild(form)
+                form.submit()
             })
 
             $('#comment textarea').on('keyup', function (event: any) {
                 const comment = event.target.value
                 const length = comment.length
+                if (length > 400) {
+                    $('#comment > span > p').css('color', 'red')
+                } else {
+                    $('#comment > span > p').css('color', 'var(--custom-dark-grey')
+                }
                 $('#comment > span > p').text(length)
             })
 
             $('#comment > button').on('click', function (event: any) {
                 const comment = $('#comment > span > textarea').val()
-                const datePosted = ''
+                const datePosted = Methods.getCurrentDate()
                 // ajax
-                const newComment: any = $('#templates > #user-comment-template').clone()
-                newComment.attr('id', '')
-                newComment.children[0].children.src = 'path to users image'
-                newComment.children[1].children[0].text('Users username')
-                newComment.children[1].children[1].text('date posted')
-                newComment.children[1].children[2].text(comment)
+                const newCommentHtml: any = $('#templates > #user-comment-template').clone()
+                const videoPostedOn: string = $('#main-video-holder > video').attr('title')
+                newCommentHtml.attr('id', '')
+                newCommentHtml[0].children[1].children[1].textContent = datePosted
+                newCommentHtml[0].children[1].children[2].textContent = comment
 
                 // add the comment to db and use the template in layout.blade to display in the UI
+                Methods.postComment(comment, datePosted, videoPostedOn, newCommentHtml)
             })
 
         })

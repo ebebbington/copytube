@@ -58,20 +58,20 @@ class BaseModel extends Model
      *
      * @return boolean|array False when no data found, singular object if one result, array of objects when more than 1
      */
-    public function SelectQuery (array $data = [], bool $first = true, int $limit = 0)
+    public function SelectQuery ($data = [], bool $first = true, int $limit = 0, string $conditionalOperator = '', $value = '')
     {
       // Allow to get only a single result for dynamics, and make this a priority to limit querying
       $result = null;
       if ($first) {
-        $result = DB::table($this->table)->where($data)->first();
+        $result = DB::table($this->table)->where($data, $conditionalOperator, $value)->first();
       }
       // then check if we arent looking for a single row to get all results by query
       if ($first === false && $limit === 0) {
-        $result = DB::table($this->table)->where($data)->get();
+        $result = DB::table($this->table)->where($data, $conditionalOperator, $value)->get();
       }
       // get all results by query but limit them
       if ($first === false && !empty($limit)) {
-        $result = DB::table($this->table)->where($data)->take($limit)->get();
+        $result = DB::table($this->table)->where($data, $conditionalOperator, $value)->take($limit)->get();
       }
       // No data found matching query?
       if (empty($result)) {
@@ -95,7 +95,7 @@ class BaseModel extends Model
     public function CreateQuery (array $data)
     {
         Log::debug('Going to run a create query using: ');
-        Log::debug(print_r($data));
+        Log::debug(json_encode($data));
         $model = $this->create($data);
         return $model;
     }
