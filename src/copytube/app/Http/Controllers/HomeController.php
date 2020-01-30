@@ -19,8 +19,10 @@ class HomeController extends Controller
 {
     public function index (Request $request)
     {
-        $a = $request->session();
-        $b = Cookie::get('sessionId');
+        $a = $request->session(); // whole session object
+        $b = Cookie::get('sessionId'); // get cookie value
+        $a = $request->requestedVideo; // method 1 of getting query strings .e.g GET /home?requestedVideo="dr"
+        $b = $request->query('requestedVideo'); // method 2 of getting query stirngs
 
         // Ensure our cookie is set, if not then send to login
         $sessionId = Cookie::get('sessionId');
@@ -49,10 +51,10 @@ class HomeController extends Controller
         Log::debug('Set the user inside the session object, returning home');
 
         // Get the videos
+        $videoRequested = $request->query('requestedVideo') ?? 'Something More'; // default to some video
         $VideosModel = new VideosModel;
-        $Videos = $VideosModel->SelectQuery([], false, 3);
-        $mainVideo = $Videos[0];
-        $rabbitHoleVideos = [$Videos[1], $Videos[2]];
+        $mainVideo = $VideosModel->SelectQuery(['title' => $videoRequested], true);
+        $rabbitHoleVideos = $VideosModel->SelectQuery('title', false, 2, '!=', $videoRequested);
 
         // Get the comments for the main video
         $CommentsModel = new CommentsModel;
