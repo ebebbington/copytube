@@ -36,6 +36,23 @@
             box-shadow: 0px 0px 5px 2px var(--custom-pink);
         }
     }
+    & ul#search-bar-matching-dropdown {
+        position: absolute;
+        background: var(--custom-grey-border);
+        list-style-type: none;
+        top: 38px;
+        width: 100%;
+        text-align: left;
+        & li {
+            padding: 0.5em;
+            cursor: pointer;
+            width: fit-content;
+            color: var(--custom-dark-grey);
+            &:hover {
+                color: var(--custom-black);
+            }
+        }
+    }
 }
 
 #main-video-holder {
@@ -95,7 +112,6 @@
     .media {
         padding: 0.5em;
         .media-left {
-            margin: auto;
             img {
                 width: 55px;
                 height: 55px;
@@ -107,6 +123,9 @@
             margin-left: .5em;
             h4 {
                 color: var(--custom-dark-grey);
+            }
+            p {
+                word-wrap: break-word;
             }
         }
     }

@@ -25,5 +25,6 @@ Route::post('/login', 'LoginController@post');
 Route::get('/home', 'HomeController@index');
 
 Route::post('/video/comment', 'VideoController@postComment');
+Route::get('/video', 'VideoController@getAllVideoTitles');
 
 Route::get('/logout', 'LogoutController@logout');

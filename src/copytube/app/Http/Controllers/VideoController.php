@@ -73,4 +73,22 @@ class VideoController extends Controller
         ];
         return response()->json($resData);
     }
+
+    public function getAllVideoTitles (Request $request)
+    {
+        $title = $request->input('title');
+        $VideosModel = new VideosModel;
+        $data = [
+            'query' => [],
+            'selectOne' => false
+        ];
+        $Videos = $VideosModel->SelectQuery($data);
+        $matchingTitles = [];
+        foreach ($Videos as $video) {
+            if (strpos(strtolower($video->title), strtolower($title)) !== false) {
+                array_push($matchingTitles, $video->title);
+            }
+        }
+        return response()->json(['success' => true, 'data' => $matchingTitles]);
+    }
 }

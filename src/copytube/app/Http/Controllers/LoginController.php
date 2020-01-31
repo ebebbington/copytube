@@ -32,7 +32,6 @@ class LoginController extends Controller
         $User = $UserModel->SelectQuery($data);
         if ($User === false) {
             Log::debug('User does not exist with that email');
-            // todo :: reduce the login attempts
             return response([
                 'success' => false,
                 'message' => 'That email does not exist in our system',
@@ -71,8 +70,6 @@ class LoginController extends Controller
         Log::debug('Created the session in the database with the user id ' . $userId . ' of and the session value of ' . $sessionId);
 
         // Set the user to logged in
-        // TESTING just set logged in to 1
-        $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 1]);
         $updated = $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
         if ($updated === false) {
             Log::debug('Failed to update the model when updating logged_in');

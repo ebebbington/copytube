@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use View;
+use Auth;
 use App\VideosModel;
 use App\CommentsModel;
 use Cookie;
@@ -36,8 +37,6 @@ class HomeController extends Controller
                 $UserModel->UpdateQuery(['id' => $User->id], ['logged_in' => 1]);
                 $SessionModel = new SessionModel;
                 $SessionModel->DeleteQuery(['user_id' => $User->id]);
-                // update user db
-                // remove session from db where user id is user id
             }
             Log::debug(json_encode($User));
             Log::debug('Session id is empty');
@@ -76,6 +75,12 @@ class HomeController extends Controller
             'selectOne' => true
         ];
         $mainVideo = $VideosModel->SelectQuery($data);
+        // override 
+        if ($mainVideo === false) {
+            $videoRequested = 'Something More';
+            $data['query'] = ['title' => $videoRequested];
+            $mainVideo = $VideosModel->SelectQuery($data);
+        }
         $data = [
             'query' => 'title',
             'conditionalOperator' => '!=',

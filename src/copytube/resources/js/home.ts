@@ -60,10 +60,23 @@ const Home = (function () {
             })
         }
 
+        function requestVideo (videoTitle: string) {
+            const form = document.createElement('form')
+            form.method = 'GET'
+            form.action = '/home'
+            const data = document.createElement('input')
+            data.name = 'requestedVideo'
+            data.value = videoTitle
+            form.appendChild(data)
+            document.body.appendChild(form)
+            form.submit()
+        }
+
         return {
             handleScroll: handleScroll,
             getCurrentDate: getCurrentDate,
-            postComment: postComment
+            postComment: postComment,
+            requestVideo: requestVideo
         }
 
     })()
@@ -75,11 +88,46 @@ const Home = (function () {
             const searchElem: any = document.getElementById('search')
             const top = searchElem.offsetTop
             window.onscroll = function () { Methods.handleScroll(searchElem, top)}
+
+            $('#search-bar').on('keyup', function (event: any) {
+                const value = event.target.value
+                console.log(value)
+                const dropdown = $('#search-bar-matching-dropdown')
+                dropdown.empty()
+                dropdown.append('<li>Loading...</li>')
+                $.ajax({
+                    url: '/video',
+                    data: {
+                        title: value
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        if (data.success) {
+                            const matchingTitles = data.data
+                            dropdown.empty()
+                            matchingTitles.forEach((element: string) => {
+                                dropdown.append('<li>' + element + '</li>')
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        console.error(err)
+                    }
+                })
+            })
+
+            $('#search-bar-matching-dropdown').on('click', 'li', function (event) {
+                console.log('clicked a video dropdown title')
+                console.log($(this).text())
+                const title = $(this).text()
+                Methods.requestVideo(title)
+            })
         
             // todo :: display autocomplete of video titles on keyup e.g. each keyup, if that is in a title, show it in the stopdown
             // todo :: also complete the below
             $('#search-button').on('click', function (event: any) {
-                /// search?
+                const videoTitle = $('#search-bar').val()
+                Methods.requestVideo(videoTitle)
             })
 
             $('.rabbit-hole-video-holder > video').on('click', function (event: any) {
@@ -87,15 +135,7 @@ const Home = (function () {
                 console.log('clicked rabbuit hole vid')
                 const rabbitHoleVideo = $(this)
                 const clickedVideoTitle = rabbitHoleVideo.attr('title')
-                const form = document.createElement('form')
-                form.method = 'GET'
-                form.action = '/home'
-                const data = document.createElement('input')
-                data.name = 'requestedVideo'
-                data.value = clickedVideoTitle
-                form.appendChild(data)
-                document.body.appendChild(form)
-                form.submit()
+                Methods.requestVideo(clickedVideoTitle)
             })
 
             $('#comment textarea').on('keyup', function (event: any) {

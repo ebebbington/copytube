@@ -18,6 +18,7 @@ class LogoutController extends Controller
 {
     public function logout (Request $request)
     {
+        // get and unset data
         $User = $request->session()->get('user');
         $sessionId = Cookie::get('sessionId');
         session(['user' => null]);
@@ -27,6 +28,7 @@ class LogoutController extends Controller
             return redirect('/login');
         }
 
+        // update db
         $UserModel = new UserModel;
         $UserModel->UpdateQuery(['email_address' => $User->email_address], ['logged_in' => 1]);
         $SessionModel = new SessionModel;
