@@ -95,9 +95,15 @@ class HomeController extends Controller
         $data = [
             'query' => ['video_posted_on' => $mainVideo->title],
             'selectOne' => false,
-            'count' => null
+            'count' => null,
+            'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
         ];
         $Comments = $CommentsModel->SelectQuery($data);
+        for ($i = 0; $i < sizeof($Comments); $i++) {
+            list($year, $month, $day) = explode('-', $Comments[$i]->date_posted);
+            $formattedDate = $day . '/' . $month . '/' . $year;
+            $Comments[$i]->date_posted = $formattedDate;
+        }
 
         return View::make('home')
             ->with('title', 'Home')

@@ -87,6 +87,8 @@ class BaseModel extends Model
       $conditionalValue = $data['conditionalValue'] ?? '';
       $count = $data['count'] ?? null;
       $selectOne = $data['selectOne'] ?? true;
+      $orderByColumn = $data['orderBy']['column'] ?? 'id';
+      $orderByDirection = $data['orderBy']['direction'] ?? 'ASC';
       $passedInData = [
         'query' => [
           'name' => 'edward'
@@ -94,7 +96,8 @@ class BaseModel extends Model
         'conditionalOperator' => '!=',
         'conditionalValue' => 'hello',
         'count' => 5,
-        'selectOne' => true
+        'selectOne' => true,
+        'orderBy' => ['column' => 'id', 'direction' => 'ASC']
       ];
       // Get a single record if requested
       if ($selectOne) {
@@ -103,12 +106,12 @@ class BaseModel extends Model
       }
       // Get all by the count limiter
       if ($selectOne === false && $count > 1) {
-        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->take($count)->get();
+        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->take($count)->get();
         return $result ?? false; // [{...}, {...}] or false
       }
       // Get all if count is undefined
       if ($selectOne === false && empty($count)) {
-        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->get();
+        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->get();
         return $result ?? false; // [{...}, {...}] or false
       }
     }
