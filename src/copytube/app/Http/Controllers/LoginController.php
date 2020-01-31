@@ -55,13 +55,6 @@ class LoginController extends Controller
         // Check if login_attempts is 0 to make them recover it
         // todo
 
-        // Check if they are already logged in, to just send them home
-        // if ($User->logged_in === 0) {
-        //     return response([
-        //         'success' => true
-        //     ], 200);
-        // }
-
         // Create a session entry in the sessions table only
         $SessionModel = new SessionModel;
         $sessionId = $request->session()->get('_token');

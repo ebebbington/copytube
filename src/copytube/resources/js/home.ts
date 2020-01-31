@@ -123,8 +123,6 @@ const Home = (function () {
                 Methods.requestVideo(title)
             })
         
-            // todo :: display autocomplete of video titles on keyup e.g. each keyup, if that is in a title, show it in the stopdown
-            // todo :: also complete the below
             $('#search-button').on('click', function (event: any) {
                 const videoTitle = $('#search-bar').val()
                 Methods.requestVideo(videoTitle)
