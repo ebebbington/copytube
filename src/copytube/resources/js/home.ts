@@ -4,8 +4,12 @@ const Home = (function () {
 
     const Methods = (function () {
 
-        function handleScroll (elem: any, top: any) {
-            console.log('you scrolled!')
+        /**
+         * Handler for scrolling and the search bar
+         * @param elem 
+         * @param top 
+         */
+        function handleScroll (elem: any, top: any): void {
             if (window.pageYOffset > top) {
                 elem.classList.add('stick')
             } else {
@@ -25,6 +29,13 @@ const Home = (function () {
             return date
         }
 
+        /**
+         * AJAX request to post a comment
+         * @param comment 
+         * @param date 
+         * @param videoPostedOn 
+         * @param newCommentHtml 
+         */
         function postComment (comment: string, date: string, videoPostedOn: string, newCommentHtml: any) {
             console.log('comment: ' + comment)
             console.log('date: ' + date)

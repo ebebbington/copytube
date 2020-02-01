@@ -34,6 +34,7 @@ const Login = (function () {
         return {
             login: login
         }
+
     })()
 
     const Handlers = (function () {
@@ -53,4 +54,5 @@ const Login = (function () {
     return {
         Methods: Methods
     }
+    
 })()
