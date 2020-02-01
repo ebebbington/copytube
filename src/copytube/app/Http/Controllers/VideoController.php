@@ -33,9 +33,6 @@ class VideoController extends Controller
         $videoPostedOn = $request->input('videoPostedOn');
         $User = $request->session()->get('user');
         $username = $User->username;
-        // $userImage = $User->image;
-
-        // check all data is set
         if (empty($comment) || empty($datePosted) || empty($User) || empty($username) || empty($videoPostedOn)) {
             Log::debug('Some data wasn\'t provided');
             return response([

@@ -27,16 +27,18 @@ class RecoverController extends Controller
 
     public function post (Request $request)
     {
+        // get data
         $token = $request->session()->get('recoverToken');
         $email = $request->input('email');
         $password = $request->input('password');
+
+        // get user by that email
         $UserModel = new UserModel;
         $data = [
             'query' => ['recover_token' => $token, 'email_address' => $email],
             'selectOne' => true
         ];
         $User = $UserModel->SelectQuery($data);
-        $a = '';
         if ($User === false) {
             return response([
                 'success' => false,

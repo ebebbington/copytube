@@ -40,8 +40,6 @@ class RegisterController extends Controller
           'rounds' => 12,
         ]);
         Log::debug('Retrieved input and hashed password: ', [$username, $email, $hash]);
-
-        // check data was passed in
         if (empty($username) || empty($email) || empty($request->input('password'))) {
           return response([
             'success' => false,

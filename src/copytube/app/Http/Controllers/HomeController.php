@@ -20,26 +20,18 @@ class HomeController extends Controller
 {
     public function index (Request $request)
     {
-        $a = $request->session(); // whole session object
-        $b = Cookie::get('sessionId'); // get cookie value
-        $a = $request->requestedVideo; // method 1 of getting query strings .e.g GET /home?requestedVideo="dr"
-        $b = $request->query('requestedVideo'); // method 2 of getting query stirngs
-
-        // Ensure our cookie is set, if not then send to login
+        // Authenticate the user
         $sessionId = Cookie::get('sessionId');
         if (empty($sessionId)) {
-            // and if the session has expired and the user still exists, update the db e.g. a logged in user acessedd the home page after session has expired
+            // they need a session id e.g. need to login
+            Log::debug('Session id is empty');
             $User = $request->session()->get('user');
             if (!empty($User)) {
+                // Clean out the user object as well
                 Log::debug('user in session isnt empty so we are going to log them out');
-                session(['user' => null]);
                 $UserModel = new UserModel;
-                $UserModel->UpdateQuery(['id' => $User->id], ['logged_in' => 1]);
-                $SessionModel = new SessionModel;
-                $SessionModel->DeleteQuery(['user_id' => $User->id]);
+                $UserModel->logout($User->id);
             }
-            Log::debug(json_encode($User));
-            Log::debug('Session id is empty');
             return View::make('login')->with('title', 'Login');
         }
 
@@ -99,6 +91,7 @@ class HomeController extends Controller
             'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
         ];
         $Comments = $CommentsModel->SelectQuery($data);
+        // format the date
         for ($i = 0; $i < sizeof($Comments); $i++) {
             list($year, $month, $day) = explode('-', $Comments[$i]->date_posted);
             $formattedDate = $day . '/' . $month . '/' . $year;

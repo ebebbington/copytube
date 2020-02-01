@@ -41,8 +41,8 @@ class LoginController extends Controller
         }
         Log::debug('User exists');
 
+        // Disable their account if no login attempts are left
         if ($User->login_attempts === 0) {
-            // your account has been locked, an email has been sent with a key to recover it
             $recoverToken = Str::random(32);
             $User->recover_token = $recoverToken;
             $UserModel->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken]);
