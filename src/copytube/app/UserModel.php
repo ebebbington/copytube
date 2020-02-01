@@ -104,7 +104,7 @@ class UserModel extends BaseModel
         return $result ? true : false;
     }
 
-    public function logout (int id): void
+    public function logout (int $id): void
     {
         session(['user' => null]);
         $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);

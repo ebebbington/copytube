@@ -33,6 +33,19 @@ class BaseModel extends Model
         return true;
     }
 
+    public function fill ($Model)
+    {
+      $a = $Model;
+      $b='';
+      if ($Model !== false && !empty($Model)) {
+        foreach ($Model as $key => $value) {
+          if (property_exists($this, $key)) {
+            $this[$key] = $value;
+          }
+        }
+      }
+    }
+
     /**
      * SELECT queries
      *
@@ -103,6 +116,7 @@ class BaseModel extends Model
       // Get a single record if requested
       if ($selectOne) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->first();
+        $this->fill($result);
         return $result ?? false; // {...} or false
       }
       // Get all by the count limiter

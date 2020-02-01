@@ -21,9 +21,9 @@ class Mail
 
     public $to = '';
 
-    private $senderEmail = 'ebebbington.copytube@gmail.com';
+    private $senderEmail = env('MAIL_EMAIL');
 
-    private $senderPassword = 'CopyTube1';
+    private $senderPassword = env('MAIL_PASSWORD');
 
     private $senderName = 'CopyTube';
 
