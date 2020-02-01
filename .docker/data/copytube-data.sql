@@ -184,6 +184,7 @@ CREATE TABLE `users` (
   `password` varchar(80) NOT NULL,
   `logged_in` tinyint(1) NOT NULL,
   `login_attempts` int(10) UNSIGNED NOT NULL,
+  `recover_token` varchar(155),
   `updated_at` timestamp NOT NULL DEFAULT NOW() ON UPDATE NOW(),
   `created_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

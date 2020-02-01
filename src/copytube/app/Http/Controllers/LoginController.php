@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use View;
 use Cookie;
+use App\Mail\Mail;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -39,11 +41,24 @@ class LoginController extends Controller
         }
         Log::debug('User exists');
 
+        if ($User->login_attempts === 0) {
+            // your account has been locked, an email has been sent with a key to recover it
+            $recoverToken = Str::random(32);
+            $User->recover_token = $recoverToken;
+            $UserModel->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken]);
+            $message = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token=' . $recoverToken;
+            $Mail = new Mail($User->email_address, $User->username, 'Account Locked', $message);
+            $Mail->send();
+            return response([
+                'success' => false,
+                'message' => 'This account has been locked.'
+            ], 403);
+        }
+
         // check if the passwords match
         $passwordsMatch = Hash::check($password, $User->password);
         if (empty($passwordsMatch)) {
-            // Reduce the login attempts
-            // todo
+            $UserModel->UpdateQuery(['id' => $User->id], ['login_attempts' => ($User->login_attempts - 1)]);
             Log::debug('Passwords dont match');
             return response([
                 'success' => false,
@@ -51,9 +66,6 @@ class LoginController extends Controller
             ], 403);
         }
         Log::debug('Passwords match');
-
-        // Check if login_attempts is 0 to make them recover it
-        // todo
 
         // Create a session entry in the sessions table only
         $SessionModel = new SessionModel;

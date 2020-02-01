@@ -28,3 +28,6 @@ Route::post('/video/comment', 'VideoController@postComment');
 Route::get('/video', 'VideoController@getAllVideoTitles');
 
 Route::get('/logout', 'LogoutController@logout');
+
+Route::get('/recover', 'RecoverController@index');
+Route::post('/recover', 'RecoverController@post');

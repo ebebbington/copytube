@@ -25,6 +25,7 @@ class BaseModel extends Model
      */
     public function validate(array $data)
     {
+      Log::debug(json_encode($data));
         $validator = Validator::make($data, $this->rules);
         if ($validator->fails()) {
           return false;

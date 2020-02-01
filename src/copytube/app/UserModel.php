@@ -61,6 +61,8 @@ class UserModel extends BaseModel
      */
     public $login_attempts;
 
+    public $recover_token;
+
     /**
      * Fields to be populated
      *
