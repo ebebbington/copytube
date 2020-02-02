@@ -25,31 +25,31 @@ class HomeController extends Controller
         if (empty($sessionId)) {
             // they need a session id e.g. need to login
             Log::debug('Session id is empty');
-            $User = $request->session()->get('user');
-            if (!empty($User)) {
+            $user = $request->session()->get('user');
+            if (!empty($user)) {
                 // Clean out the user object as well
                 Log::debug('user in session isnt empty so we are going to log them out');
-                $UserModel = new UserModel;
-                $UserModel->logout($User->id);
+                $User = new UserModel;
+                $User->logout($user->id);
             }
             return View::make('login')->with('title', 'Login');
         }
 
         // Get a user by that cookie
-        $SessionModel = new SessionModel;
+        $Session = new SessionModel;
         $data = [
             'query' => ['session_id' => $sessionId],
             'selectOne' => true
         ];
-        $Session = $SessionModel->SelectQuery($data);
-        if (empty($Session) || !$Session) {
+        $found = $Session->SelectQuery($data);
+        if (empty($found)) {
             Log::debug('No session was found with that session id e.g. it was never created in the db');
             return View::make('login')->with('title', 'Login');
         }
-        $UserModel = new UserModel;
+        $User = new UserModel;
         $data['query'] = ['id' => $Session->user_id];
-        $User = $UserModel->SelectQuery($data);
-        if (empty($User) || !$User || $Session->user_id !== $User->id) {
+        $found = $User->SelectQuery($data);
+        if (empty($found) || !$User || $Session->user_id !== $User->id) {
             Log::debug('No user was found with a matching user id in the sessions table');
             return View::make('login')->with('title', 'Login');
         }
@@ -83,19 +83,19 @@ class HomeController extends Controller
         $rabbitHoleVideos = $VideosModel->SelectQuery($data);
 
         // Get the comments for the main video
-        $CommentsModel = new CommentsModel;
+        $Comments = new CommentsModel;
         $data = [
             'query' => ['video_posted_on' => $mainVideo->title],
             'selectOne' => false,
             'count' => null,
             'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
         ];
-        $Comments = $CommentsModel->SelectQuery($data);
+        $comments = $Comments->SelectQuery($data);
         // format the date
-        for ($i = 0; $i < sizeof($Comments); $i++) {
-            list($year, $month, $day) = explode('-', $Comments[$i]->date_posted);
+        for ($i = 0; $i < sizeof($comments); $i++) {
+            list($year, $month, $day) = explode('-', $comments[$i]->date_posted);
             $formattedDate = $day . '/' . $month . '/' . $year;
-            $Comments[$i]->date_posted = $formattedDate;
+            $comments[$i]->date_posted = $formattedDate;
         }
 
         return View::make('home')
@@ -103,6 +103,6 @@ class HomeController extends Controller
             ->with('username', $User->username)
             ->with('mainVideo', $mainVideo)
             ->with('rabbitHoleVideos', $rabbitHoleVideos)
-            ->with('comments', $Comments);
+            ->with('comments', $comments);
     }
 }

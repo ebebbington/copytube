@@ -31,9 +31,9 @@ class VideoController extends Controller
         $comment = $request->input('comment');
         $datePosted = $request->input('datePosted');
         $videoPostedOn = $request->input('videoPostedOn');
-        $User = $request->session()->get('user');
-        $username = $User->username;
-        if (empty($comment) || empty($datePosted) || empty($User) || empty($username) || empty($videoPostedOn)) {
+        $user = $request->session()->get('user');
+        $username = $user->username;
+        if (empty($comment) || empty($datePosted) || empty($user) || empty($username) || empty($videoPostedOn)) {
             Log::debug('Some data wasn\'t provided');
             return response([
                 'success' => false,
@@ -42,16 +42,16 @@ class VideoController extends Controller
         }
 
         // check the video and user actually exist
-        $VideosModel = new VideosModel;
-        $UserModel = new UserModel;
+        $Videos = new VideosModel;
+        $User = new UserModel;
         $data = [
             'query' => ['title' => $videoPostedOn],
             'selectOne' => true
         ];
-        $video = $VideosModel->SelectQuery($data);
+        $foundVideo = $Videos->SelectQuery($data);
         $data['query'] = ['username' => $username];
-        $user = $UserModel->SelectQuery($data);
-        if (empty($video) || empty($user)) {
+        $foundUser = $User->SelectQuery($data);
+        if (empty($foundVideo) || empty($foundUser)) {
             Log::debug('Video title or user does not exist');
             return reponse([
                 'success' => false,
@@ -60,8 +60,8 @@ class VideoController extends Controller
         }
 
         // Create the new comment
-        $CommentsModel = new CommentsModel;
-        $a = $CommentsModel->CreateQuery(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
+        $Comments = new CommentsModel;
+        $Comments->CreateQuery(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
 
         $resData = [
             'success' => true,
@@ -74,14 +74,14 @@ class VideoController extends Controller
     public function getAllVideoTitles (Request $request)
     {
         $title = $request->input('title');
-        $VideosModel = new VideosModel;
+        $Videos = new VideosModel;
         $data = [
             'query' => [],
             'selectOne' => false
         ];
-        $Videos = $VideosModel->SelectQuery($data);
+        $videos = $Videos->SelectQuery($data);
         $matchingTitles = [];
-        foreach ($Videos as $video) {
+        foreach ($videos as $video) {
             if (strpos(strtolower($video->title), strtolower($title)) !== false) {
                 array_push($matchingTitles, $video->title);
             }

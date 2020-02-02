@@ -33,13 +33,13 @@ class RecoverController extends Controller
         $password = $request->input('password');
 
         // get user by that email
-        $UserModel = new UserModel;
+        $User = new UserModel;
         $data = [
             'query' => ['recover_token' => $token, 'email_address' => $email],
             'selectOne' => true
         ];
-        $User = $UserModel->SelectQuery($data);
-        if ($User === false) {
+        $found = $User->SelectQuery($data);
+        if ($found === false) {
             return response([
                 'success' => false,
                 'Unable to authenticate'
@@ -47,7 +47,7 @@ class RecoverController extends Controller
         }
 
         // validate
-        $validated = $UserModel->validate(['username' => $User->username, 'email' => $User->email_address, 'password' => $password]);
+        $validated = $User->validate(['username' => $User->username, 'email' => $User->email_address, 'password' => $password]);
 
         // hash password
         $hash = Hash::make($request->input('password'), [
@@ -55,7 +55,7 @@ class RecoverController extends Controller
         ]);
 
         // update the new hashed password, login_attempts and recover_token
-        $UserModel->UpdateQuery(['email_address' => $email], ['password' => $hash, 'login_attempts' => 3, 'recover_token' => null]);
+        $User->UpdateQuery(['email_address' => $email], ['password' => $hash, 'login_attempts' => 3, 'recover_token' => null]);
 
         return response([
             'success' => true,

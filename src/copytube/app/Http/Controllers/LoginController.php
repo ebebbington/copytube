@@ -26,13 +26,13 @@ class LoginController extends Controller
         $password = $request->input('password');
 
         // Check if that user exists with the same email
-        $UserModel = new UserModel;
+        $User = new UserModel;
         $data = [
             'query' => ['email_address' => $email],
             'selectOne' => true
         ];
-        $User = $UserModel->SelectQuery($data);
-        if ($User === false) {
+        $found = $User->SelectQuery($data);
+        if ($found === false) {
             Log::debug('User does not exist with that email');
             return response([
                 'success' => false,
@@ -45,7 +45,7 @@ class LoginController extends Controller
         if ($User->login_attempts === 0) {
             $recoverToken = Str::random(32);
             $User->recover_token = $recoverToken;
-            $UserModel->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken]);
+            $User->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken]);
             $message = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token=' . $recoverToken;
             $Mail = new Mail($User->email_address, $User->username, 'Account Locked', $message);
             $Mail->send();
@@ -58,7 +58,7 @@ class LoginController extends Controller
         // check if the passwords match
         $passwordsMatch = Hash::check($password, $User->password);
         if (empty($passwordsMatch)) {
-            $UserModel->UpdateQuery(['id' => $User->id], ['login_attempts' => ($User->login_attempts - 1)]);
+            $User->UpdateQuery(['id' => $User->id], ['login_attempts' => ($User->login_attempts - 1)]);
             Log::debug('Passwords dont match');
             return response([
                 'success' => false,
@@ -68,14 +68,14 @@ class LoginController extends Controller
         Log::debug('Passwords match');
 
         // Create a session entry in the sessions table only
-        $SessionModel = new SessionModel;
+        $Session = new SessionModel;
         $sessionId = $request->session()->get('_token');
         $userId = $User->id;
-        $Session = $SessionModel->CreateQuery(['session_id' => $sessionId, 'user_id' => $userId]);
+        $Session->CreateQuery(['session_id' => $sessionId, 'user_id' => $userId]);
         Log::debug('Created the session in the database with the user id ' . $userId . ' of and the session value of ' . $sessionId);
 
         // Set the user to logged in
-        $updated = $UserModel->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
+        $updated = $User->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
         if ($updated === false) {
             Log::debug('Failed to update the model when updating logged_in');
             return response([

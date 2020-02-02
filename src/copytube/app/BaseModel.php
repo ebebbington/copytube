@@ -33,14 +33,15 @@ class BaseModel extends Model
         return true;
     }
 
-    public function fill ($Model)
+    private function populate ($Model = false)
     {
       $a = $Model;
       $b='';
       if ($Model !== false && !empty($Model)) {
         foreach ($Model as $key => $value) {
           if (property_exists($this, $key)) {
-            $this[$key] = $value;
+            $this->$key = $value;
+            //$this[$key] = $value;
           }
         }
       }
@@ -116,8 +117,12 @@ class BaseModel extends Model
       // Get a single record if requested
       if ($selectOne) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->first();
-        $this->fill($result);
-        return $result ?? false; // {...} or false
+        if (empty($result)) {
+          return false;
+        } else {
+          $this->populate($result);
+          return $result;
+        }
       }
       // Get all by the count limiter
       if ($selectOne === false && $count > 1) {

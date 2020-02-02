@@ -26,6 +26,8 @@ class UserModel extends BaseModel
      */
     protected $primaryKey = 'id';
 
+    public $id;
+
     /**
      * Username of the user
      *

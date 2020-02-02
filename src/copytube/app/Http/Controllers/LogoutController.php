@@ -19,20 +19,20 @@ class LogoutController extends Controller
     public function logout (Request $request)
     {
         // get and unset data
-        $User = $request->session()->get('user');
+        $user = $request->session()->get('user');
         $sessionId = Cookie::get('sessionId');
         session(['user' => null]);
         Cookie::forget('sessionId');
-        if (empty($User) || empty($sessionId)) {
+        if (empty($user) || empty($sessionId)) {
             Log::debug('User or session id is empty');
             return redirect('/login');
         }
 
         // update db
-        $UserModel = new UserModel;
-        $UserModel->UpdateQuery(['email_address' => $User->email_address], ['logged_in' => 1]);
-        $SessionModel = new SessionModel;
-        $SessionModel->DeleteQuery(['user_id' => $User->id]);
+        $User= new UserModel;
+        $User->UpdateQuery(['email_address' => $user->email_address], ['logged_in' => 1]);
+        $Session = new SessionModel;
+        $Session->DeleteQuery(['user_id' => $user->id]);
 
         return redirect('/login');
     }

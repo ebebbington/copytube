@@ -48,8 +48,8 @@ class RegisterController extends Controller
         }
 
         // Validate user details
-        $UserModel = new UserModel;
-        $passedValidation = $UserModel->validate($request->all());
+        $User = new UserModel;
+        $passedValidation = $User->validate($request->all());
         if ($passedValidation === false) {
             Log::debug('Couldnt validate input');
             return response([
@@ -75,27 +75,18 @@ class RegisterController extends Controller
         Log::debug('User doesnt exists');
 
         // Save the user
-        $User = $UserModel->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
-        if (isset($User->exists) && $User->exists === false) {
+        $updated = $User->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
+        if (empty($updated)) {
             Log::debug('Didnt save a user');
             return response([
               'success' => false,
               'message' => 'user didnt save into the database',
             ], 500);
         }
-        if (isset($User->exists) && $User->exists === true) {
-            Log::debug('Saved a user');
-            return response([
-              'success' => true,
-            ], 200);
-        }
-
-        // For precaution
-        Log::debug("I shouldnt be here");
+        Log::debug('Saved a user');
         return response([
-          'success' => false,
-            'message' => 'Something went wrong'
-        ], 500);
+          'success' => true,
+        ], 200);
     }
 
     /**
