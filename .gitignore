@@ -3,7 +3,6 @@ src/copytube/public/hot
 src/copytube/public/storage
 src/copytube/storage/*.key
 src/copytube/vendor
-src/copytube/.env
 src/copytube/.env.backup
 src/copytube/.phpunit.result.cache
 src/copytube/Homestead.json

@@ -47,6 +47,8 @@ header {
           }
           ul {
             list-style-type: none;
+            padding-left: 0;
+            text-align: center;
             & li {
               padding: .5em;
               & a {
