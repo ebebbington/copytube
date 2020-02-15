@@ -10,21 +10,7 @@ This section provides the main application for this project, such as:
 
 * Routing
 
-## Endpoints
-
-* `GET /`
-
-    * Renders the index view
-
-* `GET /register`
-
-    * Renders the view to register an account
-
-* `POST /register`
-
-    * Uploads an account to save into the database
-
-## Directory Structure / Description
+# Directory Structure / Description
 
 * `app/`
 
@@ -146,7 +132,7 @@ This section provides the main application for this project, such as:
 
     * List of files and directories for Git to ignore
 
-## Tools Used
+# Tools Used
 
 This is the list of all tools used here, which also act as the tools learnt, or tools implemented to learn:
 
@@ -170,7 +156,7 @@ This is the list of all tools used here, which also act as the tools learnt, or 
     * MVC
     * PHP-FPM
     * Data Modelling
-    * Lravel
+    * Laravel
     * Routing
     * PHPUnit
     * SQL Queries
@@ -180,32 +166,32 @@ This is the list of all tools used here, which also act as the tools learnt, or 
     * Sessions
     * Handling auth (User logging in)
 
-## Building
+# Building
 
 We use the `package.json` file to build the JS and CSS.
 
-It boils down to using webpack to compile and minify the `app.scss|ja` files, where each file imports all the other stylesheets or javascripts. The process is:
+It boils down to using webpack to compile and minify the `app.scss|js` files, where each file imports all the other stylesheets or javascripts. The process is:
 
 * By current architecture, we import all our javascripts and stylesheets into the `app.js` and `app.scss` files, respectively.
 * Then our run command will compile and those files
 
 To do so, run: `npm run dev`. To understand a bit more, see the `webpack.mix.js` file. This also uses the `tsconfig.json` for when we write TS javascript files
 
-## PHPUnit Tests
+# PHPUnit Tests
 
-### Writing the Tests
+## Writing the Tests
 
-### Running the Tests
+## Running the Tests
 
-## XDebug
+# XDebug
 
 Xdebug is setup and configured for CopyTube, with the use a Chrome extension and VSCode. It has only been done so by configuring the Xdebug configuration file from a remote-host IP to `host.docker.internal`, as well as setting up VSCode.
 
-### Setup
+## Setup
 
 * 1. Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
 * 2. The configuration file for VSCode has already been setup (`./.vscode/*`)
 
-## Information
+# Information
 
-## Help
+# Help
