@@ -1,6 +1,8 @@
 # CopyTube (Project)
 
-CopyTube is an impersonation of YouTube, utilising videos, comments, a login system and sessions. It provides a trainig ground or a developer application that uses the following technologies:
+*(Note this is a learning project)*
+
+CopyTube is an impersonation of YouTube, utilising videos, comments, a login system and sessions. This project provides an application that uses the tools below so it can act as a training ground to further develop knowledge in those tools.
 
 * Docker
 
@@ -12,25 +14,25 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 
 * PHP
 
-## Components
+# Components
 
 CopyTube is currently split into 1 application (with the use of Nginx handling PHP-FPM and passing requests to the PHP container):
 
-### Copytube (Main App)
+## Copytube (Main App)
 
 This is the main application that holds this whole project, such as the views, database querying, PHP files, javascripts etc.
 
 See the `README.md` for the main app [here](https://github.com/ebebbington/copytube/blob/develop/src/copytube/README.md)
 
-## Prerequisites
+# Prerequisites
 
 Have Docker installed. This can be for Windows or for Mac - as long as you have Docker accessible in the command line. Docker knowledge is also essential to know commands such as `docker-compose down` and `docker system prune`.
 
-### Ports
+## Ports
 
 Make sure ports 9000 and 9002 are open for PHP-FPM and Nginx respectively.
 
-## Run the Project
+# Run the Project
 
 Clone the repository
 
@@ -53,6 +55,7 @@ DB_PORT=3306
 DB_DATABASE=copytube
 DB_USERNAME=user
 DB_PASSWORD=userpassword
+```
 
 Build and start Docker
 
@@ -85,40 +88,30 @@ Finally, go to the website
 * Windows
      `127.0.0.1:9002`
 
-## Containers
+# Containers
 
-### Nginx
+## Nginx
 
 Our proxy server for handling PHP requests to be passed to the PHP-FPM process, and passes all requests to the PHP container
 
-### PHP-FPM
+## PHP-FPM
 
 The PHP container that has PHP already configured
 
-### SQL
+## SQL
 
 Our database container to house the database data
 
-## Built With
+# Built With
 
 * [PHP](http://www.php.net) - Server Side Language
 * [Nginx](https://nginx.com) - Webserver
 * [Docker](https://docker.com) - Used for Building the Environment
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Authors
+# Authors
 
 * **Edward Bebbington** - *Initial work* - [Place website name here](Place website url here)
 
-See also the list of [contributors](https://github.com/ebebbington/copytube/contributors) who participated in this project.
+# Acknowledgments
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Thanks to Adam for helping me learn all that I know to get this project working
+* Thanks to Adam for helping me learn all that I know that ended up turning the knowledge gained into this project
