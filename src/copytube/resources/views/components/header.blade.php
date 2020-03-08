@@ -5,7 +5,7 @@
     <a class="menu-item" href="/home">Home</a>
     <a class="menu-item" href="/register">Register</a>
     <a class="menu-item" href="/login">Login</a>
-    @if (isset($username))
+    @if ($username !== '')
     <i class="gear"></i>
     <div class="hide gear-dropdown">
         <p>Hello {{ $username }}</p>

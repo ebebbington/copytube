@@ -19,7 +19,9 @@
                 color: var(--custom-dark-grey);
             }
             p {
-                word-wrap: break-word;
+                word-break: break-all;
+                
+
             }
         }
     }

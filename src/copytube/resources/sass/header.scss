@@ -8,7 +8,7 @@ header {
     padding-top: .9em;
     padding-bottom: .5em;
     border-top: 3px solid #e85e77;
-    margin-top: -8em;
+    margin-top: -9em;
     z-index: 2;
     #header-main {
       width: 100%;
@@ -25,6 +25,8 @@ header {
         color: var(--custom-pink);
         font-size: 1.5em;
         transition-duration: 1s;
+        width: 33%;
+        text-align: center;
         &:hover {
             font-size: 1.5em;
             text-decoration: none;
