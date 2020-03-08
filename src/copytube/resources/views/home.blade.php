@@ -6,23 +6,33 @@
 
 @section('content')
 <!-- search -->
-@component('components/video-search')
-@endcomponent
+<div class="row pardon-me">
+    @component('components/video-search')
+    @endcomponent
+</div>
 <!-- main video -->
-@component('components/main-video', [
-    'title' => $mainVideo->title,
-    'description' => $mainVideo->description,
-    'poster' => $mainVideo->poster,
-    'src' => $mainVideo->src
-])
-@endcomponent
+<div class="row pardon-me">
+    @component('components/main-video', [
+        'title' => $mainVideo->title,
+        'description' => $mainVideo->description,
+        'poster' => $mainVideo->poster,
+        'src' => $mainVideo->src
+    ])
+    @endcomponent
+</div>
 <!-- rabbit hole videos -->
-@component('components/rabbit-hole', ['rabbitHoleVideos' => $rabbitHoleVideos])
-@endcomponent
+<div class="row pardon-me">
+    @component('components/rabbit-hole', ['rabbitHoleVideos' => $rabbitHoleVideos])
+    @endcomponent
+</div>
 <!-- comment -->
-@component('components/add-comment')
-@endcomponent
+<div class="row">
+    @component('components/add-comment')
+    @endcomponent
+</div>
 <!-- list of comments -->
-@component('components/comment-list', ['comments' => $comments])
-@endcomponent
+<div class="row">
+    @component('components/comment-list', ['comments' => $comments])
+    @endcomponent
+</div>
 @stop

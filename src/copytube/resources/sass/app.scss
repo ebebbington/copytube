@@ -1,9 +1,13 @@
 @use 'form';
 @use 'notifier';
 @use 'header';
-@use 'home';
+@use 'add-comment';
+@use 'comment-list';
+@use 'rabbit-hole';
+@use 'main-video';
+@use 'video-search';
 
-:root{
+:root {
     --custom-white: ghostwhite;
     --custom-black: #393c3d;
     --custom-dark-grey: #636b6f;
