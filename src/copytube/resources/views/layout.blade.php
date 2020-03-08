@@ -13,50 +13,32 @@
         <!-- Own CSS and JS -->
         <script src="js/app.js"></script>
         <link rel="stylesheet" href="css/app.css">
-        <noscript><style>.container{display: none;}</style></noscript>
         @yield('head')
     </head>
     <body>
         <div id="templates" hidden>
             <div class="media" id="user-comment-template">
                 <div class="media-left">
-                    <img src=""" alt="">
+                    <img src="" alt="">
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading"></h4>
+                    <h3 class="media-heading">Sample</h3>
                     <small></small>
                     <p></p>
                 </div>
             </div>
         </div>
         <header>
-            <div id="header-main">
-                <img src="img/copytube_logo.png" alt="Logo">
-            </div>
-            <div id="header-sub">
-                <a class="menu-item" href="/home">Home</a>
-                <a class="menu-item" href="/register">Register</a>
-                <a class="menu-item" href="/login">Login</a>
-                @if (isset($username))
-                <i class="gear"></i>
-                <div class="hide gear-dropdown">
-                    <p>Hello {{ $username }}</p>
-                    <ul>
-                        <li><a href="/logout">Log out</a></li>
-                    </ul>
-                </div>
-                @endif
-            </div>
+            @component('components/header', ['username' => isset($username) ? $username : ''])
+            @endcomponent
         </header>
         <div class="container">
             <div class="col-xs-12 col-md-8 col-lg-6 center-h">
             @yield('content')
             </div>
         </div>
-        <div id="notifier-container">
-            <p id="notifier-title"></p>
-            <p id="notifier-message"></p>
-        </div>
+        @component('components/notifier')
+        @endcomponent
         <footer>
         </footer>
     </body>

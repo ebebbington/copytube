@@ -1,0 +1,18 @@
+#main-video-holder {
+    border-bottom: 1px solid var(--custom-grey-border);
+    padding-bottom: 1em;
+    video {
+        width: 100%;
+        box-shadow: 0px 0px 10px 1px red;
+        width: 100%;
+        margin-bottom: 1em;
+    }
+    h3 {
+        width: 100%;
+        color: var(--custom-black);
+    }
+    p {
+        margin: auto;
+        color: var(--custom-black);
+    }
+}

@@ -1,0 +1,28 @@
+#comment-list {
+    padding: 1em;
+    background: var(--custom-light-grey);
+    border-radius: 5px;
+    width: 100%;
+    .media {
+        padding: 0.5em;
+        .media-left {
+            img {
+                width: 55px;
+                height: 55px;
+                border-radius:80%;
+            }
+        }
+        .media-body {
+            text-align: left;
+            margin-left: .5em;
+            h3 {
+                color: var(--custom-dark-grey);
+            }
+            p {
+                word-break: break-all;
+                
+
+            }
+        }
+    }
+}
