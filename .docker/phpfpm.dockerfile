@@ -6,7 +6,8 @@ ARG HOST_IP
 RUN apt-get update -y
 RUN apt-get install -y --no-install-recommends libxml2-dev libxslt-dev python-dev npm vim
 RUN apt-get install -y \
-  apt-transport-https apt-utils libc-client-dev libzip-dev libldb-dev libldap2-dev libpng-dev libonig-dev zip unzip curl
+  apt-transport-https apt-utils libc-client-dev libzip-dev libldb-dev libldap2-dev libpng-dev libonig-dev zip unzip curl \
+  npm install npm@latest
 
 # Avilable extensions by default when using docker-php-ext-install
 # bcmath bz2 calendar ctype curl dba dom enchant exif fileinfo filter ftp gd gettext gmp hash iconv imap interbase intl json ldap mbstring mysqli oci8 odbc opcache pcntl pdo pdo_dblib pdo_firebird pdo_mysql pdo_oci pdo_odbc pdo_pgsql pdo_sqlite pgsql phar posix pspell readline recode reflection session shmop simplexml snmp soap sockets sodium spl standard sysvmsg sysvsem sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zend_test zip
