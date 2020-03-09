@@ -1,0 +1,72 @@
+// https://webrtc.org/getting-started/media-devices
+
+class Media {
+
+    /**
+     * Configs for getUserMedia
+     */
+    private constraints: MediaStreamConstraints
+
+    /**
+     * Has the class got access to the users media
+     */
+    public hasMedia: boolean = false
+
+    /**
+     * The users media e.g. stream
+     */
+    public stream: MediaStream = null
+
+    /**
+     * Users id associated with the stream
+     */
+    public id: string = ''
+
+    /**
+     * Sets constraints and shows the users ocnnected media devices
+     * 
+     * @param constraints 
+     */
+    constructor (constraints: MediaStreamConstraints) {
+        this.constraints = constraints
+        this.showMediaDevices()
+    }
+
+    /**
+     * Log out the users connected media devices
+     */
+    private showMediaDevices () {
+        const types: string[] = ['audioinput', 'autooutput', 'videoinput']
+        navigator.mediaDevices.enumerateDevices()
+        .then((devices: any) => {
+            console.log('Media devices', devices)
+        })
+    }
+
+    /**
+     * Get the users media
+     */
+    public async getPermissions () {
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia(this.constraints)
+            this.hasMedia = true
+            this.id = this.stream.id
+        } catch (err) {
+            console.error(`Error accessing media devices:`, err)
+        }
+    }
+}
+
+// Create new media object
+const media = new Media({video: true, audio: true})
+
+const test = (async () => {
+    // Get the media
+    await media.getPermissions()
+    // Log the stream
+    if (media.hasMedia) {
+        console.log(media.stream)
+        // video.srcObject = media.stream
+        // video.play
+    }
+})()

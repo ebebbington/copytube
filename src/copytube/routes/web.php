@@ -31,3 +31,5 @@ Route::get('/logout', 'LogoutController@logout');
 
 Route::get('/recover', 'RecoverController@index');
 Route::post('/recover', 'RecoverController@post');
+
+Route::get('/chat', 'ChatController@index');
