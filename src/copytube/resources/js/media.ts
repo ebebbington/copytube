@@ -5,7 +5,7 @@ class Media {
     /**
      * Configs for getUserMedia
      */
-    private constraints: MediaStreamConstraints
+    private readonly constraints: MediaStreamConstraints
 
     /**
      * Has the class got access to the users media
@@ -22,14 +22,28 @@ class Media {
      */
     public id: string = ''
 
+    public roomName: string = ''
+
+    public username: string = ''
+
     /**
      * Sets constraints and shows the users ocnnected media devices
-     * 
-     * @param constraints 
+     *
+     * @param constraints
      */
     constructor (constraints: MediaStreamConstraints) {
         this.constraints = constraints
         this.showMediaDevices()
+        this.generateRoomName()
+        this.getUsername()
+    }
+
+    private getUsername () {
+        this.username = prompt('Username')
+    }
+
+    private generateRoomName () {
+        this.roomName = 'observable-TESTROOMNAME'
     }
 
     /**
@@ -57,16 +71,23 @@ class Media {
     }
 }
 
-// Create new media object
-const media = new Media({video: true, audio: true})
+const configuration = {
+    iceServers: [{
+        urls: 'stun:stun.l.google.com:19302' // Google's public STUN server
+    }]
+};
 
-const test = (async () => {
+$(document).ready(async function () {
+    const media = new Media({video: true, audio: true})
     // Get the media
     await media.getPermissions()
     // Log the stream
     if (media.hasMedia) {
-        console.log(media.stream)
-        // video.srcObject = media.stream
-        // video.play
+        console.log(media)
+        const videoElement = document.querySelector('video#user-video');
+        //@ts-ignore
+        videoElement.srcObject = media.stream;
+        //@ts-ignore
+        videoElement.play
     }
-})()
+})
