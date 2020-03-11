@@ -16,3 +16,5 @@ src/copytube/package-lock.json
 src/copytube/public/css/app.css
 src/copytube/public/js/app.js
 src/copytube/public/js/js.js
+src/socket/package-lock.json
+src/socket/node_modules

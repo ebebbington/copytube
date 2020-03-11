@@ -1,0 +1,17 @@
+{
+  "name": "socket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ecosystem.config.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "websocket": "^1.0.31"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
