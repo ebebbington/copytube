@@ -56,6 +56,8 @@ services:
       dockerfile: .docker/node.dockerfile
     volumes:
       - ./src/socket:/var/www/socket
+    ports:
+      - "9009:9009"
     working_dir: /var/www/socket
     command: bash -c "npm i --verbose && pm2-runtime ecosystem.config.js"
     networks:
