@@ -1,7 +1,8 @@
 // https://webrtc.org/getting-started/media-devices
 // const { PeerServer } = require('peer');
 // const server = PeerServer({port: 9000, path: '/myapp'});
-
+import io from 'socket.io-client'
+const socket = io('http://127.0.0.1:9009')
 abstract class Media {
 
     /**
@@ -20,7 +21,7 @@ abstract class Media {
     protected abstract stream: MediaStream
 
     /**
-     * Users id associated with the stream
+     *
      */
     protected abstract id: string
 
@@ -43,9 +44,14 @@ abstract class Media {
     }
 
     protected setup () {
-        this.getUsername()
+        //this.getUsername()
         this.generateRoomName()
+        this.generateId()
         this.showMediaDevices()
+    }
+
+    private generateId () {
+        this.id = Math.random().toString(36).substr(7)
     }
 
     private getUsername () {
@@ -74,7 +80,6 @@ abstract class Media {
         try {
             this.stream = await navigator.mediaDevices.getUserMedia(this.constraints)
             this.hasMedia = true
-            this.id = this.stream.id
         } catch (err) {
             console.error(`Error accessing media devices:`, err)
         }
@@ -136,68 +141,112 @@ $(document).ready(async function () {
         pc1.addTrack(track, video.stream);
     });
 
+    // Socket - only to get the peer id of the joined person
+    class S {
+        private room: string
+        public theirId: string
+        public hasTheirId: boolean = false
+        constructor(data: {username: string, id: string}) {
+            socket.emit('user joined', {username: data.username, id: data.id})
+            socket.on('user joined', this.handleUserJoined)
+        }
+        private handleUserJoined (data: { username: string, id: string, room: string}) {
+            console.log('[handleuserjoined')
+            console.log(data)
+            this.room = data.room
+            this.theirId = data.id
+            this.hasTheirId = true
+        }
+    }
+
+    const s = new S({username: video.username, id: video.id})
+
+
+    //
+    // Our peer, used to bridge our users
+    //
     // https://peerjs.com/docs.html#start
     // https://peerjs.com/
+    // npm run dev; node_modules/.bin/peerjs --port 9003 --key peerjs --path /myapp
     // PeerJS library
     //@ts-ignore - Create a peer user
     //const peer = new Peer({key: 'peerjs'}, {host: 'localhost', port: 9003, path: '/myapp'});
     // or
-    const peer = new Peer(prompt('id'), { host: 'localhost', port: 9003, path: '/myapp'})
-    // Get the assigned peer id when connected - this example is just gonna ask for an id so we can specifically connect to it
-    let assignedPeerId = prompt('id')
+    const peer = new Peer(video.id, { host: 'localhost', port: 9003, path: '/myapp'})
     peer.on('open', function(id: string) {
-        console.log('My peer ID is: ' + id);
-        //assignedPeerId = id
+        console.log('Peer connection has opened. My peer ID is (which is set in object creation: ' + id);
     });
-    // when we want to connect to another peer, we nee dtheir id
-    var tmpotherperrid = prompt('other peer id to connect to')
-    var conn = peer.connect(tmpotherperrid);
-// on open will be launch when you successfully connect to PeerServer
-    conn.on('open', function(){
-        // here you have conn.id
-        console.log('connection opened')
-        conn.send('hi!');
-    });
+    // start a connection with a peer
+    const otherp = peer.connect(s.theirId)
+    // receieve connection
     peer.on('connection', function(conn: any) {
         console.log('peer got a connection')
-        conn.on('data', function(data: any){
-            // Will print 'hi!'
-            console.log(data);
-        });
-    });
-
-// on open will be launch when you successfully connect to PeerServer
-    peer.on('open', function(data: any){
-        console.log('open')
-        //assignedPeerId = data
-        console.log(data)
-        // here you have conn.id
-        // peer.send('hi!');
-    });
-    peer.on('connection', function(conn: any) {
-        console.log('connected')
+        console.log('below is the conn param:')
         console.log(conn)
         conn.on('data', function(data: any){
             // Will print 'hi!'
-            console.log('data for connection')
+            conn.send('Hi')
+            console.log('connection got data:')
             console.log(data);
         });
+        conn.send('some test data')
     });
-
-    var call = peer.call('second', video.stream);
-    call.on('stream', function(remoteStream: any) {
-        // Show stream in some video/canvas element.
-        console.log('call got a remote stream')
-        console.log(remoteStream)
-        peerVideoElement.srcObject = remoteStream
-    });
-
-    peer.on('call', function(call: any) {
-        call.answer(video.stream); // Answer the call with an A/V stream.
-        call.on('stream', function (remoteStream: any) {
-            // Show stream in some video/canvas element.
-            console.log('got a call, then a strea')
-            console.log(remoteStream)
-        })
+    var testcall = peer.call(s.theirId, video.stream)
+    testcall.on('stream', (data: any) => {
+        peerVideoElement.srcObject = data
     })
+
+    //
+    // Socket - to handle the other users id for their peer id
+    //
+    // socket to keep track of ids
+    let call: any
+    function handleUserJoined (id: string) {
+        console.log('[handleUserJoined]')
+        console.log(id)
+        const otherPeer = peer.connect(id)
+        otherPeer.on('open', function ( data: any) {
+            // here you have conn.id
+            console.log('connection opened')
+            console.log('heres data passed back:')
+            console.log(data)
+            //data.send('hi!');
+        })
+        call = peer.call(id, video.stream);
+        call.on('stream', function(remoteStream: any) {
+            // Show stream in some video/canvas element.
+            console.log('call got a remote stream')
+            console.log(remoteStream)
+            peerVideoElement.srcObject = remoteStream
+        });
+        peer.on('call', function(call: any) {
+            call.answer(video.stream); // Answer the call with an A/V stream.
+            call.on('stream', function (remoteStream: any) {
+                // Show stream in some video/canvas element.
+                console.log('got a call, then a strea')
+                console.log(remoteStream)
+            })
+        })
+    }
+
+
+//     var conn = peer.connect(tmpotherperrid);
+// // on open will be launch when you successfully connect to PeerServer
+//     conn.on('open', function(data: any){
+//         // here you have conn.id
+//         console.log('connection opened')
+//         console.log('heres data passed back:')
+//         console.log(data)
+//         conn.send('hi!');
+//     });
+
+    // peer.on('connection', function(conn: any) {
+    //     console.log('connected')
+    //     console.log(conn)
+    //     conn.on('data', function(data: any){
+    //         // Will print 'hi!'
+    //         console.log('data for connection')
+    //         console.log(data);
+    //     });
+    // });
 })

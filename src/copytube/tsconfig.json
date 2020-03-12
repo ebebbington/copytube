@@ -6,6 +6,7 @@
         "sourceMap": false, // false for not showing the .ts file in browser sources
         "module": "commonjs",
         "allowJs": true,
+        "esModuleInterop": true
     },
     "include": ["resources/js/*.ts"]
 }
