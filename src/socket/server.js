@@ -1,56 +1,38 @@
-"use strict";
+
+
+
+
+const express = require('express')
+const http = require('http')
+const app = express()
 require('dotenv').config()
-const PORT = process.env.PORT
-var webSocketServer = require('websocket').server;
-var http = require('http');
-// latest 100 messages
-var history = [ ];
-// list of currently connected clients (users)
-var clients = [ ];
+const port = process.env.PORT || 9009
+app.set('port', port)
+//create http server
+const server = http.createServer(app);
+server.listen(port);
+// Attach socket io we assigned in app.ts to the server (handling is handled inside the respective route)
+const socketIo = require('socket.io')
+const io = socketIo(server)
+io.attach(server)
 
 
-/**
- * HTTP server
- */
-var server = http.createServer( function (request, response) { });
-server.listen(PORT, function() {
-  console.log((new Date()) + " Server is listening on port "
-    + PORT);
-});
 
-/**
- * WebSocket server
- */
-var wsServer = new webSocketServer({
-  httpServer: server
-});
 
-/**
- * On someone connecting
- */
-wsServer.on('request', function(request) {
-  console.log((new Date()) + ' Connection from origin '
-    + request.origin + '.');
-  // accept connection - you should check 'request.origin' to
-  // make sure that client is connecting from your website
-  // (http://en.wikipedia.org/wiki/Same_origin_policy)
-  var connection = request.accept(null, request.origin);
-  // we need to know client index to remove them on 'close' event
-  var index = clients.push(connection) - 1;
-  var userName = false;
-  var userColor = false;
-  console.log((new Date()) + ' Connection accepted.');
-  // send back chat history
-  if (history.length > 0) {
-    connection.sendUTF(
-      JSON.stringify({ type: 'history', data: history} ));
-  }
-  // user sent some message
-  connection.on('message', function(message) {
-    console.log('got a message!: ' + message)
-  });
-  // user disconnected
-  connection.on('close', function(connection) {
-    console.log('user disconnected: ' + connection)
-  });
-});
+
+io.on('connection', function (socket) {
+  console.log('io connection has been made to me')
+  socket.on('disconnect', function (data) {
+    console.log('user disconencted from me')
+  })
+  socket.on('user joined', function (data) {
+    console.log('user has joined with the following data:')
+    console.log(data)
+    var data = {
+      id: data.id, room: 'some room', username: data.username
+    }
+    console.log('going to broadcast to user joined with the following:')
+    console.log(data)
+    socket.broadcast.emit('user joined', data)
+  })
+})
