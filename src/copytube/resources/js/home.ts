@@ -6,8 +6,8 @@ const Home = (function () {
 
         /**
          * Handler for scrolling and the search bar
-         * @param elem 
-         * @param top 
+         * @param elem
+         * @param top
          */
         function handleScroll (elem: any, top: any): void {
             if (window.pageYOffset > top) {
@@ -31,10 +31,10 @@ const Home = (function () {
 
         /**
          * AJAX request to post a comment
-         * @param comment 
-         * @param date 
-         * @param videoPostedOn 
-         * @param newCommentHtml 
+         * @param comment
+         * @param date
+         * @param videoPostedOn
+         * @param newCommentHtml
          */
         function postComment (comment: string, date: string, videoPostedOn: string, newCommentHtml: any) {
             console.log('comment: ' + comment)
@@ -97,8 +97,12 @@ const Home = (function () {
         $(document).ready(function () {
 
             const searchElem: any = document.getElementById('search')
-            const top = searchElem.offsetTop
-            window.onscroll = function () { Methods.handleScroll(searchElem, top)}
+            if (searchElem.offsetTop) {
+                const top = searchElem.offsetTop
+                window.onscroll = function () {
+                    Methods.handleScroll(searchElem, top)
+                }
+            }
 
             $('#search-bar').on('keyup', function (event: any) {
                 const value = event.target.value
@@ -133,7 +137,7 @@ const Home = (function () {
                 const title = $(this).text()
                 Methods.requestVideo(title)
             })
-        
+
             $('#search-button').on('click', function (event: any) {
                 const videoTitle = $('#search-bar').val()
                 Methods.requestVideo(videoTitle)

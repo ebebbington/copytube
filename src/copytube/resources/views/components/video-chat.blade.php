@@ -1,28 +1,44 @@
 <div id="video-chat">
     <video id="user-video" autoplay playsinline controls></video>
     <span>
-        <p id="user-name"></p>
-        <small><i id="user-id"></i></small>
+        <p>Your ID: </p>
+        <p id="your-id"></p>
     </span>
-    <hr>
-    <video id="peer-video" autoplay playsinline controls></video>
     <span>
-        <p id="peer-name"></p>
-        <small><i id="peer-id"></i></small>
+        <p id="their-id-description">Waiting for a friend...</p>
+        <button id="their-id" class="button-to-text" type="button"></button>
     </span>
+    <video id="peer-video" autoplay playsinline controls></video>
     <style>
+        .button-to-text {
+            border: none;
+            background: none;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: blue;
+        }
         video {
+            height: 200px;
+        }
+        #user-video {
+            position: fixed;
+            left: 2px;
+            bottom: 2px;
+        }
+        #peer-video {
             width: 100%;
-            height: 250px;
+            height: auto;
         }
         span {
             display: flex
         }
-        span > p {
-            margin: auto 0.1em auto auto;
+        ul {
+            display: flex;
+            padding-left: 0;
+            list-style-type: none;
         }
-        span > small {
-            margin: auto auto auto 0.1em;
+        li {
+            width: 33%;
         }
     </style>
 </div>
