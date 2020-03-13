@@ -3,16 +3,155 @@ import {SocketConnectOpts} from "net";
 import {SocketOptions} from "dgram";
 
 const express = require('express')
-const http = require('http')
-const app = express()
+import http, { Server as HTTPServer } from 'http'
+import app, { Application as ExpressApp } from 'express'
 require('dotenv').config()
 const port: string = process.env.PORT || '9009'
 app.set('port', port)
 const server = http.createServer(app);
 server.listen(port);
-const socketIo = require('socket.io')
+import socketIo, { Server as SocketIOServer }  from 'socket.io'
 const io = socketIo(server)
 io.attach(server)
+
+let connections: string[] = []
+const MAX_CONNECTIONS = 2
+
+/**
+ * const { RTCPeerConnection, RTCPEerDescription } = window
+ * async function callUser (socketId) {
+ *     const offer = await peerConnection.createOffer()
+ *     await peerConnection.setLocalDescription(new RTCPeerDescription(offer))
+ *     socket.emit('call user', {offer, socketId})
+ * }
+ * let myId = ''
+ * socket.on('joined', id => myId = id)
+ * socket.on('user joined', callUser)
+ * socket.on('call made', ({offer, theirid }) {
+ *     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
+ *     const answer = await peerConnection.createAnswer()
+ *     await peerConnection.setLocalDescription(new RTCSessiondESCRIPTION(answer))
+ *     socket.emit('answer call', { answer, id: theirId})
+ * }
+ * socket.on('answer made', ({answer, socketid}) => {
+ *     await peerConnection.setRemoveDescription(new RTCSessionDescription(data.answer))
+ *     if (!isAlreadyCalling) {
+ *         callUser(data.socketId)
+ *         isAlreadycallig = true
+ *     }
+ * }
+ *
+ * ... .getusermedia, (stream => stream.getTracks().foreach(track => peerconn.addtrack(track, stream
+ *
+ * peerconnection.ontrack = function ({streams: [stream]} {
+ *     // display remnote video here
+ * }
+ */
+class Socket {
+
+  public static handle (io: SocketIOServer) {
+    io.on('connection', socket => {
+      Socket.handleConnection(socket)
+
+      Socket.emitJoined(socket)
+      Socket.broadcastEmitUserJoined(socket)
+
+      socket.on('disconnect', () => {
+        Socket.handleDisconnect(socket)
+      })
+
+      socket.on('call user', (data) => {
+        Socket.handleCallUser(socket, data)
+      })
+
+      socket.on('answer call', (data: {answer: any, socketId: string}) => {
+        Socket.handleAnswerCall(socket, data)
+      })
+
+    })
+  }
+
+  //@ts-ignore
+  public static emitAnswerMade(socket, data: { answer: any, socketId: string}) {
+    socket.to(data.socketId).emit('answer made', { socketId: socket.id, answer: data.answer})
+  }
+
+  //@ts-ignore
+  public static handleAnswerCall(socket, data: { answer: any, socketId: string}) {
+    Socket.emitAnswerMade(socket, data)
+  }
+
+  //@ts-ignore
+  public static emitCallMade (socket, data: { offer: any, socketId: string}) {
+    socket.to(data.socketId).emit('call made', {
+      offer: data.offer,
+      theirSocketId: data.socketId
+    })
+  }
+
+  //@ts-ignore
+  public static handleCallUser (socket, data: { offer: any, socketId: string}) {
+    Socket.emitCallMade(socket, data)
+  }
+
+  //@ts-ignore
+  public static broadcastEmitUserJoined (socket) {
+    socket.broadcast.emit('user joined', socket.id)
+  }
+
+  //@ts-ignore
+  public static emitJoined (socket) {
+    socket.emit('joined', socket.id)
+  }
+
+  //@ts-ignore
+  public static handleDisconnect (socket) {
+    console.log('[handleDisconnection] - User disconnected from me')
+    connections = connections.filter(id => id !== socket.id)
+  }
+
+  //@ts-ignore
+  public static handleConnection (socket) {
+    console.log('[handleConnection] - Connection has been made')
+    if (connections.length === MAX_CONNECTIONS) {
+      socket.disconnect()
+    } else {
+      connections.push(socket.id)
+    }
+  }
+
+}
+
+class Server {
+  private readonly httpServer: HTTPServer
+  private readonly  app: ExpressApp
+  private readonly io: SocketIOServer
+  private readonly port: string = port
+
+  constructor () {
+    this.app = express()
+    this.httpServer = http.createServer(this.app)
+    this.io = socketIo(this.httpServer)
+    this.configure()
+    this.listen()
+    this.handleSocketConnection()
+  }
+
+  private configure () {
+    this.app.set('port', this.port)
+    this.io.attach(this.httpServer)
+  }
+
+  private handleSocketConnection () {
+    Socket.handle(this.io)
+  }
+
+  private listen () {
+    this.httpServer.listen(port)
+  }
+}
+
+const server2 = new Server()
 
 interface User {
   username: string,
