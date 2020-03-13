@@ -10,6 +10,8 @@ This section provides the main application for this project, such as:
 
 * Routing
 
+* Video chat
+
 # Directory Structure / Description
 
 * `app/`
@@ -157,6 +159,7 @@ This is the list of all tools used here, which also act as the tools learnt, or 
     * PHP-FPM
     * Data Modelling
     * Laravel
+        * Components
     * Routing
     * PHPUnit
     * SQL Queries
@@ -165,6 +168,8 @@ This is the list of all tools used here, which also act as the tools learnt, or 
 
     * Sessions
     * Handling auth (User logging in)
+    
+* SocketIO Client
 
 # Building
 
