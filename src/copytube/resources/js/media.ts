@@ -3,59 +3,61 @@
 // const server = PeerServer({port: 9000, path: '/myapp'});
 import io from 'socket.io-client'
 const socket = io('http://127.0.0.1:9009')
-abstract class Media {
+
+class Media {
 
     /**
      * Configs for getUserMedia
      */
-    protected abstract constraints: MediaStreamConstraints
+    private readonly constraints: MediaStreamConstraints
 
     /**
      * Has the class got access to the users media
      */
-    protected abstract hasMedia: boolean
+    private hasMedia: boolean
 
     /**
      * The users media e.g. stream
      */
-    protected abstract stream: MediaStream
+    public stream: MediaStream
 
     /**
      *
      */
-    protected abstract id: string
+    public id: string
 
     /**
      * Name of the room
      */
-    protected abstract roomName: string
+    public roomName: string
 
     /**
      * Name to associate user with
      */
-    protected abstract username: string
+    public username: string
 
     /**
      * Sets constraints and shows the users ocnnected media devices
      *
      * @param constraints
      */
-    protected constructor () {
+    constructor (constraints: MediaStreamConstraints) {
+        this.constraints = constraints
+        this.setup()
     }
 
     protected setup () {
-        //this.getUsername()
+        this.generateUsername()
         this.generateRoomName()
         this.generateId()
-        this.showMediaDevices()
     }
 
     private generateId () {
         this.id = Math.random().toString(36).substr(7)
     }
 
-    private getUsername () {
-        this.username = prompt('Username')
+    private generateUsername () {
+        this.username = Math.random().toString(36).substr(7)
     }
 
     private generateRoomName () {
@@ -86,82 +88,59 @@ abstract class Media {
     }
 }
 
-class Video extends Media {
-    public constraints: MediaStreamConstraints
-    public hasMedia = false
-    public username = ''
-    public id = ''
-    public roomName  = ''
-    public stream: MediaStream
-    constructor() {
-        super()
-        this.constraints = {video: true, audio: true}
-        this.setup()
-    }
-}
-
-class Voice extends Media {
-    public constraints: MediaStreamConstraints
-    public hasMedia = false
-    public username = ''
-    public id = ''
-    public roomName  = ''
-    public stream: MediaStream
-    constructor() {
-        super()
-        this.constraints = {video: false, audio: true};
-        this.setup()
-    }
-}
-
 const configuration = {
     iceServers: [{
         urls: 'stun:stun.l.google.com:19302' // Google's public STUN server
     }]
 };
 
+const PeerConfigs = {
+    host: 'localhost',
+    port: 9003,
+    path: '/myapp'
+}
+
 $(document).ready(async function () {
     // Display video and audio
-    const video = new Video()
-    const audio = new Voice()
-    await video.getPermissions()
-    await audio.getPermissions()
+    const ThisUser = new Media({video: true, audio: true})
+    await ThisUser.getPermissions()
     const userVideoElement: HTMLVideoElement = document.querySelector('video#user-video')
     const peerVideoElement: HTMLVideoElement = document.querySelector('video#peer-video')
     const userVoiceElement: HTMLAudioElement = document.querySelector('audio#user-voice')
     const peerVoiceElement: HTMLAudioElement = document.querySelector('audio#peer-voice')
-    userVideoElement.srcObject = video.stream;
+    userVideoElement.srcObject = ThisUser.stream;
     userVideoElement.play
-    userVoiceElement.srcObject = audio.stream
+    //userVoiceElement.srcObject = audio.stream
 
     // RTC Peer Connection - Native
     const pc1 = new RTCPeerConnection();
     const pc2 = new RTCPeerConnection()
-    video.stream.getTracks().forEach((track) => {
-        pc1.addTrack(track, video.stream);
+    ThisUser.stream.getTracks().forEach((track) => {
+        pc1.addTrack(track, ThisUser.stream);
     });
 
     // Peer handler when we get their id
     //@ts-ignore
-    const peer = new Peer(video.id, { host: 'localhost', port: 9003, path: '/myapp'})
-    peer.on('open', function(id: string) {
-        console.log('Peer connection has opened. My peer ID is (which is set in object creation: ' + id);
+    const peer = new Peer(ThisUser.id, PeerConfigs)
+    peer.on('open', function (id: string) {
+        console.log('Peer connection has opened. This also will show my id: ' + id);
     });
     peer.on('connection', function(conn: any) {
-        console.log('peer got a connection')
-        console.log('below is the conn param:')
+        console.log('peer got a connection, below is the connection param')
         console.log(conn)
         conn.on('data', function(data: any){
+            console.log('Connection got some data:')
+            console.log(data)
             // Will print 'hi!'
+            console.log('Going to send the other connection some data')
             conn.send('Hi')
-            console.log('connection got data:')
-            console.log(data);
         });
+        console.log('Going to send the other connection some data')
         conn.send('some test data')
     });
     peer.on('call', function (call: any) {
         console.log('peer got a call')
-        call.answer(video.stream)
+        call.answer(ThisUser.stream)
     })
     function connectToOtherPeer (theirId: string) {
         console.log('[connecttootherpeer]')
@@ -172,9 +151,10 @@ $(document).ready(async function () {
             conn.on('data', function (data: any) {
                 console.log('connection receieved some data: ' + data)
             })
+            console.log('Going to send them from data from the conn open cb')
             conn.send('Hi!')
         })
-        var call = peer.call(theirId, video.stream)
+        var call = peer.call(theirId, ThisUser.stream)
         call.on('stream', (data: any) => {
             console.log('this call got a stream!')
             peerVideoElement.srcObject = data
@@ -202,12 +182,12 @@ $(document).ready(async function () {
 
         private listenForDisconnect () {
             window.onbeforeunload = () => {
-                socket.emit('user left', {id: video.id, room: this.room, username: video.username})
+                socket.emit('user left', {id: ThisUser.id, room: this.room, username: ThisUser.username})
             }
         }
     }
 
-    const s = new S({username: video.username, id: video.id})
+    const s = new S({username: ThisUser.username, id: ThisUser.id})
 
     //
     // Our peer, used to bridge our users
