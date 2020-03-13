@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "ecosystem.config.js",
+  "scripts": {
+    "buildTS": "node_modules/.bin/tsc && pm2 restart all"
+  },
   "dependencies": {
+    "@types/node": "^13.9.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "socket.io": "^2.3.0",
+    "typescript": "^3.8.3",
     "websocket": "^1.0.31"
   },
   "devDependencies": {},

@@ -32,7 +32,7 @@ services:
     volumes:
       - ./src/copytube:/var/www/copytube
     # Run commands after volumes are mounted. The php-fpm cmd is here so the container doesnt exit after running the composer command
-    #command: bash -c "composer install && npm i && npm run dev && php-fpm -F"
+    command: bash -c "composer install && npm i && npm run dev && php-fpm -F"
     working_dir: /var/www/copytube
     networks:
       - copytube-network
@@ -59,7 +59,7 @@ services:
     ports:
       - "9009:9009"
     working_dir: /var/www/socket
-    command: bash -c "npm i --verbose && pm2-runtime ecosystem.config.js"
+    command: bash -c "npm i --verbose && node_modules/.bin/tsc && pm2-runtime ecosystem.config.js"
     networks:
       - copytube-network
 

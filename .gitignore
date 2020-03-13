@@ -18,3 +18,4 @@ src/copytube/public/js/app.js
 src/copytube/public/js/js.js
 src/socket/package-lock.json
 src/socket/node_modules
+src/socket/server.js
