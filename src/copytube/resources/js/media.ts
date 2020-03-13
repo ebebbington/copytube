@@ -104,12 +104,18 @@ $(document).ready(async function () {
     // Display video and audio
     const ThisUser = new Media({video: true, audio: true})
     await ThisUser.getPermissions()
+    const userNameElement: HTMLHeadingElement = document.querySelector('p#user-name')
+    const userIdElement: any = document.querySelector('i#user-id')
     const userVideoElement: HTMLVideoElement = document.querySelector('video#user-video')
+    const peerNameElement: HTMLHeadingElement = document.querySelector('p#peer-name')
+    const peerIdElement: any = document.querySelector('i#peer-id')
     const peerVideoElement: HTMLVideoElement = document.querySelector('video#peer-video')
     const userVoiceElement: HTMLAudioElement = document.querySelector('audio#user-voice')
     const peerVoiceElement: HTMLAudioElement = document.querySelector('audio#peer-voice')
     userVideoElement.srcObject = ThisUser.stream;
     userVideoElement.play
+    userNameElement.textContent = ThisUser.username
+    userIdElement.textContent = ThisUser.id
     //userVoiceElement.srcObject = audio.stream
 
     // RTC Peer Connection - Native
@@ -173,6 +179,8 @@ $(document).ready(async function () {
         }
         private handleUserJoined (data: { username: string, id: string, room: string}) {
             console.log('[handleuserjoined')
+            peerNameElement.textContent = data.username
+            peerIdElement.textContent = data.id
             console.log(data)
             this.room = data.room
             this.theirId = data.id
