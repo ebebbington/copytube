@@ -1,21 +1,16 @@
-import Socket = NodeJS.Socket;
-import {SocketConnectOpts} from "net";
-import {SocketOptions} from "dgram";
-
-const express = require('express')
+//const express = require('express')
 import http, { Server as HTTPServer } from 'http'
-import app, { Application as ExpressApp } from 'express'
+import express, { Application as ExpressApp } from 'express'
+const app = express()
 require('dotenv').config()
 const port: string = process.env.PORT || '9009'
-app.set('port', port)
-const server = http.createServer(app);
-server.listen(port);
+//app.set('port', port)
+//const server = http.createServer(app);
+//server.listen(port);
 import socketIo, { Server as SocketIOServer }  from 'socket.io'
-const io = socketIo(server)
-io.attach(server)
-
-let connections: string[] = []
-const MAX_CONNECTIONS = 2
+import SocketIO from "socket.io";
+//const io = socketIo(server)
+//io.attach(server)
 
 /**
  * const { RTCPeerConnection, RTCPEerDescription } = window
@@ -49,74 +44,156 @@ const MAX_CONNECTIONS = 2
  */
 class Socket {
 
-  public static handle (io: SocketIOServer) {
-    io.on('connection', socket => {
-      Socket.handleConnection(socket)
+  private connections: string[] = []
 
-      Socket.emitJoined(socket)
-      Socket.broadcastEmitUserJoined(socket)
+  private readonly MAX_CONNECTIONS = 2
+
+  private io: any
+
+  private activeSockets: string[] = [];
+
+  constructor(io: SocketIOServer) {
+    this.io = io
+  }
+
+  public handle () {
+    this.io.on('connection', (socket: any) => {
+
+      socket.on('get-id', () => {
+        socket.emit('get-id', socket.id)
+      })
+
+      const existingSocket = this.activeSockets.find(
+          existingSocket => existingSocket === socket.id
+      );
+      if (!existingSocket) {
+        this.activeSockets.push(socket.id);
+        socket.emit('user-joined', {
+          users: this.activeSockets.filter(
+              existingSocket => existingSocket !== socket.id
+          )
+        });
+        socket.broadcast.emit('user-joined', {
+          users: [socket.id]
+        });
+      }
+      socket.on("disconnect", () => {
+        this.activeSockets = this.activeSockets.filter(
+            existingSocket => existingSocket !== socket.id
+        );
+        socket.broadcast.emit("remove-user", {
+          socketId: socket.id
+        });
+      });
+      socket.on("call-user", (data: any) => {
+        socket.to(data.to).emit("call-made", {
+          offer: data.offer,
+          socket: socket.id
+        });
+      });
+      socket.on("make-answer", (data: any) => {
+        socket.to(data.to).emit("answer-made", {
+          socket: socket.id,
+          answer: data.answer
+        });
+      });
+
+
+      //this.handleConnection(socket)
+
+      socket.on('user joined', () => {
+        //this.handleUserJoined(socket)
+      })
+
+      socket.on('get id', () => {
+        //this.handleGetId(socket)
+      })
 
       socket.on('disconnect', () => {
-        Socket.handleDisconnect(socket)
+        //this.handleDisconnect(socket)
       })
 
-      socket.on('call user', (data) => {
-        Socket.handleCallUser(socket, data)
+      socket.on('call user', (data: { offer: any, to: string}) => {
+        //this.handleCallUser(socket, data)
       })
 
-      socket.on('answer call', (data: {answer: any, socketId: string}) => {
-        Socket.handleAnswerCall(socket, data)
+      socket.on('answer call', (data: {answer: any, to: string}) => {
+        //this.handleAnswerCall(socket, data)
       })
 
     })
   }
 
   //@ts-ignore
-  public static emitAnswerMade(socket, data: { answer: any, socketId: string}) {
-    socket.to(data.socketId).emit('answer made', { socketId: socket.id, answer: data.answer})
+  public emitGetId (socket) {
+    console.log('[emitGetId] - emitting users socket id to them')
+    socket.emit('get id', socket.id)
   }
 
   //@ts-ignore
-  public static handleAnswerCall(socket, data: { answer: any, socketId: string}) {
-    Socket.emitAnswerMade(socket, data)
+  public handleGetId (socket) {
+    console.log('[handleGetId] - calling emitGetId method')
+    this.emitGetId(socket)
   }
 
   //@ts-ignore
-  public static emitCallMade (socket, data: { offer: any, socketId: string}) {
-    socket.to(data.socketId).emit('call made', {
+  public emitAnswerMade(socket, data: { answer: any, to: string}) {
+    console.log('[emitAnswerMade] - Data', data.answer, data.to)
+    console.log('[emitAnswerMade] - Emitting socket id and answer to calling id')
+    socket.to(data.to).emit('answer made', { socketId: socket.id, answer: data.answer})
+  }
+
+  //@ts-ignore
+  public handleAnswerCall(socket, data: { answer: any, to: string}) {
+    console.log('[handleAnswerCall] - Data', data.answer, data.to)
+    console.log('[handleAnswerCall] - calling emitAnswerMade method')
+    this.emitAnswerMade(socket, data)
+  }
+
+  //@ts-ignore
+  public emitCallMade (socket, data: { offer: any, to: string}) {
+    console.log('[emitCallMade] - Data', data.offer, data.to)
+    console.log('[emitCallMade] - Emiting the offer and other users id to calling user')
+    console.log('ID OF CALLED USER:' + data.to)
+    socket.to(data.to).emit('call made', {
       offer: data.offer,
-      theirSocketId: data.socketId
+      id: data.to
     })
   }
 
   //@ts-ignore
-  public static handleCallUser (socket, data: { offer: any, socketId: string}) {
-    Socket.emitCallMade(socket, data)
+  public handleCallUser (socket, data: { offer: any, to: string}) {
+    console.log('[handleCallUser] - Data', data.offer, data.to)
+    console.log('[handleCallUser] - Calling the emitCallMade method')
+    this.emitCallMade(socket, data)
   }
 
   //@ts-ignore
-  public static broadcastEmitUserJoined (socket) {
+  public handleUserJoined (socket) {
+    console.log('[handleUserJoined] - Emitting the connections socket id')
     socket.broadcast.emit('user joined', socket.id)
   }
 
   //@ts-ignore
-  public static emitJoined (socket) {
+  public emitJoined (socket) {
+    console.log('[emitJoined] - Emitting `joined` with id of ' + socket.id)
     socket.emit('joined', socket.id)
   }
 
   //@ts-ignore
-  public static handleDisconnect (socket) {
+  public handleDisconnect (socket) {
     console.log('[handleDisconnection] - User disconnected from me')
-    connections = connections.filter(id => id !== socket.id)
+    this.connections = this.connections.filter(id => id !== socket.id)
   }
 
   //@ts-ignore
-  public static handleConnection (socket) {
+  public handleConnection (socket) {
     console.log('[handleConnection] - Connection has been made')
-    if (connections.length === MAX_CONNECTIONS) {
+    if (this.connections.length === this.MAX_CONNECTIONS) {
+      console.log('max num of connections reached')
       socket.disconnect()
     } else {
-      connections.push(socket.id)
+      this.connections.push(socket.id)
     }
   }
 
@@ -143,15 +220,18 @@ class Server {
   }
 
   private handleSocketConnection () {
-    Socket.handle(this.io)
+    const socket = new Socket(this.io)
+    socket.handle()
   }
 
   private listen () {
-    this.httpServer.listen(port)
+    this.httpServer.listen(this.port, () => {
+      console.log('Listening on ' + this.port)
+    })
   }
 }
 
-const server2 = new Server()
+const server = new Server()
 
 interface User {
   username: string,
@@ -214,27 +294,27 @@ function handleUserJoined (socket: any, data: { id: string, username: string }) 
   emitUserJoined(socket, newUserData)
 }
 
-io.on('connection', function (socket: any) {
-  handleConnection(socket)
-
-  socket.on('disconnect', function (data: any) {
-    handleDisconnect()
-  })
-
-  /**
-   * removes the user from the pool
-   */
-  socket.on('user left', function (data: {id: string}) {
-    handleUserLeft(data.id)
-  })
-
-  /**
-   * A user emits that they have joined the pool
-   */
-  socket.on('user joined', function (data: { id: string, username: string}) {
-    handleUserJoined(socket, data)
-  })
-
-})
+// io.on('connection', function (socket: any) {
+//   handleConnection(socket)
+//
+//   socket.on('disconnect', function (data: any) {
+//     handleDisconnect()
+//   })
+//
+//   /**
+//    * removes the user from the pool
+//    */
+//   socket.on('user left', function (data: {id: string}) {
+//     handleUserLeft(data.id)
+//   })
+//
+//   /**
+//    * A user emits that they have joined the pool
+//    */
+//   socket.on('user joined', function (data: { id: string, username: string}) {
+//     handleUserJoined(socket, data)
+//   })
+//
+// })
 
 // todo :: add rooms
