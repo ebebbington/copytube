@@ -14,9 +14,13 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 
 * PHP
 
+* Node
+
+    * SocketIO
+
 # Components
 
-CopyTube is currently split into 1 application (with the use of Nginx handling PHP-FPM and passing requests to the PHP container):
+CopyTube is currently split into 2 applications (with the use of Nginx handling PHP-FPM and passing requests to the PHP container):
 
 ## Copytube (Main App)
 
@@ -24,13 +28,19 @@ This is the main application that holds this whole project, such as the views, d
 
 See the `README.md` for the main app [here](https://github.com/ebebbington/copytube/blob/develop/src/copytube/README.md)
 
+## Socket (Web Socket)
+
+This handles all of our server-side web socket connections. For example, it handles our video chat application at `/chat`.
+
+See the `README.md` for the Socket app [here](https://github.com/ebebbington/copytube/blob/develop/src/socket/README.md)
+
 # Prerequisites
 
 Have Docker installed. This can be for Windows or for Mac - as long as you have Docker accessible in the command line. Docker knowledge is also essential to know commands such as `docker-compose down` and `docker system prune`.
 
 ## Ports
 
-Make sure ports 9000 and 9002 are open for PHP-FPM and Nginx respectively.
+Make sure ports 9000 and 9002 are open for PHP-FPM and Nginx respectively. As well as port 9009 for the socket server.
 
 # Run the Project
 
@@ -40,21 +50,6 @@ Clone the repository
 cd /your/chosen/dir
 git clone https://github.com/ebebbington/copytube.git
 cd copytube
-```
-
-Create the environmental file for the PHP application
-
-```
-# ./src/copytube/.env
-# Set the not-so-secret secret key. This key is required to be set to encrypt the app
-APP_KEY=base64:JjrFWC+TGnySY2LsldPXAxuHpyjh8UuoPMt6yy2gJ8U=
-# Setup the database configurations
-DB_CONNECTION=mysql
-DB_HOST=copytube_sql
-DB_PORT=3306
-DB_DATABASE=copytube
-DB_USERNAME=user
-DB_PASSWORD=userpassword
 ```
 
 Build and start Docker
@@ -101,6 +96,10 @@ The PHP container that has PHP already configured
 ## SQL
 
 Our database container to house the database data
+
+## Socket
+
+Our web socket server build with NodeJS and SocketIO
 
 # Built With
 
