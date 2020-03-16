@@ -27,6 +27,7 @@ $(document).ready(async function () {
     })
     // Display their id when they join
     socket.on('user-joined', (data: { users: any }) => {
+        console.log('[user-joined] - data:', data)
         const theirIdDescriptionElement = document.getElementById('their-id-description')
         theirIdDescriptionElement.textContent = 'Their ID: '
         const theirIdElement = document.getElementById('their-id')
