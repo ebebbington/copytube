@@ -130,8 +130,20 @@ class Socket {
     }
   }
 
-  private removeUserFromRoom (socketId: string) {
-
+  private removeUserFromRoom (socket: SocketIO.Socket) {
+    // remove user
+    this.rooms.forEach((room, i) => {
+      if (room.users.includes(socket.id)) {
+        this.rooms[i].users = room.users.filter(user => user !== socket.id)
+      }
+    })
+    // clean room if empty
+    this.rooms.forEach((room, i) => {
+      if (room.users.length === 0) {
+        this.rooms.splice(i, 1)
+      }
+    })
+    socket.leave(socket.id)
   }
 
   /**
@@ -145,46 +157,35 @@ class Socket {
 
       this.joinRoom(socket)
 
-      // Display other user in room
-      const joinedRoom = this.getJoinedRoom(socket.id)
-      if (joinedRoom) {
+      /**
+       * When requested, will get the room data, so your id, their ids and the name.
+       * It will also send an event to the other users in the room with the updated user list
+       */
+      socket.on('room', () => {
         const otherUsersId = this.getOtherUsersIdByRoom(socket)
-        // send to other clients someone has joined
-        socket.to(otherUsersId).emit('user-joined', {
-          users: [socket.id]
+        const joinedRoom = this.getJoinedRoom(socket.id)
+        if (!joinedRoom)
+          return false
+        socket.to(otherUsersId).emit('room', {
+          myId: joinedRoom.users.filter(id => id !== socket.id)[0],
+          users: [socket.id],
+          name: joinedRoom.name
         })
-        // and when a user connects whilst there is already another user in the room, send the other users id
-        socket.to(socket.id).emit('user-joined', {
-          users: [otherUsersId]
+        socket.emit('room', {
+          myId: socket.id,
+          users: joinedRoom.users.filter(id => id !== socket.id),
+          name: joinedRoom.name
         })
-      }
-
-      // Get id
-      socket.on('get-id', () => {
-        socket.emit('get-id', socket.id)
       })
 
       // Update rooms
       socket.on("disconnect", () => {
         const otherUsersId = this.getOtherUsersIdByRoom(socket)
-        // Remove the user from the room
-        this.rooms.forEach((room, i) => {
-          if (room.users.includes(socket.id)) {
-            this.rooms[i].users = room.users.filter(user => user !== socket.id)
-          }
-        })
         // Send message this user has left
         socket.to(otherUsersId).emit("remove-user", {
           socketId: socket.id
         });
-        // Completely remove the user
-        socket.leave(socket.id)
-        // Remove the room if empty
-        this.rooms.forEach((room, i) => {
-          if (room.users.length === 0) {
-            this.rooms.splice(i, 1)
-          }
-        })
+        this.removeUserFromRoom(socket)
       });
 
       // Make a call request
