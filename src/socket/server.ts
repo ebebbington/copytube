@@ -130,6 +130,10 @@ class Socket {
     }
   }
 
+  private removeUserFromRoom (socketId: string) {
+
+  }
+
   /**
    * @description
    * The entry point for handling all events and connections
@@ -162,17 +166,15 @@ class Socket {
 
       // Update rooms
       socket.on("disconnect", () => {
+        const otherUsersId = this.getOtherUsersIdByRoom(socket)
         // Remove the user from the room
         this.rooms.forEach((room, i) => {
           if (room.users.includes(socket.id)) {
             this.rooms[i].users = room.users.filter(user => user !== socket.id)
           }
         })
-        const joinedRoom = this.getJoinedRoom(socket.id)
-        if (!joinedRoom)
-          return false
         // Send message this user has left
-        socket.to(joinedRoom.name).emit("remove-user", {
+        socket.to(otherUsersId).emit("remove-user", {
           socketId: socket.id
         });
         // Completely remove the user
