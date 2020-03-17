@@ -180,12 +180,16 @@ class Socket {
 
       // Update rooms
       socket.on("disconnect", () => {
-        const otherUsersId = this.getOtherUsersIdByRoom(socket)
-        // Send message this user has left
-        socket.to(otherUsersId).emit("remove-user", {
-          socketId: socket.id
-        });
+        const joinedRoom = this.getJoinedRoom(socket.id) // need to get the room before we leave
+        const otherUsersId = this.getOtherUsersIdByRoom(socket) // need to get the id before we leave
+        if (!joinedRoom)
+          return false
         this.removeUserFromRoom(socket)
+        // Send message this user has left
+        socket.to(otherUsersId).emit('room', {
+          myId: otherUsersId,
+          users: joinedRoom.users.filter(id => id !== socket.id && id !== otherUsersId)
+        })
       });
 
       // Make a call request
