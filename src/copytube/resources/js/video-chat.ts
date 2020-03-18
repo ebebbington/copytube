@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import Notifier from "./notifier";
 
 const VideoChat = (function () {
 
@@ -32,8 +33,12 @@ const VideoChat = (function () {
             theirIdElement.textContent = data.users[0]
             // If they have left e.g. no users, remove the src object
             if (!data.users.length) {
+                Notifier.warning('User Left', 'User has left the room')
                 const peerVideoElement: HTMLVideoElement = document.querySelector('video#peer-video')
                 peerVideoElement.srcObject = null
+            }
+            if (data.users.length) {
+                Notifier.success('User Joined', 'User has joined the room')
             }
         }
 
@@ -156,6 +161,7 @@ const VideoChat = (function () {
 
             document.getElementById('their-id').addEventListener('click', function (event: any) {
                 const theirIdElement = document.getElementById('their-id')
+                Notifier.success('Call User', 'Calling user...')
                 Methods.callUser(theirIdElement.textContent)
             })
 
