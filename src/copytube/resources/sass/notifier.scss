@@ -7,7 +7,7 @@
     }
     100% {
         opacity: 0;
-        
+
     }
 }
 @keyframes fadeIn{
@@ -19,7 +19,7 @@
     }
 }
 #notifier-container {
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     text-align: center;
@@ -28,6 +28,7 @@
     border-radius: 10px;
     transition-duration: 1s;
     height: 75px;
+    visibility: hidden;
 }
 #notifier-container.success {
     background-color: green;

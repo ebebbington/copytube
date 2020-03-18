@@ -17,14 +17,16 @@ const Notifier = (function () {
     const FADE_OUT_DELAY: number = 4000;
 
     function show (messageType: string, title: string, message: string): void {
+      const $notifierContainer = $('#notifier-container')
       if (messageType && title && message) {
-        $('#notifier-container').removeClass(classNames.toString().replace(',', ' '));
-        $('#notifier-container').addClass(messageType);
-        $('#notifier-container').css('display', 'block');
-        $('#notifier-container > p#notifier-title').text(title);
-        $('#notifier-container > p#notifier-message').text(message);
+        $notifierContainer.removeClass(classNames.toString().replace(',', ' '));
+        $notifierContainer.addClass(messageType);
+        $notifierContainer.css('visibility', 'visible')
+        $notifierContainer.find('p#notifier-title').text(title);
+        $notifierContainer.find('p#notifier-message').text(message);
         setTimeout(function () {
-          $('#notifier-container').removeClass('error warning success');
+          $notifierContainer.removeClass('error warning success');
+          $notifierContainer.css('visibility', 'hidden')
         }, FADE_OUT_DELAY);
       }
     }
