@@ -146,6 +146,23 @@ class Socket {
     socket.leave(socket.id)
   }
 
+  public emitRoom (socket: any, isDisconnecting = false) {
+    const otherUsersId = this.getOtherUsersIdByRoom(socket)
+    const joinedRoom = this.getJoinedRoom(socket.id)
+    if (!joinedRoom)
+      return false
+    socket.to(otherUsersId).emit('room', {
+      myId: otherUsersId,
+      users: isDisconnecting ? [] : [socket.id],
+      name: joinedRoom.name
+    })
+    socket.emit('room', {
+      myId: socket.id,
+      users: joinedRoom.users.filter(id => id !== socket.id),
+      name: joinedRoom.name
+    })
+  }
+
   /**
    * @description
    * The entry point for handling all events and connections
@@ -162,34 +179,13 @@ class Socket {
        * It will also send an event to the other users in the room with the updated user list
        */
       socket.on('room', () => {
-        const otherUsersId = this.getOtherUsersIdByRoom(socket)
-        const joinedRoom = this.getJoinedRoom(socket.id)
-        if (!joinedRoom)
-          return false
-        socket.to(otherUsersId).emit('room', {
-          myId: joinedRoom.users.filter(id => id !== socket.id)[0],
-          users: [socket.id],
-          name: joinedRoom.name
-        })
-        socket.emit('room', {
-          myId: socket.id,
-          users: joinedRoom.users.filter(id => id !== socket.id),
-          name: joinedRoom.name
-        })
+        this.emitRoom(socket)
       })
 
       // Update rooms
       socket.on("disconnect", () => {
-        const joinedRoom = this.getJoinedRoom(socket.id) // need to get the room before we leave
-        const otherUsersId = this.getOtherUsersIdByRoom(socket) // need to get the id before we leave
-        if (!joinedRoom)
-          return false
+        this.emitRoom(socket, true)
         this.removeUserFromRoom(socket)
-        // Send message this user has left
-        socket.to(otherUsersId).emit('room', {
-          myId: otherUsersId,
-          users: joinedRoom.users.filter(id => id !== socket.id && id !== otherUsersId)
-        })
       });
 
       // Make a call request
