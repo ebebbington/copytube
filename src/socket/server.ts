@@ -21,7 +21,10 @@ interface Room {
  * @method    generateRoomName        {@link Socket#generateRoomName}
  * @method    getOtherUsersIdByRoom   {@link Socket#getOtherUsersIdByRoom}
  * @method    joinRoom                {@link Socket#joinRoom}
+ * @method    removeUserFromRoom      {@link Socket#removeUserFromRoom}
+ * @method    emitRoom                {@link Socket#emitRoom}
  * @method    handle                  {@link Socket#handle}
+ * @method    emitCallMade            {@link Socket#emitCallMade}
  */
 class Socket {
 
@@ -130,6 +133,17 @@ class Socket {
     }
   }
 
+  /**
+   * @method removeUserFromRoom
+   *
+   * @description
+   * Remove the socket connection from all processes e.g. the rooms prop, and cleans up the room if its empty
+   *
+   * @example
+   * this.io.on('connection', (socket) => this.removeUserFromRoom(socket))
+   *
+   * @param {SocketIO.Socket} socket The socket object
+   */
   private removeUserFromRoom (socket: SocketIO.Socket) {
     // remove user
     this.rooms.forEach((room, i) => {
@@ -146,14 +160,26 @@ class Socket {
     socket.leave(socket.id)
   }
 
-  public emitRoom (socket: any, isDisconnecting = false) {
+  /**
+   * @method emitRoom
+   *
+   * @description
+   * Send the room data to all clients in the room
+   *
+   * @example
+   * this.emitRoom(socket, true|false)
+   *
+   * @param {SocketIO.Socket} socket The socket object
+   * @param {boolean} isDisconnecting If the user is disconnecting. If true will omit the disconnecting users is
+   */
+  private emitRoom (socket: SocketIO.Socket, isDisconnecting: boolean = false) {
     const otherUsersId = this.getOtherUsersIdByRoom(socket)
     const joinedRoom = this.getJoinedRoom(socket.id)
     if (!joinedRoom)
       return false
     socket.to(otherUsersId).emit('room', {
       myId: otherUsersId,
-      users: isDisconnecting ? [] : [socket.id],
+      users: isDisconnecting ? joinedRoom.users.filter(id => id !== socket.id && id !== otherUsersId) : [socket.id],
       name: joinedRoom.name
     })
     socket.emit('room', {
@@ -161,6 +187,42 @@ class Socket {
       users: joinedRoom.users.filter(id => id !== socket.id),
       name: joinedRoom.name
     })
+  }
+
+  /**
+   * @method emitCallMade
+   *
+   * @description
+   * On calling a user, emit an event to say a call has been made
+   *
+   * @param {SocketIO.Socket}   socket      The socket object
+   * @param {object}            data        The data passed back from the event
+   * @param {string}            data.to     The id of the the user to make the call to
+   * @param {RTCOfferOptions}   data.offer  Offer options
+   */
+  private emitCallMade (socket: SocketIO.Socket, data: { to: string, offer: RTCOfferOptions}) {
+    socket.to(data.to).emit("call-made", {
+      offer: data.offer,
+      socket: socket.id
+    });
+  }
+
+  /**
+   * @method emitAnswerMade
+   *
+   * @description
+   * Answer the call by sending the answer options
+   *
+   * @param {SocketIO.Socket} socket The socket object
+   * @param {object}            data        The data passed back from the event
+   * @param {string}            data.to     The id of the the user to make the call to
+   * @param {RTCAnswerOptions}  data.answer  Answer options
+   */
+  private emitAnswerMade (socket: SocketIO.Socket, data:  { to: string, answer: RTCAnswerOptions}) {
+    socket.to(data.to).emit("answer-made", {
+      socket: socket.id,
+      answer: data.answer
+    });
   }
 
   /**
@@ -190,18 +252,12 @@ class Socket {
 
       // Make a call request
       socket.on("call-user", (data: { to: string, offer: RTCOfferOptions}) => {
-        socket.to(data.to).emit("call-made", {
-          offer: data.offer,
-          socket: socket.id
-        });
+        this.emitCallMade(socket, data)
       });
 
       // Answer the call request
       socket.on("make-answer", (data: { to: string, answer: RTCAnswerOptions}) => {
-        socket.to(data.to).emit("answer-made", {
-          socket: socket.id,
-          answer: data.answer
-        });
+        this.emitAnswerMade(socket, data)
       });
 
     })
