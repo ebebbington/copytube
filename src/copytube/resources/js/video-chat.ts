@@ -1,13 +1,18 @@
 import io from 'socket.io-client'
 import Notifier from "./notifier";
+import Loading from "./loading";
 if (window.location.pathname === '/chat') {
     const VideoChat = (function () {
 
         const socket = io('http://127.0.0.1:9009')
-        const peerConnection = new RTCPeerConnection()
+        let peerConnection = new RTCPeerConnection()
         let isAlreadyCalling = false
 
         const Methods = (function () {
+
+            function resetPeerConnection () {
+                peerConnection = new RTCPeerConnection()
+            }
 
             /**
              * @method handleRoom
@@ -24,24 +29,22 @@ if (window.location.pathname === '/chat') {
              */
             function handleRoom(data: { myId: string, users: string[], name: string }) {
                 // Check the id elem text to see if a user was on the page
-                const theirIdElement = document.getElementById('their-id')
+                const callUserElement = document.getElementById('call-user')
+                const theirId = callUserElement.dataset.socketId
                 // If they have left e.g. no users, remove the src object
-                if (theirIdElement.textContent && !data.users.length) {
+                if (theirId && !data.users.length) {
                     Notifier.warning('User Left', 'User has left the room')
                     const peerVideoElement: HTMLVideoElement = document.querySelector('video#peer-video')
                     peerVideoElement.srcObject = null
+                    const endCallElement = document.getElementById('end-call')
+                    callUserElement.classList.remove('hide')
+                    endCallElement.classList.add('hide')
                 }
-                if (!theirIdElement.textContent && data.users.length) {
+                if (!theirId && data.users.length) {
                     Notifier.success('User Joined', 'User has joined the room')
                 }
-
-                // Display our id
-                const yourIdElement = document.getElementById('your-id')
-                yourIdElement.textContent = data.myId
-                // Display their id and the description text
-                const theirIdDescriptionElement = document.getElementById('their-id-description')
-                theirIdDescriptionElement.textContent = data.users[0] ? 'Their ID: ' : 'Waiting for someone to join...'
-                theirIdElement.textContent = data.users[0]
+                callUserElement.textContent = data.users[0] ? 'Call User!' : 'Waiting for a friend...'
+                callUserElement.dataset.socketId = data.users[0]
             }
 
             /**
@@ -103,6 +106,7 @@ if (window.location.pathname === '/chat') {
                     callUser(data.socket);
                     isAlreadyCalling = true;
                 }
+                isAlreadyCalling = false
             }
 
             /**
@@ -134,7 +138,8 @@ if (window.location.pathname === '/chat') {
                 callUser,
                 handleCallMade,
                 handleAnswerMade,
-                displayMyVideoAndGetTracks
+                displayMyVideoAndGetTracks,
+                resetPeerConnection
             }
 
         })()
@@ -151,8 +156,22 @@ if (window.location.pathname === '/chat') {
                     const remoteVideo: any = document.getElementById("peer-video");
                     if (remoteVideo) {
                         remoteVideo.srcObject = stream;
+                        const callUserElement = document.getElementById('call-user')
+                        const endCallElement = document.getElementById('end-call')
+                        callUserElement.classList.add('hide')
+                        endCallElement.classList.remove('hide')
                     }
                 };
+
+                peerConnection.oniceconnectionstatechange = function (data: any) {
+                    if (peerConnection.iceConnectionState === "failed" ||
+                        peerConnection.iceConnectionState === "disconnected" ||
+                        peerConnection.iceConnectionState === "closed") {
+                        const peerVideo: HTMLVideoElement = document.querySelector('video#peer-video')
+                        peerVideo.srcObject = null
+                        window.location.href = '/chat'
+                    }
+                }
 
                 socket
                     .on('room', Methods.handleRoom)
@@ -161,10 +180,19 @@ if (window.location.pathname === '/chat') {
                     .on('call-made', async (data: { offer: any, socket: string }) => Methods.handleCallMade(data))
                     .on('answer-made', async (data: { answer: any, socket: string }) => Methods.handleAnswerMade(data))
 
-                document.getElementById('their-id').addEventListener('click', function (event: any) {
-                    const theirIdElement = document.getElementById('their-id')
+                document.getElementById('call-user').addEventListener('click', function (event: any) {
+                    const callUserElement = document.getElementById('call-user')
                     Notifier.success('Call User', 'Calling user...')
-                    Methods.callUser(theirIdElement.textContent)
+                    const id = callUserElement.dataset.socketId
+                    if (!id)
+                        return false
+                    Methods.callUser(id)
+                })
+
+                document.getElementById('end-call').addEventListener('click', function () {
+                    Loading(true)
+                    peerConnection.close()
+                    window.location.href = '/chat'
                 })
 
             })

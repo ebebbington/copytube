@@ -1,21 +1,26 @@
 <div id="video-chat">
+
     <video id="user-video" autoplay playsinline controls></video>
     <span>
-        <p>Your ID: </p>
-        <p id="your-id"></p>
+        <button id="call-user" class="success" type="button">Waiting for a friend...</button>
+        <button id="end-call" class="error hide" type="button">End Call</button>
     </span>
-    <span>
-        <p id="their-id-description">Waiting for a friend...</p>
-        <button id="their-id" class="button-to-text" type="button"></button>
-    </span>
+    <hr>
     <video id="peer-video" autoplay playsinline controls></video>
     <style>
-        .button-to-text {
-            border: none;
-            background: none;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            color: blue;
+        button {
+            width: 50%;
+            margin: auto;
+            color: white;
+            border-radius: 100px;
+            font-size: 1.2em;
+            height: 38px;
+        }
+        button.success {
+            background: green;
+        }
+        button.error {
+            background: red;
         }
         video {
             height: 200px;
@@ -28,17 +33,6 @@
         #peer-video {
             width: 100%;
             height: auto;
-        }
-        span {
-            display: flex
-        }
-        ul {
-            display: flex;
-            padding-left: 0;
-            list-style-type: none;
-        }
-        li {
-            width: 33%;
         }
     </style>
 </div>
