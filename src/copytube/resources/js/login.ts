@@ -1,12 +1,14 @@
 'use strict'
 
 import Notifier from "./notifier"
+import Loading from "./loading";
 
 const Login = (function () {
 
     const Methods = (function () {
 
         function login () {
+            Loading(true)
             console.log($('input[name="email"]').val())
             $.ajax({
                 headers: {
@@ -18,15 +20,17 @@ const Login = (function () {
                     email: $('input[name="email"]').val(),
                     password: $('input[name="password"]').val()
                 },
-                
+
                 success: function (data) {
                     console.log(data)
                     Notifier.success('Login', data.message)
                     window.location.href = '/home'
+                    Loading(false)
                 },
                 error: function (err: any) {
                     console.error(err)
                     Notifier.error('Login', err.responseJSON.message)
+                    Loading(false)
                 }
             })
         }
@@ -54,5 +58,5 @@ const Login = (function () {
     return {
         Methods: Methods
     }
-    
+
 })()

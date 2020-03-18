@@ -1,4 +1,5 @@
 import Notifier from './notifier'
+import Loading from "./loading";
 
 const Home = (function () {
 
@@ -61,17 +62,20 @@ const Home = (function () {
                         newCommentHtml[0].children[1].children[0].textContent = data.data
                         $('#comment-list').prepend(newCommentHtml)
                     }
+                    Loading(false)
                 },
                 error: function (err) {
                     console.log('error')
                     Notifier.success('Add Comment', 'Failed')
                     console.error(err)
                     console.log(JSON.parse(err.responseText))
+                    Loading(false)
                 }
             })
         }
 
         function requestVideo (videoTitle: string) {
+            Loading(true)
             const form = document.createElement('form')
             form.method = 'GET'
             form.action = '/home'
@@ -97,7 +101,7 @@ const Home = (function () {
         $(document).ready(function () {
 
             const searchElem: any = document.getElementById('search')
-            if (searchElem.offsetTop) {
+            if (searchElem && typeof searchElem.offsetTop === 'number') {
                 const top = searchElem.offsetTop
                 window.onscroll = function () {
                     Methods.handleScroll(searchElem, top)
@@ -163,6 +167,7 @@ const Home = (function () {
             })
 
             $('#comment > button').on('click', function (event: any) {
+                Loading(true)
                 const comment = $('#comment > span > textarea').val()
                 const datePosted = Methods.getCurrentDate()
                 // ajax

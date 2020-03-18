@@ -39,6 +39,8 @@
         </div>
         @component('components/notifier')
         @endcomponent
+        @component('components/loading')
+        @endcomponent
         <footer>
         </footer>
     </body>

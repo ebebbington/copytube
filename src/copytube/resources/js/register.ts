@@ -1,6 +1,7 @@
 /* global $, alert */
 'use strict'
 import Notifier from './notifier'
+import Loading from './loading'
 
 const Register = (function () {
 
@@ -26,6 +27,7 @@ const Register = (function () {
     }
 
     function registerUser (): void {
+        Loading(true)
       const username: string = $('input[name="username"]').val()
       const email: string = $('input[name="email"]').val()
       const password: string = $('input[name="password"]').val()
@@ -50,6 +52,7 @@ const Register = (function () {
           }
           // else theres a problem
           Notifier.error('Error', data.message)
+            Loading(false)
           return false
         },
         error: function (error) {
@@ -60,6 +63,7 @@ const Register = (function () {
           Notifier.error('Error', errMsg)
           //$('html', 'body').animate({scrollTop: 0}, 'slow')
           //return false
+            Loading(false)
         }
       })
     }
