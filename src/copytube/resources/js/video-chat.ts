@@ -23,23 +23,25 @@ if (window.location.pathname === '/chat') {
              *
              */
             function handleRoom(data: { myId: string, users: string[], name: string }) {
+                // Check the id elem text to see if a user was on the page
+                const theirIdElement = document.getElementById('their-id')
+                // If they have left e.g. no users, remove the src object
+                if (theirIdElement.textContent && !data.users.length) {
+                    Notifier.warning('User Left', 'User has left the room')
+                    const peerVideoElement: HTMLVideoElement = document.querySelector('video#peer-video')
+                    peerVideoElement.srcObject = null
+                }
+                if (!theirIdElement.textContent && data.users.length) {
+                    Notifier.success('User Joined', 'User has joined the room')
+                }
+
                 // Display our id
                 const yourIdElement = document.getElementById('your-id')
                 yourIdElement.textContent = data.myId
                 // Display their id and the description text
                 const theirIdDescriptionElement = document.getElementById('their-id-description')
                 theirIdDescriptionElement.textContent = data.users[0] ? 'Their ID: ' : 'Waiting for someone to join...'
-                const theirIdElement = document.getElementById('their-id')
                 theirIdElement.textContent = data.users[0]
-                // If they have left e.g. no users, remove the src object
-                if (!data.users.length) {
-                    Notifier.warning('User Left', 'User has left the room')
-                    const peerVideoElement: HTMLVideoElement = document.querySelector('video#peer-video')
-                    peerVideoElement.srcObject = null
-                }
-                if (data.users.length) {
-                    Notifier.success('User Joined', 'User has joined the room')
-                }
             }
 
             /**
