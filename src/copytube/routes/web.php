@@ -18,7 +18,7 @@
 
 // TODO :: Adde middleware auth to required routes
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->middleware('auth');
 
 Route::get('/register', 'RegisterController@index');
 Route::post('/register', 'RegisterController@submit');
@@ -26,12 +26,12 @@ Route::post('/register', 'RegisterController@submit');
 Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@get']);
 Route::post('/login', 'LoginController@post');
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->middleware('auth');
 
-Route::post('/video/comment', 'VideoController@postComment');
-Route::get('/video', 'VideoController@getAllVideoTitles');
+Route::post('/video/comment', 'VideoController@postComment')->middleware('auth');
+Route::get('/video', 'VideoController@getAllVideoTitles')->middleware('auth');
 
-Route::get('/logout', 'LogoutController@logout');
+Route::get('/logout', 'LogoutController@logout')->middleware('auth');
 
 Route::get('/recover', 'RecoverController@index');
 Route::post('/recover', 'RecoverController@post');
