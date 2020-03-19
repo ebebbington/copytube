@@ -44,6 +44,7 @@ const Register = (function () {
         },
         success: function (data, status, jqXHR) {
           console.table(data)
+            Loading(false)
           if (data.success === true) {
             $('form').trigger('reset')
             Notifier.success('Register', 'Created an account')
@@ -52,7 +53,6 @@ const Register = (function () {
           }
           // else theres a problem
           Notifier.error('Error', data.message)
-            Loading(false)
           return false
         },
         error: function (error) {

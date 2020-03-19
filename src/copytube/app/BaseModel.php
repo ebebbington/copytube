@@ -6,17 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
-// Caching db data
-//$participant = null;
-//$key ="Participant".$id;
-//if(Cache::has($key)//get participant from cache
-//$participant = Cache::get($key);
-//else{//get participant and cache for 3 minutes
-//    $participant = Participant::find($id);
-//    $seconds = 180;
-//    Cache::set($key, $participant, $seconds);
-//}
+use phpDocumentor\Reflection\Types\Boolean;
 
 class BaseModel extends Model
 {
@@ -30,9 +20,9 @@ class BaseModel extends Model
      * $UserModel = new UserModel;
      * $validated = $UserModel->validate(['name' => 'edward']);
      *
-     * @param Array $data containing an array of key value pairs
+     * @param array $data containing an array of key value pairs
      *
-     * @return Boolean
+     * @return bool
      */
     public function validate(array $data)
     {
@@ -162,8 +152,7 @@ class BaseModel extends Model
     {
         Log::debug('Going to run a create query using: ');
         Log::debug(json_encode($data));
-        $model = $this->create($data);
-        return $model;
+        return $this->create($data);
     }
 
     /**
@@ -177,9 +166,9 @@ class BaseModel extends Model
      *
      * @param array $query The key value pair of data to find
      * @param array $newData The key value pair of data to update
-     * @return boolean true or false based on the success
+     * @return bool true or false based on the success
      */
-    public function UpdateQuery (array $query, array $newData): bool
+    public function UpdateQuery (array $query, array $newData)
     {
       $result = DB::table($this->table)->where($query)->update($newData);
       return $result === 1 ? true : false;
@@ -192,7 +181,6 @@ class BaseModel extends Model
      */
     public function DeleteQuery (array $query)
     {
-        $result = DB::table($this->table)->where($query)->delete();
-        return $result;
+        return DB::table($this->table)->where($query)->delete();
     }
 }
