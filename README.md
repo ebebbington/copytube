@@ -101,6 +101,10 @@ Our database container to house the database data
 
 Our web socket server build with NodeJS and SocketIO
 
+## Redis
+
+Help with caching request. In the future i intend on using it for a pub/sub
+
 # Built With
 
 * [PHP](http://www.php.net) - Server Side Language
