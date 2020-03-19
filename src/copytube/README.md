@@ -205,10 +205,12 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 
 * Auth
 
+Uses the users table, and will check if the user exists and creds match. But
+wont check login attempts or lock an account - this needs to be done in the login controller
 ```php
 $credentials = [
   'email_address' => 'Edward.idontexist@hotmail.com',
-  'password' => $password
+  'password' => 'Some password'
 ];
 // Check if user is logged in
 Log::debug('Is user logged in: ' . Auth::check());
@@ -220,6 +222,11 @@ Log::debug('The authed user');
 Log::debug(Auth::user());
 // Log user out
 Log::debug('Gonna log user out: ' . Auth::logout());
+
+// Then in the routes, only allow access if they are authed:
+Route::get('/home', ['middleware' => 'auth', 'as' => 'home', 'uses' => 'HomeController@index']);
+// or
+Route::get('...')->middleware('auth');
 ```
 
 * Cache

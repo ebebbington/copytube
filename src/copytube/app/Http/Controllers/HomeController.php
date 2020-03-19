@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\UserModel;
 use App\SessionModel;
 use http\Client\Curl\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use View;
-use Auth;
 use App\VideosModel;
 use App\CommentsModel;
 use Cookie;
@@ -22,18 +22,6 @@ class HomeController extends Controller
 {
     public function index (Request $request)
     {
-        // TEST cache using redis container. Works but how?
-        if ($value = Redis::get('rediscontainerkey')) {
-            Log::debug('Redis key already exists: ' . $value);
-        } else {
-            Log::debug('Going to create redis container key as it doesnt exist');
-            Redis::set('rediscontainerkey', 'rediscontainervalue');
-        }
-        // TEST cache using default file driver. If driver is set to file, the data is stored in /storage/framework/cache/data/...
-        //      This is the default cache implementation for laravel, using either file or redis as the driver
-        Cache::put('thekey', 'the redis cache value', 5000);
-        Log::debug('Cache value for thekey: ' . Cache::get('thekey'));
-
         // Authenticate the user
         $sessionId = Cookie::get('sessionId');
         if (empty($sessionId)) {
