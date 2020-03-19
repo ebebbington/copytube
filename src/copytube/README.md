@@ -199,7 +199,15 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 
 # Information
 
-# Help
+## Auth / Users
+
+Authentication using Laravel is implemented. How it works is, certain routes are using `->middleware('auth')`, this checks if `Auth::check()` is true. If it
+isn't then it will redirect to the Login route - to achieve this I had to add `['as' => 'login']` to the route call, which gives it's
+the name e.g. redirecting to route Login looks for route named login.
+
+How we auth users is simple. The User.php file (iwht the help of me using a users db table) is automatically setup to check this
+table, so when we call `Auth::attempt(['email_address' => ..., 'password' => ...])`, it will do the validation using a related user
+in the users table. This call will also log the user in
 
 ## Cheatsheet
 
@@ -212,7 +220,7 @@ $credentials = [
   'email_address' => 'Edward.idontexist@hotmail.com',
   'password' => 'Some password'
 ];
-// Check if user is logged in
+// Check if user is logged in - manual way, the automatic way is using ->middleware('auth')
 Log::debug('Is user logged in: ' . Auth::check());
 // Log user in
 Log::debug('Logging user in:');
@@ -227,6 +235,9 @@ Log::debug('Gonna log user out: ' . Auth::logout());
 Route::get('/home', ['middleware' => 'auth', 'as' => 'home', 'uses' => 'HomeController@index']);
 // or
 Route::get('...')->middleware('auth');
+
+// Get the user (if authed)
+$user = Auth::user();
 ```
 
 * Cache
@@ -244,3 +255,5 @@ if ($value = Redis::get('rediscontainerkey')) {
 Cache::put('thekey', 'the redis cache value', 5000);
 Log::debug('Cache value for thekey: ' . Cache::get('thekey'));
 ```
+
+# Help
