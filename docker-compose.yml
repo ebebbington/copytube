@@ -63,6 +63,16 @@ services:
     networks:
       - copytube-network
 
+  redis:
+    container_name: copytube_redis
+    build:
+      context: .
+      dockerfile: .docker/redis.dockerfile
+    ports:
+      - "6379:6379"
+    networks:
+      - copytube-network
+
 #  asterisk:
 #    container_name: copytube_asterisk
 #    image: hibou/asterisk:14
