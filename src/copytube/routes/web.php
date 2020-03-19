@@ -14,6 +14,7 @@
 // Route::get('/', function () {
 //     return view('home')->with('title', 'Home');
 // });
+//return Cache::remember('home.index', 60 * 60 * 24, fn() => (new App\Http\Controllers\HomeController)->index($request));
 Route::get('/', 'HomeController@index');
 
 Route::get('/register', 'RegisterController@index');

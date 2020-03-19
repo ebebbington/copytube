@@ -7,6 +7,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
+// Caching db data
+//$participant = null;
+//$key ="Participant".$id;
+//if(Cache::has($key)//get participant from cache
+//$participant = Cache::get($key);
+//else{//get participant and cache for 3 minutes
+//    $participant = Participant::find($id);
+//    $seconds = 180;
+//    Cache::set($key, $participant, $seconds);
+//}
+
 class BaseModel extends Model
 {
     /**
