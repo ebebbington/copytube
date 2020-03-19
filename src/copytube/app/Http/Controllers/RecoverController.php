@@ -21,6 +21,9 @@ class RecoverController extends Controller
     public function index (Request $request)
     {
         $token = $request->query('token');
+        $User = new UserModel;
+        $found = $User->SelectQuery(['query' => ['recover_token' => $token], 'selectOne' => true]);
+        if (!isset($token) || $found === false) return redirect()->route('login'); // because field is null and token might be null
         Cookie::queue('recoverToken', $token, 10);
         return View::make('recover')->with('title', 'Recover');
     }

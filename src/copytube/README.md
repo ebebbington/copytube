@@ -205,7 +205,7 @@ Authentication using Laravel is implemented. How it works is, certain routes are
 isn't then it will redirect to the Login route - to achieve this I had to add `['as' => 'login']` to the route call, which gives it's
 the name e.g. redirecting to route Login looks for route named login.
 
-How we auth users is simple. The User.php file (iwht the help of me using a users db table) is automatically setup to check this
+How we auth users is simple. The User.php file (with the help of me using a users db table) is automatically setup to check this
 table, so when we call `Auth::attempt(['email_address' => ..., 'password' => ...])`, it will do the validation using a related user
 in the users table. This call will also log the user in
 
