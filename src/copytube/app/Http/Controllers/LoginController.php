@@ -25,29 +25,25 @@ class LoginController extends Controller
         // get data
         $email = $request->input('email');
         $password = $request->input('password');
-
-        // Check if that user exists with the same email
-        $User = new UserModel;
+        $credentials = [
+            'email_address' => $email,
+            'password' => $password
+        ];
+        // Get user
         $data = [
             'query' => ['email_address' => $email],
             'selectOne' => true
         ];
-        $found = $User->SelectQuery($data);
-        if ($found === false) {
-            Log::debug('User does not exist with that email');
-            return response([
-                'success' => false,
-                'message' => 'That email does not exist in our system',
-              ], 404);
-        }
-        Log::debug('User exists');
-
+        $User = new UserModel;
+        $User->SelectQuery($data);
         // Disable their account if no login attempts are left
         if ($User->login_attempts === 0) {
             $recoverToken = Str::random(32);
             $User->recover_token = $recoverToken;
             $User->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken]);
-            $message = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token=' . $recoverToken;
+            $message
+                = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token='
+                . $recoverToken;
             $Mail = new Mail($User->email_address, $User->username, 'Account Locked', $message);
             $Mail->send();
             return response([
@@ -55,44 +51,32 @@ class LoginController extends Controller
                 'message' => 'This account has been locked.'
             ], 403);
         }
+        // Auth
+        if (Auth::attempt($credentials)) {
+            // Set the user to logged in
+            $updated = $User->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
+            if ($updated === false) {
+                Log::debug('Failed to update the model when updating logged_in');
+                return response([
+                    'success' => false,
+                    'message' => 'Failed to update the model'
+                ]);
+            }
 
-        // check if the passwords match
-        $passwordsMatch = Hash::check($password, $User->password);
-        if (empty($passwordsMatch)) {
-            $User->UpdateQuery(['id' => $User->id], ['login_attempts' => ($User->login_attempts - 1)]);
-            Log::debug('Passwords dont match');
+            return response([
+                'success' => true
+            ], 200);
+        } else {
+            // Reduce login attempts
+            if ($User->login_attempts > 0) {
+                $User->UpdateQuery(['email_address' => $credentials['email_address']],
+                    ['login_attempts' => $User->login_attempts - 1]);
+            }
             return response([
                 'success' => false,
-                'message' => 'Password does not match'
+                'message' => 'Failed to authenticate'
             ], 403);
         }
-        Log::debug('Passwords match');
-
-        // Create a session entry in the sessions table only
-        $Session = new SessionModel;
-        $sessionId = $request->session()->get('_token');
-        $userId = $User->id;
-        $Session->CreateQuery(['session_id' => $sessionId, 'user_id' => $userId]);
-        Log::debug('Created the session in the database with the user id ' . $userId . ' of and the session value of ' . $sessionId);
-
-        // Set the user to logged in
-        $updated = $User->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
-        if ($updated === false) {
-            Log::debug('Failed to update the model when updating logged_in');
-            return response([
-                'success' => false,
-                'message' => 'Failed to update the model'
-            ]);
-        }
-
-        // Create the cookie
-        Cookie::queue('sessionId', $sessionId, 3600);
-        Log::debug('Queued the cookie and oing to respond with a success');
-
-        // All goes well, send them to the home
-        return response([
-            'success' => true
-        ], 200);
     }
 
     public function get (Request $request)
