@@ -21,17 +21,17 @@ class Mail
 
     public $to = '';
 
-    private $senderEmail = env('MAIL_EMAIL');
+    private string $senderEmail;
 
-    private $senderPassword = env('MAIL_PASSWORD');
+    private string $senderPassword;
 
-    private $senderName = 'CopyTube';
+    private string $senderName = 'CopyTube';
 
-    private $title = '';
+    private string $title = '';
 
-    private $message = '';
+    private string $message = '';
 
-    private $name = '';
+    private string $name = '';
 
     private $PHPMailer;
 
@@ -42,6 +42,8 @@ class Mail
      */
     public function __construct($to, $name, $title, $message)
     {
+        $this->senderEmail = env('MAIL_EMAIL');
+        $this->senderPassword = env('MAIL_PASSWORD');
         $this->title = $title;
         $this->to = $to;
         $this->message = $message;
@@ -56,7 +58,7 @@ class Mail
             $this->PHPMailer->Password = $this->senderPassword; // gmail password
             $this->PHPMailer->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
             $this->PHPMailer->Port = 587; // self explantory
-      
+
             // Setup the final email
             $this->PHPMailer->setFrom($this->senderEmail, $this->senderName);
             $this->PHPMailer->addAddress($this->to, $this->name);
@@ -69,7 +71,7 @@ class Mail
 
     public function send()
     {
-    /* 
+    /*
         * DONT REMOVE THIS CONDITIONAL.
         * Removing it will cause n infinite loop of emails. Read below
         *
