@@ -200,3 +200,40 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 # Information
 
 # Help
+
+## Cheatsheet
+
+* Auth
+
+```php
+$credentials = [
+  'email_address' => 'Edward.idontexist@hotmail.com',
+  'password' => $password
+];
+// Check if user is logged in
+Log::debug('Is user logged in: ' . Auth::check());
+// Log user in
+Log::debug('Logging user in:');
+Log::debug(Auth::attempt($credentials));
+// Get authed/logged in user
+Log::debug('The authed user');
+Log::debug(Auth::user());
+// Log user out
+Log::debug('Gonna log user out: ' . Auth::logout());
+```
+
+* Cache
+
+```php
+// TEST cache using redis container. Works but how?
+if ($value = Redis::get('rediscontainerkey')) {
+    Log::debug('Redis key already exists: ' . $value);
+} else {
+    Log::debug('Going to create redis container key as it doesnt exist');
+    Redis::set('rediscontainerkey', 'rediscontainervalue');
+}
+// TEST cache using default file driver. If driver is set to file, the data is stored in /storage/framework/cache/data/...
+//      This is the default cache implementation for laravel, using either file or redis as the driver
+Cache::put('thekey', 'the redis cache value', 5000);
+Log::debug('Cache value for thekey: ' . Cache::get('thekey'));
+```
