@@ -2,10 +2,10 @@
 
 namespace App;
 
+use App\Helpers\RedisCacheHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\Boolean;
 
@@ -107,9 +107,8 @@ class BaseModel extends Model
       $orderByColumn = $data['orderBy']['column'] ?? 'id';
       $orderByDirection = $data['orderBy']['direction'] ?? 'ASC';
       $cacheKey = $data['cacheKey'] ?? null;
-      if ($data = Redis::connection()->get($cacheKey)) {
-          Log::debug('Redis does have key of: ' . $cacheKey . '. Returning this data instead of running the query');
-          return json_decode($data);
+      if ($cacheData = RedisCacheHelper::get($cacheKey)) {
+          return $cacheData;
       }
       $passedInData = [
         'query' => [
@@ -125,34 +124,34 @@ class BaseModel extends Model
       // Get a single record if requested
       if ($selectOne) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->first();
-        if (empty($result)) {
+        if (empty($result))
           return false;
-        } else {
-            if ($cacheKey) {
-                Log::debug('Cache key of ' . $cacheKey . ' is passed in, saving the select one db result');
-                Redis::connection()->set($cacheKey, json_encode($result), 1000);
-            }
+        // When we get data save the data is it doesn't exist to redis, populate class and return
+          if ($cacheKey && !$cacheData = RedisCacheHelper::get($cacheKey)) {
+              RedisCacheHelper::set($result, $cacheKey);
+          }
           $this->populate($result);
           return $result;
-        }
       }
       // Get all by the count limiter
       if ($selectOne === false && $count > 1) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->take($count)->get();
-          if ($cacheKey && $result) {
-              Log::debug('Cache key of ' . $cacheKey . ' is passed in, saving the select one db result');
-              Redis::connection()->set($cacheKey, json_encode($result), 1000);
+        if (empty($result))
+            return false;
+        if ($cacheKey && !$cacheData = RedisCacheHelper::get($cacheKey)) {
+              RedisCacheHelper::set($result, $cacheKey);
           }
-        return $result ?? false; // [{...}, {...}] or false
+        return $result; // [{...}, {...}]
       }
       // Get all if count is undefined
       if ($selectOne === false && empty($count)) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->get();
-          if ($cacheKey && $result) {
-              Log::debug('Cache key of ' . $cacheKey . ' is passed in, saving the select one db result');
-              Redis::connection()->set($cacheKey, json_encode($result), 1000);
+        if (empty($result))
+            return false;
+          if ($cacheKey && !$cacheData = RedisCacheHelper::get($cacheKey)) {
+              RedisCacheHelper::set($result, $cacheKey);
           }
-        return $result ?? false; // [{...}, {...}] or false
+        return $result; // [{...}, {...}]
       }
     }
 
@@ -164,14 +163,18 @@ class BaseModel extends Model
      * $User = $UserModel->CreateQuery(['name' => 'edward', ...])
      *
      * @param array $data Key value pairs of data to insert
+     * @param string $cacheKey The key of the cache to update
      *
      * @return mixed The database row just inserted
      */
-    public function CreateQuery (array $data)
+    public function CreateQuery (array $data, string $cacheKey)
     {
         Log::debug('Going to run a create query using: ');
         Log::debug(json_encode($data));
         $row = $this->create($data);
+        if ($cacheKey && $cacheData =  RedisCacheHelper::get($cacheKey)) {
+            RedisCacheHelper::update($data, $cacheKey);
+        }
         return $row;
     }
 
