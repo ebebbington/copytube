@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * DO NOT USE THIS CLASS
+ *
+ * Use `Cache::...` instead.
+ *
+ * I managed to get Cache working after i created this class, and it is better to use, so this class serves as a
+ * reference now
+ */
+
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Log;

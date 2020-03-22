@@ -42,21 +42,18 @@ class VideoController extends Controller
             ]);
         }
 
-        // check the video and user actually exist
+        // check the video actually exist
         $Videos = new VideosModel;
-        $User = new UserModel;
         $data = [
             'query' => ['title' => $videoPostedOn],
             'selectOne' => true
         ];
         $foundVideo = $Videos->SelectQuery($data);
-        $data['query'] = ['username' => $username];
-        $foundUser = $User->SelectQuery($data);
-        if (empty($foundVideo) || empty($foundUser)) {
+        if (empty($foundVideo)) {
             Log::debug('Video title or user does not exist');
             return reponse([
                 'success' => false,
-                'message' => 'Video title or user does not exist'
+                'message' => 'Video does not exist'
             ]);
         }
 
