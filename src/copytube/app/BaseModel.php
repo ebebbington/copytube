@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Helpers\RedisCacheHelper;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -107,8 +107,10 @@ class BaseModel extends Model
       $orderByColumn = $data['orderBy']['column'] ?? 'id';
       $orderByDirection = $data['orderBy']['direction'] ?? 'ASC';
       $cacheKey = $data['cacheKey'] ?? null;
-      if ($cacheData = RedisCacheHelper::get($cacheKey)) {
-          return $cacheData;
+      // If the cached data already exists with the given key then return that instead
+      if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+          Log::debug('cache has key of ' . $cacheKey);
+          return Cache::get($cacheKey);
       }
       $passedInData = [
         'query' => [
@@ -126,21 +128,18 @@ class BaseModel extends Model
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->first();
         if (empty($result))
           return false;
-        // When we get data save the data is it doesn't exist to redis, populate class and return
-          if ($cacheKey && !$cacheData = RedisCacheHelper::get($cacheKey)) {
-              RedisCacheHelper::set($result, $cacheKey);
-          }
-          $this->populate($result);
-          return $result;
+        if ($cacheKey && !empty($cacheKey))
+            Cache::put($cacheKey, $result, 3600);
+        $this->populate($result);
+        return $result;
       }
       // Get all by the count limiter
       if ($selectOne === false && $count > 1) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->take($count)->get();
         if (empty($result))
             return false;
-        if ($cacheKey && !$cacheData = RedisCacheHelper::get($cacheKey)) {
-              RedisCacheHelper::set($result, $cacheKey);
-          }
+        if ($cacheKey && !empty($cacheKey))
+            Cache::put($result, $cacheKey, 3600);
         return $result; // [{...}, {...}]
       }
       // Get all if count is undefined
@@ -148,9 +147,8 @@ class BaseModel extends Model
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->get();
         if (empty($result))
             return false;
-          if ($cacheKey && !$cacheData = RedisCacheHelper::get($cacheKey)) {
-              RedisCacheHelper::set($result, $cacheKey);
-          }
+        if ($cacheKey && !empty($cacheKey))
+            Cache::put($result, $cacheKey, 3600);
         return $result; // [{...}, {...}]
       }
     }
@@ -163,17 +161,21 @@ class BaseModel extends Model
      * $User = $UserModel->CreateQuery(['name' => 'edward', ...])
      *
      * @param array $data Key value pairs of data to insert
-     * @param string $cacheKey The key of the cache to update
+     * @param string $cacheKey The key of the cache to update, only applies if updating an array
      *
      * @return mixed The database row just inserted
      */
-    public function CreateQuery (array $data, string $cacheKey)
+    public function CreateQuery (array $data, string $cacheKey = '')
     {
         Log::debug('Going to run a create query using: ');
         Log::debug(json_encode($data));
         $row = $this->create($data);
-        if ($cacheKey && $cacheData =  RedisCacheHelper::get($cacheKey)) {
-            RedisCacheHelper::update($data, $cacheKey);
+        if (!empty($cacheKey) && $cacheData = Cache::has($cacheKey)) {
+            // Push a new item to the array
+            if (is_array($cacheData)) {
+                array_unshift($cacheData, $row);
+                Cache::put($cacheKey, $cacheData, 3600);
+            }
         }
         return $row;
     }
@@ -189,21 +191,30 @@ class BaseModel extends Model
      *
      * @param array $query The key value pair of data to find
      * @param array $newData The key value pair of data to update
+     * @param string $cacheKey The key associated with the data to update
      * @return bool true or false based on the success
      */
-    public function UpdateQuery (array $query, array $newData)
+    public function UpdateQuery (array $query, array $newData, string $cacheKey = '')
     {
       $result = DB::table($this->table)->where($query)->update($newData);
+      if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+          $row = DB::table($this->table)->where($query)->first();
+          Cache::put($cacheKey, $row, 3600);
+      }
       return $result === 1 ? true : false;
     }
 
     /**
      * @param array $query
+     * @param string $cacheKey The key associated with the data to delete
      *
      * @return int
      */
-    public function DeleteQuery (array $query)
+    public function DeleteQuery (array $query, string $cacheKey = '')
     {
+        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+            Cache::forget($cacheKey);
+        }
         return DB::table($this->table)->where($query)->delete();
     }
 }
