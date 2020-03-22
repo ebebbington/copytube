@@ -62,8 +62,8 @@ class RedisCacheHelper {
     public static function update ($data, $cacheKey): void
     {
         if ($cacheData = RedisCacheHelper::get($cacheKey)) {
-            array_unshift($data, $cacheData);
-            RedisCacheHelper::set($data, $cacheKey);
+            array_unshift($cacheData, $data);
+            RedisCacheHelper::set($cacheData, $cacheKey);
         }
     }
 
