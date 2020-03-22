@@ -295,6 +295,14 @@ Boom all done, now we can write the following and query the redis container:
 
 ```php
 Redis::set('thekey', 'thevalue');
+// or
+$redis = Redis::connection();
+$redis->set('thekey', 'thevalue');
+if ($value = $redis->get('thekey')) { // also same to `Redis::has('thekey')`
+    // is set
+} else {
+    // not set
+}
 ```
 
 ```shell script

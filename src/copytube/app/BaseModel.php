@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\Boolean;
 
@@ -94,7 +95,7 @@ class BaseModel extends Model
      * @param array|string $data Can be a key value pair for data to find, or a string if used with conditionals, e.g. ('title', $first = false, $limit = 0, $operator = '!=', $value = 'username' )
      * @param boolean Find a single instance? Defaults to true
      *
-     * @return boolean|array False when no data found, singular object if one result, array of objects when more than 1
+     * @return bool|array|object False when no data found, singular object if one result, array of objects when more than 1
      */
     public function SelectQuery (array $data = [], bool $first = true, int $limit = 0)
     {
@@ -105,6 +106,11 @@ class BaseModel extends Model
       $selectOne = $data['selectOne'] ?? true;
       $orderByColumn = $data['orderBy']['column'] ?? 'id';
       $orderByDirection = $data['orderBy']['direction'] ?? 'ASC';
+      $cacheKey = $data['cacheKey'] ?? null;
+      if ($data = Redis::connection()->get($cacheKey)) {
+          Log::debug('Redis does have key of: ' . $cacheKey . '. Returning this data instead of running the query');
+          return json_decode($data);
+      }
       $passedInData = [
         'query' => [
           'name' => 'edward'
@@ -113,7 +119,8 @@ class BaseModel extends Model
         'conditionalValue' => 'hello',
         'count' => 5,
         'selectOne' => true,
-        'orderBy' => ['column' => 'id', 'direction' => 'ASC']
+        'orderBy' => ['column' => 'id', 'direction' => 'ASC'],
+        'cacheKey' => 'some key' // e.g. on home controller for getting dynamic video: cacheKey = 'videos:something_more' or 'videos:something_more,iceland'
       ];
       // Get a single record if requested
       if ($selectOne) {
@@ -121,6 +128,10 @@ class BaseModel extends Model
         if (empty($result)) {
           return false;
         } else {
+            if ($cacheKey) {
+                Log::debug('Cache key of ' . $cacheKey . ' is passed in, saving the select one db result');
+                Redis::connection()->set($cacheKey, json_encode($result), 1000);
+            }
           $this->populate($result);
           return $result;
         }
@@ -128,11 +139,19 @@ class BaseModel extends Model
       // Get all by the count limiter
       if ($selectOne === false && $count > 1) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->take($count)->get();
+          if ($cacheKey && $result) {
+              Log::debug('Cache key of ' . $cacheKey . ' is passed in, saving the select one db result');
+              Redis::connection()->set($cacheKey, json_encode($result), 1000);
+          }
         return $result ?? false; // [{...}, {...}] or false
       }
       // Get all if count is undefined
       if ($selectOne === false && empty($count)) {
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->get();
+          if ($cacheKey && $result) {
+              Log::debug('Cache key of ' . $cacheKey . ' is passed in, saving the select one db result');
+              Redis::connection()->set($cacheKey, json_encode($result), 1000);
+          }
         return $result ?? false; // [{...}, {...}] or false
       }
     }
