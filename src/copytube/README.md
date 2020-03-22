@@ -256,4 +256,53 @@ Cache::put('thekey', 'the redis cache value', 5000);
 Log::debug('Cache value for thekey: ' . Cache::get('thekey'));
 ```
 
+* Redis
+
+To get Redis working, you obviously need to define the environmental variables required for `config/database.php`.
+
+Once this is done, you need to change:
+
+```php
+'client' => env('REDIS_CLIENT', 'phpredis'),
+
+'redis' => [
+    'driver' => 'redis',
+    'connection' => 'cache',
+],
+```
+
+to:
+
+```php
+'client' => env('REDIS_CLIENT', 'predis'),
+
+'redis' => [
+    'driver' => 'redis',
+    'connection' => 'default',
+],
+```
+
+Then remove the following block from `config/database.php` for the redis context:
+
+```php
+'options' => [
+    'cluster' => env('REDIS_CLUSTER', 'redis'),
+    'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+],
+```
+
+Boom all done, now we can write the following and query the redis container:
+
+```php
+Redis::set('thekey', 'thevalue');
+```
+
+```shell script
+$ docker exec -it copytube_redis bash
+
+# redis-cli
+
+> get thekey # thevalue
+```
+
 # Help
