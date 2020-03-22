@@ -55,19 +55,24 @@ class HomeController extends Controller
 //        Log::debug('Set the user inside the session object, returning home');
 
         // Get the videos
-        $videoRequested = $request->query('requestedVideo') ?? 'Something More'; // default to some video
+        $videoRequested = $request->query('requestedVideo'); // default to some video
         $VideosModel = new VideosModel;
         $data = [
             'query' => ['title' => $videoRequested],
             'selectOne' => true
         ];
         $mainVideo = $VideosModel->SelectQuery($data);
-        // override
-        if ($mainVideo === false) {
-            $videoRequested = 'Something More';
-            $data['query'] = ['title' => $videoRequested];
-            $mainVideo = $VideosModel->SelectQuery($data);
+        // Video requested could well be wrong or undefined
+        if (empty($mainVideo) || !isset($mainVideo)) {
+            $errorData = [
+                'title' => 404,
+                'errorCode' => 404,
+                'errorMessage' => 'No video was found matching `'.$videoRequested . '`'
+            ];
+            return response()->view('errors.404', $errorData)->setStatusCode(404);
         }
+
+        // Get rabbit hole videos that aren't main video
         $data = [
             'query' => 'title',
             'conditionalOperator' => '!=',
