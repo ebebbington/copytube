@@ -33,11 +33,16 @@ class RedisCacheHelper {
      */
     public static function get ($cacheKey)
     {
+        $loggingPrefix = '[RedisCacheHelper - get]';
         $Redis = Redis::connection();
         $cacheKey = RedisCacheHelper::normaliseCacheKey($cacheKey);
+        Log::debug($loggingPrefix . ' Going to get the caches data for the key of: ' . $cacheKey);
         if ($cacheData = $Redis->get($cacheKey)) {
+            Log::debug($loggingPrefix . ' Cached data was found, see below:');
+            Log::debug($cacheData);
             return json_decode($cacheData);
         } else {
+            Log::debug($loggingPrefix . ' No cached data was found for that key');
             return false;
         }
     }
@@ -61,9 +66,15 @@ class RedisCacheHelper {
      */
     public static function update ($data, $cacheKey): void
     {
+        $loggingPrefix = '[RedisCacheHelper - update]';
+        $cacheKey = RedisCacheHelper::normaliseCacheKey($cacheKey);
         if ($cacheData = RedisCacheHelper::get($cacheKey)) {
+            Log::debug($loggingPrefix . ' Cached data exists for ' . $cacheKey . '. Going to update it with:');
+            Log::debug($data);
             array_unshift($cacheData, $data);
             RedisCacheHelper::set($cacheData, $cacheKey);
+        } else {
+            Log::debug($loggingPrefix . ' No cached data was found. Not going to update.');
         }
     }
 
@@ -83,8 +94,11 @@ class RedisCacheHelper {
      */
     public static function set ($data, $cacheKey): void
     {
+        $loggingPrefix = '[RedisCacheHelper - set]';
         $Redis = Redis::connection();
         $cacheKey = RedisCacheHelper::normaliseCacheKey($cacheKey);
+        Log::debug($loggingPrefix . ' Going to set the below data to ' . $cacheKey . ':');
+        Log::debug($data);
         $Redis->set($cacheKey, json_encode($data));
     }
 
