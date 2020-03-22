@@ -109,7 +109,7 @@ class BaseModel extends Model
       $cacheKey = $data['cacheKey'] ?? null;
       // If the cached data already exists with the given key then return that instead
       if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-          Log::debug('cache has key of ' . $cacheKey);
+          Log::debug('cache has key of ' . $cacheKey . '. Returning this data instead');
           return Cache::get($cacheKey);
       }
       $passedInData = [
@@ -128,8 +128,10 @@ class BaseModel extends Model
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->first();
         if (empty($result))
           return false;
-        if ($cacheKey && !empty($cacheKey))
+        if ($cacheKey && !empty($cacheKey)) {
+            Log::debug('Going to save the selectOne db result to the key of '.$cacheKey.'. We will get the cached data next time around');
             Cache::put($cacheKey, $result, 3600);
+        }
         $this->populate($result);
         return $result;
       }
@@ -138,8 +140,10 @@ class BaseModel extends Model
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->take($count)->get();
         if (empty($result))
             return false;
-        if ($cacheKey && !empty($cacheKey))
-            Cache::put($result, $cacheKey, 3600);
+        if ($cacheKey && !empty($cacheKey)) {
+            Log::debug('Going to save the selectMany db result to the key of ' . $cacheKey . '. We will get this nex ttime around');
+            Cache::put($cacheKey, $result, 3600);
+        }
         return $result; // [{...}, {...}]
       }
       // Get all if count is undefined
@@ -147,8 +151,10 @@ class BaseModel extends Model
         $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->get();
         if (empty($result))
             return false;
-        if ($cacheKey && !empty($cacheKey))
-            Cache::put($result, $cacheKey, 3600);
+        if ($cacheKey && !empty($cacheKey)) {
+            Log::debug('Going to save the selectAll db result to the key of ' . $cacheKey . '. We will get this nex ttime around');
+            Cache::put($cacheKey, $result, 3600);
+        }
         return $result; // [{...}, {...}]
       }
     }

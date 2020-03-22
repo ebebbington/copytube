@@ -55,21 +55,21 @@ class HomeController extends Controller
 //        Log::debug('Set the user inside the session object, returning home');
 
         // Get the videos
-        $videoRequested = $request->query('requestedVideo'); // default to some video
+        $videoRequested = $request->query('requestedVideo') ?? 'Something More'; // default to some video if we are routing to /home
         $VideosModel = new VideosModel;
         $data = [
             'query' => ['title' => $videoRequested],
-            'selectOne' => true
+            'selectOne' => true,
+            'cacheKey' => 'db:videos:title=' . $videoRequested
         ];
         $mainVideo = $VideosModel->SelectQuery($data);
-        // Video requested could well be wrong or undefined
+        // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
-            $errorData = [
-                'title' => 404,
-                'errorCode' => 404,
+            $errorCode = 404;
+            $errorData = ['title' => $errorCode, 'errorCode' => $errorCode,
                 'errorMessage' => 'No video was found matching `'.$videoRequested . '`'
             ];
-            return response()->view('errors.404', $errorData)->setStatusCode(404);
+            return response()->view('errors.404', $errorData)->setStatusCode($errorCode);
         }
 
         // Get rabbit hole videos that aren't main video
@@ -78,7 +78,8 @@ class HomeController extends Controller
             'conditionalOperator' => '!=',
             'conditionalValue' => $videoRequested,
             'selectOne' => false,
-            'count' => 2
+            'count' => 2,
+            'cacheKey' => 'db:videos:title!='.$videoRequested.'&limit=2',
         ];
         $rabbitHoleVideos = $VideosModel->SelectQuery($data);
 
@@ -88,7 +89,8 @@ class HomeController extends Controller
             'query' => ['video_posted_on' => $mainVideo->title],
             'selectOne' => false,
             'count' => null,
-            'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
+            'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC'],
+            'cacheKey' => 'db:comments:videoTitle='.$mainVideo->title
         ];
         $comments = $Comments->SelectQuery($data);
         $comments = $Comments->formatDates($comments);

@@ -59,7 +59,13 @@ class VideoController extends Controller
 
         // Create the new comment
         $Comments = new CommentsModel;
-        $Comments->CreateQuery(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
+        $Comments->CreateQuery([
+            'comment' => $comment,
+            'author' => $username,
+            'date_posted' => $datePosted,
+            'video_posted_on' => $videoPostedOn,
+            'cacheKey' => 'db:comments:videoTitle='.$videoPostedOn
+        ]);
 
         $resData = [
             'success' => true,
@@ -75,7 +81,8 @@ class VideoController extends Controller
         $Videos = new VideosModel;
         $data = [
             'query' => [],
-            'selectOne' => false
+            'selectOne' => false,
+            'cacheKey' => 'db:videos:all'
         ];
         $videos = $Videos->SelectQuery($data);
         $matchingTitles = [];

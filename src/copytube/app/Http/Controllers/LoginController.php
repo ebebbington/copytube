@@ -32,7 +32,8 @@ class LoginController extends Controller
         // Get user
         $data = [
             'query' => ['email_address' => $email],
-            'selectOne' => true
+            'selectOne' => true,
+            'cacheKey' => 'db:users:email_address='.$email
         ];
         $User = new UserModel;
         $User->SelectQuery($data);
@@ -40,7 +41,7 @@ class LoginController extends Controller
         if ($User->login_attempts === 0) {
             $recoverToken = Str::random(32);
             $User->recover_token = $recoverToken;
-            $User->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken]);
+            $User->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken], 'db:users:email_address='.$email);
             $message
                 = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token='
                 . $recoverToken;
@@ -54,7 +55,7 @@ class LoginController extends Controller
         // Auth
         if (Auth::attempt($credentials)) {
             // Set the user to logged in
-            $updated = $User->UpdateQuery(['email_address' => $email], ['logged_in' => 0]);
+            $updated = $User->UpdateQuery(['email_address' => $email], ['logged_in' => 0], 'db:users:email_address='.$email);
             if ($updated === false) {
                 Log::debug('Failed to update the model when updating logged_in');
                 return response([
@@ -70,7 +71,9 @@ class LoginController extends Controller
             // Reduce login attempts
             if ($User->login_attempts > 0) {
                 $User->UpdateQuery(['email_address' => $credentials['email_address']],
-                    ['login_attempts' => $User->login_attempts - 1]);
+                    ['login_attempts' => $User->login_attempts - 1],
+                    'db:users:email_address='.$credentials['email_address']
+                );
             }
             return response([
                 'success' => false,
