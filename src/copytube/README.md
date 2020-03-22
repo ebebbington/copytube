@@ -256,6 +256,9 @@ Cache::put('thekey', 'the redis cache value', 5000);
 Log::debug('Cache value for thekey: ' . Cache::get('thekey'));
 ```
 
+To convert this into pointing to Redis i just needed to define the DRIVER as redis as CACHE_PREFIX as "".
+Cache is preferred over Redis
+
 * Redis
 
 To get Redis working, you obviously need to define the environmental variables required for `config/database.php`.
