@@ -165,13 +165,14 @@ class BaseModel extends Model
      *
      * @param array $data Key value pairs of data to insert
      *
-     * @return mixed
+     * @return mixed The database row just inserted
      */
     public function CreateQuery (array $data)
     {
         Log::debug('Going to run a create query using: ');
         Log::debug(json_encode($data));
-        return $this->create($data);
+        $row = $this->create($data);
+        return $row;
     }
 
     /**

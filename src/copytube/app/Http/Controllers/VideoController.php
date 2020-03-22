@@ -7,6 +7,7 @@ use App\UserModel;
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -25,13 +26,13 @@ class VideoController extends Controller
               'success' => false,
             ], 403);
         }
-        Log::debug('Request to POST register is an ajax');
+        Log::debug('Request to POST video is an ajax');
 
         // get data
         $comment = $request->input('comment');
         $datePosted = $request->input('datePosted');
         $videoPostedOn = $request->input('videoPostedOn');
-        $user = $request->session()->get('user');
+        $user = Auth::user();
         $username = $user->username;
         if (empty($comment) || empty($datePosted) || empty($user) || empty($username) || empty($videoPostedOn)) {
             Log::debug('Some data wasn\'t provided');
