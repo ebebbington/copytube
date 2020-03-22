@@ -74,4 +74,24 @@ class CommentsModel extends BaseModel
     ];
 
     public $timestamps = false;
+
+    /**
+     * @method formatDates
+     *
+     * @description
+     * Format the dates posted for each comment into format is dd/mm/yyyy
+     *
+     * @param object $commentList Array of objects containing the comments retrieved from the db
+     *
+     * @return object The same list but with modified date formats
+     */
+    public function formatDates (object $commentList)
+    {
+        for ($i = 0; $i < sizeof($commentList); $i++) {
+            list($year, $month, $day) = explode('-', $commentList[$i]->date_posted);
+            $formattedDate = $day . '/' . $month . '/' . $year;
+            $commentList[$i]->date_posted = $formattedDate;
+        }
+        return $commentList;
+    }
 }

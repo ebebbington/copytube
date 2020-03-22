@@ -86,12 +86,7 @@ class HomeController extends Controller
             'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
         ];
         $comments = $Comments->SelectQuery($data);
-        // format the date
-        for ($i = 0; $i < sizeof($comments); $i++) {
-            list($year, $month, $day) = explode('-', $comments[$i]->date_posted);
-            $formattedDate = $day . '/' . $month . '/' . $year;
-            $comments[$i]->date_posted = $formattedDate;
-        }
+        $comments = $Comments->formatDates($comments);
 
         return View::make('home')
             ->with('title', 'Home')
