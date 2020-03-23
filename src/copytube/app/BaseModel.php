@@ -67,7 +67,7 @@ class BaseModel extends Model
      * @return bool|array|object False when no data found, singular object if one result, array of objects when more than 1
      *
      * @example
-     * $where = 'name = 'edward' and age != 200';
+     * $where = "name = '$name' and age != 200"; // or omit this property
      * $limit = 1; // -1 = all (array), 1 = 1 (object), >1 = many (array)
      * $orderBy = [
      *   'column' => date, // defaults to id

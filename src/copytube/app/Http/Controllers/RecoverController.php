@@ -22,7 +22,11 @@ class RecoverController extends Controller
     {
         $token = $request->query('token');
         $User = new UserModel;
-        $found = $User->SelectQuery(['query' => ['recover_token' => $token], 'selectOne' => true]);
+        $query = [
+            'where' => "recover_token = '$token'",
+            'limit' => 1
+        ];
+        $found = $User->SelectQuery($query);
         if (!isset($token) || $found === false) return redirect()->route('login'); // because field is null and token might be null
         Cookie::queue('recoverToken', $token, 10);
         return View::make('recover')->with('title', 'Recover');
@@ -37,11 +41,11 @@ class RecoverController extends Controller
 
         // get user by that email
         $User = new UserModel;
-        $data = [
-            'query' => ['recover_token' => $token, 'email_address' => $email],
-            'selectOne' => true
+        $query = [
+            'where' => "recover_token = '$token' and email_address = '$email'",
+            'limit' => 1
         ];
-        $found = $User->SelectQuery($data);
+        $found = $User->SelectQuery($query);
         if ($found === false) {
             return response([
                 'success' => false,
