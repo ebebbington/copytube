@@ -74,12 +74,12 @@ class HomeController extends Controller
         Log::info($loggingPrefix . 'Successfully retrieved a main video of '.$videoRequested.':', [$mainVideo]);
 
         // Get rabbit hole videos that aren't main video
-        $rabbitHoleVideos = $VideosModel->SelectQuery($videoRequested);
+        $rabbitHoleVideos = $VideosModel->getRabbitHoleVideos($videoRequested);
         Log::info($loggingPrefix . "Retrieved rabbit hole videos");
 
         // Get the comments for the main video
         $Comments = new CommentsModel;
-        $comments = $Comments->SelectQuery($videoRequested);
+        $comments = $Comments->getAllByVideoTitle($videoRequested);
         Log::info($loggingPrefix . 'Retrieved comments where');
 
         $renderData = [
