@@ -87,6 +87,7 @@ class HomeController extends Controller
             'limit' => -1,
             'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
         ];
+        $cacheKey = "db:comments:videoTitle='$mainVideo->title'";
         $comments = $Comments->SelectQuery($query, $cacheKey);
         $comments = $Comments->formatDates($comments);
 
