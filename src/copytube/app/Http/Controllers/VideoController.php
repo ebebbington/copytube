@@ -45,12 +45,8 @@ class VideoController extends Controller
 
         // check the video actually exist
         $Videos = new VideosModel;
-        $query = [
-            'where' => "title = '$videoPostedOn'",
-            'limit' => 1
-        ];
-        $foundVideo = $Videos->SelectQuery($query);
-        if (empty($foundVideo)) {
+        $foundVideo = $Videos->getVideoByTitle($videoPostedOn);
+        if (empty($foundVideo) || $foundVideo === false) {
             Log::debug('Video title or user does not exist');
             return reponse([
                 'success' => false,
@@ -62,8 +58,7 @@ class VideoController extends Controller
         $Comments = new CommentsModel;
         $cacheKey = 'db:comments:videoTitle='.$videoPostedOn;
         log::debug('GOING TO CREATE COMMENT WITH CACHE KEY OF: ' . $cacheKey);
-        $Comments->CreateQuery(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn], $cacheKey);
-
+        $Comments->create(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
         $resData = [
             'success' => true,
             'data' => $username

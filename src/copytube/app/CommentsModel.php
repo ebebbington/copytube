@@ -121,4 +121,10 @@ class CommentsModel extends BaseModel
         $comments = $this->formatDates($comments);
         return $comments;
     }
+
+    public function create (array $data)
+    {
+        $cacheKey = "db:users:videoTitle=" . $data['video_posted_on'] . "'";
+        $this->CreateQuery($data, $cacheKey);
+    }
 }
