@@ -61,12 +61,14 @@ const Home = (function () {
                         newCommentHtml[0].children[0].children[0].src = 'img/lava_sample.jpg'
                         newCommentHtml[0].children[1].children[0].textContent = data.data
                         $('#comment-list').prepend(newCommentHtml)
+                        $('#add-comment-input').val('')
+                        $('#comment > span > p').text('0')
                     }
                     Loading(false)
                 },
                 error: function (err) {
                     console.log('error')
-                    Notifier.success('Add Comment', 'Failed')
+                    Notifier.error('Add Comment', 'Failed')
                     console.error(err)
                     console.log(JSON.parse(err.responseText))
                     Loading(false)
