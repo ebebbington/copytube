@@ -23,7 +23,7 @@ class LogoutController extends Controller
         // update db
         $user = Auth::user();
         $User = new UserModel;
-        $User->UpdateQuery(['email_address' => $user->email_address], ['logged_in' => 1]);
+        $User->updateLoggedIn(1, $user->email);
 
         Auth::logout();
         return redirect('/login');
