@@ -116,7 +116,10 @@ class BaseModel extends Model
         // When asking for 1 record, return a single object as they dont expect an array
         if ($limit === 1 && !empty($result)) {
             Log::info($loggingPrefix . 'Request limit is 1 so returning the 0th index instead of the array');
-            $result = $result[0];
+            if (isset($result) && isset($result[0]))
+                $result = $result[0];
+            else
+                return false;
         }
         if (empty($result) || !isset($result)) {
             Log::error($loggingPrefix . 'No data was retrieved on table ' . $this->table . ' with query:', $query);
