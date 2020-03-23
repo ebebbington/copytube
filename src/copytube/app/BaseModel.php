@@ -7,10 +7,16 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Mockery\Exception;
 use phpDocumentor\Reflection\Types\Boolean;
 
 class BaseModel extends Model
 {
+    private function normaliseCacheKey ($cacheKey = '')
+    {
+        return str_replace(' ', '+', $cacheKey);
+    }
+
     /**
      * Validate Data for a mode, such as before inserting.
      *
@@ -83,10 +89,10 @@ class BaseModel extends Model
       $limit = $query['limit'];
       $orderByColumn = $query['orderBy']['column'] ?? 'id';
       $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
+      $cacheKey = $this->normaliseCacheKey($cacheKey);
       // If the cached data already exists with the given key then return that instead
         Log::debug('Cache key passed in to SelectQuery is: ' . $cacheKey);
       if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-          Log::debug('cache has key of ' . $cacheKey . '. Returning this data instead');
           return Cache::get($cacheKey);
       }
         Log::debug('Running a SELECT query where ' . $query['where'] . ', with a limit of ' . $query['limit'] . '. Ordering ' .$orderByColumn . ' by ' . $orderByDirection);
@@ -117,14 +123,13 @@ class BaseModel extends Model
     public function CreateQuery (array $data, string $cacheKey = '')
     {
         Log::debug('Going to run a create query using: ');
-        Log::debug(json_encode($data));
         $row = $this->create($data);
-        if (!empty($cacheKey) && $cacheData = Cache::has($cacheKey)) {
+        if (!empty($cacheKey) && Cache::has($cacheKey)) {
+            Log::debug('Cache has the key of ' . $cacheKey . ' inside create query');
             // Push a new item to the array
-            if (is_array($cacheData)) {
-                array_unshift($cacheData, $row);
-                Cache::put($cacheKey, $cacheData, 3600);
-            }
+            $cacheData = Cache::get($cacheKey);
+            $cacheData[] = $row;
+            Cache::put($cacheKey, $cacheData, 3600);
         }
         return $row;
     }
@@ -145,6 +150,7 @@ class BaseModel extends Model
      */
     public function UpdateQuery (array $query, array $newData, string $cacheKey = '')
     {
+        $cacheKey = $this->normaliseCacheKey($cacheKey);
       $result = DB::table($this->table)->where($query)->update($newData);
       if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
           $row = DB::table($this->table)->where($query)->first();
@@ -161,6 +167,7 @@ class BaseModel extends Model
      */
     public function DeleteQuery (array $query, string $cacheKey = '')
     {
+        $cacheKey = $this->normaliseCacheKey($cacheKey);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
             Cache::forget($cacheKey);
         }
