@@ -58,7 +58,7 @@ class VideoController extends Controller
         $Comments = new CommentsModel;
         $cacheKey = 'db:comments:videoTitle='.$videoPostedOn;
         log::debug('GOING TO CREATE COMMENT WITH CACHE KEY OF: ' . $cacheKey);
-        $Comments->create(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
+        $Comments->createComment(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
         $resData = [
             'success' => true,
             'data' => $username
