@@ -12,9 +12,13 @@ use phpDocumentor\Reflection\Types\Boolean;
 
 class BaseModel extends Model
 {
+
     private function normaliseCacheKey($cacheKey = '')
     {
-        return str_replace(' ', '+', $cacheKey);
+        $replacedKey = str_replace(' ', '+', $cacheKey);
+        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
+        Log::info($loggingPrefix . "Replaced $cacheKey with $replacedKey");
+        return $replacedKey;
     }
 
     /**
@@ -33,21 +37,29 @@ class BaseModel extends Model
      */
     public function validate(array $data)
     {
-        Log::debug(json_encode($data));
+        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
+        Log::info($loggingPrefix . 'Going to validate the following data: ', $data);
+        Log::info($loggingPrefix . 'With the rules of: ', $this->rules);
         $validator = Validator::make($data, $this->rules);
         if ($validator->fails()) {
+            Log::error($loggingPrefix . 'Validation failed');
             return false;
         }
+        Log::info($loggingPrefix . 'Validation passed');
         return true;
     }
 
+    /**
+     * @param bool|object $Model
+     */
     private function populate($Model = false)
     {
-        $a = $Model;
-        $b = '';
+        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         if ($Model !== false && !empty($Model)) {
+            Log::info($loggingPrefix . 'Passed in Model is not empty [GOOD]: ', [$Model]);
             foreach ($Model as $key => $value) {
                 if (property_exists($this, $key)) {
+                    Log::info($loggingPrefix . 'Calling class has property of ' . $key . ". Setting it to $value");
                     $this->$key = $value;
                     //$this[$key] = $value;
                 }
@@ -85,31 +97,37 @@ class BaseModel extends Model
      */
     public function SelectQuery(array $query, string $cacheKey = '')
     {
+        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         $cacheKey = $this->normaliseCacheKey($cacheKey);
         // If the cached data already exists with the given key then return that instead
-        Log::debug('Cache key passed in to SelectQuery is: ' . $cacheKey);
+        Log::info($loggingPrefix . 'Passed in `cacheKey` is: ' . $cacheKey);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+            Log::info($loggingPrefix . 'Redis has the cached data for that key. Returning this instead');
             return Cache::get($cacheKey);
         }
         $where = $query['where'] ?? 'id != -1';
         $limit = $query['limit'];
         $orderByColumn = $query['orderBy']['column'] ?? 'id';
         $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
-        Log::debug('Running a SELECT query where ' . $query['where'] . ', with a limit of ' . $query['limit']
+        Log::info($loggingPrefix . 'Running query on table' . $this->table . ' where ' . $where . ', with a limit of ' . $query['limit']
             . '. Ordering ' . $orderByColumn . ' by ' . $orderByDirection);
         $result = DB::table($this->table)->whereRaw($where)->orderBy($orderByColumn, $orderByDirection)->take($limit)
             ->get();
         // When asking for 1 record, return a single object as they dont expect an array
         if ($limit === 1 && !empty($result)) {
+            Log::info($loggingPrefix . 'Request limit is 1 so returning the 0th index instead of the array');
             $result = $result[0];
         }
         if (empty($result) || !isset($result)) {
+            Log::error($loggingPrefix . 'No data was retrieved on table ' . $this->table . ' with query:', $query);
             return false;
         }
         // Cache the result
         if ($cacheKey && !empty($cacheKey) && isset($cacheKey)) {
+            Log::info($loggingPrefix . '`cacheKey` is defined so writing the result to this key in redis with expiration of ' . 3600);
             Cache::put($cacheKey, $result, 3600);
         }
+        Log::info($loggingPrefix . 'Returning the database result');
         return $result;
     }
 
@@ -131,11 +149,15 @@ class BaseModel extends Model
      */
     public function CreateQuery(array $data, string $cacheKey = '')
     {
+        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         $cacheKey = $this->normaliseCacheKey($cacheKey);
+        Log::info($loggingPrefix . 'Creating a new row on table ' . $this->table . ':', $data);
         $row = $this->create($data);
         if (!empty($cacheKey) && Cache::has($cacheKey)) {
+            Log::info($loggingPrefix . 'Redis cache has the passed in key of ' . $cacheKey . '. Forgetting this data to update it on the next select');
             Cache::forget($cacheKey);
         }
+        Log::info($loggingPrefix . 'Returning the newly created row');
         return $row;
     }
 
@@ -156,12 +178,16 @@ class BaseModel extends Model
      */
     public function UpdateQuery(array $query, array $newData, string $cacheKey = '')
     {
+        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         $cacheKey = $this->normaliseCacheKey($cacheKey);
+        Log::info($loggingPrefix . 'Updating ' . $this->table . 'with the query and new data:', [$query, $newData]);
         $result = DB::table($this->table)->where($query)->update($newData);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+            Log::info($loggingPrefix . 'Redis cache has key of ' . $cacheKey . '. Updating the cache with the result:', [$result]);
             $row = DB::table($this->table)->where($query)->first();
             Cache::put($cacheKey, $row, 3600);
         }
+        Log::debug($loggingPrefix . 'Query has a successful update: ' . $result === 1 ? true : false);
         return $result === 1 ? true : false;
     }
 
@@ -173,10 +199,15 @@ class BaseModel extends Model
      */
     public function DeleteQuery(array $query, string $cacheKey = '')
     {
+        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         $cacheKey = $this->normaliseCacheKey($cacheKey);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+            Log::info($loggingPrefix . 'Cache has key of ' . $cacheKey . '. Removing this key');
             Cache::forget($cacheKey);
         }
-        return DB::table($this->table)->where($query)->delete();
+        $result = DB::table($this->table)->where($query)->delete();
+        $success = $result === 1 || $result === true ? true : false;
+        Log::info($loggingPrefix . 'Deletion on table ' . $this->table . ' with the following has a success of: ' . $success, $query);
+        return $success;
     }
 }

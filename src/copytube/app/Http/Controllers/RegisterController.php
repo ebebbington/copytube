@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\UserModel;
 
 use http\Client\Curl\User;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +22,11 @@ class RegisterController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     public function submit(Request $request)
     {
+        $loggingPrefix = "[RegisterController - ".__FUNCTION__.'] ';
         // check its an ajax call
         if ($request->ajax() === false) {
             Log::debug('Request is not an ajax call');
@@ -96,6 +99,7 @@ class RegisterController extends Controller
      */
     public function index()
     {
+        $loggingPrefix = "[RegisterController - ".__FUNCTION__.'] ';
       return View::make('register')->with('title', 'Register');
     }
 }

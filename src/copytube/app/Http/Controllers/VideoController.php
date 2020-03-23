@@ -19,6 +19,7 @@ class VideoController extends Controller
 {
     public function postComment (Request $request)
     {
+        $loggingPrefix = "[VideoController - ".__FUNCTION__.'] ';
         // check its an ajax call
         if ($request->ajax() === false) {
             Log::debug('Request is not an ajax call');
@@ -73,6 +74,7 @@ class VideoController extends Controller
 
     public function getAllVideoTitles (Request $request)
     {
+        $loggingPrefix = "[VideoController - ".__FUNCTION__.'] ';
         $title = $request->input('title');
         $Videos = new VideosModel;
         $query = [
