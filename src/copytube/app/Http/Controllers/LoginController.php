@@ -30,13 +30,13 @@ class LoginController extends Controller
             'password' => $password
         ];
         // Get user
-        $data = [
-            'query' => ['email_address' => $email],
-            'selectOne' => true,
-            'cacheKey' => 'db:users:email_address='.$email
+        $query = [
+            'where' => "email_address = '$email'",
+            'limit' => 1
         ];
+        $cacheKey = 'db:users:email_address='.$email;
         $User = new UserModel;
-        $User->SelectQuery($data);
+        $User->SelectQuery($query, $cacheKey);
         // Disable their account if no login attempts are left
         if ($User->login_attempts === 0) {
             $recoverToken = Str::random(32);

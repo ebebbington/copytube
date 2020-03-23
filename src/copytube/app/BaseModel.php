@@ -50,113 +50,52 @@ class BaseModel extends Model
     }
 
     /**
-     * SELECT queries
+     * @method SelectQuery
      *
-     * Will get all results based on the where clauses in the params and
-     * the calling classes table name
+     * @description
+     * Can handle any GET/SELECT database queries
      *
-     * Should the result only be one, it will return a single array that can
-     * be used like such: $result->id
-     *
-     * Should t retrieve multiple rows, it will return that array
-     * e.g. $result[0]->name; $result[3]->name;
-     *
-     * @example
-     * // Get a single record
-     * $data = [
-     *  'query' => ['name' => 'Edward'],
-     *  'selectOne' => true,
-     * ]
-     * $result = $SomeModel->Select($data); // {...} or false
-     * // Many records
-     * $data = [
-     *  'query' => ['username' => 'edward'],
-     *  'selectOne' => false,
-     *  'count' => 102
-     * ]
-     * $result = $SomeModel->Select($data);
-     * // Get all data
-     * $data = [
-     *  'query' => [],
-     *  'selectOne' => false,
-     *  'count' => null
-     * ]
-     * $result = $SomeModel->Select($data) // [[[...]], [{...}]]
-     * // Use conditionals
-     * $data = [
-     *  'query' => 'name',
-     *  'conditionalOperator' => '!=',
-     *  'conditionalValue' => 'edward',
-     *  'count' => 102,
-     *  'selectOne' => false
-     * ]
-     * $result = $SomeModel->Select('title', false, 0, '!=', 'Something More')
-     *
-     * @param array|string $data Can be a key value pair for data to find, or a string if used with conditionals, e.g. ('title', $first = false, $limit = 0, $operator = '!=', $value = 'username' )
-     * @param boolean Find a single instance? Defaults to true
+     * @param array $query Contains the required data to run the query you want.                    Required.
+     *   $data = [
+     *     'query'            =>  (string) Where condition. Defaults to having none (id != -1)
+     *     'limit'            =>  (int) If 1 returns an object. If -1 gets all. If > 1 gets many.   Required.
+     *     'orderByColumn'    =>  (string) Must be used with `orderByDirection`. Defaults to `id`
+     *     'orderByDirection' =>  (string) Must be used with above. Defaults to 'ASC'
+     *   ]
+     * @param string $cacheKey  Gets db data by key else creates the key data.                      Optional.
      *
      * @return bool|array|object False when no data found, singular object if one result, array of objects when more than 1
+     *
+     * @example
+     * $where = "name = '$name' and age != 200"; // or omit this property
+     * $limit = 1; // -1 = all (array), 1 = 1 (object), >1 = many (array)
+     * $orderBy = [
+     *   'column' => date, // defaults to id
+     *   'direction' => 'ASC' //defaults to ASC. Supported: ASC, DESC
+     * ];
+     * $query = ['where' => $where, 'limit' => $limit, 'orderBy' => $orderBy];
+     * $cacheKey = 'db:users:name=edward&age!=200&limit=1';
+     * $SomeModel->SelectQuery($query, $cacheKey);
      */
-    public function SelectQuery (array $data = [], bool $first = true, int $limit = 0)
+    public function SelectQuery (array $query, string $cacheKey = '')
     {
-      $query = $data['query'] ?? [];
-      $conditionalOperator = $data['conditionalOperator'] ?? '';
-      $conditionalValue = $data['conditionalValue'] ?? '';
-      $count = $data['count'] ?? null;
-      $selectOne = $data['selectOne'] ?? true;
-      $orderByColumn = $data['orderBy']['column'] ?? 'id';
-      $orderByDirection = $data['orderBy']['direction'] ?? 'ASC';
-      $cacheKey = $data['cacheKey'] ?? null;
+      $where = $query['where'] ?? 'id != -1';
+      $limit = $query['limit'];
+      $orderByColumn = $query['orderBy']['column'] ?? 'id';
+      $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
       // If the cached data already exists with the given key then return that instead
       if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
           Log::debug('cache has key of ' . $cacheKey . '. Returning this data instead');
           return Cache::get($cacheKey);
       }
-      $passedInData = [
-        'query' => [
-          'name' => 'edward'
-        ],
-        'conditionalOperator' => '!=',
-        'conditionalValue' => 'hello',
-        'count' => 5,
-        'selectOne' => true,
-        'orderBy' => ['column' => 'id', 'direction' => 'ASC'],
-        'cacheKey' => 'some key' // e.g. on home controller for getting dynamic video: cacheKey = 'videos:something_more' or 'videos:something_more,iceland'
-      ];
-      // Get a single record if requested
-      if ($selectOne) {
-        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->first();
-        if (empty($result))
+        Log::debug('Running a SELECT query where ' . $query['where'] . ', with a limit of ' . $query['limit'] . '. Ordering ' .$orderByColumn . ' by ' . $orderByDirection);
+        $result = DB::table($this->table)->whereRaw($where)->orderBy($orderByColumn, $orderByDirection)->take($limit)->get();
+      // When asking for 1 record, return a single object as they dont expect an array
+      if ($limit === 1 && !empty($result))
+          $result = $result[0];
+      if (empty($result) || !isset($result))
           return false;
-        if ($cacheKey && !empty($cacheKey)) {
-            Log::debug('Going to save the selectOne db result to the key of '.$cacheKey.'. We will get the cached data next time around');
-            Cache::put($cacheKey, $result, 3600);
-        }
-        $this->populate($result);
-        return $result;
-      }
-      // Get all by the count limiter
-      if ($selectOne === false && $count > 1) {
-        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->take($count)->get();
-        if (empty($result))
-            return false;
-        if ($cacheKey && !empty($cacheKey)) {
-            Log::debug('Going to save the selectMany db result to the key of ' . $cacheKey . '. We will get this nex ttime around');
-            Cache::put($cacheKey, $result, 3600);
-        }
-        return $result; // [{...}, {...}]
-      }
-      // Get all if count is undefined
-      if ($selectOne === false && empty($count)) {
-        $result = DB::table($this->table)->where($query, $conditionalOperator, $conditionalValue)->orderBy($orderByColumn, $orderByDirection)->get();
-        if (empty($result))
-            return false;
-        if ($cacheKey && !empty($cacheKey)) {
-            Log::debug('Going to save the selectAll db result to the key of ' . $cacheKey . '. We will get this nex ttime around');
-            Cache::put($cacheKey, $result, 3600);
-        }
-        return $result; // [{...}, {...}]
-      }
+      return $result;
     }
 
     /**

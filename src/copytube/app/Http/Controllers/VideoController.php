@@ -44,11 +44,11 @@ class VideoController extends Controller
 
         // check the video actually exist
         $Videos = new VideosModel;
-        $data = [
-            'query' => ['title' => $videoPostedOn],
-            'selectOne' => true
+        $query = [
+            'where' => "title = '$videoPostedOn'",
+            'limit' => 1
         ];
-        $foundVideo = $Videos->SelectQuery($data);
+        $foundVideo = $Videos->SelectQuery($query);
         if (empty($foundVideo)) {
             Log::debug('Video title or user does not exist');
             return reponse([
@@ -79,12 +79,11 @@ class VideoController extends Controller
     {
         $title = $request->input('title');
         $Videos = new VideosModel;
-        $data = [
-            'query' => [],
-            'selectOne' => false,
-            'cacheKey' => 'db:videos:all'
+        $query = [
+            'limit' => -1,
         ];
-        $videos = $Videos->SelectQuery($data);
+        $cacheKey = 'db:videos:all';
+        $videos = $Videos->SelectQuery($query, $cacheKey);
         $matchingTitles = [];
         foreach ($videos as $video) {
             if (strpos(strtolower($video->title), strtolower($title)) !== false) {
