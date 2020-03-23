@@ -84,6 +84,7 @@ class BaseModel extends Model
       $orderByColumn = $query['orderBy']['column'] ?? 'id';
       $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
       // If the cached data already exists with the given key then return that instead
+        Log::debug('Cache key passed in to SelectQuery is: ' . $cacheKey);
       if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
           Log::debug('cache has key of ' . $cacheKey . '. Returning this data instead');
           return Cache::get($cacheKey);
@@ -95,6 +96,9 @@ class BaseModel extends Model
           $result = $result[0];
       if (empty($result) || !isset($result))
           return false;
+      // Cache the result
+        if ($cacheKey && !empty($cacheKey) && isset($cacheKey))
+            Cache::put($cacheKey, $result, 3600);
       return $result;
     }
 
