@@ -95,4 +95,30 @@ class CommentsModel extends BaseModel
         }
         return $commentList;
     }
+
+    /**
+     * @method getAllByVideoTitle
+     *
+     * @description
+     * Gets al comments that match the passed in title. Also formats the dates for you
+     *
+     * @param string $videoTitle
+     *
+     * @return array|bool|object
+     *
+     * @example
+     * $comments = $CommentsModel->getAllByVideoTitle('Something More'); array or false
+     */
+    public function getAllByVideoTitle (string $videoTitle)
+    {
+        $query = [
+            'where' => "video_posted_on = '$videoTitle'",
+            'limit' => -1,
+            'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
+        ];
+        $cacheKey = "db:comments:videoTitle=".$videoTitle;
+        $comments = $this->SelectQuery($query, $cacheKey);
+        $comments = $this->formatDates($comments);
+        return $comments;
+    }
 }

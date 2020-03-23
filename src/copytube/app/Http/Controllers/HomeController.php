@@ -79,15 +79,8 @@ class HomeController extends Controller
 
         // Get the comments for the main video
         $Comments = new CommentsModel;
-        $query = [
-            'where' => "video_posted_on = '$mainVideo->title'",
-            'limit' => -1,
-            'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
-        ];
-        $cacheKey = "db:comments:videoTitle=".$mainVideo->title;
-        $comments = $Comments->SelectQuery($query, $cacheKey);
-        Log::info($loggingPrefix . 'Retrieved comments where '.$query['where'].', limit of '.$query['limit'].', length is: '.sizeof($comments));
-        $comments = $Comments->formatDates($comments);
+        $comments = $Comments->SelectQuery($videoRequested);
+        Log::info($loggingPrefix . 'Retrieved comments where');
 
         $renderData = [
             'title' => 'Home',
