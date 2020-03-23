@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -209,5 +210,51 @@ class UserModel extends BaseModel
         ];
         $cacheKey = 'db:users:email_address='.$email;
         $this->UpdateQuery($query, $updateData, $cacheKey);
+    }
+
+    public function getByToken ($token)
+    {
+        $query = [
+            'where' => "recover_token = '$token'",
+            'limit' => 1
+        ];
+        $cacheKey = "db:users:recover_token=$token'";
+        $user = $this->SelectQuery($query, $cacheKey);
+        return $user;
+    }
+
+    /**
+     * @method updateAfterRecover
+     *
+     * @description
+     * Update the users data after recovering the account
+     *
+     * @param string $email
+     * @param string $rawPassword
+     */
+    public function updateAfterRecover (string $email, string $rawPassword)
+    {
+        $query = [
+            'email_address' => $email
+        ];
+        $updateData = [
+            'password' => $this->generateHash($rawPassword),
+            'login_attempts' => 3,
+            'recover_token' => null
+        ];
+        $this->UpdateQuery($query, $updateData);
+    }
+
+    /**
+     * @param $rawPassword
+     *
+     * @return string
+     */
+    private function generateHash ($rawPassword)
+    {
+        $hash = Hash::make($rawPassword, [
+            'rounds' => 12,
+        ]);
+        return $hash;
     }
 }
