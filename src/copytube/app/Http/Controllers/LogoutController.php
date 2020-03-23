@@ -19,7 +19,7 @@ class LogoutController extends Controller
 {
     public function logout (Request $request)
     {
-
+        $loggingPrefix = "[LogoutController - ".__FUNCTION__.'] ';
         // update db
         $user = Auth::user();
         $User = new UserModel;

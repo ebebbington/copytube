@@ -87,6 +87,7 @@ class CommentsModel extends BaseModel
      */
     public function formatDates (object $commentList)
     {
+        $loggingPrefix = "[CommentsModel - ".__FUNCTION__.'] ';
         for ($i = 0; $i < sizeof($commentList); $i++) {
             list($year, $month, $day) = explode('-', $commentList[$i]->date_posted);
             $formattedDate = $day . '/' . $month . '/' . $year;

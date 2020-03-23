@@ -20,6 +20,7 @@ class RecoverController extends Controller
 {
     public function index (Request $request)
     {
+        $loggingPrefix = "[RecoverController - ".__FUNCTION__.'] ';
         $token = $request->query('token');
         $User = new UserModel;
         $query = [
@@ -34,6 +35,7 @@ class RecoverController extends Controller
 
     public function post (Request $request)
     {
+        $loggingPrefix = "[RecoverController - ".__FUNCTION__.'] ';
         // get data
         $token = $request->session()->get('recoverToken');
         $email = $request->input('email');

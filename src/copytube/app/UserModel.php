@@ -101,13 +101,15 @@ class UserModel extends BaseModel
      */
     public static function exists(string $email): bool
     {
+        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
         $result = UserModel::where('email_address', $email)->first();
-
+        Log::info($loggingPrefix . 'User exists: ' . $result ? true : false);
         return $result ? true : false;
     }
 
     public function logout (int $id): void
     {
+        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
         session(['user' => null]);
         $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);
         $SessionModel = new SessionModel;

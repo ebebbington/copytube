@@ -20,8 +20,11 @@ use Cookie;
 
 class HomeController extends Controller
 {
+
     public function index (Request $request)
     {
+        $loggingPrefix = "[HomeController - ".__FUNCTION__.'] ';
+        Log::info($loggingPrefix);
         // Authenticate the user
 
         // Old code before adding laravel auth
@@ -38,7 +41,7 @@ class HomeController extends Controller
 //        }
 
         $user = Auth::user();
-
+        Log::info($loggingPrefix . 'Retrieved the user from Auth');
         // Old code before adding laravel auth
 //        $User = new UserModel;
 //        $data['query'] = ['id' => $Session->user_id];
@@ -65,12 +68,14 @@ class HomeController extends Controller
         $mainVideo = $VideosModel->SelectQuery($query, $cacheKey);
         // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
+            Log::error($loggingPrefix . "Requested main video of $videoRequested was not found");
             $errorCode = 404;
             $errorData = ['title' => $errorCode, 'errorCode' => $errorCode,
                 'errorMessage' => 'No video was found matching `'.$videoRequested . '`'
             ];
             return response()->view('errors.404', $errorData)->setStatusCode($errorCode);
         }
+        Log::info($loggingPrefix . 'Successfully retrieved a main video of '.$videoRequested.':', [$mainVideo]);
 
         // Get rabbit hole videos that aren't main video
         $query = [
@@ -79,6 +84,8 @@ class HomeController extends Controller
         ];
         $cacheKey = 'db:videos:title!='.$videoRequested.'&limit=2';
         $rabbitHoleVideos = $VideosModel->SelectQuery($query, $cacheKey);
+        Log::info($loggingPrefix . "Retrieved rabbit hole videos where ".$query['where'].' and limit is '.$query['limit'].':',[$rabbitHoleVideos]);
+
         // Get the comments for the main video
         $Comments = new CommentsModel;
         $query = [
@@ -88,13 +95,22 @@ class HomeController extends Controller
         ];
         $cacheKey = "db:comments:videoTitle=".$mainVideo->title;
         $comments = $Comments->SelectQuery($query, $cacheKey);
+        Log::info($loggingPrefix . 'Retrieved comments where '.$query['where'].', limit of '.$query['limit'].', length is: '.sizeof($comments));
         $comments = $Comments->formatDates($comments);
 
-        return View::make('home')
-            ->with('title', 'Home')
-            ->with('username', $user->username)
-            ->with('mainVideo', $mainVideo)
-            ->with('rabbitHoleVideos', $rabbitHoleVideos)
-            ->with('comments', $comments);
+        $renderData = [
+            'title' => 'Home',
+            'username' => $user->username,
+            'mainVideo' => $mainVideo,
+            'rabbitHoleVideos' => $rabbitHoleVideos,
+            'comments' => $comments
+        ];
+        Log::info($loggingPrefix . 'Return view of `home` with the following data:', $renderData);
+        return View::make($renderData['title'])
+            ->with('title', $renderData['title'])
+            ->with('username', $renderData['username'])
+            ->with('mainVideo', $renderData['mainVideo'])
+            ->with('rabbitHoleVideos', $renderData['rabbitHoleVideos'])
+            ->with('comments', $renderData['comments']);
     }
 }

@@ -22,6 +22,8 @@ class LoginController extends Controller
 
     public function post (Request $request)
     {
+        $loggingPrefix = "[LoginController - ".__FUNCTION__.'] ';
+        Log::debug($loggingPrefix . 'Return view of `chat`');
         // get data
         $email = $request->input('email');
         $password = $request->input('password');
@@ -84,6 +86,7 @@ class LoginController extends Controller
 
     public function get (Request $request)
     {
+        $loggingPrefix = "[LoginController - ".__FUNCTION__.'] ';
         // session(['hi' => 'hello']);
         // $var = 'hi';
         // echo $var;
