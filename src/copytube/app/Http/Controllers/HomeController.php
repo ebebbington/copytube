@@ -69,11 +69,12 @@ class HomeController extends Controller
         // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
             Log::error($loggingPrefix . "Requested main video of $videoRequested was not found");
-            $errorCode = 404;
-            $errorData = ['title' => $errorCode, 'errorCode' => $errorCode,
-                'errorMessage' => 'No video was found matching `'.$videoRequested . '`'
-            ];
-            return response()->view('errors.404', $errorData)->setStatusCode($errorCode);
+//            $errorCode = 404;
+//            $errorData = ['title' => $errorCode, 'errorCode' => $errorCode,
+//                'errorMessage' => 'No video was found matching `'.$videoRequested . '`'
+//            ];
+//            return response()->view('errors.404', $errorData)->setStatusCode($errorCode);
+            abort(404);
         }
         Log::info($loggingPrefix . 'Successfully retrieved a main video of '.$videoRequested.':', [$mainVideo]);
 

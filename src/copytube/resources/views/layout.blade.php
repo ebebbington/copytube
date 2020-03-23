@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <title>{{ $title }}</title>
+        @if (isset($title))
+            <title>{{ $title }}</title>
+        @endif
         <meta charset="utf-8">
         <link rel="icon" href="img/copytube_logo.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">

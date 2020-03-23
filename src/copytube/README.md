@@ -199,6 +199,13 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 
 # Information
 
+## 4xx|5xx Status
+
+Simply use the following code to do so: `abort($statusCode)`. I have set up a 404 page that laravel will
+automatically detect so when doing `abort(404);` this is all handled. The 404 page has a hard coded title of 404,
+and the page uses the default message of `Page Not Found`. If you wish to
+specify a custom message, just use `abort(404, 'Woah cant find it mate!');`.
+
 ## Auth / Users
 
 Authentication using Laravel is implemented. How it works is, certain routes are using `->middleware('auth')`, this checks if `Auth::check()` is true. If it
