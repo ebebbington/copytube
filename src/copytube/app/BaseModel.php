@@ -85,16 +85,16 @@ class BaseModel extends Model
      */
     public function SelectQuery(array $query, string $cacheKey = '')
     {
-        $where = $query['where'] ?? 'id != -1';
-        $limit = $query['limit'];
-        $orderByColumn = $query['orderBy']['column'] ?? 'id';
-        $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
         $cacheKey = $this->normaliseCacheKey($cacheKey);
         // If the cached data already exists with the given key then return that instead
         Log::debug('Cache key passed in to SelectQuery is: ' . $cacheKey);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
+        $where = $query['where'] ?? 'id != -1';
+        $limit = $query['limit'];
+        $orderByColumn = $query['orderBy']['column'] ?? 'id';
+        $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
         Log::debug('Running a SELECT query where ' . $query['where'] . ', with a limit of ' . $query['limit']
             . '. Ordering ' . $orderByColumn . ' by ' . $orderByDirection);
         $result = DB::table($this->table)->whereRaw($where)->orderBy($orderByColumn, $orderByDirection)->take($limit)
@@ -114,7 +114,11 @@ class BaseModel extends Model
     }
 
     /**
-     * Add data to a database
+     * @method CreateQuery
+     *
+     * @description
+     * Add data to a database. Will also flush the cache key if it exists so on a similar select,
+     * will save the new data
      *
      * @param array  $data     Key value pairs of data to insert
      * @param string $cacheKey The key of the cache to update, only applies if updating an array
@@ -127,14 +131,10 @@ class BaseModel extends Model
      */
     public function CreateQuery(array $data, string $cacheKey = '')
     {
-        Log::debug('Going to run a create query using: ');
+        $cacheKey = $this->normaliseCacheKey($cacheKey);
         $row = $this->create($data);
         if (!empty($cacheKey) && Cache::has($cacheKey)) {
-            Log::debug('Cache has the key of ' . $cacheKey . ' inside create query');
-            // Push a new item to the array
-            $cacheData = Cache::get($cacheKey);
-            $cacheData[] = $row;
-            Cache::put($cacheKey, $cacheData, 3600);
+            Cache::forget($cacheKey);
         }
         return $row;
     }

@@ -79,7 +79,6 @@ class HomeController extends Controller
         ];
         $cacheKey = 'db:videos:title!='.$videoRequested.'&limit=2';
         $rabbitHoleVideos = $VideosModel->SelectQuery($query, $cacheKey);
-
         // Get the comments for the main video
         $Comments = new CommentsModel;
         $query = [
@@ -89,7 +88,6 @@ class HomeController extends Controller
         ];
         $cacheKey = "db:comments:videoTitle=".$mainVideo->title;
         $comments = $Comments->SelectQuery($query, $cacheKey);
-
         $comments = $Comments->formatDates($comments);
 
         return View::make('home')
