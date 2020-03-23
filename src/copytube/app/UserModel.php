@@ -4,11 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\BaseModel;
+use Illuminate\Support\Str;
 
 class UserModel extends BaseModel
 {
@@ -114,5 +116,145 @@ class UserModel extends BaseModel
         $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);
         $SessionModel = new SessionModel;
         $SessionModel->DeleteQuery(['user_id' => $id]);
+    }
+
+    /**
+     * @method getByEmail
+     *
+     * @description
+     * Get a user from the data base by the email. This should only be used when the user isn't authed, e.g. logging in
+     *
+     * @param string $email
+     *
+     * @return array|bool|object
+     *
+     * @example
+     * $user = $UserModel->getByEmail('edward.bebbington...')' // object or false
+     */
+    public function getByEmail (string $email)
+    {
+        $query = [
+            'where' => "email_address = '$email'",
+            'limit' => 1
+        ];
+        $cacheKey = 'db:users:email_address='.$email;
+        $user = $this->SelectQuery($query, $cacheKey);
+        return $user;
+    }
+
+    /**
+     * @method lockAccount
+     *
+     * @description
+     * Lock the users account
+     *
+     * @param mixed  $id    Users id
+     * @param string $email Users email
+     *
+     * @return bool|string
+     *
+     * @example
+     * $token = $UserModel->lockAccount($user->id, $user->email_address); // token if success, false if failed
+     */
+    public function lockAccount ($id, string $email)
+    {
+        $recoverToken = Str::random(32);
+        $success = $this->UpdateQuery(['id' => $id], ['recover_token' => $recoverToken], 'db:users:email_address='.$email);
+        return $success === true ? $recoverToken : false;
+    }
+
+    /**
+     * @method updateLoggedIn
+     *
+     * @description
+     * Update the users logged in value. 1 = not logged in, 0 = logged in
+     *
+     * @param int    $loggedInValue
+     * @param string $email
+     *
+     * @return bool success
+     *
+     * @example
+     * // Log user in
+     * $UserModel->updateLoggedIn(0, $user->email);
+     */
+    public function updateLoggedIn (int $loggedInValue, string $email)
+    {
+        $query = [
+            'email_address' => $email
+        ];
+        $updateData = [
+            'logged_in' => $loggedInValue
+        ];
+        $cacheKey = 'db:users:email_address='.$email;
+        $updated = $this->UpdateQuery($query, $updateData, $cacheKey);
+        return $updated;
+    }
+
+    /**
+     * @method updateLoginAttempts
+     *
+     * @description
+     * Update the users login attempts. 3 is max, 0 means account is to be locked
+     *
+     * @param string $email
+     * @param int    $loginAttempts
+     */
+    public function updateLoginAttempts (string $email, int $loginAttempts)
+    {
+        $query = [
+            'email_address' => $email
+        ];
+        $updateData = [
+            'login_attempts' => $loginAttempts
+        ];
+        $cacheKey = 'db:users:email_address='.$email;
+        $this->UpdateQuery($query, $updateData, $cacheKey);
+    }
+
+    public function getByToken ($token)
+    {
+        $query = [
+            'where' => "recover_token = '$token'",
+            'limit' => 1
+        ];
+        $cacheKey = "db:users:recover_token=$token'";
+        $user = $this->SelectQuery($query, $cacheKey);
+        return $user;
+    }
+
+    /**
+     * @method updateAfterRecover
+     *
+     * @description
+     * Update the users data after recovering the account
+     *
+     * @param string $email
+     * @param string $rawPassword
+     */
+    public function updateAfterRecover (string $email, string $rawPassword)
+    {
+        $query = [
+            'email_address' => $email
+        ];
+        $updateData = [
+            'password' => $this->generateHash($rawPassword),
+            'login_attempts' => 3,
+            'recover_token' => null
+        ];
+        $this->UpdateQuery($query, $updateData);
+    }
+
+    /**
+     * @param $rawPassword
+     *
+     * @return string
+     */
+    private function generateHash ($rawPassword)
+    {
+        $hash = Hash::make($rawPassword, [
+            'rounds' => 12,
+        ]);
+        return $hash;
     }
 }

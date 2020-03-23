@@ -32,22 +32,21 @@ class LoginController extends Controller
             'password' => $password
         ];
         // Get user
-        $query = [
-            'where' => "email_address = '$email'",
-            'limit' => 1
-        ];
-        $cacheKey = 'db:users:email_address='.$email;
-        $User = new UserModel;
-        $User->SelectQuery($query, $cacheKey);
+        $UserModel = new UserModel;
+        $user = $UserModel->getByEmail($email);
         // Disable their account if no login attempts are left
-        if ($User->login_attempts === 0) {
-            $recoverToken = Str::random(32);
-            $User->recover_token = $recoverToken;
-            $User->UpdateQuery(['id' => $User->id], ['recover_token' => $recoverToken], 'db:users:email_address='.$email);
+        if ($user->login_attempts === 0) {
+            $token = $UserModel->lockAccount($user->id, $email);
+            if (!$token) {
+                return response([
+                    'success' => false,
+                    'message' => 'Failed to lock your account'
+                ], 500);
+            }
             $message
                 = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token='
-                . $recoverToken;
-            $Mail = new Mail($User->email_address, $User->username, 'Account Locked', $message);
+                . $token;
+            $Mail = new Mail($user->email_address, $user->username, 'Account Locked', $message);
             $Mail->send();
             return response([
                 'success' => false,
@@ -57,7 +56,7 @@ class LoginController extends Controller
         // Auth
         if (Auth::attempt($credentials)) {
             // Set the user to logged in
-            $updated = $User->UpdateQuery(['email_address' => $email], ['logged_in' => 0], 'db:users:email_address='.$email);
+            $updated = $UserModel->updateLoggedIn(0, $email);
             if ($updated === false) {
                 Log::debug('Failed to update the model when updating logged_in');
                 return response([
@@ -71,11 +70,8 @@ class LoginController extends Controller
             ], 200);
         } else {
             // Reduce login attempts
-            if ($User->login_attempts > 0) {
-                $User->UpdateQuery(['email_address' => $credentials['email_address']],
-                    ['login_attempts' => $User->login_attempts - 1],
-                    'db:users:email_address='.$credentials['email_address']
-                );
+            if ($user->login_attempts > 0) {
+                $UserModel->updateLoginAttempts($email, $user->login_attempts -1);
             }
             return response([
                 'success' => false,

@@ -67,4 +67,53 @@ class VideosModel extends BaseModel
      * @var array
      */
     protected $rules = [];
+
+    /**
+     * @method getVideoByTitle
+     *
+     * @param string $videoTitle Title if the video to get
+     *
+     * @return array|bool|object
+     *
+     * @example
+     * $video = $VideosModel->getVideoByTitle('Something More'); // object or false
+     */
+    public function getVideoByTitle (string $videoTitle)
+    {
+        $loggingPrefix = '[VideosModel -' . __FUNCTION__ . '] ';
+        Log::info($loggingPrefix . 'Getting video by ' . $videoTitle);
+        $query = [
+            'where' => "title = '$videoTitle'",
+            'limit' => 1,
+        ];
+        $cacheKey = 'db:videos:title=' . $videoTitle;
+        $video = $this->SelectQuery($query, $cacheKey);
+        return $video;
+    }
+
+    /**
+     * @method getRabbitHoleVideos
+     *
+     * @description
+     * Responsible for getting all rabbit hole videos. Gets 2 where title doesnt equal the one passed in
+     *
+     * @param string $videoToIgnore Title of video to ignore from selecting
+     *
+     * @return array|bool|object
+     *
+     * @example
+     * $videos = $VideosModel->getRabbitHoleVideos('Lava Sample'); // array if > 1, object is 1, false if none
+     */
+    public function getRabbitHoleVideos (string $videoToIgnore)
+    {
+        $loggingPrefix = '[VideosModel -' . __FUNCTION__ . '] ';
+        Log::info($loggingPrefix . 'Getting videos by title !== ' . $videoToIgnore);
+        $query = [
+            'where' => "title != '$videoToIgnore'",
+            'limit' => 2
+        ];
+        $cacheKey = 'db:videos:title!='.$videoToIgnore.'&limit=2';
+        $rabbitHoleVideos = $this->SelectQuery($query, $cacheKey);
+        return $rabbitHoleVideos;
+    }
 }

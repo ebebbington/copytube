@@ -60,12 +60,7 @@ class HomeController extends Controller
         // Get the videos
         $videoRequested = $request->query('requestedVideo') ?? 'Something More'; // default to some video if we are routing to /home
         $VideosModel = new VideosModel;
-        $query = [
-            'where' => "title = '$videoRequested'",
-            'limit' => 1,
-        ];
-        $cacheKey = 'db:videos:title=' . $videoRequested;
-        $mainVideo = $VideosModel->SelectQuery($query, $cacheKey);
+        $mainVideo = $VideosModel->getVideoByTitle($videoRequested);
         // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
             Log::error($loggingPrefix . "Requested main video of $videoRequested was not found");
@@ -79,25 +74,13 @@ class HomeController extends Controller
         Log::info($loggingPrefix . 'Successfully retrieved a main video of '.$videoRequested.':', [$mainVideo]);
 
         // Get rabbit hole videos that aren't main video
-        $query = [
-            'where' => "title != '$videoRequested'",
-            'limit' => 2
-        ];
-        $cacheKey = 'db:videos:title!='.$videoRequested.'&limit=2';
-        $rabbitHoleVideos = $VideosModel->SelectQuery($query, $cacheKey);
-        Log::info($loggingPrefix . "Retrieved rabbit hole videos where ".$query['where'].' and limit is '.$query['limit'].':',[$rabbitHoleVideos]);
+        $rabbitHoleVideos = $VideosModel->getRabbitHoleVideos($videoRequested);
+        Log::info($loggingPrefix . "Retrieved rabbit hole videos");
 
         // Get the comments for the main video
         $Comments = new CommentsModel;
-        $query = [
-            'where' => "video_posted_on = '$mainVideo->title'",
-            'limit' => -1,
-            'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
-        ];
-        $cacheKey = "db:comments:videoTitle=".$mainVideo->title;
-        $comments = $Comments->SelectQuery($query, $cacheKey);
-        Log::info($loggingPrefix . 'Retrieved comments where '.$query['where'].', limit of '.$query['limit'].', length is: '.sizeof($comments));
-        $comments = $Comments->formatDates($comments);
+        $comments = $Comments->getAllByVideoTitle($videoRequested);
+        Log::info($loggingPrefix . 'Retrieved comments where');
 
         $renderData = [
             'title' => 'Home',
