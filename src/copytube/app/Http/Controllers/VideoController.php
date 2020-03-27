@@ -63,6 +63,7 @@ class VideoController extends Controller
         // TODO :: Validate
         $row = $Comments->createComment(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
         dispatch(new ProcessNewComment($row));
+        // TODO :: Just send back the comment data and render it there. Also format the date, and makes it scalable for when i want to do ui updates and add images
         $resData = [
             'success' => true,
             'data' => $username
