@@ -73,6 +73,20 @@ services:
     networks:
       - copytube-network
 
+  realtime:
+    container_name: copytube_realtime
+    build:
+      context: .
+      dockerfile: .docker/drash.dockerfile
+    volumes:
+      - ./src/realtime:/var/www/realtime
+    ports:
+      - "9008:9008"
+    working_dir: /var/www/realtime
+    command: bash -c "deno --allow-net --allow-read --allow-run --allow-env --allow-write app.ts"
+    networks:
+      - copytube-network
+
 #  asterisk:
 #    container_name: copytube_asterisk
 #    image: hibou/asterisk:14
