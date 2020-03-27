@@ -28,3 +28,5 @@ export {
     WebSocket,
     append
 } from "https://deno.land/std@v0.35.0/ws/mod.ts";
+
+export { connect } from "https://denopkg.com/keroxp/deno-redis/redis.ts";
