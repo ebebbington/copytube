@@ -27,6 +27,7 @@
         "@types/react-dom": "^16.9.4",
         "@types/socket.io-client": "^1.4.32",
         "commonjs": "0.0.1",
+        "laravel-echo": "^1.6.1",
         "nodejs": "0.0.0",
         "peer": "^0.2.10",
         "react-dom": "^16.12.0",
