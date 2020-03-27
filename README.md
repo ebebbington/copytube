@@ -17,6 +17,14 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 * Node
 
     * SocketIO
+    
+# Features
+
+* Database Caching inside PHP using Redis
+
+* Realtime SocketIO chat application using Node
+
+* Laravel Authorisation
 
 # Components
 
