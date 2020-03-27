@@ -125,6 +125,6 @@ class CommentsModel extends BaseModel
     public function createComment (array $data)
     {
         $cacheKey = "db:comments:videoTitle=" . $data['video_posted_on'];
-        $this->CreateQuery($data, $cacheKey);
+        return $this->CreateQuery($data, $cacheKey);
     }
 }
