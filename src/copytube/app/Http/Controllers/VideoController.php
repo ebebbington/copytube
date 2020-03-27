@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\CommentAdded;
+use App\Jobs\ProcessNewComment;
 use App\UserModel;
 
 use http\Client\Curl\User;
@@ -61,7 +62,7 @@ class VideoController extends Controller
         log::debug('GOING TO CREATE COMMENT WITH CACHE KEY OF: ' . $cacheKey);
         // TODO :: Validate
         $row = $Comments->createComment(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
-        event(new CommentAdded($row));
+        dispatch(new ProcessNewComment($row));
         $resData = [
             'success' => true,
             'data' => $username

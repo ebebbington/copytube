@@ -238,6 +238,16 @@ This is all called by simply doing:
 event(new \App\Events\CommentAdded($comment));
 ```
 
+But to make this asynchronous (we dont need to wait for it to complete), we have to make a queue.
+To do so, we simply do `php artisan make:job JobName`, assign any properties with the passed in data,
+and modify the handle method like we would in the Listener.
+
+So now, instead of calling the event, we call the Job which will then call the event:
+
+```php
+dispatch(new \App\Jobs\ProcessNewComment($row));
+```
+
 See Laravels Events for more information
 
 ## Cheatsheet
