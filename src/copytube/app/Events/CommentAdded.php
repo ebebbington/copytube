@@ -17,6 +17,10 @@ class CommentAdded
 
     public $comment;
 
+    public $type;
+
+    public $channel;
+
     /**
      * Create a new event instance.
      *
@@ -24,8 +28,10 @@ class CommentAdded
      */
     public function __construct($comment)
     {
-        Log::info('[CommentAdded Event - Constructor] Been called. Here\'s the data passed in:');
+        Log::info('[CommentAdded Event - Constructor] Been called.');
         $this->comment = $comment;
+        $this->type = 'new';
+        $this->channel = 'realtime.comments.new';
     }
 
     /**
