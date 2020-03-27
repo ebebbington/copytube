@@ -216,6 +216,30 @@ How we auth users is simple. The User.php file (with the help of me using a user
 table, so when we call `Auth::attempt(['email_address' => ..., 'password' => ...])`, it will do the validation using a related user
 in the users table. This call will also log the user in
 
+## Events / Listeners / Realtime Update Using Redis and Realtime socket
+
+This is implemented by simply (and this applies to anything else regarding scalability) updating `EventServiceProvider`.
+I added the event class and the listener class to the `$listen` property, then using `php artisan event:make` created those classes
+for me. In the event class you then assign a parameter to a property, and once done will be sent off to
+the listener. Then the listener will use the `handle` method with the data assigned above inside of the parameters - here you can write whatever you want,
+but for me I wanted to push it to Redis, for example:
+
+```php
+public function handle(CommentAdded $event)
+{
+    // In the event, we assigned $this->comment, so that is accessible in the event param
+    // You could do $this->name = 'ed', and still do $event->name
+    Redis::publish('realtime.comments.new', json_encode($event->comment));
+}
+```
+
+This is all called by simply doing:
+```php
+event(new \App\Events\CommentAdded($comment));
+```
+
+See Laravels Events for more information
+
 ## Cheatsheet
 
 * Auth
