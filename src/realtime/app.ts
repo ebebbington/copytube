@@ -1,3 +1,9 @@
+/**
+ * Example For Handling on the Client
+ *
+ * socket.onmessage = function (event) { const message = JSON.parse(event.data) }
+ */
+
 import { config, connect, serve } from "./deps.ts";
 import {
     acceptWebSocket,
