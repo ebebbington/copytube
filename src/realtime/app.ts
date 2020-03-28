@@ -1,63 +1,47 @@
-// TODO 4 :: Rework this whole aspect to support the handling of redis connections and sending of socket messages to the client
-import SocketServer from "./server.ts";
-import { connect } from "./deps.ts";
-import { serve } from "https://deno.land/std/http/server.ts";
+import { config, connect, serve } from "./deps.ts";
 import {
     acceptWebSocket,
     isWebSocketCloseEvent,
     isWebSocketPingEvent,
     WebSocket
-} from "https://deno.land/std/ws/mod.ts";
+} from "./deps.ts";
 
-const port = "9008";
+const port = config().PORT;
 const redis = await connect({
-    hostname: "copytube_redis",
-    port: 6379
+    hostname: config().REDIS_HOST,
+    port: parseInt(config().REDIS_PORT)
 });
 let allClients: any = []
-
-// const io = new SocketServer();
-// io.addListener('chatroom1', )
-// io.on('connection', async () => {
-//     console.log('A user connected.');
-//     const clients = io.getClients()
-//     console.log(clients)
-//     Object.keys(clients).forEach((id: string) => {
-//         io.to(id, 'HI FROM SERVER')
-//     })
-// });
-// io.on('chatroom1', function (incomingMessage: any) {
-//     console.log('message from chatroom1')
-//     io.to('chatroom1', incomingMessage);
-// });
-// io.on('disconnect', () => {
-//     console.log('A user disconnected.');
-// });
 
 function sendRedisMessageToSocketClients (message: any) {
     try {
         message = JSON.stringify(message)
     } catch (err) {}
     allClients.forEach((client: any) => {
+        console.info('Emitting socket message to id ' + client.id)
         client.socket.send('Sending message to ' + client.id + ' with data of ' + message)
     })
 }
 async function subscribeToRedis () {
     const channels = ['realtime.comments.new']
     const sub = await redis.subscribe(...channels);
+    console.info('Subscribed to redis and awaiting messages on the following channels:');
+    console.info(channels);
     (async () => {
         for await (const { channel, message } of sub.receive()) {
-            // on message
-            console.log('MESSAGE RECEIEVD FROM CLASS:')
-            console.log(message)
+            console.info('Received a message from redis on the following channel: ' + channel + '. Sending the message to the socket client')
             sendRedisMessageToSocketClients(message)
         }
     })();
 }
+
+// Start subscribing to redis
 await subscribeToRedis()
 
-// Working prototype for sending coket connections
-console.log(`websocket server is running on :${port}`);
+// Blocks the event loop, needs to be at the end
+// Start the websocket server, and with each connection, append to a list of clients
+// And on each disconnect, remove the client from the list
+console.info(`websocket server is running on :${port}`);
 for await (const req of serve(`:${port}`)) {
     const {headers, conn} = req;
     acceptWebSocket({
@@ -66,6 +50,24 @@ for await (const req of serve(`:${port}`)) {
         bufReader: req.r,
         bufWriter: req.w
     }).then(async (sock: WebSocket): Promise<void> => {
+        console.info('New web socket connection with socket id of: ' + conn.rid + '. Adding this connection to the list of clients')
         allClients.push({id: conn.rid, socket: sock})
-    })
+        const it = sock.receive();
+        while (true) {
+            try {
+                const {done, value} = await it.next();
+                if (done) {
+                    console.info('Socket connection disconnected. Removing user from client list')
+                    allClients = allClients.filter((client: any) => client.id !== conn.rid)
+                    break;
+                }
+            } catch (e) {
+                console.error('Failed when trying to remove socket connection on a disconnect. Trying again but here\'s the error:')
+                console.error(e)
+                allClients = allClients.filter((client: any) => client.id !== conn.rid)
+            }
+        }
+    }).catch((err: Error): void => {
+        console.error(`failed to accept websocket: ${err}`);
+    });
 }
