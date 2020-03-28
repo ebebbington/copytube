@@ -16,7 +16,14 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 
 * Node
 
-    * SocketIO
+* SocketIO
+
+* Deno
+    
+* Redis
+
+    * DB Caching
+    * Pub/Sub
     
 # Ports
 
@@ -40,21 +47,51 @@ SQL: 3007
 
 * Laravel Authorisation
 
-# Components
+* Realtime updates using Laravel jobs, Redis and a Deno WebSocket
 
-CopyTube is currently split into 2 applications (with the use of Nginx handling PHP-FPM and passing requests to the PHP container):
+# Containers
+
+CopyTube is currently split into many applications (with the use of Nginx handling PHP-FPM and passing requests to the PHP container):
 
 ## Copytube (Main App)
 
-This is the main application that holds this whole project, such as the views, database querying, PHP files, javascripts etc.
+This is the main application that holds the majority of this project, such as the views, database querying, PHP files, javascripts etc.
+It's the brain essentially.
 
-See the `README.md` for the main app [here](https://github.com/ebebbington/copytube/blob/develop/src/copytube/README.md)
+See the `README.md` for the main app [here](https://github.com/ebebbington/copytube/blob/master/src/copytube/README.md)
 
 ## Socket (Web Socket)
 
-This handles all of our server-side web socket connections. For example, it handles our video chat application at `/chat`.
+This handles the server-side for our WebRTC applications. Currently it is only video chat, but this section
+is responsible for these types of tasks. This is because I want to keep each socket server as simple as possible, because they
+can easily get too overwhelming and hard to manage.
 
-See the `README.md` for the Socket app [here](https://github.com/ebebbington/copytube/blob/develop/src/socket/README.md)
+See the `README.md` for the Socket app [here](https://github.com/ebebbington/copytube/blob/master/src/socket/README.md)
+
+## SQL
+
+This is our database for the application, automatically seeded in the docker process
+
+## Realtime
+
+This is our realtime socket implementation. Similar to the Socket component, but also different in that this
+is responsible for giving realtime updates for users. For example, a new comment for a video is posted. This
+is sent through Redis, the Realtime app listens and retrieves the message, and sends it to the clients of the realtime
+connection.
+
+I should note that although this is a web socket server, it does not receive any events or messages. It only
+sends down what redis brings.
+
+See the `README.md` for the Realtime app [here](https://github.com/ebebbington/copytube/blob/master/src/realtime/README.md)
+
+## Redis
+
+Redis is included inside this application. It is used by Laravel for caching database queries, and to send messages using
+a Pub/Sub architecture to the Realtime app, from the Laravel app to give realtime updates
+
+## Nginx
+
+Our proxy server for handling PHP requests to be passed to the PHP-FPM process, and passes all requests to the PHP container
 
 # Prerequisites
 
@@ -62,7 +99,7 @@ Have Docker installed. This can be for Windows or for Mac - as long as you have 
 
 ## Ports
 
-Make sure ports 9000 and 9002 are open for PHP-FPM and Nginx respectively. As well as port 9009 for the socket server.
+Make sure all the above ports are open
 
 # Run the Project
 
@@ -104,28 +141,6 @@ Finally, go to the website
      
 * Windows
      `127.0.0.1:9002`
-
-# Containers
-
-## Nginx
-
-Our proxy server for handling PHP requests to be passed to the PHP-FPM process, and passes all requests to the PHP container
-
-## PHP-FPM
-
-The PHP container that has PHP already configured
-
-## SQL
-
-Our database container to house the database data
-
-## Socket
-
-Our web socket server build with NodeJS and SocketIO
-
-## Redis
-
-Help with caching request. In the future i intend on using it for a pub/sub
 
 # Built With
 
