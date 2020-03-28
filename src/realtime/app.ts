@@ -1,8 +1,6 @@
 import { config, connect, serve } from "./deps.ts";
 import {
     acceptWebSocket,
-    isWebSocketCloseEvent,
-    isWebSocketPingEvent,
     WebSocket
 } from "./deps.ts";
 
