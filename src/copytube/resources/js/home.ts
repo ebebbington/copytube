@@ -1,9 +1,23 @@
 import Notifier from './notifier'
 import Loading from "./loading";
+import Realtime from "./realtime";
 
 const Home = (function () {
 
     const Methods = (function () {
+
+        //@ts-ignore
+        Realtime.handleNewVideoComment = function (message) {
+            if ($('#main-video-holder > h2').text() !== message.comment.video_posted_on)
+                return false
+            const newCommentHtml: any = $('#templates > #user-comment-template').clone()
+            newCommentHtml.attr('id', '')
+            newCommentHtml[0].children[1].children[1].textContent = message.comment.date_posted
+            newCommentHtml[0].children[1].children[2].textContent = message.comment.comment
+            newCommentHtml[0].children[0].children[0].src = 'img/lava_sample.jpg'
+            newCommentHtml[0].children[1].children[0].textContent = message.comment.author
+            $('#comment-list').prepend(newCommentHtml)
+        }
 
         /**
          * Handler for scrolling and the search bar
@@ -37,10 +51,7 @@ const Home = (function () {
          * @param videoPostedOn
          * @param newCommentHtml
          */
-        function postComment (comment: string, date: string, videoPostedOn: string, newCommentHtml: any) {
-            console.log('comment: ' + comment)
-            console.log('date: ' + date)
-            console.log(videoPostedOn)
+        function postComment (comment: string, date: string, videoPostedOn: string) {
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -58,9 +69,6 @@ const Home = (function () {
                     if (data.success) {
                         Notifier.success('Add Comment', 'Success')
                         //newCommentHtml[0].children[0].children[0].src = data.data.image
-                        newCommentHtml[0].children[0].children[0].src = 'img/lava_sample.jpg'
-                        newCommentHtml[0].children[1].children[0].textContent = data.data
-                        $('#comment-list').prepend(newCommentHtml)
                         $('#add-comment-input').val('')
                         $('#comment > span > p').text('0')
                     }
@@ -173,14 +181,10 @@ const Home = (function () {
                 const comment = $('#comment > span > textarea').val()
                 const datePosted = Methods.getCurrentDate()
                 // ajax
-                const newCommentHtml: any = $('#templates > #user-comment-template').clone()
                 const videoPostedOn: string = $('#main-video-holder > video').attr('title')
-                newCommentHtml.attr('id', '')
-                newCommentHtml[0].children[1].children[1].textContent = datePosted
-                newCommentHtml[0].children[1].children[2].textContent = comment
 
                 // add the comment to db and use the template in layout.blade to display in the UI
-                Methods.postComment(comment, datePosted, videoPostedOn, newCommentHtml)
+                Methods.postComment(comment, datePosted, videoPostedOn)
             })
 
         })
