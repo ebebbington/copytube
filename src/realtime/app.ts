@@ -4,17 +4,24 @@ import {
     WebSocket
 } from "./deps.ts";
 
+interface Client {
+    id: number,
+    socket: WebSocket
+}
+
 const port = config().PORT;
 const redis = await connect({
     hostname: config().REDIS_HOST,
     port: parseInt(config().REDIS_PORT)
 });
-let allClients: any = []
+let allClients: Array<Client>
 
 function sendRedisMessageToSocketClients (message: any) {
     try {
         message = JSON.stringify(message)
     } catch (err) {}
+    // If no clients have joined then dont send - acts as an error handler as error will be thrown: forEach of undefined
+    if (!allClients || !allClients.length) return false
     allClients.forEach((client: any) => {
         console.info('Emitting socket message to id ' + client.id)
         client.socket.send('Sending message to ' + client.id + ' with data of ' + message)
@@ -27,6 +34,7 @@ async function subscribeToRedis () {
     console.info(channels);
     (async () => {
         for await (const { channel, message } of sub.receive()) {
+            console.log('THE TYPE OF MESSAGE: ' + typeof message)
             console.info('Received a message from redis on the following channel: ' + channel + '. Sending the message to the socket client')
             sendRedisMessageToSocketClients(message)
         }
