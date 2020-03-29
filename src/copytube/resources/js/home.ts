@@ -12,7 +12,9 @@ const Home = (function () {
                 return false
             const newCommentHtml: any = $('#templates > #user-comment-template').clone()
             newCommentHtml.attr('id', '')
-            newCommentHtml[0].children[1].children[1].textContent = message.comment.date_posted
+            const [year, month, day] = message.comment.date_posted.split('-')
+            const formattedDate = day + '/' + month + '/' + year
+            newCommentHtml[0].children[1].children[1].textContent = formattedDate
             newCommentHtml[0].children[1].children[2].textContent = message.comment.comment
             newCommentHtml[0].children[0].children[0].src = 'img/lava_sample.jpg'
             newCommentHtml[0].children[1].children[0].textContent = message.comment.author
@@ -64,8 +66,6 @@ const Home = (function () {
                     videoPostedOn: videoPostedOn
                 },
                 success: function (data) {
-                    console.log('success')
-                    console.log(data)
                     if (data.success) {
                         Notifier.success('Add Comment', 'Success')
                         //newCommentHtml[0].children[0].children[0].src = data.data.image

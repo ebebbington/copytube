@@ -89,11 +89,17 @@ class CommentsModel extends BaseModel
     {
         $loggingPrefix = "[CommentsModel - ".__FUNCTION__.'] ';
         for ($i = 0; $i < sizeof($commentList); $i++) {
-            list($year, $month, $day) = explode('-', $commentList[$i]->date_posted);
-            $formattedDate = $day . '/' . $month . '/' . $year;
-            $commentList[$i]->date_posted = $formattedDate;
+            $commentList[$i]->date_posted = $this->convertDate($commentList[$i]->date_posted);
         }
         return $commentList;
+    }
+
+    public function convertDate (string $date)
+    {
+        // expected: "yyyy-mm-dd"
+        list($year, $month, $day) = explode('-', $date);
+        $formattedDate = $day . '/' . $month . '/' . $year;
+        return $formattedDate;
     }
 
     /**
