@@ -39,9 +39,11 @@ form {
             width: 100%;
         }
         input.form-field {
-            width: auto;
             margin: auto;
             text-align: center;
+        }
+        input.form-field[type="file"] {
+            height: auto;
         }
     }
 }
