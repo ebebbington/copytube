@@ -68,6 +68,14 @@ class UserModel extends BaseModel
     public $recover_token;
 
     /**
+     * The path for the profile picture. Can be "sample.jpg" for default, or "<id>/filename".
+     * The current directory where these lie is "/public/img/", so an example value: "img/<id>/<filename>". see register controller
+     *
+     * @var string
+     */
+    public $profile_picture;
+
+    /**
      * Fields to be populated
      *
      * @var array
@@ -91,7 +99,8 @@ class UserModel extends BaseModel
     protected $rules = [
       'username' => 'required',
       'email'    => 'required|email',
-      'password' => 'required|regex:/[0-9a-zA-Z]{8,}/',
+      'password' => 'required|regex:/^(?=.*\d)(?=.*[a-zA-Z]).{8,}/',
+        'profile_picture' => ['required', 'regex:/.*\.(jpg|jpeg|png)\b/']
     ];
 
     /**
@@ -238,7 +247,7 @@ class UserModel extends BaseModel
             'email_address' => $email
         ];
         $updateData = [
-            'password' => $this->generateHash($rawPassword),
+            'password' => UserModel::generateHash($rawPassword),
             'login_attempts' => 3,
             'recover_token' => null
         ];
@@ -250,7 +259,7 @@ class UserModel extends BaseModel
      *
      * @return string
      */
-    private function generateHash ($rawPassword)
+    public static function generateHash ($rawPassword)
     {
         $hash = Hash::make($rawPassword, [
             'rounds' => 12,
