@@ -184,6 +184,7 @@ CREATE TABLE `users` (
   `password` varchar(80) NOT NULL,
   `logged_in` tinyint(1) NOT NULL,
   `login_attempts` int(10) UNSIGNED NOT NULL,
+  `profile_picture` varchar(155),
   `recover_token` varchar(155),
   `updated_at` timestamp NOT NULL DEFAULT NOW() ON UPDATE NOW(),
   `created_at` timestamp NOT NULL
@@ -193,10 +194,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email_address`, `password`, `logged_in`, `login_attempts`) VALUES
-(20, 'Edward Work', 'edward.bebbington@intercity.technology', '$2y$10$NItdrDuiuOpB6cdamy3NKekjvdylBjYvCoepjJPQR0d5eAC0IKxNa', 1, 3),
-(21, 'Edward Home', 'EdwardSBebbington@hotmail.com', '$2y$10$Arh7UfnUuyl8UOZlhmmiquAWtcJdq9YE0fj.bbUx4dNl5DnUW3oxS', 1, 3),
-(23, 'test', 'test@hotmail.com', '$2y$10$DCTZq7Wm4SfmAV2Bu4DVXO6MGWgE33jZ6QnKSazq7XEH6ssOCvyam', 1, 3);
+INSERT INTO `users` (`id`, `username`, `email_address`, `password`, `logged_in`, `login_attempts`, `profile_picture`) VALUES
+(20, 'Edward Work', 'edward.bebbington@intercity.technology', '$2y$10$NItdrDuiuOpB6cdamy3NKekjvdylBjYvCoepjJPQR0d5eAC0IKxNa', 1, 3, 'img/an_iceland_venture.jpg'),
+(21, 'Edward Home', 'EdwardSBebbington@hotmail.com', '$2y$10$Arh7UfnUuyl8UOZlhmmiquAWtcJdq9YE0fj.bbUx4dNl5DnUW3oxS', 1, 3, 'img/lava_sample.jpg'),
+(23, 'test', 'test@hotmail.com', '$2y$10$DCTZq7Wm4SfmAV2Bu4DVXO6MGWgE33jZ6QnKSazq7XEH6ssOCvyam', 1, 3, 'img/something_more.jpg');
 
 -- --------------------------------------------------------
 
