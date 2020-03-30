@@ -31,7 +31,10 @@
             </div>
         </div>
         <header>
-            @component('components/header', ['username' => isset($username) ? $username : ''])
+            @component('components/header', [
+                'username' => isset($username) ? $username : '',
+                'profilePicture' => isset($profilePicture) ? $profilePicture : ''
+            ])
             @endcomponent
         </header>
         <div class="container">

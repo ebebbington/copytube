@@ -33,8 +33,11 @@ header {
             color: var(--custom-pink);
         }
       }
-      i.gear {
-
+      img.profile-picture {
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          cursor: pointer;
       }
       .gear-dropdown {
           position: absolute;
@@ -80,7 +83,7 @@ $icon_size: 1em;
   box-sizing: border-box;
   margin: auto 1em auto auto;
   transition-duration: .5s;
-  
+
   &:before,
   &:after {
     content: '×';
@@ -94,7 +97,7 @@ $icon_size: 1em;
     font-size: $icon_size*2.5;
     color: gray;
   }
-  
+
   &:after {
     transform: translate(-50%,-50%) rotate(45deg);
   }

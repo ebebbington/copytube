@@ -7,7 +7,7 @@
     <a class="menu-item" href="/login">Login</a>
     <a class="menu-item" href="/chat">Chat</a>
     @if ($username !== '')
-    <i class="gear"></i>
+    <img class="profile-picture" src="{{ $profilePicture }}" alt="Profile Picture">
     <div class="hide gear-dropdown">
         <p>Hello {{ $username }}</p>
         <ul>

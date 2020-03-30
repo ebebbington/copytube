@@ -8,7 +8,7 @@ const Header = (function () {
 
         $(document).ready(function () {
 
-            $('header i.gear').on('click', function (event) {
+            $('header img.profile-picture').on('click', function (event) {
                 $('header div.gear-dropdown').toggleClass('hide')
             })
 
