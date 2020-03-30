@@ -28,27 +28,23 @@ const Register = (function () {
 
     function registerUser (): void {
         Loading(true)
-      const username: string = $('input[name="username"]').val()
-      const email: string = $('input[name="email"]').val()
-      const password: string = $('input[name="password"]').val()
+        //@ts-ignore
+        const formData = new FormData($('form')[0])
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         type: 'POST',
         url: '/register',
-        data: {
-          username: username,
-          email: email,
-          password: password
-        },
+          processData: false,
+          contentType: false,
+        data: formData,
         success: function (data, status, jqXHR) {
           console.table(data)
             Loading(false)
           if (data.success === true) {
             $('form').trigger('reset')
             Notifier.success('Register', 'Created an account')
-            $('html', 'body').animate({scrollTop: 0}, 'slow')
             return false
           }
           // else theres a problem
