@@ -16,7 +16,7 @@ const Home = (function () {
             const formattedDate = day + '/' + month + '/' + year
             newCommentHtml[0].children[1].children[1].textContent = formattedDate
             newCommentHtml[0].children[1].children[2].textContent = message.comment.comment
-            newCommentHtml[0].children[0].children[0].src = 'img/lava_sample.jpg'
+            newCommentHtml[0].children[0].children[0].src = message.comment.profile_picture
             newCommentHtml[0].children[1].children[0].textContent = message.comment.author
             $('#comment-list').prepend(newCommentHtml)
         }

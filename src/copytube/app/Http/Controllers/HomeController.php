@@ -79,12 +79,13 @@ class HomeController extends Controller
 
         // Get the comments for the main video
         $Comments = new CommentsModel;
-        $comments = $Comments->getAllByVideoTitle($videoRequested);
-        Log::info($loggingPrefix . 'Retrieved comments where');
-
+        $comments = $Comments->getAllByVideoTitleAndJoinProfilePicture($videoRequested);
+        Log::debug($user->profile_picture);
+        Log::debug($user['profile_picture']);
         $renderData = [
             'title' => 'Home',
             'username' => $user->username,
+            'profilePicture' => $user->profile_picture,
             'mainVideo' => $mainVideo,
             'rabbitHoleVideos' => $rabbitHoleVideos,
             'comments' => $comments
@@ -95,6 +96,7 @@ class HomeController extends Controller
             ->with('username', $renderData['username'])
             ->with('mainVideo', $renderData['mainVideo'])
             ->with('rabbitHoleVideos', $renderData['rabbitHoleVideos'])
-            ->with('comments', $renderData['comments']);
+            ->with('comments', $renderData['comments'])
+            ->with('profilePicture', $renderData['profilePicture']);
     }
 }

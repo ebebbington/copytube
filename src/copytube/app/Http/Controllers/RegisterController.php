@@ -34,15 +34,15 @@ class RegisterController extends Controller
               'success' => false,
             ], 403);
         }
-        Log::debug('Request to POST register is an ajax');
+        Log::info('Request to POST register is an ajax');
 
         // get data
         $username = $request->input('username');
         $email    = $request->input('email');
-        $hash = Hash::make($request->input('password'), [
-          'rounds' => 12,
-        ]);
-        Log::debug('Retrieved input and hashed password: ', [$username, $email, $hash]);
+        $hash = UserModel::generateHash($request->input('password'));
+
+        // Check if empty
+        Log::info('Retrieved input and hashed password: ', [$username, $email, $hash]);
         if (empty($username) || empty($email) || empty($request->input('password'))) {
           return response([
             'success' => false,
@@ -52,9 +52,17 @@ class RegisterController extends Controller
 
         // Validate user details
         $User = new UserModel;
-        $passedValidation = $User->validate($request->all());
+        $profilePictureName = $request->hasFile('profile-picture')
+            ? strtolower($request->file('profile-picture')->getClientOriginalName())
+            : 'sample.jpg';
+        $passedValidation = $User->validate([
+            'username' => $username,
+            'email' => $email,
+            'password' => $request->input('password'),
+            'profile_picture' => $profilePictureName
+        ]);
         if ($passedValidation === false) {
-            Log::debug('Couldnt validate input');
+            Log::info('Couldnt validate input');
             return response([
               'success' => false,
               'message' => 'couldnt validate the input'
@@ -64,7 +72,7 @@ class RegisterController extends Controller
         // remove the raw password
         $_POST[ 'password' ] = null;
         $request->merge(['password' => null]);
-        Log::debug('Removed references to the raw password');
+        Log::info('Removed references to the raw password');
 
         // Check if user already exists
         $userExists = UserModel::exists($email);
@@ -73,9 +81,9 @@ class RegisterController extends Controller
             return response([
               'success' => false,
               'message' => 'user already exists',
-            ], 200);
+            ], 403);
         }
-        Log::debug('User doesnt exists');
+        Log::info('User doesnt exists');
 
         // Save the user
         $updated = $User->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
@@ -86,7 +94,15 @@ class RegisterController extends Controller
               'message' => 'user didnt save into the database',
             ], 500);
         }
-        Log::debug('Saved a user');
+        // Get user id, save profile picture if required and update the profile_picture field
+        $user = $User->SelectQuery(['where' => "email_address = '$email'", 'limit' => 1]);
+        $profilePicturePath = $request->hasFile('profile-picture')
+            ? $request->file('profile-picture')->store($user->id)
+            : 'sample.jpg';
+        $profilePicturePath = 'img/'.$profilePicturePath;
+        $User->UpdateQuery(['email_address' => $email], ['profile_picture' => $profilePicturePath]);
+        Log::info('Saved a user');
+
         return response([
           'success' => true,
         ], 200);

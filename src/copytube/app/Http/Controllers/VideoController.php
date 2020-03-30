@@ -59,8 +59,15 @@ class VideoController extends Controller
         // Create the new comment
         $Comments = new CommentsModel;
         $cacheKey = 'db:comments:videoTitle='.$videoPostedOn;
-        $row = $Comments->createComment(['comment' => $comment, 'author' => $username, 'date_posted' => $datePosted, 'video_posted_on' => $videoPostedOn]);
-        dispatch(new ProcessNewComment($row));
+        // TODO :: RAUN THROUGH VALIDAT EMETHOD FOR COMMENT
+        $row = $Comments->createComment([
+            'comment' => $comment,
+            'author' => $username,
+            'date_posted' => $datePosted,
+            'video_posted_on' => $videoPostedOn,
+            'user_id' => $user['id']
+        ]);
+        dispatch(new ProcessNewComment($row, $user['profile_picture']));
         $resData = [
             'success' => true
         ];

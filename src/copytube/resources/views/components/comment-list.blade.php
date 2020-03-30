@@ -2,7 +2,7 @@
     @foreach ($comments as $comment)
     <div class="media">
         <div class="media-left">
-            <img src="img/lava_sample.jpg" alt="{{ $comment->author }}'s profile picture">
+            <img src="{{ $comment->profile_picture }}" alt="{{ $comment->author }}'s profile picture">
         </div>
         <div class="media-body">
             @if ($comment->author !== "")
@@ -13,4 +13,7 @@
         </div>
     </div>
     @endforeach
+    @if (!isset($comments) || sizeof($comments) < 1)
+    <p>This video has no comments</p>
+    @endif
 </div>

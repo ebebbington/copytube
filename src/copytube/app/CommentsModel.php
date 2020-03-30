@@ -54,12 +54,14 @@ class CommentsModel extends BaseModel
      */
     public $video_posted_on;
 
+    public $user_id;
+
     /**
      * Fields to be populated
      *
      * @var array
      */
-    protected $fillable = ['comment', 'author', 'date_posted', 'video_posted_on'];
+    protected $fillable = ['comment', 'author', 'date_posted', 'video_posted_on', 'user_id'];
 
     /**
      * Rules for validation
@@ -71,6 +73,7 @@ class CommentsModel extends BaseModel
       'author'    => 'required',
       'date_posted' => 'required',
       'video_posted_on' => 'required',
+        'user_id' => 'required'
     ];
 
     public $timestamps = false;
@@ -115,9 +118,11 @@ class CommentsModel extends BaseModel
      * @example
      * $comments = $CommentsModel->getAllByVideoTitle('Something More'); array or false
      */
-    public function getAllByVideoTitle (string $videoTitle)
+    public function getAllByVideoTitleAndJoinProfilePicture (string $videoTitle)
     {
         $query = [
+            'select' => 'comments.*, users.profile_picture',
+            'join' => ['users', 'comments.user_id', '=', 'users.id'],
             'where' => "video_posted_on = '$videoTitle'",
             'limit' => -1,
             'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
