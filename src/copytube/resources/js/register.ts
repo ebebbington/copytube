@@ -53,10 +53,15 @@ const Register = (function () {
         },
         error: function (error) {
           console.log(error)
-          const errors = error.responseJSON.errors
-          const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
-          //$('#register-form').trigger('reset')
-          Notifier.error('Error', errMsg)
+            try {
+                const errors = error.responseJSON.errors
+                const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
+                //$('#register-form').trigger('reset')
+                Notifier.error('Error', errMsg)
+            } catch (err) {
+              //@ts-ignore
+              Notifier.error('Error', error.message)
+            }
           //$('html', 'body').animate({scrollTop: 0}, 'slow')
           //return false
             Loading(false)
