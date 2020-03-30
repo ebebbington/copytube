@@ -7,8 +7,8 @@
         padding: 0.5em;
         .media-left {
             img {
-                width: 55px;
-                height: 55px;
+                width: 35px;
+                height: 35px;
                 border-radius:80%;
             }
         }
@@ -17,11 +17,10 @@
             margin-left: .5em;
             h3 {
                 color: var(--custom-dark-grey);
+                font-size: 1em;
             }
             p {
-                word-break: break-all;
-                
-
+                word-break: break-word;
             }
         }
     }
