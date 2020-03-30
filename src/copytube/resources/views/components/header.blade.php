@@ -9,7 +9,9 @@
     @if ($username !== '')
     <img class="profile-picture" src="{{ $profilePicture }}" alt="Profile Picture">
     <div class="hide gear-dropdown">
-        <p>Hello {{ $username }}</p>
+        <p class="bold">{{ $username }}</p>
+        <p>{{ $email }}</p>
+        <hr>
         <ul>
             <li><a href="/logout">Log out</a></li>
         </ul>

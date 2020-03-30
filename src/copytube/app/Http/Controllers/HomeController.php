@@ -85,6 +85,7 @@ class HomeController extends Controller
         $renderData = [
             'title' => 'Home',
             'username' => $user->username,
+            'email' => $user->email_address,
             'profilePicture' => $user->profile_picture,
             'mainVideo' => $mainVideo,
             'rabbitHoleVideos' => $rabbitHoleVideos,
@@ -97,6 +98,7 @@ class HomeController extends Controller
             ->with('mainVideo', $renderData['mainVideo'])
             ->with('rabbitHoleVideos', $renderData['rabbitHoleVideos'])
             ->with('comments', $renderData['comments'])
-            ->with('profilePicture', $renderData['profilePicture']);
+            ->with('profilePicture', $renderData['profilePicture'])
+            ->with('email', $renderData['email']);
     }
 }

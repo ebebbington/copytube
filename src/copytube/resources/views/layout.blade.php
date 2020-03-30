@@ -33,7 +33,8 @@
         <header>
             @component('components/header', [
                 'username' => isset($username) ? $username : '',
-                'profilePicture' => isset($profilePicture) ? $profilePicture : ''
+                'profilePicture' => isset($profilePicture) ? $profilePicture : '',
+                'email' => isset($email) ? $email : ''
             ])
             @endcomponent
         </header>
