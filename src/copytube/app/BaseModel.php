@@ -75,6 +75,8 @@ class BaseModel extends Model
      *
      * @param array  $query    Contains the required data to run the query you want.                    Required.
      *                         $data = [
+     *                         'select'           =>  (string) Select certain fields. Selects all if not defined. Optional
+     *                         'join'             =>  (array) Array of strings on what to join. Optional
      *                         'query'            =>  (string) Where condition. Defaults to having none (id != -1)
      *                         'limit'            =>  (int) If 1 returns an object. If -1 gets all. If > 1 gets many.   Required.
      *                         'orderByColumn'    =>  (string) Must be used with `orderByDirection`. Defaults to `id`
@@ -85,6 +87,10 @@ class BaseModel extends Model
      * @return bool|array|object False when no data found, singular object if one result, array of objects when more than 1
      *
      * @example
+     * $select = 'comments.*, users.profile_picture'
+     * $join = ['users', 'comments.user_id', '=', 'users.id']
+     *          ^^^^^      ^^^^^^^^^^^       ^^    ^^^^^^
+     *     other table       where      conditional where
      * $where = "name = '$name' and age != 200"; // or omit this property
      * $limit = 1; // -1 = all (array), 1 = 1 (object), >1 = many (array)
      * $orderBy = [
@@ -105,14 +111,37 @@ class BaseModel extends Model
             Log::info($loggingPrefix . 'Redis has the cached data for that key. Returning this instead');
             return Cache::get($cacheKey);
         }
+        $select = isset($query['select']) ? $query['select'] : null;
+        $join = isset($query['join']) ? $query['join'] : null;
         $where = $query['where'] ?? 'id != -1';
         $limit = $query['limit'];
         $orderByColumn = $query['orderBy']['column'] ?? 'id';
         $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
         Log::info($loggingPrefix . 'Running query on table' . $this->table . ' where ' . $where . ', with a limit of ' . $query['limit']
             . '. Ordering ' . $orderByColumn . ' by ' . $orderByDirection);
-        $result = DB::table($this->table)->whereRaw($where)->orderBy($orderByColumn, $orderByDirection)->take($limit)
-            ->get();
+        Log::info($loggingPrefix . 'Selecting table ' . $this->table);
+        $result = DB::table($this->table);
+        if (isset($select)) {
+            Log::info($loggingPrefix . 'With select query of: ' . $select);
+            $result = $result->selectRaw($select);
+        }
+        if (isset($join) && sizeof($join) === 4) {
+            Log::info($loggingPrefix . 'With join of: ' . json_encode($join));
+            $result = $result->join($join[0], $join[1], $join[2], $join[3]);
+        }
+        if (isset($where)) {
+            Log::info($loggingPrefix . 'With where clause of: ' . $where);
+            $result = $result->whereRaw($where);
+        }
+        $result = $result->orderBy($orderByColumn, $orderByDirection);
+        if (isset($limit)) {
+            Log::info($loggingPrefix . 'Limiting by: ' . $limit);
+            $result = $result->take($limit);
+        }
+        $result = $result->get();
+        Log::info($loggingPrefix . 'Result after ->get():');
+        Log::info($result);
+
         // When asking for 1 record, return a single object as they dont expect an array
         if ($limit === 1 && !empty($result)) {
             Log::info($loggingPrefix . 'Request limit is 1 so returning the 0th index instead of the array');

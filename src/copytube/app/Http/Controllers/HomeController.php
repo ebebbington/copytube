@@ -79,8 +79,7 @@ class HomeController extends Controller
 
         // Get the comments for the main video
         $Comments = new CommentsModel;
-        $comments = $Comments->getAllByVideoTitle($videoRequested);
-        Log::info($loggingPrefix . 'Retrieved comments where');
+        $comments = $Comments->getAllByVideoTitleAndJoinProfilePicture($videoRequested);
 
         $renderData = [
             'title' => 'Home',
