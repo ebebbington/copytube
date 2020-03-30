@@ -6,7 +6,11 @@ const Loading = function (isLoading: boolean, elemToHalt?: any) {
         loadingElement.style.visibility = 'visible'
         if (elemToHalt)
             elemToHalt.disabled = true
-        $('.loading-circles').css('animation', 'pulse 2s infinite')
+        $('.loading-circles#loading-circle-one').css('animation', 'pulse 1.5s infinite')
+        $('.loading-circles#loading-circle-two').css('animation', 'pulse 1.5s infinite 0.2s')
+        $('.loading-circles#loading-circle-four').css('animation', 'pulse 1.5s infinite .4s')
+        $('.loading-circles#loading-circle-five').css('animation', 'pulse 1.5s infinite .8s')
+        $('.loading-circles#loading-circle-three').css('animation', 'pulse 1.5s infinite 1.2s')
     }
 
     if (!isLoading) {
