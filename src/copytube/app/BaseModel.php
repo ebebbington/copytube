@@ -75,19 +75,19 @@ class BaseModel extends Model
      *
      * @param array  $query    Contains the required data to run the query you want.                    Required.
      *                         $data = [
-     *                         'select'           =>  (string) Select certain fields. Selects all if not defined. Optional
+     *                         'select'           =>  (string|string[]) List or string of fields to select. Omitted if not defined e.g it'll end up selecting all. Optional
      *                         'join'             =>  (array) Array of strings on what to join. Optional
-     *                         'query'            =>  (string) Where condition. Defaults to having none (id != -1)
+     *                         'query'            =>  (string) Where condition. Defaults to having none (id != -1). Optional
      *                         'limit'            =>  (int) If 1 returns an object. If -1 gets all. If > 1 gets many.   Required.
      *                         'orderByColumn'    =>  (string) Must be used with `orderByDirection`. Defaults to `id`
      *                         'orderByDirection' =>  (string) Must be used with above. Defaults to 'ASC'
      *                         ]
      * @param string $cacheKey Gets db data by key else creates the key data.                      Optional.
      *
-     * @return bool|array|object False when no data found, singular object if one result, array of objects when more than 1
+     * @return bool|array|object False when no data found, singular object if limit=1 result, array of objects when more than 1
      *
      * @example
-     * $select = 'comments.*, users.profile_picture'
+     * $select = ['comments.*, users.profile_picture']
      * $join = ['users', 'comments.user_id', '=', 'users.id']
      *          ^^^^^      ^^^^^^^^^^^       ^^    ^^^^^^
      *     other table       where      conditional where
@@ -97,7 +97,7 @@ class BaseModel extends Model
      *   'column' => date, // defaults to id
      *   'direction' => 'ASC' //defaults to ASC. Supported: ASC, DESC
      * ];
-     * $query = ['where' => $where, 'limit' => $limit, 'orderBy' => $orderBy];
+     * $query = ['select' => $select, 'join' => $join, 'where' => $where, 'limit' => $limit, 'orderBy' => $orderBy];
      * $cacheKey = 'db:users:name=edward&age!=200&limit=1';
      * $SomeModel->SelectQuery($query, $cacheKey);
      */
@@ -122,8 +122,8 @@ class BaseModel extends Model
         Log::info($loggingPrefix . 'Selecting table ' . $this->table);
         $result = DB::table($this->table);
         if (isset($select)) {
-            Log::info($loggingPrefix . 'With select query of: ' . $select);
-            $result = $result->selectRaw($select);
+            Log::info($loggingPrefix . 'With select query of: ' . json_encode($select));
+            $result = $result->select($select);
         }
         if (isset($join) && sizeof($join) === 4) {
             Log::info($loggingPrefix . 'With join of: ' . json_encode($join));

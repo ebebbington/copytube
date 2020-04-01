@@ -121,7 +121,7 @@ class CommentsModel extends BaseModel
     public function getAllByVideoTitleAndJoinProfilePicture (string $videoTitle)
     {
         $query = [
-            'select' => 'comments.*, users.profile_picture',
+            'select' => ['comments.*', 'users.profile_picture'],
             'join' => ['users', 'comments.user_id', '=', 'users.id'],
             'where' => "video_posted_on = '$videoTitle'",
             'limit' => -1,
