@@ -20,7 +20,7 @@ Route::get('/', function () {
     return redirect('home');
 });
 
-Route::get('/register', 'RegisterController@index');
+Route::get('/register', ['as' => 'register', 'uses' => 'RegisterController@index']);
 Route::post('/register', 'RegisterController@submit');
 
 Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@get']);
@@ -37,6 +37,8 @@ Route::get('/recover', 'RecoverController@index');
 Route::post('/recover', 'RecoverController@post');
 
 Route::get('/chat', 'ChatController@index');
+
+Route::delete('/user', 'UserController@Delete')->middleware('auth');
 
 Route::get('/{any}', function ($any) {
     abort(404);

@@ -69,6 +69,10 @@ header {
                 }
               }
             }
+            & li#delete-account-trigger {
+                color: red;
+                cursor: pointer;
+            }
           }
         }
       }

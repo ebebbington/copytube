@@ -13,7 +13,8 @@
         <p>{{ $email }}</p>
         <hr>
         <ul>
-            <li><a href="/logout">Log out</a></li>
+            <li><a href="/logout">Logout</a></li>
+            <li id="delete-account-trigger">Delete</li>
         </ul>
     </div>
     @endif
