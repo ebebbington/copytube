@@ -29,7 +29,7 @@ Route::post('/login', 'LoginController@post');
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'])->middleware('auth');
 
 Route::post('/video/comment', 'VideoController@postComment')->middleware('auth');
-Route::get('/video', 'VideoController@getAllVideoTitles')->middleware('auth');
+Route::get('/video', 'VideoController@autocomplete')->middleware('auth');
 
 Route::get('/logout', 'LogoutController@logout')->middleware('auth');
 

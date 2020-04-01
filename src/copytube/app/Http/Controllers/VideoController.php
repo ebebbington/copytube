@@ -74,22 +74,21 @@ class VideoController extends Controller
         return response()->json($resData);
     }
 
-    public function getAllVideoTitles (Request $request)
+    public function autocomplete (Request $request)
     {
         $loggingPrefix = "[VideoController - ".__FUNCTION__.'] ';
         $title = $request->input('title');
-        $Videos = new VideosModel;
-        $query = [
-            'limit' => -1,
-        ];
-        $cacheKey = 'db:videos:all';
-        $videos = $Videos->SelectQuery($query, $cacheKey);
-        $matchingTitles = [];
-        foreach ($videos as $video) {
-            if (strpos(strtolower($video->title), strtolower($title)) !== false) {
-                array_push($matchingTitles, $video->title);
-            }
-        }
-        return response()->json(['success' => true, 'data' => $matchingTitles]);
+        $titles = [];
+        if (!empty($title)) {
+            $Videos = new VideosModel;
+            $query = [
+                'select' => 'title',
+                'where' => "title LIKE '%$title%'",
+                'limit' => 10,
+            ];
+            $videos = $Videos->SelectQuery($query); // dont want to cache as we dont want a fixed list of titles
+            $titles = array_column($videos->toArray(), 'title');
+        } else { $titles = []; }
+        return response()->json(['success' => true, 'data' => $titles]);
     }
 }
