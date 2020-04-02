@@ -1,0 +1,24 @@
+name: Docker
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - './*'
+    paths-ignore:
+      - 'src/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - './*'
+    paths-ignore:
+      - 'src/**'
+
+jobs:
+
+  docker-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Start Docker
+        run: docker-compose up -d
