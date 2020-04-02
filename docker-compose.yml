@@ -13,6 +13,7 @@ services:
     depends_on:
       - phpfpm
       - socket
+      - realtime
     ports:
       - "9002:9002"
     networks:
