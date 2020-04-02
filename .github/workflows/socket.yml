@@ -1,0 +1,22 @@
+name: Socket
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'src/socket/*'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'src/socket/*'
+
+jobs:
+
+  socket-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Start Docker
+        run: docker-compose up -d
+      - name: Run Tests
+        run: docker exec copytube_socket npm run test
