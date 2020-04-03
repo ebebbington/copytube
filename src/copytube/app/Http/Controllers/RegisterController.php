@@ -68,7 +68,6 @@ class RegisterController extends Controller
         // Check if user already exists
         $userExists = UserModel::exists($email);
         if ($userExists === true) {
-            Log::debug('User already exists');
             return response([
               'success' => false,
               'message' => 'user already exists',
@@ -79,7 +78,6 @@ class RegisterController extends Controller
         // Save the user
         $updated = $User->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
         if (empty($updated)) {
-            Log::debug('Didnt save a user');
             return response([
               'success' => false,
               'message' => 'user didnt save into the database',
