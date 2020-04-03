@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AccountLocked;
 use App\UserModel;
 use App\SessionModel;
 
@@ -12,9 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use View;
 use Cookie;
-use App\Mail\Mail;
 use Illuminate\Support\Str;
 
 class LoginController extends Controller
@@ -34,6 +35,12 @@ class LoginController extends Controller
         // Get user
         $UserModel = new UserModel;
         $user = $UserModel->getByEmail($email);
+        if ($user === false) {
+            return response([
+                'success' => false,
+                'message' => 'This account does not exist with that email'
+            ], 403);
+        }
         // Disable their account if no login attempts are left
         if ($user->login_attempts === 0) {
             $token = $UserModel->lockAccount($user->id, $email);
@@ -43,11 +50,14 @@ class LoginController extends Controller
                     'message' => 'Failed to lock your account'
                 ], 500);
             }
+            $title = 'Account Locked';
             $message
                 = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token='
                 . $token;
-            $Mail = new Mail($user->email_address, $user->username, 'Account Locked', $message);
-            $Mail->send();
+            Log::debug($user->email_address);
+            Mail::to($user->email_address)->send(new AccountLocked($title, $message));
+            //$Mail = new Mail($user->email_address, $user->username, 'Account Locked', $message);
+            //$Mail->send();
             return response([
                 'success' => false,
                 'message' => 'This account has been locked.'
