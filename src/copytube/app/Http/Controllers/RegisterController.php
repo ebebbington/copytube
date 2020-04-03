@@ -52,11 +52,11 @@ class RegisterController extends Controller
             'password' => $request->input('password'),
             'profile_picture' => $profilePictureName
         ]);
-        if ($passedValidation === false) {
-            Log::info('Couldnt validate input');
+        if ($passedValidation !== true) {
+            Log::info('Couldnt validate input: ' . $passedValidation);
             return response([
               'success' => false,
-              'message' => 'couldnt validate the input'
+              'message' => $passedValidation
             ], 401);
         }
 
