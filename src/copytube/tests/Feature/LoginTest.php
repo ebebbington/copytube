@@ -85,6 +85,8 @@ class LoginTest extends TestCase
     {
         $this->createTestUser(3);
         $response = $this->makePostRequest($this->validEmail, $this->validPassword);
+        $user = DB::table('users')->where('email_address', '=', $this->validEmail);
+        $this->assertEquals(0, $user->logged_in);
         $response->assertJson(['success' => true]);
         $response->assertStatus(200);
         $this->removeTestUser();
