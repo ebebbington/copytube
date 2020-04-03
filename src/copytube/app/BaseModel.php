@@ -29,7 +29,7 @@ class BaseModel extends Model
      *
      * @param array $data containing an array of key value pairs
      *
-     * @return bool
+     * @return bool|string true if a success, else the error message as it must have failed
      * @example
      * $UserModel = new UserModel;
      * $validated = $UserModel->validate(['name' => 'edward']);
@@ -43,7 +43,7 @@ class BaseModel extends Model
         $validator = Validator::make($data, $this->rules);
         if ($validator->fails()) {
             Log::error($loggingPrefix . 'Validation failed');
-            return false;
+            return $validator->errors()->first();;
         }
         Log::info($loggingPrefix . 'Validation passed');
         return true;
