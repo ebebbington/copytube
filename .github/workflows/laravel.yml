@@ -31,6 +31,6 @@ jobs:
       #    - name: Directory Permissions
       #      run: chmod -R 777 storage bootstrap/cache
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: docker exec copytube_phpfpm vendor/bin/phpunit
+        run: docker exec copytube_phpfpm vendor/bin/phpunit —coverage-html reports/
       - name: Stop Docker
         run: docker-compose down
