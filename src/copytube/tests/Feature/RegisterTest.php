@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -41,12 +42,15 @@ class RegisterTest extends TestCase
             ->delete();
     }
 
-    private function submitValidUser (): ?Object
+    // TODO :: testSubmitInvalidUser? Maybe this is handled by testvalidation
+
+    private function makePostRequest ($username, $email, $password): ?Object
     {
+        // TODO :: Add file object, how to mock file uploads?
         $data = [
-            'username' => $this->validUsername,
-            'email' => $this->validEmail,
-            'password' => $this->validPassword
+            'username' => $username,
+            'email' => $email,
+            'password' => $password
         ];
         $headers = [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
@@ -64,10 +68,43 @@ class RegisterTest extends TestCase
         $response->assertViewIs('register');
     }
 
-     public function testPostValidation ()
+     public function testFailedPostValidation ()
      {
-          // Test the validation of data
-         // todo :: Get the rules from the model: Validator::make(, UserModel::$rules);
+         //
+         // USERNAME
+         //
+
+         // Empty
+         $response = $this->makePostRequest(
+            '',
+             $this->validEmail,
+             $this->validPassword
+         );
+         $response->assertJson(['success' => false, 'message' => 'The username field is required.']);
+
+         //
+         // EMAIL
+         //
+
+         // TODO :: Empty
+
+         // TODO :: Not an email
+
+         //
+         // PASSWORD
+         //
+
+         // TODO :: Empty
+
+         // TODO :: No number
+
+         // TODO :: Not correct length
+
+         // TODO :: No letters
+
+         // TODO :: No uppercase character
+
+         // TODO :: No lowercase character
      }
 
      public function testPostWhenUserExists ()
@@ -80,18 +117,24 @@ class RegisterTest extends TestCase
         // TODO
      }
 
-    public function testDatabaseIsUpdated()
+    public function testSuccessfulPostRequest()
     {
         // First remove the test user if there is one
         $this->removeTestUserFromDB();
 
         // Test adding a user and that table has that column
-        $response = $this->submitValidUser();
+        $response = $this->makePostRequest(
+            $this->validUsername,
+            $this->validEmail,
+            $this->validPassword
+        );
 
         // TODO :: Get user from DB and assert the data
 
         // Remove the data
         $this->removeTestUserFromDB();
+
+        // TODO :: Assert the response
     }
 
      public function testPasswordGetsHashed()
