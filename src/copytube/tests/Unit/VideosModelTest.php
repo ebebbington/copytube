@@ -13,8 +13,6 @@ class VideosModelTest extends TestCase
         $video = $VideosModel->getVideoByTitle('Something More');
         $this->assertEquals(true, isset($video) && !empty($video));
         $video = $VideosModel->getVideoByTitle('I dont exist');
-        print_r('hi');
-        print_r($video);
         $this->assertEquals(true, $video === false);
     }
 

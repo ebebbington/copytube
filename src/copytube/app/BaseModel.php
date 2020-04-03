@@ -138,7 +138,7 @@ class BaseModel extends Model
 
         $result = $result->get();
 
-        if ($result === [])
+        if ($result->toArray() === [])
             return false;
         if (empty($result))
             return false;

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\BaseModel;
 use App\User;
 use App\UserModel;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,6 +16,13 @@ class LoginTest extends TestCase
     private $validUsername = 'ValidUsername';
     private $validEmail = 'testemail@hotmail.com';
     private $validPassword = 'TestPassword1';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Cache::flush();
+    }
 
     private function makePostRequest ($email, $password): ?Object
     {
@@ -56,6 +64,7 @@ class LoginTest extends TestCase
 
     public function testPostLockedAccount ()
     {
+        $this->removeTestUser();
         $this->createTestUser(0);
         // Send post request
         $response = $this->makePostRequest($this->validEmail, $this->validPassword);
@@ -85,7 +94,7 @@ class LoginTest extends TestCase
     {
         $this->createTestUser(3);
         $response = $this->makePostRequest($this->validEmail, $this->validPassword);
-        $user = DB::table('users')->where('email_address', '=', $this->validEmail);
+        $user = DB::table('users')->where('email_address', '=', $this->validEmail)->first();
         $this->assertEquals(0, $user->logged_in);
         $response->assertJson(['success' => true]);
         $response->assertStatus(200);

@@ -111,8 +111,9 @@ class BaseModelTest extends TestCase
         //
 
         // No data found expect false
+        $this->deleteAllRows();
         $selectedRow = $TestModel->SelectQuery(['limit' => 1]);
-        $this->assertEquals(false, $selectedRow === [] || $selectedRow === false);
+        $this->assertEquals(false, $selectedRow);
     }
 
     public function testUpdateQueryMethod ()
