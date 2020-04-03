@@ -113,53 +113,48 @@ class BaseModel extends Model
         }
         $select = isset($query['select']) ? $query['select'] : null;
         $join = isset($query['join']) ? $query['join'] : null;
-        $where = $query['where'] ?? 'id != -1';
-        $limit = $query['limit'];
+        $where = isset($query['where']) ? $query['where'] : null;
+        $limit = $query['limit'] ?? 1;
         $orderByColumn = $query['orderBy']['column'] ?? 'id';
         $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
         Log::info($loggingPrefix . 'Running query on table' . $this->table . ' where ' . $where . ', with a limit of ' . $query['limit']
             . '. Ordering ' . $orderByColumn . ' by ' . $orderByDirection);
-        Log::info($loggingPrefix . 'Selecting table ' . $this->table);
+
         $result = DB::table($this->table);
-        if (isset($select)) {
-            Log::info($loggingPrefix . 'With select query of: ' . json_encode($select));
+
+        if (isset($select))
             $result = $result->select($select);
-        }
-        if (isset($join) && sizeof($join) === 4) {
-            Log::info($loggingPrefix . 'With join of: ' . json_encode($join));
+
+        if (isset($join) && sizeof($join) === 4)
             $result = $result->join($join[0], $join[1], $join[2], $join[3]);
-        }
-        if (isset($where)) {
-            Log::info($loggingPrefix . 'With where clause of: ' . $where);
+
+        if (isset($where))
             $result = $result->whereRaw($where);
-        }
+
         $result = $result->orderBy($orderByColumn, $orderByDirection);
-        if (isset($limit)) {
-            Log::info($loggingPrefix . 'Limiting by: ' . $limit);
+
+        if (isset($limit))
             $result = $result->take($limit);
-        }
+
         $result = $result->get();
-        Log::info($loggingPrefix . 'Result after ->get():');
-        Log::info($result);
+
+        if ($result === [])
+            return false;
+        if (empty($result))
+            return false;
+        if (!isset($result))
+            return false;
+        if (!$result)
+            return false;
 
         // When asking for 1 record, return a single object as they dont expect an array
-        if ($limit === 1 && !empty($result)) {
-            Log::info($loggingPrefix . 'Request limit is 1 so returning the 0th index instead of the array');
-            if (isset($result) && isset($result[0]))
-                $result = $result[0];
-            else
-                return false;
-        }
-        if (empty($result) || !isset($result)) {
-            Log::error($loggingPrefix . 'No data was retrieved on table ' . $this->table . ' with query:', $query);
-            return false;
-        }
+        if ($limit === 1 && sizeof($result) >= 1)
+            $result = $result[0];
+
         // Cache the result
-        if ($cacheKey && !empty($cacheKey) && isset($cacheKey)) {
-            Log::info($loggingPrefix . '`cacheKey` is defined so writing the result to this key in redis with expiration of ' . 3600);
+        if ($cacheKey && !empty($cacheKey) && isset($cacheKey))
             Cache::put($cacheKey, $result, 3600);
-        }
-        Log::info($loggingPrefix . 'Returning the database result');
+
         return $result;
     }
 
@@ -186,6 +181,8 @@ class BaseModel extends Model
         Log::info($loggingPrefix . 'Creating a new row on table ' . $this->table . ':', $data);
         $row = $this->create($data);
         if (!empty($cacheKey) && Cache::has($cacheKey)) {
+            // Because next time they select with the key, we dont want them selecting old data
+            // So on the select it'll make a new key with the updated data
             Log::info($loggingPrefix . 'Redis cache has the passed in key of ' . $cacheKey . '. Forgetting this data to update it on the next select');
             Cache::forget($cacheKey);
         }
@@ -216,11 +213,12 @@ class BaseModel extends Model
         $result = DB::table($this->table)->where($query)->update($newData);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
             Log::info($loggingPrefix . 'Redis cache has key of ' . $cacheKey . '. Updating the cache with the result:', [$result]);
-            $row = DB::table($this->table)->where($query)->first();
+            $row = DB::table($this->table)->where($newData)->first();
+            Log::debug(json_encode($row));
             Cache::put($cacheKey, $row, 3600);
         }
         Log::debug($loggingPrefix . 'Query has a successful update: ' . $result === 1 ? true : false);
-        return $result === 1 ? true : false;
+        return $result >= 1 ? true : false;
     }
 
     /**
