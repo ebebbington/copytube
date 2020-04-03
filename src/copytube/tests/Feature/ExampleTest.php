@@ -16,6 +16,8 @@ use Tests\TestCase;
  */
 class ExampleTest extends TestCase
 {
+
+
     /**
      * A basic test example.
      *
@@ -25,7 +27,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     /**
@@ -67,34 +69,34 @@ class ExampleTest extends TestCase
      */
     protected $stack;
 
-    protected function setUp(): void
-    {
-        $this->stack = [];
-    }
+//    protected function setUp(): void
+//    {
+//        $this->stack = [];
+//    }
 
     /**
      * The same applies for for teaing down
      */
-    protected function tearDown(): void
-    {
-
-    }
+//    protected function tearDown(): void
+//    {
+//
+//    }
 
     /**
      * You can also set up before a class
      */
-    public static function setUpBeforeClass(): void
-    {
-
-    }
+//    public static function setUpBeforeClass(): void
+//    {
+//
+//    }
 
     /**
      * And after
      */
-    public static function tearDownAfterClass(): void
-    {
-
-    }
+//    public static function tearDownAfterClass(): void
+//    {
+//
+//    }
 
     /**
      * Create a stub of a class
@@ -103,15 +105,15 @@ class ExampleTest extends TestCase
      *
      * @uses RegisterController::hello
      */
-    public function testStub()
-    {
-        $stub = $this->createStub(RegisterController::class);
-
-        $stub->method('test')
-            ->willReturn('hello'); // this will intentially fail
-
-        $this->assertSame('hello', $stub->test());
-    }
+//    public function testStub()
+//    {
+//        $stub = $this->createStub(RegisterController::class);
+//
+//        $stub->method('test')
+//            ->willReturn('hello'); // this will intentially fail
+//
+//        $this->assertSame('hello', $stub->test());
+//    }
 
     /**
      * You can also ignore classes or functions from code converage ussing the below
