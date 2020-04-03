@@ -41,15 +41,6 @@ class RegisterController extends Controller
         $email    = $request->input('email');
         $hash = UserModel::generateHash($request->input('password'));
 
-        // Check if empty
-        Log::info('Retrieved input and hashed password: ', [$username, $email, $hash]);
-        if (empty($username) || empty($email) || empty($request->input('password'))) {
-          return response([
-            'success' => false,
-            'message' => 'Some details have not bene provided'
-          ]);
-        }
-
         // Validate user details
         $User = new UserModel;
         $profilePictureName = $request->hasFile('profile-picture')

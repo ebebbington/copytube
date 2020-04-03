@@ -17,6 +17,8 @@ class RegisterTest extends TestCase
 
     private $validPassword = 'MrTestPa55word1';
 
+
+
     /**
      * @test
      */
@@ -39,36 +41,6 @@ class RegisterTest extends TestCase
             ->delete();
     }
 
-    public function testGetRequest()
-    {
-        $response = $this->json('GET', '/register');
-        $response->assertStatus(200);
-        $response->assertViewIs('register');
-    }
-
-     public function todotestValidation ()
-     {
-          // Test the validation of data
-         // todo :: Get the rules from the model: Validator::make(, UserModel::$rules);
-     }
-
-    public function testUpdateOfDatabase()
-    {
-        // First remove the test user if there is one
-        $this->removeTestUserFromDB();
-
-        // Test adding a user and that table has that column
-        $response = $this->submitValidUser();
-
-        // Remove the data
-        $this->removeTestUserFromDB();
-
-        // Assert the response
-        $response->assertJson([
-            'success' => true
-        ]);
-    }
-
     private function submitValidUser (): ?Object
     {
         $data = [
@@ -85,19 +57,45 @@ class RegisterTest extends TestCase
         return $response;
     }
 
-    // public function testPasswordGetsHashed()
-    // {
-    //     // make sure the password is hashed
-    // }
-
-    public function testRawPasswordIsRemoved()
+    public function testGetRequest()
     {
-        // make sure the password is removed from everywhere
-        // and create a user so we reach the block that removes the pass
+        $response = $this->json('GET', '/register');
+        $response->assertStatus(200);
+        $response->assertViewIs('register');
+    }
+
+     public function testPostValidation ()
+     {
+          // Test the validation of data
+         // todo :: Get the rules from the model: Validator::make(, UserModel::$rules);
+     }
+
+     public function testPostWhenUserExists ()
+     {
+        // TODO
+     }
+
+     public function testProfilePictureIsSavedOnPost ()
+     {
+        // TODO
+     }
+
+    public function testDatabaseIsUpdated()
+    {
+        // First remove the test user if there is one
+        $this->removeTestUserFromDB();
+
+        // Test adding a user and that table has that column
         $response = $this->submitValidUser();
+
+        // TODO :: Get user from DB and assert the data
+
         // Remove the data
         $this->removeTestUserFromDB();
-        $removed = $_POST['password'] ? false : true;
-        $this->assertTrue($removed);
     }
+
+     public function testPasswordGetsHashed()
+     {
+         // TODO :: make sure the password is hashed
+     }
 }
