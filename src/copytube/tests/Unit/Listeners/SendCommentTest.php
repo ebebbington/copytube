@@ -38,6 +38,7 @@ class SendCommentTest extends TestCase
         $this->app->instance(SendComment::class, $listener);
         dispatch(new ProcessNewComment($comment, 'img/test'));
         app('queue')->setDefaultDriver($defaultDriver);
+        // TODO :: Assert redis got message
 
     }
 }
