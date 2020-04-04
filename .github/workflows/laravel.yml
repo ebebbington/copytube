@@ -19,7 +19,8 @@ jobs:
       - name: Start Docker and run tests
         run: |
           docker-compose up -d
-          docker exec copytube_phpfpm ./vendor/bin/phpunit —coverage-html reports/
+          docker exec copytube_phpfpm composer global require phpunit/phpunit
+          docker exec copytube_phpfpm phpunit —coverage-html reports/
       #    - name: Copy .env
       #      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       #    - name: Install Dependencies
