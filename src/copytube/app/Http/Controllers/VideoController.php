@@ -37,12 +37,13 @@ class VideoController extends Controller
         $videoPostedOn = $request->input('videoPostedOn');
         $user = Auth::user();
         $username = $user->username;
+        Log::debug(json_encode([$comment, $datePosted, $videoPostedOn, $username]));
         if (empty($comment) || empty($datePosted) || empty($user) || empty($username) || empty($videoPostedOn)) {
             Log::debug('Some data wasn\'t provided');
             return response([
                 'success' => false,
                 'message' => 'Some data wasn\'t provided'
-            ]);
+            ], 403);
         }
 
         // check the video actually exist
@@ -50,24 +51,32 @@ class VideoController extends Controller
         $foundVideo = $Videos->getVideoByTitle($videoPostedOn);
         if (empty($foundVideo) || $foundVideo === false) {
             Log::debug('Video title or user does not exist');
-            return reponse([
+            return response([
                 'success' => false,
                 'message' => 'Video does not exist'
-            ]);
+            ], 404);
         }
 
         // Create the new comment
         $Comments = new CommentsModel;
         $cacheKey = 'db:comments:videoTitle='.$videoPostedOn;
         // TODO :: RAUN THROUGH VALIDAT EMETHOD FOR COMMENT
-        $row = $Comments->createComment([
+        $newComment = [
             'comment' => $comment,
             'author' => $username,
             'date_posted' => $datePosted,
             'video_posted_on' => $videoPostedOn,
             'user_id' => $user['id']
-        ]);
-        dispatch(new ProcessNewComment($row, $user['profile_picture']));
+        ];
+        $validated = $Comments->validate($newComment);
+        if ($validated !== true) {
+            return response([
+                'success' => false,
+                'message' => $validated
+            ], 401);
+        }
+        $row = $Comments->createComment($newComment);
+        dispatch(new ProcessNewComment($row, $user->profile_picture));
         $resData = [
             'success' => true
         ];
@@ -87,7 +96,9 @@ class VideoController extends Controller
                 'limit' => 10,
             ];
             $videos = $Videos->SelectQuery($query); // dont want to cache as we dont want a fixed list of titles
-            $titles = array_column($videos->toArray(), 'title');
+            if (!empty($videos)) {
+                $titles = array_column($videos->toArray(), 'title');
+            }
         } else { $titles = []; }
         return response()->json(['success' => true, 'data' => $titles]);
     }

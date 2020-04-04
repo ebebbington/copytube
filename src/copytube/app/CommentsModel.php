@@ -69,7 +69,7 @@ class CommentsModel extends BaseModel
      * @var array
      */
     protected $rules = [
-      'title' => 'required',
+        'comment' => 'required',
       'author'    => 'required',
       'date_posted' => 'required',
       'video_posted_on' => 'required',
