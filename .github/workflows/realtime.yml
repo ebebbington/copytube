@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Start Docker
-        run: docker-compose up -d
-      - name: Run Tests
-        run: docker exec copytube_realtime deno test
+        run: |
+          docker-compose up -d
+          docker exec copytube_realtime deno test
+#      - name: Run Tests
+#        run: docker exec copytube_realtime deno test

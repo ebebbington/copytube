@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Start Docker
-        run: docker-compose up -d
-      - name: Run Tests
-        run: docker exec copytube_socket npm run test
+        run: |
+          docker-compose up -d
+          docker exec copytube_socket npm run buildTS
+          docker exec copytube_socket npm run test
+#      - name: Run Tests
+#        run: docker exec copytube_socket npm run test
