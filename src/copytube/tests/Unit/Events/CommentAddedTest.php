@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Events;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class CommentAddedTest extends TestCase
 {

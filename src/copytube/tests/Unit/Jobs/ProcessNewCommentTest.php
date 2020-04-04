@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Jobs;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ProcessNewCommentTest extends TestCase
 {
