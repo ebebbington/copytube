@@ -125,10 +125,9 @@ const Home = (function () {
                 dropdown.empty()
                 dropdown.append('<li>Loading...</li>')
                 $.ajax({
-                    url: '/video',
-                    data: {
-                        title: value
-                    },
+                    url: '/video?title=' + value,
+                    method: 'GET',
+                    dataType: 'json',
                     success: function (data) {
                         console.log(data)
                         if (data.success) {

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\CommentsModel;
 use App\UserModel;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -16,13 +18,9 @@ class UserController extends Controller
         $user = Auth::user();
 
         // Remove file from fs
-        if ($user['profile_picture'] !== 'sample.jpg') {
-            try {
-                Storage::delete($user['profile_picture']);
-            } catch (FileException $err) {
-
-            }
-        }
+        try {
+            Storage::disk('local_public')->deleteDirectory('img/'.$user->id);                //Storage::disk('local_public')->delete('img/'.$user['id']);
+        } catch (FileException $err) { }
 
         // Remove row from db
         $UserModel = new UserModel();

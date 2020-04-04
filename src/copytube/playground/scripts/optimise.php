@@ -15,6 +15,8 @@ $command =
     '&&' .
     'php artisan route:cache' .
     '&&' .
+    'php artisan cache:clear' .
+    '&&' .
     'php artisan api:cache' .
     '&&' .
     'php artisan config:cache';

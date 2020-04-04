@@ -41,15 +41,6 @@ class RegisterController extends Controller
         $email    = $request->input('email');
         $hash = UserModel::generateHash($request->input('password'));
 
-        // Check if empty
-        Log::info('Retrieved input and hashed password: ', [$username, $email, $hash]);
-        if (empty($username) || empty($email) || empty($request->input('password'))) {
-          return response([
-            'success' => false,
-            'message' => 'Some details have not bene provided'
-          ]);
-        }
-
         // Validate user details
         $User = new UserModel;
         $profilePictureName = $request->hasFile('profile-picture')
@@ -61,11 +52,11 @@ class RegisterController extends Controller
             'password' => $request->input('password'),
             'profile_picture' => $profilePictureName
         ]);
-        if ($passedValidation === false) {
-            Log::info('Couldnt validate input');
+        if ($passedValidation !== true) {
+            Log::info('Couldnt validate input: ' . $passedValidation);
             return response([
               'success' => false,
-              'message' => 'couldnt validate the input'
+              'message' => $passedValidation
             ], 401);
         }
 
@@ -77,7 +68,6 @@ class RegisterController extends Controller
         // Check if user already exists
         $userExists = UserModel::exists($email);
         if ($userExists === true) {
-            Log::debug('User already exists');
             return response([
               'success' => false,
               'message' => 'user already exists',
@@ -88,7 +78,6 @@ class RegisterController extends Controller
         // Save the user
         $updated = $User->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
         if (empty($updated)) {
-            Log::debug('Didnt save a user');
             return response([
               'success' => false,
               'message' => 'user didnt save into the database',

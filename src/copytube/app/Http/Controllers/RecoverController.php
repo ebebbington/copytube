@@ -43,7 +43,7 @@ class RecoverController extends Controller
         if ($user === false) {
             return response([
                 'success' => false,
-                'Unable to authenticate'
+                'message' => 'Unable to authenticate'
             ], 403);
         }
 

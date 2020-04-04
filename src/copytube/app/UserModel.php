@@ -99,7 +99,7 @@ class UserModel extends BaseModel
     protected $rules = [
       'username' => 'required',
       'email'    => 'required|email',
-      'password' => 'required|regex:/^(?=.*\d)(?=.*[a-zA-Z]).{8,}/',
+      'password' => 'required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/',
         'profile_picture' => ['required', 'regex:/.*\.(jpg|jpeg|png)\b/']
     ];
 
@@ -118,14 +118,14 @@ class UserModel extends BaseModel
         return $result ? true : false;
     }
 
-    public function logout (int $id): void
-    {
-        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
-        session(['user' => null]);
-        $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);
-        $SessionModel = new SessionModel;
-        $SessionModel->DeleteQuery(['user_id' => $id]);
-    }
+//    public function logout (int $id): void
+//    {
+//        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
+//        session(['user' => null]);
+//        $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);
+//        $SessionModel = new SessionModel;
+//        $SessionModel->DeleteQuery(['user_id' => $id]);
+//    }
 
     /**
      * @method getByEmail

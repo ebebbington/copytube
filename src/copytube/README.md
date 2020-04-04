@@ -184,9 +184,17 @@ To do so, run: `npm run dev`. To understand a bit more, see the `webpack.mix.js`
 
 # PHPUnit Tests
 
+Tests have been developed for this project
+
 ## Writing the Tests
 
+Mimic existing file structure, and try to writ tests for each case
+
 ## Running the Tests
+
+`vendor/bin/phpunit` - All
+`vendor/bin/phpunit --coverage-html reports/` - All with coverage
+`vendor/bin/phpunit theTestMethod theTestFile` - Specific method in specific test
 
 # XDebug
 
