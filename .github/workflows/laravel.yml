@@ -19,7 +19,6 @@ jobs:
       - name: Start Docker
         run: |
           docker-compose up -d
-          docker exec copytube_phpfpm npm run dev
           docker exec copytube_phpfpm vendor/bin/phpunit —coverage-html reports/
       #    - name: Copy .env
       #      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
