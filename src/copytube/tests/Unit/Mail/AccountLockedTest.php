@@ -5,7 +5,7 @@ namespace Tests\Unit\Mail;
 use App\Mail\AccountLocked;
 use Illuminate\Support\Facades\Mail;
 use Mockery;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class AccountLockedTest extends TestCase
 {
@@ -16,8 +16,14 @@ class AccountLockedTest extends TestCase
      */
     public function testEmailIsSent ()
     {
-        Mail::to('edward.bebbington@intercity.technology')->send(new AccountLocked(
+        Mail::fake();
+        Mail::assertNothingSent();
+        Mail::to('EdwardSBebbington@hotmail.com')->send(new AccountLocked(
             'Test Email',
             'Generated from unit tests'));
+        Mail::assertSent(AccountLocked::class, function ($mail) {
+            return $mail->hasTo('EdwardSBebbington@hotmail.com');
+        });
+        Mail::assertSent(AccountLocked::class, 1);
     }
 }
