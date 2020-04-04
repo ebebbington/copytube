@@ -2,6 +2,10 @@
 
 namespace Tests\Unit\Events;
 
+use App\CommentsModel;
+use App\Events\CommentAdded;
+use App\Jobs\ProcessNewComment;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class CommentAddedTest extends TestCase
@@ -11,8 +15,19 @@ class CommentAddedTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testEventFired()
     {
-        $this->assertTrue(true);
+        Event::fake();
+        $CommentsModel = new CommentsModel;
+        $comment = $CommentsModel->CreateQuery([
+            'comment' => 'Test',
+            'author' => 'Test',
+            'date_posted' => '2020-02-02',
+            'user_id' => 2,
+            'video_posted_on' => 'test'
+        ]);
+        // Send event
+        dispatch(new ProcessNewComment($comment, 'img/test'));
+        Event::assertDispatched(CommentAdded::class, 1);
     }
 }
