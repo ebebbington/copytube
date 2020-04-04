@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Start Docker
+      - name: Start Docker and run tests
         run: |
           docker-compose up -d
           docker exec copytube_realtime deno test
