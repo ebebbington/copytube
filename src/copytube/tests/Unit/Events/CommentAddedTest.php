@@ -27,7 +27,7 @@ class CommentAddedTest extends TestCase
             'video_posted_on' => 'test'
         ]);
         // Send event
-        dispatch(new ProcessNewComment($comment, 'img/test'));
+        Event::dispatch(new CommentAdded($comment));
         Event::assertDispatched(CommentAdded::class, 1);
     }
 }
