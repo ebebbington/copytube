@@ -24,14 +24,6 @@ class RegisterTest extends TestCase
     private $validProfilePicturePath = 'img/sample.jpg';
 
     /**
-     * @test
-     */
-    public function newtest()
-    {
-
-    }
-
-    /**
      * Remove test users from the users table
      *
      * @return void
@@ -271,9 +263,4 @@ class RegisterTest extends TestCase
         $response->assertJson(['success' => true]);
         $response->assertStatus(200);
     }
-
-     public function testPasswordGetsHashed()
-     {
-         // TODO :: make sure the password is hashed
-     }
 }

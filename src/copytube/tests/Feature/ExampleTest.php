@@ -12,7 +12,7 @@ use Tests\TestCase;
  *
  * @package Tests\Feature
  *
- * @covers Test
+ * @covers TestCase
  */
 class ExampleTest extends TestCase
 {
@@ -47,7 +47,7 @@ class ExampleTest extends TestCase
      */
     public function testReturnVal()
     {
-        return [1, 2, 3];
+        //return [1, 2, 3];
     }
 
     /**
