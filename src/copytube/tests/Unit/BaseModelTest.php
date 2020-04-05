@@ -114,6 +114,15 @@ class BaseModelTest extends TestCase
         $this->deleteAllRows();
         $selectedRow = $TestModel->SelectQuery(['limit' => 1]);
         $this->assertEquals(false, $selectedRow);
+
+        //
+        // Existing cache key - for code coverage
+        //
+
+        Cache::put('test', 'hi', 3600);
+        $data = $TestModel->SelectQuery(['limit' => 1], 'test');
+        $this->assertEquals('hi', $data);
+
     }
 
     public function testUpdateQueryMethod ()
