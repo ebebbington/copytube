@@ -19,8 +19,8 @@ jobs:
       - name: Start Docker and run tests
         run: |
           docker-compose up -d > /dev/null
-          sleep 60
-          docker exec copytube_phpfpm /var/www/copytube/Makefile test
+          sleep 300
+          docker exec copytube_phpfpm vendor/bin/phpunit
       #    - name: Copy .env
       #      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       #    - name: Install Dependencies
