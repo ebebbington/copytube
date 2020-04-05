@@ -19,6 +19,7 @@ jobs:
       - name: Start Docker and run tests
         run: |
           docker-compose up -d > /dev/null
+          sleep 60
           docker exec copytube_socket /var/www/socket/node_modules/.bin/mocha -r ts-node/register test/**/*.ts
 #      - name: Run Tests
 #        run: docker exec copytube_socket npm run test
