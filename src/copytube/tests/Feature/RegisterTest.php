@@ -37,7 +37,7 @@ class RegisterTest extends TestCase
             ->delete();
     }
 
-    private function makePostRequest ($username, $email, $password, $profilePicture): ?Object
+    private function makePostRequest ($username, $email, $password, $profilePicture, $noCsrf = null): ?Object
     {
         $data = [];
         if (isset($username)) $data['username'] = $username;
@@ -46,7 +46,7 @@ class RegisterTest extends TestCase
         if (isset($profilePicture)) $data['profile-picture'] = $profilePicture;
 
         $headers = [
-            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            'HTTP_X-Requested-With' => isset($noCsrf) ? '' : 'XMLHttpRequest',
             'X-CSRF-TOKEN' => csrf_token()
         ];
         // Send the request
