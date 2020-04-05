@@ -17,4 +17,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Start Docker
-        run: docker-compose up -d
+        run: docker-compose up -d > /dev/null
