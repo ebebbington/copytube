@@ -44,19 +44,21 @@ class VideoTest extends TestCase
         // INCORRECT REQUEST
         //
 
-        // No comment
-        $res = $this->post('/video/comment', ['test' => 'hi'], $headers);
-        $res->assertStatus(403);
-        $res->assertJson(['success' => false, 'message' => 'Some data wasn\'t provided']);
+        // No comment but with video title to test validation
+        $res = $this->post('/video/comment', ['videoPostedOn' => 'Something More'], $headers);
+        $res->assertStatus(401);
+        $res->assertJson(['success' => false, 'message' => 'The comment field is required.']);
 
-        // No date posted
+        // No date posted but with video title to test validation
         $data = ['comment' => 'hello'];
+        $data['videoPostedOn'] = 'Something More';
         $res = $this->post('/video/comment', $data, $headers);
-        $res->assertStatus(403);
-        $res->assertJson(['success' => false, 'message' => 'Some data wasn\'t provided']);
+        $res->assertStatus(401);
+        $res->assertJson(['success' => false, 'message' => 'The date posted field is required.']);
 
         // No video posted on
         $data['datePosted'] = '2020-03-02';
+        $data['videoPostedOn'] = null;
         $res = $this->post('/video/comment', $data, $headers);
         $res->assertStatus(403);
         $res->assertJson(['success' => false, 'message' => 'Some data wasn\'t provided']);

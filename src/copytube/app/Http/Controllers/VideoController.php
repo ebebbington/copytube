@@ -22,14 +22,6 @@ class VideoController extends Controller
     public function postComment (Request $request)
     {
         $loggingPrefix = "[VideoController - ".__FUNCTION__.'] ';
-        // check its an ajax call
-        if ($request->ajax() === false) {
-            Log::debug('Request is not an ajax call');
-            return response([
-              'success' => false,
-            ], 403);
-        }
-        Log::debug('Request to POST video is an ajax');
 
         // get data
         $comment = $request->input('comment');
@@ -37,8 +29,7 @@ class VideoController extends Controller
         $videoPostedOn = $request->input('videoPostedOn');
         $user = Auth::user();
         $username = $user->username;
-        Log::debug(json_encode([$comment, $datePosted, $videoPostedOn, $username]));
-        if (empty($comment) || empty($datePosted) || empty($user) || empty($username) || empty($videoPostedOn)) {
+        if (empty($videoPostedOn)) {
             Log::debug('Some data wasn\'t provided');
             return response([
                 'success' => false,
@@ -60,7 +51,6 @@ class VideoController extends Controller
         // Create the new comment
         $Comments = new CommentsModel;
         $cacheKey = 'db:comments:videoTitle='.$videoPostedOn;
-        // TODO :: RAUN THROUGH VALIDAT EMETHOD FOR COMMENT
         $newComment = [
             'comment' => $comment,
             'author' => $username,
