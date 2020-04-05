@@ -169,7 +169,7 @@ class UserModel extends BaseModel
     {
         $recoverToken = Str::random(32);
         $success = $this->UpdateQuery(['id' => $id], ['recover_token' => $recoverToken], 'db:users:email_address='.$email);
-        return $success === true ? $recoverToken : false;
+        return $recoverToken;
     }
 
     /**
