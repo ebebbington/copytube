@@ -18,9 +18,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         // Remove file from fs
-        try {
-            Storage::disk('local_public')->deleteDirectory('img/'.$user->id);                //Storage::disk('local_public')->delete('img/'.$user['id']);
-        } catch (FileException $err) { }
+        Storage::disk('local_public')->deleteDirectory('img/'.$user->id);                //Storage::disk('local_public')->delete('img/'.$user['id']);
 
         // Remove row from db
         $UserModel = new UserModel();
