@@ -20,20 +20,22 @@ class HomeControllerTest extends TestCase
         $response->assertStatus(302);
     }
 
-    public function testGetWithAuth ()
+    public function testGetWithAuthWithInvalidQuery ()
+    {
+        $id = TestUtilities::createValidTestUserInDb(['logged_in' => 0]);
+        TestUtilities::logUserIn($id);
+        // make request with title but doesnt exist
+        $response = $this->get('/home?requestedVideo=Idontexist');
+        $response->assertStatus(404);
+        TestUtilities::removeTestUser();
+    }
+
+    public function testGetWithAuthWithNoQuery ()
     {
         // create user
-        $id = DB::table('users')->insertGetId([
-            'username' => 'TestUsername',
-            'email_address' => 'TestEmail@hotmail.com',
-            'password' => UserModel::generateHash('TestPassword1'),
-            'login_attempts' => 3,
-            'logged_in' => 0
-        ]);
+        $id = TestUtilities::createValidTestUserInDb(['logged_in' => 0]);
         // Auth user
-        Auth::loginUsingId($id);
-        $user = Auth::user();
-
+        TestUtilities::logUserIn($id);
         // Make request with no video request
         $response = $this->get('/home');
         // Assert the view
@@ -51,16 +53,18 @@ class HomeControllerTest extends TestCase
         foreach ($data['rabbitHoleVideos'] as $vid) {
             $this->assertEquals(true, $vid->title !== 'Something More');
         }
-        $this->assertEquals(11, sizeof($data['comments']));
+        $this->assertEquals(9, sizeof($data['comments']));
         foreach ($data['comments'] as $comment) {
             $this->assertEquals(true, $comment->video_posted_on === 'Something More');
         }
         $this->assertEquals(true, $data['email'] === 'TestEmail@hotmail.com');
+        TestUtilities::removeTestUser();
+    }
 
-        // make request with title but doesnt exist
-        $response = $this->get('/home?requestedVideo=Idontexist');
-        $response->assertStatus(404);
-
+    public function testGetWithAuthWithQuery ()
+    {
+        $id = TestUtilities::createValidTestUserInDb();
+        TestUtilities::logUserIn($id);
         // make request with correct title
         $response = $this->get('/home?requestedVideo=Lava Sample');
         // Assert the view
@@ -83,5 +87,6 @@ class HomeControllerTest extends TestCase
             $this->assertEquals(true, $comment->video_posted_on === 'Lava Sample');
         }
         $this->assertEquals(true, $data['email'] === 'TestEmail@hotmail.com');
+        TestUtilities::removeTestUser();
     }
 }

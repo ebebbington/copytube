@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;

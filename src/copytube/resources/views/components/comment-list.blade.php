@@ -1,4 +1,5 @@
 <div id="comment-list">
+    @if (isset($comments))
     @foreach ($comments as $comment)
     <div class="media">
         <div class="media-left">
@@ -13,6 +14,7 @@
         </div>
     </div>
     @endforeach
+    @endif
     @if (!isset($comments) || sizeof($comments) < 1)
     <p>This video has no comments</p>
     @endif
