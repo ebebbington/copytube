@@ -13,6 +13,7 @@ class TestUtilities
     public static string $validUsername = 'TestUsername';
     public static string $validEmail = 'TestEmail@hotmail.com';
     public static string $validPassword = 'Welcome1';
+    public static string $validProfilePicture = 'img/sample.jpg';
     public static array $invalidPasswords
         = [
             'testpassword1', // must include caps
