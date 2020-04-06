@@ -6,6 +6,7 @@ use App\UserModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -32,6 +33,7 @@ class HomeControllerTest extends TestCase
 
     public function testGetWithAuthWithNoQuery ()
     {
+        Cache::flush();
         // create user
         $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
         // Auth user
@@ -63,6 +65,7 @@ class HomeControllerTest extends TestCase
 
     public function testGetWithAuthWithQuery ()
     {
+        Cache::flush();
         $id = TestUtilities::createTestUserInDb();
         TestUtilities::logUserIn($id);
         // make request with correct title

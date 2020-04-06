@@ -44,6 +44,8 @@ class LoginTest extends TestCase
 
     public function testPostLockedAccount ()
     {
+        Cache::flush();
+        TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb(['login_attempts' => 0]);
         // Send post request
         $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$validPassword);

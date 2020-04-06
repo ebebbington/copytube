@@ -8,9 +8,11 @@ This section provides the main application for this project, such as:
 
 * All client side functionality
 
-* Routing
+* Routing (MVC Architecture)
 
 * Video chat
+
+* 100% Code Coverage
 
 # Directory Structure / Description
 
