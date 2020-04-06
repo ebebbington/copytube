@@ -39,7 +39,12 @@ class TestUtilities
         if (isset($query) && sizeof($query) >= 1)
             DB::table('users')->where($query)->delete();
         else
-            DB::table('users')->where(['username' => 'TestUsername'])->delete();
+            DB::table('users')->where(['username' => TestUtilities::$validUsername])->delete();
+    }
+
+    public static function getTestUserInDb ()
+    {
+        return DB::table('users')->where('email_address', '=', TestUtilities::$validEmail)->first();
     }
 
     public static function logUserIn (int $id)
