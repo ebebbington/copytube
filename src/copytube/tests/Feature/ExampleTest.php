@@ -11,8 +11,6 @@ use Tests\TestCase;
  * Class ExampleTest
  *
  * @package Tests\Feature
- *
- * @covers TestCase
  */
 class ExampleTest extends TestCase
 {
@@ -47,7 +45,9 @@ class ExampleTest extends TestCase
      */
     public function testReturnVal()
     {
-        //return [1, 2, 3];
+        $arr = [1, 2, 3];
+        $this->assertTrue($arr === [1, 2, 3]);
+        return $arr;
     }
 
     /**

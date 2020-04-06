@@ -94,21 +94,4 @@ class UserTest extends TestCase
         // Check we were redirected (302) to register page
         $res->assertStatus(302);
     }
-
-    /**
-     * To test when deleteting the directory fails
-     */
-    public function testDeleteMethodWithAuthOnError ()
-    {
-        $userId = $this->createUserAndGetId();
-        // Auth myself as its an authed route
-        Auth::loginUsingId($userId);
-        $user = Auth::user();
-        // Make request
-        $headers = [
-            'HTTP_X-Requested-With' => 'XMLHttpRequest',
-            'X-CSRF-TOKEN' => csrf_token()
-        ];
-        $res = $this->delete('/user', $headers);
-    }
 }
