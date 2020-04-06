@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\DB;
 
 class TestUtilities
 {
-    public static function createValidTestUserInDb (array $overrides = [])
+    public static string $validUsername = 'TestUsername';
+    public static string $validEmail = 'TestEmail@hotmail.com';
+    public static string $validPassword = 'Welcome1';
+
+    public static function createTestUserInDb (array $overrides = [])
     {
         $data = [
-            'username' => isset($overrides['username']) ? $overrides['username'] : 'TestUsername',
-            'email_address' => isset($overrides['email_address']) ? $overrides['email_address'] : 'TestEmail@hotmail.com',
-            'password' => isset($overrides['password']) ? $overrides['password'] : UserModel::generateHash('TestPassword1'),
+            'username' => isset($overrides['username']) ? $overrides['username'] : TestUtilities::$validUsername,
+            'email_address' => isset($overrides['email_address']) ? $overrides['email_address'] : TestUtilities::$validEmail,
+            'password' => isset($overrides['password']) ? $overrides['password'] : UserModel::generateHash(TestUtilities::$validPassword),
             'login_attempts' => isset($overrides['login_attempts']) ? $overrides['login_attempts'] : 3,
             'logged_in' => isset($overrides['logged_in']) ? $overrides['logged_in'] : 1
         ];
@@ -23,7 +27,7 @@ class TestUtilities
         return $id;
     }
 
-    public static function removeTestUser (array $query = [])
+    public static function removeTestUsersInDb (array $query = [])
     {
         if (isset($query) && sizeof($query) >= 1)
             DB::table('users')->where($query)->delete();

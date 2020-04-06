@@ -22,18 +22,18 @@ class HomeControllerTest extends TestCase
 
     public function testGetWithAuthWithInvalidQuery ()
     {
-        $id = TestUtilities::createValidTestUserInDb(['logged_in' => 0]);
+        $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
         TestUtilities::logUserIn($id);
         // make request with title but doesnt exist
         $response = $this->get('/home?requestedVideo=Idontexist');
         $response->assertStatus(404);
-        TestUtilities::removeTestUser();
+        TestUtilities::removeTestUsersInDb();
     }
 
     public function testGetWithAuthWithNoQuery ()
     {
         // create user
-        $id = TestUtilities::createValidTestUserInDb(['logged_in' => 0]);
+        $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
         // Auth user
         TestUtilities::logUserIn($id);
         // Make request with no video request
@@ -58,12 +58,12 @@ class HomeControllerTest extends TestCase
             $this->assertEquals(true, $comment->video_posted_on === 'Something More');
         }
         $this->assertEquals(true, $data['email'] === 'TestEmail@hotmail.com');
-        TestUtilities::removeTestUser();
+        TestUtilities::removeTestUsersInDb();
     }
 
     public function testGetWithAuthWithQuery ()
     {
-        $id = TestUtilities::createValidTestUserInDb();
+        $id = TestUtilities::createTestUserInDb();
         TestUtilities::logUserIn($id);
         // make request with correct title
         $response = $this->get('/home?requestedVideo=Lava Sample');
@@ -87,6 +87,6 @@ class HomeControllerTest extends TestCase
             $this->assertEquals(true, $comment->video_posted_on === 'Lava Sample');
         }
         $this->assertEquals(true, $data['email'] === 'TestEmail@hotmail.com');
-        TestUtilities::removeTestUser();
+        TestUtilities::removeTestUsersInDb();
     }
 }
