@@ -13,12 +13,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideoTest extends TestCase
 {
-    public function testPostComment ()
+    public function testPostCommentWithoutAuth ()
     {
-        DB::table('users')
-            ->where('email_address', '=', 'TestEmail@hotmail.com')
-            ->delete();
-        // Not authed
+        TestUtilities::removeTestUsersInDb();
         // Run request without auth
         $headers = [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
@@ -26,18 +23,14 @@ class VideoTest extends TestCase
         ];
         $res = $this->post('/video/comment', ['comment' => 'test'], $headers);
         $res->assertStatus(302);
+        $res->assertRedirect('/login');
+    }
 
+    public function testPostCommentWithAuth ()
+    {
         // Auth myself
-        DB::table('users')->insert([
-            'username' => 'TestUsername',
-            'email_address' => 'TestEmail@hotmail.com',
-            'password' => UserModel::generateHash('TestPassword1'),
-            'login_attempts' => 3,
-            'logged_in' => 0,
-            'profile_picture' => 'img/sample.jpg'
-        ]);
-        $user = DB::table('users')->where('email_address', '=', 'TestEmail@hotmail.com')->first();
-        Auth::loginUsingId($user->id);
+        $id = TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
+        Auth::loginUsingId($id);
         $user = Auth::user();
 
         //
@@ -45,6 +38,10 @@ class VideoTest extends TestCase
         //
 
         // No comment but with video title to test validation
+        $headers = [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            'X-CSRF-TOKEN' => csrf_token()
+        ];
         $res = $this->post('/video/comment', ['videoPostedOn' => 'Something More'], $headers);
         $res->assertStatus(401);
         $res->assertJson(['success' => false, 'message' => 'The comment field is required.']);
@@ -79,8 +76,9 @@ class VideoTest extends TestCase
         $res->assertStatus(200);
         $res->assertJson(['success' => true]);
 
-        // Remove all comments
-        DB::table('comments')->where('user_id', '=', $user->id)->delete();
+        // Remove all comments and user
+        DB::table('comments')->where('user_id', '=', $id)->delete();
+        TestUtilities::removeTestUsersInDb();
 
         // TODO :: Listen for the message on the channel using redis. Needs a queue listener
 
@@ -97,16 +95,8 @@ class VideoTest extends TestCase
         $res->assertStatus(302);
 
         // Auth myself
-        DB::table('users')->insert([
-            'username' => 'TestUsername',
-            'email_address' => 'TestEmail@hotmail.com',
-            'password' => UserModel::generateHash('TestPassword1'),
-            'login_attempts' => 3,
-            'logged_in' => 0
-        ]);
-        $user = DB::table('users')->where('email_address', '=', 'TestEmail@hotmail.com')->first();
-        Auth::loginUsingId($user->id);
-        $user = Auth::user();
+        $id = TestUtilities::createTestUserInDb();
+        Auth::loginUsingId($id);
 
         // send requestResponds with empty array when no title is passed in e.g. no value in search bar
         $res = $this->get('/video?title=', $headers);
@@ -122,6 +112,8 @@ class VideoTest extends TestCase
         $res = $this->get('/video?title=I Dont exist', $headers);
         $res->assertStatus(200);
         $res->assertJson(['success' => true, 'data' => []]);
+
+        TestUtilities::removeTestUsersInDb();
     }
 
 }

@@ -30,7 +30,8 @@ class TestUtilities
             'password' => isset($overrides['password']) ? $overrides['password'] : UserModel::generateHash(TestUtilities::$validPassword),
             'login_attempts' => isset($overrides['login_attempts']) ? $overrides['login_attempts'] : 3,
             'logged_in' => isset($overrides['logged_in']) ? $overrides['logged_in'] : 1,
-            'recover_token' => isset($overrides['recover_token']) ? $overrides['recover_token'] : null
+            'recover_token' => isset($overrides['recover_token']) ? $overrides['recover_token'] : null,
+            'profile_picture' => isset($overrides['profile_picture']) ? $overrides['profile_picture'] : null
         ];
         $id = DB::table('users')->insertGetId($data);
         return $id;
