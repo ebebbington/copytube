@@ -1,0 +1,13 @@
+language: ruby
+
+services:
+  - docker
+
+before_install:
+- docker-compose up -d
+- sleep 300
+
+script:
+- docker exec copytube_phpfpm vendor/bin/phpunit
+- docker exec copytube_socket node_modules/.bin/mocha -r ts-node/register test/**/*.ts
+- docker exec copytube_realtime deno test
