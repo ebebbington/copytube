@@ -40,6 +40,10 @@ class CommentsModelTest extends TestCase
         }
         $redisData = Cache::get('db:comments:videoTitle=Something+More');
         $this->assertEquals(true, isset($redisData) && !empty($redisData));
+
+        // And when no comments are found
+        $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture('I dont exist');
+        $this->assertTrue($comments === []);
     }
 
     public function testCreatingComment ()
