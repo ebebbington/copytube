@@ -27,23 +27,6 @@ class RecoverTest extends TestCase
         return $response;
     }
 
-    private function createTestUser ()
-    {
-        DB::table('users')->insert([
-            'username' => 'Test username',
-            'email_address' => 'Testemail@hotmail.com',
-            'password' => UserModel::generateHash('Testpassword1'),
-            'logged_in' => 0,
-            'login_attempts' => 0,
-            'recover_token' => 'test_token',
-        ]);
-    }
-
-    private function deleteTestUser ()
-    {
-        DB::table('users')->where('email_address', '=', 'Testemail@hotmail.com')->delete();
-    }
-
     public function testGetWithIncorrectToken ()
     {
         // No query
@@ -65,12 +48,12 @@ class RecoverTest extends TestCase
     public function testGetWithCorrectToken ()
     {
         // Assert correct response with correct token
-        $this->createTestUser();
+        TestUtilities::createTestUserInDb(['recover_token' => 'test_token']);
         $response = $this->get('/recover?token=test_token');
         $response->assertStatus(200);
         $response->assertViewIs('recover');
         $response->assertCookie('recoverToken');
-        $this->deleteTestUser();
+        TestUtilities::removeTestUsersInDb();
     }
 
     public function testPost ()
@@ -81,12 +64,12 @@ class RecoverTest extends TestCase
         $response->assertStatus(403);
 
         // Test it updates the row correctly
-        $this->createTestUser();
-        $response = $this->sendPostRequest('test_token', 'Testemail@hotmail.com', 'Testpassword2');
-        $user = DB::table('users')->where('email_address', '=', 'Testemail@hotmail.com')->first();
+        TestUtilities::createTestUserInDb(['recover_token' => 'test_token']);
+        $response = $this->sendPostRequest('test_token', TestUtilities::$validEmail, TestUtilities::$validPassword);
+        $user = TestUtilities::getTestUserInDb();
         $this->assertEquals(true, $user->login_attempts === 3);
         $this->assertEquals(true, $user->recover_token === null);
-        $this->assertEquals(true, Hash::check('Testpassword2', $user->password));
+        $this->assertEquals(true, Hash::check(TestUtilities::$validPassword, $user->password));
 
         // Assert json response
         $response->assertJson(['success' => true, 'message' => 'Successfully updated your password']);

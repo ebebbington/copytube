@@ -22,12 +22,12 @@ class BaseModelTest extends TestCase
         DB::table('test')->delete();
     }
 
-    public function testSelectQueryMethod ()
+    public function testSelectQueryMethodWithCacheKey ()
     {
         //
         // PASSING IN CACHE KEY
         //
-
+        Cache::flush();
         // Quickly create a row
         $value = 'TEST1';
         $this->insertOne($value);
@@ -44,10 +44,19 @@ class BaseModelTest extends TestCase
         $this->deleteAllRows();
 
         //
-        // USING SELECT PROPERTY
+        // Existing cache key - for code coverage
         //
 
+        Cache::put('test', 'hi', 3600);
+        $data = $TestModel->SelectQuery(['limit' => 1], 'test');
+        $this->assertEquals('hi', $data);
+
+    }
+
+    public function testSelectQueryWithSelect ()
+    {
         // Selecting data
+        $TestModel = new TestModel();
         $createdRow = $TestModel->CreateQuery(['test' => 'Hello world']);
         $selectedRow = $TestModel->SelectQuery(['select' => ['id', 'test'], 'limit' => 1]);
         $createdRowId = $createdRow->id;
@@ -56,12 +65,12 @@ class BaseModelTest extends TestCase
         $this->assertEquals(true, isset($selectedRowId));
         $this->assertEquals($createdRowId, $selectedRowId);
         $this->deleteAllRows();
+    }
 
-        //
-        // JOIN PROPERTY
-        //
-
+    public function testSelectQueryWithJoin ()
+    {
         // Joining
+        $TestModel = new TestModel();
         $TestModel->CreateQuery(['test' => 'Something More']);
         $selectedRow = $TestModel->SelectQuery([
             'select' => ['test.*', 'videos.title'],
@@ -71,12 +80,12 @@ class BaseModelTest extends TestCase
         $this->assertEquals('Something More', $selectedRow->test);
         $this->assertEquals('Something More', $selectedRow->title);
         $this->deleteAllRows();
+    }
 
-        //
-        // WHERE
-        //
-
+    public function testSelectQueryWithWhere ()
+    {
         // Where
+        $TestModel = new TestModel();
         $TestModel->CreateQuery(['test' => 'Test2']);
         $selectedRow = $TestModel->SelectQuery([
             'where' => "test = 'Test2'",
@@ -84,12 +93,12 @@ class BaseModelTest extends TestCase
         ]);
         $this->assertEquals('Test2', $selectedRow->test);
         $this->deleteAllRows();
+    }
 
-        //
-        // LIMIT
-        //
-
+    public function testSelectQueryWithLimit ()
+    {
         // Limit
+        $TestModel = new TestModel();
         $TestModel->CreateQuery(['test' => 'Test1']);
         $TestModel->CreateQuery(['test' => 'Test2']);
         $selectedRow = $TestModel->SelectQuery(['limit' => 1]);
@@ -99,24 +108,32 @@ class BaseModelTest extends TestCase
         $selectedRows = $TestModel->SelectQuery(['limit' => -1]);
         $this->assertEquals(true, is_object($selectedRows));
         $this->deleteAllRows();
+    }
 
-        //
-        // ORDER BY
-        //
+    public function testSelectQueryWithOrderBy ()
+    {
+        // Order by
+        $TestModel = new TestModel();
+        $TestModel->CreateQuery(['test' => '3']);
+        $TestModel->CreateQuery(['test' => '1']);
+        $TestModel->CreateQuery(['test' => '2']);
+        $rows = $TestModel->SelectQuery(['limit' => 3, 'orderBy' => ['column' => 'test', 'direction' => 'DESC']]);
+        $this->assertTrue($rows[0]->test === '3');
+        $this->assertTrue($rows[1]->test === '2');
+        $this->assertTrue($rows[2]->test === '1');
+        $this->deleteAllRows();
+    }
 
-        // TODO :: Order by
-
-        //
-        // EMPTY
-        //
-
+    public function testSelectQueryWhenEmpty ()
+    {
         // No data found expect false
         $this->deleteAllRows();
+        $TestModel = new TestModel();
         $selectedRow = $TestModel->SelectQuery(['limit' => 1]);
         $this->assertEquals(false, $selectedRow);
     }
 
-    public function testUpdateQueryMethod ()
+    public function testUpdateQueryMethodWithNoCacheKey ()
     {
         // Expect correct result
         $TestModel = new TestModel;
@@ -126,9 +143,13 @@ class BaseModelTest extends TestCase
         $row = $TestModel->SelectQuery(['where' => "test = 'Goodbye world'", 'limit' => 1]);
         $this->assertEquals('Goodbye world', $row->test);
         $this->deleteAllRows();
+    }
 
+    public function testUpdateQueryWithCacheKey ()
+    {
         // iF CACHE key passed in expect the key value pair to not exist anymore
         Cache::put('db:test:helloworld', 'hello', 3600);
+        $TestModel = new TestModel();
         $TestModel->CreateQuery(['test' => 'Hello world']);
         $TestModel->UpdateQuery(['test' => 'Hello world'], ['test' => 'Goodbye world'], 'db:test:helloworld');
         $redisData = Cache::get('db:test:helloworld');
@@ -136,13 +157,17 @@ class BaseModelTest extends TestCase
         $redisData = Cache::get('db:test:helloworld');
         $this->assertEquals($redisData, $row);
         $this->deleteAllRows();
+    }
 
+    public function testUpdateQueryOnFailure ()
+    {
         // Expect result to be false on error
+        $TestModel = new TestModel();
         $success = $TestModel->UpdateQuery(['test' => 'I dont exist'], ['test' => 'Hello world']);
         $this->assertEquals(false, $success);
     }
 
-    public function testDeleteQueryMethod ()
+    public function testDeleteQueryMethodOnSuccess ()
     {
         // Expect redis to forget the cache key if passed in on success
         Cache::put('db:test:deleteQuery', 'hi', 3600);
@@ -152,8 +177,12 @@ class BaseModelTest extends TestCase
         $redisData = Cache::get('db:test:deleteQuery');
         $this->assertEquals(null, $redisData);
         $this->assertEquals(true, $success);
+    }
 
+    public function testDeleteQueryMethodOnFailure ()
+    {
         // Expect res to be false if failed
+        $TestModel = new TestModel();
         $success = $TestModel->DeleteQuery(['test' => 'I dont exist']);
         $this->assertEquals(false, $success);
     }
@@ -178,9 +207,9 @@ class BaseModelTest extends TestCase
 
     public function testNormalisingCacheKey ()
     {
-        // TODO :: Expect any spaces to be replaced with "+"
+        // Expect any spaces to be replaced with "+"
         $exampleKey = "db:test:title=Something More";
-        $replacedKey = "db:test:title=Something More";
+        $replacedKey = "db:test:title=Something+More";
         $TestModel = new TestModel;
         $TestModel->CreateQuery(['test' => 'Hi']);
         Cache::put($replacedKey, 'Hi', 3600);
@@ -191,7 +220,7 @@ class BaseModelTest extends TestCase
 
     public function testValidateMethod ()
     {
-        // TODO :: Ensure it passes (true) if success and the error message when fails
+        // Ensure it passes (true) if success and the error message when fails
         $TestModel = new TestModel;
         $res = $TestModel->validate(['test' => 'hello']);
         $this->assertEquals(true, $res);

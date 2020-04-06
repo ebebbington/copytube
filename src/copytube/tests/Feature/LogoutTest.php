@@ -28,25 +28,19 @@ class LogoutTest extends TestCase
     public function testDeleteUserWithAuth ()
     {
         // create user
-        DB::table('users')->insert([
-            'username' => 'TestUsername',
-            'email_address' => 'TestEmail@hotmail.com',
-            'password' => UserModel::generateHash('TestPassword1'),
-            'login_attempts' => 3,
-            'logged_in' => 0
-        ]);
-        $user = DB::table('users')->where('email_address', '=', 'TestEmail@hotmail.com')->first();
+        TestUtilities::createTestUserInDb();
+        $user = TestUtilities::getTestUserInDb();
         // Auth user
         Auth::loginUsingId($user->id);
         // User must be authed
-        $user = Auth::user();
-        $this->assertEquals(true, isset($user));
+        $authedUser = Auth::user();
+        $this->assertEquals(true, isset($authedUser));
         // send request
         $response = $this->makeDeleteRequest();
         // assert response
         $response->assertStatus(302);
         // user must have logged_in = 1
-        $user = DB::table('users')->where('email_address', '=', 'TestEmail@hotmail.com')->first();
+        $user = TestUtilities::getTestUserInDb();
         $this->assertEquals(1, $user->logged_in);
         Auth::logout();
     }

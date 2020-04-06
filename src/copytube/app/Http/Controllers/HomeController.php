@@ -61,6 +61,7 @@ class HomeController extends Controller
         $videoRequested = $request->query('requestedVideo') ?? 'Something More'; // default to some video if we are routing to /home
         $VideosModel = new VideosModel;
         $mainVideo = $VideosModel->getVideoByTitle($videoRequested);
+        Log::debug('THE VIDEO of req title '.$videoRequested.': ' . json_encode($mainVideo));
         // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
             Log::error($loggingPrefix . "Requested main video of $videoRequested was not found");
@@ -80,8 +81,6 @@ class HomeController extends Controller
         // Get the comments for the main video
         $Comments = new CommentsModel;
         $comments = $Comments->getAllByVideoTitleAndJoinProfilePicture($videoRequested);
-        Log::debug($user->profile_picture);
-        Log::debug($user['profile_picture']);
         $renderData = [
             'title' => 'Home',
             'username' => $user->username,

@@ -129,7 +129,10 @@ class CommentsModel extends BaseModel
         ];
         $cacheKey = "db:comments:videoTitle=".$videoTitle;
         $comments = $this->SelectQuery($query, $cacheKey);
-        $comments = $this->formatDates($comments);
+        if ($comments)
+            $comments = $this->formatDates($comments);
+        else
+            $comments = [];
         return $comments;
     }
 

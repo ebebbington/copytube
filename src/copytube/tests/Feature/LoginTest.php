@@ -13,10 +13,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LoginTest extends TestCase
 {
-    private $validUsername = 'ValidUsername';
-    private $validEmail = 'testemail@hotmail.com';
-    private $validPassword = 'TestPassword1';
-
     public function setUp(): void
     {
         parent::setUp();
@@ -39,22 +35,6 @@ class LoginTest extends TestCase
         return $response;
     }
 
-    private function createTestUser ($loginAttempts)
-    {
-        DB::table('users')->insert([
-            'username' => $this->validUsername,
-            'email_address' => $this->validEmail,
-            'password' => UserModel::generateHash($this->validPassword),
-            'login_attempts' => $loginAttempts,
-            'logged_in' => 1
-        ]);
-    }
-
-    private function removeTestUser ()
-    {
-        DB::table('users')->whereRaw("email_address = '$this->validEmail'")->delete();
-    }
-
     public function testGetRequest()
     {
         $response = $this->json('GET', '/login');
@@ -64,40 +44,41 @@ class LoginTest extends TestCase
 
     public function testPostLockedAccount ()
     {
-        $this->removeTestUser();
-        $this->createTestUser(0);
+        Cache::flush();
+        TestUtilities::removeTestUsersInDb();
+        TestUtilities::createTestUserInDb(['login_attempts' => 0]);
         // Send post request
-        $response = $this->makePostRequest($this->validEmail, $this->validPassword);
+        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$validPassword);
         $response->assertJson(['success' => false, 'message' => 'This account has been locked.']);
         $response->assertStatus(403);
-        $this->removeTestUser();
+        TestUtilities::removeTestUsersInDb();
     }
 
     public function testPostIncorrectPasswordButValidEmail ()
     {
-        $this->createTestUser(3);
-        $response = $this->makePostRequest($this->validEmail, 'incorrectPassword');
+        TestUtilities::createTestUserInDb();
+        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$invalidPasswords[0]);
         $response->assertJson(['success' => false, 'message' => 'Failed to authenticate']);
         $response->assertStatus(403);
-        $this->removeTestUser();
+        TestUtilities::removeTestUsersInDb();
     }
 
     // eg cannot auth attempt it as the user isnt in db
     public function testPostNonExistingUser ()
     {
-        $response = $this->makePostRequest($this->validEmail, $this->validPassword);
+        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$validPassword);
         $response->assertJson(['success' => false, 'message' => 'This account does not exist with that email']);
         $response->assertStatus(403);
     }
 
     public function testPostSuccessfulLogin ()
     {
-        $this->createTestUser(3);
-        $response = $this->makePostRequest($this->validEmail, $this->validPassword);
-        $user = DB::table('users')->where('email_address', '=', $this->validEmail)->first();
+        TestUtilities::createTestUserInDb();
+        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$validPassword);
+        $user = DB::table('users')->where('email_address', '=', TestUtilities::$validEmail)->first();
         $this->assertEquals(0, $user->logged_in);
         $response->assertJson(['success' => true]);
         $response->assertStatus(200);
-        $this->removeTestUser();
+        TestUtilities::removeTestUsersInDb();
     }
 }

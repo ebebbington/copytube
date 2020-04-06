@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Redis;
  *
  * @package App\Helpers
  *
+ * @codeCoverageIgnore
+ *
  * @description
  * Abstracted logic to handle getting, setting, and updating data inside the Redis cache.
  * Mainly because this is database data so we are encoding and decoding the data.

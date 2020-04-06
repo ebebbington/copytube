@@ -44,12 +44,6 @@ class LoginController extends Controller
         // Disable their account if no login attempts are left
         if ($user->login_attempts === 0) {
             $token = $UserModel->lockAccount($user->id, $email);
-            if (!$token) {
-                return response([
-                    'success' => false,
-                    'message' => 'Failed to lock your account'
-                ], 500);
-            }
             $title = 'Account Locked';
             $message
                 = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token='
@@ -67,13 +61,13 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             // Set the user to logged in
             $updated = $UserModel->updateLoggedIn(0, $email);
-            if ($updated === false) {
-                Log::debug('Failed to update the model when updating logged_in');
-                return response([
-                    'success' => false,
-                    'message' => 'Failed to update the model'
-                ]);
-            }
+//            if ($updated === false) {
+//                Log::debug('Failed to update the model when updating logged_in');
+//                return response([
+//                    'success' => false,
+//                    'message' => 'Failed to update the model'
+//                ]);
+//            }
 
             return response([
                 'success' => true

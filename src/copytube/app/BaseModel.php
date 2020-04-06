@@ -51,6 +51,7 @@ class BaseModel extends Model
 
     /**
      * @param bool|object $Model
+     * @codeCoverageIgnore
      */
     private function populate($Model = false)
     {
@@ -138,13 +139,7 @@ class BaseModel extends Model
 
         $result = $result->get();
 
-        if ($result->toArray() === [])
-            return false;
-        if (empty($result))
-            return false;
-        if (!isset($result))
-            return false;
-        if (!$result)
+        if ($result->toArray() === [] || empty($result) || !isset($result) || !$result)
             return false;
 
         // When asking for 1 record, return a single object as they dont expect an array

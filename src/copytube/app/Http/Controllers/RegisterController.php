@@ -27,14 +27,6 @@ class RegisterController extends Controller
     public function submit(Request $request)
     {
         $loggingPrefix = "[RegisterController - ".__FUNCTION__.'] ';
-        // check its an ajax call
-        if ($request->ajax() === false) {
-            Log::debug('Request is not an ajax call');
-            return response([
-              'success' => false,
-            ], 403);
-        }
-        Log::info('Request to POST register is an ajax');
 
         // get data
         $username = $request->input('username');
@@ -76,13 +68,13 @@ class RegisterController extends Controller
         Log::info('User doesnt exists');
 
         // Save the user
-        $updated = $User->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
-        if (empty($updated)) {
-            return response([
-              'success' => false,
-              'message' => 'user didnt save into the database',
-            ], 500);
-        }
+        $row = $User->CreateQuery(['username' => $username, 'email_address' => $email, 'password' => $hash, 'logged_in' => 1, 'login_attempts' => 3]);
+//        if (empty($updated)) {
+//            return response([
+//              'success' => false,
+//              'message' => 'user didnt save into the database',
+//            ], 500);
+//        }
         // Get user id, save profile picture if required and update the profile_picture field
         $user = $User->SelectQuery(['where' => "email_address = '$email'", 'limit' => 1]);
         $profilePicturePath = $request->hasFile('profile-picture')
