@@ -1,5 +1,7 @@
 # CopyTube (Project)
 
+[![Build Status](https://travis-ci.com/ebebbington/copytube.svg?branch=master)](https://travis-ci.com/ebebbington/copytube)
+
 *(Note this is a learning project)*
 
 CopyTube is an impersonation of YouTube, utilising videos, comments, a login system and sessions. This project provides an application that uses the tools below so it can act as a training ground to further develop knowledge in those tools.
