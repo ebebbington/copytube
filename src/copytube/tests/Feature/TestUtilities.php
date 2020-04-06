@@ -13,6 +13,13 @@ class TestUtilities
     public static string $validUsername = 'TestUsername';
     public static string $validEmail = 'TestEmail@hotmail.com';
     public static string $validPassword = 'Welcome1';
+    public static array $invalidPasswords
+        = [
+            'testpassword1', // must include caps
+            'TESTPASSWORD1', // must // include lowercase
+            'testPassword', // must include number
+            'testPas', // must be min len of 8
+        ];
 
     public static function createTestUserInDb (array $overrides = [])
     {
