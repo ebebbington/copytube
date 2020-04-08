@@ -21,6 +21,16 @@ const Home = (function () {
             $('#comment-list').prepend(newCommentHtml)
         }
 
+        //@ts-ignore
+        Realtime.handleUserDeleted = function (message: { channel: string, type: string, userId: number}) {
+            const $allComments = $('#comment-list .media[data-user-id="' + message.userId + '"]')
+            if (!$allComments.length)
+                return false
+            $allComments.each(function () {
+                $(this).remove()
+            })
+        }
+
         /**
          * Handler for scrolling and the search bar
          * @param elem

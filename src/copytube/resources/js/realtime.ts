@@ -21,7 +21,9 @@ Realtime.onmessage = function(event) {
                 //@ts-ignore
                 if (Realtime.handleNewVideoComment) Realtime.handleNewVideoComment(message)
                 break
-            default:
+            case 'realtime.users.delete':
+                //@ts-ignore
+                if (Realtime.handleUserDeleted) Realtime.handleUserDeleted(message)
                 break
         }
     } catch (err) {}
