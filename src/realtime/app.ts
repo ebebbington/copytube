@@ -35,7 +35,7 @@ function sendRedisMessageToSocketClients (message: string) {
     }
 }
 async function subscribeToRedis () {
-    const channels = ['realtime.comments.new']
+    const channels = ['realtime.comments.new', 'realtime.users.delete']
     const sub = await redis.subscribe(...channels);
     console.info('Subscribed to redis and awaiting messages on the following channels:');
     console.info(channels);
