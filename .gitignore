@@ -21,3 +21,4 @@ src/socket/node_modules
 src/socket/server.js
 src/copytube/reports
 src/copytube/img
+src/socket/*.js
