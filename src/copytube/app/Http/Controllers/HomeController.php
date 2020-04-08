@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessUserDeleted;
 use App\UserModel;
 use App\SessionModel;
 use http\Client\Curl\User;
