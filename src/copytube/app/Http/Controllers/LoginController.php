@@ -23,6 +23,8 @@ class LoginController extends Controller
 
     public function post (Request $request)
     {
+        if (Auth::user())
+            return response()->redirectTo('/home');
         $loggingPrefix = "[LoginController - ".__FUNCTION__.'] ';
         Log::debug($loggingPrefix . 'Return view of `chat`');
         // get data
@@ -86,6 +88,8 @@ class LoginController extends Controller
 
     public function get (Request $request)
     {
+        if (Auth::user())
+            return response()->redirectTo('/home');
         $loggingPrefix = "[LoginController - ".__FUNCTION__.'] ';
         // session(['hi' => 'hello']);
         // $var = 'hi';
