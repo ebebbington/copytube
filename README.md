@@ -1,6 +1,7 @@
 # CopyTube (Project)
 
 [![Build Status](https://travis-ci.com/ebebbington/copytube.svg?branch=master)](https://travis-ci.com/ebebbington/copytube)
+[![codecov](https://codecov.io/gh/ebebbington/copytube/branch/master/graph/badge.svg)](https://codecov.io/gh/ebebbington/copytube)
 
 *(Note this is a learning project)*
 
