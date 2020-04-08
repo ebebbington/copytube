@@ -4,8 +4,12 @@ services:
   - docker
 
 before_install:
+- pip install --user codecov
 - docker-compose up -d
 - sleep 300
+
+after_success:
+  - codecov --file coverage/lcov.info --disable search
 
 script:
 - docker exec copytube_phpfpm vendor/bin/phpunit
