@@ -1,7 +1,7 @@
 <div id="comment-list">
     @if (isset($comments))
     @foreach ($comments as $comment)
-    <div class="media">
+    <div class="media" data-user-id="{{ $comment->user_id }}">
         <div class="media-left">
             <img src="{{ $comment->profile_picture }}" alt="{{ $comment->author }}'s profile picture">
         </div>

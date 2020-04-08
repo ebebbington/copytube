@@ -20,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\CommentAdded' => [
             'App\Listeners\SendComment'
+        ],
+        'App\Events\UserDeleted' => [
+            'App\Listeners\SendUserId'
         ]
     ];
 

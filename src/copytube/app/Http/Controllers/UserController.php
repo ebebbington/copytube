@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CommentsModel;
+use App\Jobs\ProcessUserDeleted;
 use App\UserModel;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
@@ -30,6 +31,9 @@ class UserController extends Controller
 
         // Log user out from Auth
         Auth::logout();
+
+        // Send event to remove all comments
+        dispatch(new ProcessUserDeleted($user->id));
 
         return redirect()->route('register');
     }
