@@ -29,3 +29,5 @@ export {
 } from "https://deno.land/std/ws/mod.ts";
 
 export { connect } from "https://denopkg.com/keroxp/deno-redis/redis.ts";
+
+export { assertEquals } from "https://deno.land/std/testing/asserts.ts";

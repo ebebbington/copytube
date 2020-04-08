@@ -4,9 +4,11 @@ services:
   - docker
 
 before_install:
-- pip install --user codecov
-- docker-compose up -d
+- pip install --user codecov > /dev/null
+- docker-compose up -d > /dev/null
+- echo Sleeping for 300 seconds for the containers source code to properly build
 - sleep 300
+- ech Done sleeping
 
 after_success:
   - codecov --file coverage/lcov.info --disable search
@@ -14,4 +16,4 @@ after_success:
 script:
 - docker exec copytube_phpfpm vendor/bin/phpunit
 - docker exec copytube_socket node_modules/.bin/mocha -r ts-node/register test/**/*.ts
-- docker exec copytube_realtime deno test
+- docker exec copytube_realtime deno test --allow-net
