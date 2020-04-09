@@ -24,3 +24,4 @@ src/copytube/img
 src/socket/*.js
 src/socket/.nyc_output
 src/socket/coverage
+src/socket/test/*.test.js
