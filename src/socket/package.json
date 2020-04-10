@@ -4,7 +4,7 @@
   "description": "",
   "main": "ecosystem.config.js",
   "scripts": {
-    "testTS": "node_modules/.bin/mocha -r ts-node/register test/**/*.ts",
+    "testTS": "npm run buildTS; node_modules/.bin/mocha -r ts-node/register",
     "start": "node server.js",
     "cov": "node_modules/.bin/nyc",
     "buildTS": "node_modules/.bin/tsc && pm2 restart all"

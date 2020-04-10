@@ -4,7 +4,6 @@ const expect = chai.expect
 const sinon = require('sinon')
 chai.should()
 import SocketIO from "socket.io-client"
-require('../socket')
 
 describe('Socket Server', () => {
 
