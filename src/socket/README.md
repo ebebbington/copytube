@@ -8,17 +8,29 @@ This section provides the web socket server for our video chat application:
 
 * WebRTC (video chat)
 
-All written in node
+All written in Node
 
 # Directory Structure / Description
 
 * `node_modules/`
 
     * Holds our modules we require
+    
+* `test/`
+
+    * Holds our test files
 
 * `.env`
 
     * Our environmental file
+    
+* `.nycrc`
+
+    * Configuration file for using code coverage
+    
+* `app.ts`
+
+    * Entry point file to bootstrap the application
 
 * `ecosystem.config.js`
 
@@ -35,6 +47,14 @@ All written in node
 * `package.json`
 
     * Defines dependencies for NPM
+    
+* `server.ts`
+
+    * Server class to start the express application
+    
+* `socket.ts`
+
+    * Socket class to handle anything socket related
 
 * `tsconfig.json`
 
@@ -60,9 +80,22 @@ To do so, run: `npm run buildTS`.
 
 # Chai/Mocha Tests
 
+Tests are created that resemble the file structure.
+
+Code coverage is included as a `package.json` script but is ignored as I
+haven't found a way to get it working properly. This is mainly due to NYC 
+needing a file to be required for it to be covered - something i'm not doing
+as I am using Typescript
+
+Note: The docker environment needs to be running
+
 ## Writing the Tests
 
 ## Running the Tests
+
+`npm run testTS`
+
+`npm run cov`
 
 # Information
 

@@ -15,5 +15,5 @@ after_success:
 
 script:
 - docker exec copytube_phpfpm vendor/bin/phpunit
-- docker exec copytube_socket node_modules/.bin/mocha -r ts-node/register test/**/*.ts
+- docker exec copytube_socket npm run testTS
 - docker exec copytube_realtime deno test --allow-net

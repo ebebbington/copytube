@@ -4,7 +4,7 @@ module.exports =
       [
         {
           name: 'Socket',
-          script: 'server.js',
+          script: 'app.js',
           //watch: true,
           //output: 'logs/out.log', // Console logs
           //error: 'logs/err.log', // Errors
