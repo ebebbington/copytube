@@ -3,7 +3,13 @@
   "all": true,
   "check-coverage": true,
   "exclude": [
-      "./*.js"
+      "*.ts",
+      "bin",
+      "test/*.test.*",
+      "coverage/*.js",
+      "app.*",
+      "server.*",
+      "ecosystem.config.js"
    ],
    "reporter": "html"
 }
