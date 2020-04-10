@@ -61,9 +61,6 @@ class Server {
    */
   private configure () {
     this.app.set('port', this.port)
-    this.app.use('/', function () {
-      console.log('route to /')
-    })
     this.io.attach(this.httpServer)
   }
 
