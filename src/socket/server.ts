@@ -22,14 +22,14 @@ import SocketServer from "./socket";
 class Server {
 
   /**
-   * @var {HTTPServer} Basix HTTP Server to start our application
+   * @var {HTTPServer} Basic HTTP Server to start our application
    */
   private readonly httpServer: HTTPServer
 
   /**
    * @var {ExpressApp} Used to be passed into the HTTP server for easier setup
    */
-  private readonly  app: ExpressApp
+  public readonly  app: ExpressApp
 
   /**
    * @var {SocketIOServer} The SocketIO connection (io)
@@ -61,6 +61,9 @@ class Server {
    */
   private configure () {
     this.app.set('port', this.port)
+    this.app.use('/', function () {
+      console.log('route to /')
+    })
     this.io.attach(this.httpServer)
   }
 

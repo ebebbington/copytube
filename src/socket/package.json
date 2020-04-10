@@ -6,7 +6,7 @@
   "scripts": {
     "testTS": "npm run buildTS; node_modules/.bin/mocha -r ts-node/register",
     "start": "node server.js",
-    "cov": "node_modules/.bin/nyc",
+    "cov": "node_modules/.bin/nyc npm run testTS",
     "buildTS": "node_modules/.bin/tsc && pm2 restart all"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "@types/mocha": "^7.0.2",
     "@types/socket.io-client": "^1.4.32",
     "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0"
   },
