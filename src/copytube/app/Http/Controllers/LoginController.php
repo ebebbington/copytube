@@ -25,8 +25,7 @@ class LoginController extends Controller
     {
         if (Auth::user())
             return response()->redirectTo('/home');
-        $loggingPrefix = "[LoginController - ".__FUNCTION__.'] ';
-        Log::debug($loggingPrefix . 'Return view of `chat`');
+
         // get data
         $email = $request->input('email');
         $password = $request->input('password');
@@ -34,6 +33,7 @@ class LoginController extends Controller
             'email_address' => $email,
             'password' => $password
         ];
+
         // Get user
         $UserModel = new UserModel;
         $user = $UserModel->getByEmail($email);
@@ -50,7 +50,6 @@ class LoginController extends Controller
             $message
                 = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token='
                 . $token;
-            Log::debug($user->email_address);
             Mail::to($user->email_address)->send(new AccountLocked($title, $message));
             //$Mail = new Mail($user->email_address, $user->username, 'Account Locked', $message);
             //$Mail->send();

@@ -64,7 +64,7 @@ class RecoverTest extends TestCase
         $response->assertStatus(403);
 
         // Test it updates the row correctly
-        TestUtilities::createTestUserInDb(['recover_token' => 'test_token']);
+        TestUtilities::createTestUserInDb(['recover_token' => 'test_token', 'profile_picture' => 'Test.png']);
         $response = $this->sendPostRequest('test_token', TestUtilities::$validEmail, TestUtilities::$validPassword);
         $user = TestUtilities::getTestUserInDb();
         $this->assertEquals(true, $user->login_attempts === 3);
@@ -73,5 +73,7 @@ class RecoverTest extends TestCase
 
         // Assert json response
         $response->assertJson(['success' => true, 'message' => 'Successfully updated your password']);
+
+        TestUtilities::removeTestUsersInDb();
     }
 }

@@ -37,15 +37,9 @@ class BaseModel extends Model
      */
     public function validate(array $data)
     {
-        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
-        Log::info($loggingPrefix . 'Going to validate the following data: ', $data);
-        Log::info($loggingPrefix . 'With the rules of: ', $this->rules);
         $validator = Validator::make($data, $this->rules);
-        if ($validator->fails()) {
-            Log::error($loggingPrefix . 'Validation failed');
+        if ($validator->fails())
             return $validator->errors()->first();;
-        }
-        Log::info($loggingPrefix . 'Validation passed');
         return true;
     }
 
@@ -104,41 +98,29 @@ class BaseModel extends Model
      */
     public function SelectQuery(array $query, string $cacheKey = '')
     {
-        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         $cacheKey = $this->normaliseCacheKey($cacheKey);
         // If the cached data already exists with the given key then return that instead
-        Log::info($loggingPrefix . 'Passed in `cacheKey` is: ' . $cacheKey);
-        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-            Log::info($loggingPrefix . 'Redis has the cached data for that key. Returning this instead');
+        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey))
             return Cache::get($cacheKey);
-        }
+
         $select = isset($query['select']) ? $query['select'] : null;
         $join = isset($query['join']) ? $query['join'] : null;
         $where = isset($query['where']) ? $query['where'] : null;
         $limit = $query['limit'] ?? 1;
         $orderByColumn = $query['orderBy']['column'] ?? 'id';
         $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
-        Log::info($loggingPrefix . 'Running query on table' . $this->table . ' where ' . $where . ', with a limit of ' . $query['limit']
-            . '. Ordering ' . $orderByColumn . ' by ' . $orderByDirection);
 
         $result = DB::table($this->table);
-
         if (isset($select))
             $result = $result->select($select);
-
         if (isset($join) && sizeof($join) === 4)
             $result = $result->join($join[0], $join[1], $join[2], $join[3]);
-
         if (isset($where))
             $result = $result->whereRaw($where);
-
         $result = $result->orderBy($orderByColumn, $orderByDirection);
-
         if (isset($limit))
             $result = $result->take($limit);
-
         $result = $result->get();
-
         if ($result->toArray() === [] || empty($result) || !isset($result) || !$result)
             return false;
 
@@ -171,17 +153,14 @@ class BaseModel extends Model
      */
     public function CreateQuery(array $data, string $cacheKey = '')
     {
-        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
-        $cacheKey = $this->normaliseCacheKey($cacheKey);
-        Log::info($loggingPrefix . 'Creating a new row on table ' . $this->table . ':', $data);
         $row = $this->create($data);
+
+        $cacheKey = $this->normaliseCacheKey($cacheKey);
         if (!empty($cacheKey) && Cache::has($cacheKey)) {
             // Because next time they select with the key, we dont want them selecting old data
             // So on the select it'll make a new key with the updated data
-            Log::info($loggingPrefix . 'Redis cache has the passed in key of ' . $cacheKey . '. Forgetting this data to update it on the next select');
             Cache::forget($cacheKey);
         }
-        Log::info($loggingPrefix . 'Returning the newly created row');
         return $row;
     }
 
@@ -202,17 +181,13 @@ class BaseModel extends Model
      */
     public function UpdateQuery(array $query, array $newData, string $cacheKey = '')
     {
-        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
-        $cacheKey = $this->normaliseCacheKey($cacheKey);
-        Log::info($loggingPrefix . 'Updating ' . $this->table . 'with the query and new data:', [$query, $newData]);
         $result = DB::table($this->table)->where($query)->update($newData);
+
+        $cacheKey = $this->normaliseCacheKey($cacheKey);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-            Log::info($loggingPrefix . 'Redis cache has key of ' . $cacheKey . '. Updating the cache with the result:', [$result]);
             $row = DB::table($this->table)->where($newData)->first();
-            Log::debug(json_encode($row));
             Cache::put($cacheKey, $row, 3600);
         }
-        Log::debug($loggingPrefix . 'Query has a successful update: ' . $result === 1 ? true : false);
         return $result >= 1 ? true : false;
     }
 
@@ -224,15 +199,12 @@ class BaseModel extends Model
      */
     public function DeleteQuery(array $query, string $cacheKey = '')
     {
-        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         $cacheKey = $this->normaliseCacheKey($cacheKey);
-        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-            Log::info($loggingPrefix . 'Cache has key of ' . $cacheKey . '. Removing this key');
+        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey))
             Cache::forget($cacheKey);
-        }
+
         $result = DB::table($this->table)->where($query)->delete();
         $success = $result === 1 || $result === true ? true : false;
-        Log::info($loggingPrefix . 'Deletion on table ' . $this->table . ' with the following has a success of: ' . $success, $query);
         return $success;
     }
 }

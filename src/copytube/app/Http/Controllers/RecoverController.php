@@ -20,7 +20,6 @@ class RecoverController extends Controller
 {
     public function index (Request $request)
     {
-        $loggingPrefix = "[RecoverController - ".__FUNCTION__.'] ';
         $token = $request->query('token');
         $User = new UserModel;
         $user = $User->getByToken($token);
@@ -48,10 +47,16 @@ class RecoverController extends Controller
         }
 
         // validate
-        $validated = $User->validate(['username' => $User->username, 'email' => $User->email_address, 'password' => $password]);
+        $validated = $User->validate(['username' => $user->username, 'email' => $user->email_address, 'password' => $password, 'profile_picture' => $user->profile_picture]);
+        if ($validated !== true) {
+            return response([
+                'success' => false,
+                'message' => $validated
+            ]);
+        }
 
         // update the new hashed password, login_attempts and recover_token
-        $User->updateAfterRecover($email, $request->input('password'));
+        $User->updateAfterRecover($email, $password);
 
         return response([
             'success' => true,
