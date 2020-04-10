@@ -9,8 +9,10 @@ use App\Jobs\RedisQueueTest;
 use App\Listeners\SendComment;
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Queue\Listener;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 
@@ -32,13 +34,15 @@ class SendCommentTest extends TestCase
             'video_posted_on' => 'test'
         ]);
         $listener = \Mockery::mock('SendComment');
+        $job = (new ProcessNewComment($comment, 'img/test'));
 
         // Assertions
+        Redis::shouldReceive('publish');
+        dispatch($job)->onConnection('sync');
         $listener->shouldReceive('handle')->once();
         $this->app->instance(SendComment::class, $listener);
-        dispatch(new ProcessNewComment($comment, 'img/test'));
+        dispatch($job)->onConnection('sync');
         app('queue')->setDefaultDriver($defaultDriver);
-        // TODO :: Assert redis got message
 
     }
 }

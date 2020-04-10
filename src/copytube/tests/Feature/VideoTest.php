@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Mockery;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -79,7 +80,6 @@ class VideoTest extends TestCase
         // Remove all comments and user
         DB::table('comments')->where('user_id', '=', $id)->delete();
         TestUtilities::removeTestUsersInDb();
-
         // TODO :: Listen for the message on the channel using redis. Needs a queue listener
 
     }
