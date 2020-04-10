@@ -8,7 +8,7 @@ before_install:
 - docker-compose up -d > /dev/null
 - echo Sleeping for 300 seconds for the containers source code to properly build
 - sleep 300
-- ech Done sleeping
+- echo Done sleeping
 
 after_success:
   - codecov --file coverage/lcov.info --disable search
