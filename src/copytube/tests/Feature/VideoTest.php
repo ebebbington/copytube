@@ -80,8 +80,6 @@ class VideoTest extends TestCase
         // Remove all comments and user
         DB::table('comments')->where('user_id', '=', $id)->delete();
         TestUtilities::removeTestUsersInDb();
-        // TODO :: Listen for the message on the channel using redis. Needs a queue listener
-
     }
 
     public function testAutocomplete ()
