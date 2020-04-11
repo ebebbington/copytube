@@ -28,6 +28,12 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
     * DB Caching
     * Pub/Sub
     
+* Testing
+
+    * Unit
+    * Feature
+    * Browser (Laravel Dusk, Selenium container)
+    
 # Ports
 
 Nginx: 9002
@@ -41,6 +47,8 @@ Realtime: 9008
 Redis: 6379
 
 SQL: 3007
+
+Selenium: 4444
     
 # Features
 
@@ -51,6 +59,12 @@ SQL: 3007
 * Laravel Authorisation
 
 * Realtime updates using Laravel jobs, Redis and a Deno WebSocket
+
+* Testing all around
+
+    * Realtime tests
+    * Socket tests
+    * Copytube tests (browser tests using Selenium container and Laravel Dusk)
 
 # Containers
 
@@ -95,6 +109,11 @@ a Pub/Sub architecture to the Realtime app, from the Laravel app to give realtim
 ## Nginx
 
 Our proxy server for handling PHP requests to be passed to the PHP-FPM process, and passes all requests to the PHP container
+
+## Selenium
+
+Container to aid in browser testing for the copytube phpfpm component, more specifically to be used with Laravel Dusk, as
+it has troubles on its own running inside a docker container
 
 # Prerequisites
 
