@@ -15,5 +15,6 @@ after_success:
 
 script:
 - docker exec copytube_phpfpm vendor/bin/phpunit
+- docker exec copytube_phpfpm php artisan dusk
 - docker exec copytube_socket npm run testTS
 - docker exec copytube_realtime deno test --allow-net
