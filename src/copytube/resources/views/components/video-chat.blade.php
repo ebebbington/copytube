@@ -2,7 +2,7 @@
 
     <video id="user-video" autoplay playsinline controls></video>
     <span>
-        <button id="call-user" class="success" type="button">Waiting for a friend...</button>
+        <button id="call-user" class="success" type="button" value="call">Waiting for a friend...</button>
         <button id="end-call" class="error hide" type="button">End Call</button>
     </span>
     <hr>
