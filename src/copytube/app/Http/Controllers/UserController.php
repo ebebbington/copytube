@@ -34,7 +34,5 @@ class UserController extends Controller
 
         // Send event to remove all comments
         dispatch(new ProcessUserDeleted($user->id));
-
-        return redirect()->route('register');
     }
 }
