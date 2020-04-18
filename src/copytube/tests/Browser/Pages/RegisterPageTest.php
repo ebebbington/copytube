@@ -9,11 +9,6 @@ use Tests\Feature\TestUtilities;
 
 class RegisterPageTest extends DuskTestCase
 {
-    /**
-     * A Dusk test example.
-     *
-     * @return void
-     */
     public function testUserCanSuccessfullyRegister()
     {
         $this->browse(function ($browser) {
