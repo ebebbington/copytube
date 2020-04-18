@@ -31,19 +31,14 @@ class RecoverController extends Controller
 
     public function post (Request $request)
     {
-        $loggingPrefix = "[RecoverController - ".__FUNCTION__.'] ';
         // get data
         $token = $request->cookie('recoverToken');
         $email = $request->input('email');
         $password = $request->input('password');
-        Log::info('Email and pass');
-        Log::info(json_encode([$email, $password]));
 
         // get user by that email
         $User = new UserModel;
         $user = $User->getByEmail($email);
-        Log::info('The user form getting');
-        Log::info(json_encode($user));
         if ($user === false) {
             return response([
                 'success' => false,
@@ -52,10 +47,7 @@ class RecoverController extends Controller
         }
 
         // validate
-        Log::debug('The passed in token and the users token');
-        Log::debug(json_encode([$token, $user->recover_token]));
         if ($user->recover_token !== $token) {
-            Log::info('token doesnt match');
             return json_encode([
                 'success' => false,
                 'message' => 'Token does not match'
@@ -63,7 +55,6 @@ class RecoverController extends Controller
         }
         $validated = $User->validate(['username' => $user->username, 'email' => $user->email_address, 'password' => $password, 'profile_picture' => $user->profile_picture]);
         if ($validated !== true) {
-            Log::info('validation failed:'.$validated);
             return response([
                 'success' => false,
                 'message' => $validated

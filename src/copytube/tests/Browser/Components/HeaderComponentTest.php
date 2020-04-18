@@ -101,7 +101,6 @@ class HeaderComponentTest extends DuskTestCase
     {
         TestUtilities::createTestUserInDb();
         $user = User::find(1);
-        var_dump($user);
         $this->browse(function ($browser) use ($user) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
                 ->visit('/home')
