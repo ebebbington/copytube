@@ -1,5 +1,14 @@
-let Realtime = new WebSocket('ws://127.0.0.1:9008/realtime')
+let url = 'ws://'
 
+if (window.location.hostname === '127.0.0.1')
+    // development
+    url += window.location.hostname
+else if (window.location.hostname === 'copytube_nginx')
+    // laravel dusk testing
+    url += 'copytube_realtime'
+url += ':9008/realtime'
+
+let Realtime = new WebSocket(url)
 Realtime.onopen = function(e) {
     console.log('Realtime connection has opened')
 };
