@@ -21,27 +21,26 @@ class RecoverPageTest extends DuskTestCase
                 ->type('password', TestUtilities::$validPassword)
                 ->press('Submit')
                 ->waitUntil('!$.active');
-            var_dump($browser);
             $browser
                 ->assertSee('Successfully Reset Your Password');
             TestUtilities::removeTestUsersInDb();
         });
     }
 
-//    public function testUserWillSeeErrorsWithInvalidCreds ()
-//    {
-//        TestUtilities::removeTestUsersInDb();
-//        TestUtilities::createTestUserInDb(['recover_token' => 'test_token', 'login_attempts' => 0]);
-//        $this->browse(function ($browser) {
-//            $browser->visit('/register?token=test_token')
-//                ->type('email', 'hello')
-//                ->type('password', 'hello')
-//                ->press('Submit')
-//                ->waitUntil('!$.active')
-//                ->assertSee('Unable to authenticate');
-//            TestUtilities::removeTestUsersInDb();
-//        });
-//    }
+    public function testUserWillSeeErrorsWithInvalidCreds ()
+    {
+        TestUtilities::removeTestUsersInDb();
+        TestUtilities::createTestUserInDb(['recover_token' => 'test_token', 'login_attempts' => 0]);
+        $this->browse(function ($browser) {
+            $browser->visit('/recover?token=test_token')
+                ->type('email', 'hello')
+                ->type('password', 'hello')
+                ->press('Submit')
+                ->waitUntil('!$.active')
+                ->assertSee('Unable to authenticate');
+            TestUtilities::removeTestUsersInDb();
+        });
+    }
 //
 //    public function testUserWillSeeErrorsWithInvalidToken ()
 //    {
