@@ -146,8 +146,8 @@ class UserModel extends BaseModel
             'where' => "email_address = '$email'",
             'limit' => 1
         ];
-        $cacheKey = 'db:users:email_address='.$email;
-        $user = $this->SelectQuery($query, $cacheKey);
+        //$cacheKey = 'db:users:email_address='.$email;
+        $user = $this->SelectQuery($query);
         return $user;
     }
 
