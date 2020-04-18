@@ -41,11 +41,18 @@ class AddCommentComponentTest extends DuskTestCase
         });
     }
 //
-//    public function testSuccessWhenSendingWithComment()
-//    {
-//        $this->browse(function (Browser $browser) {
-//            $browser->visit('/')
-//                ->assertSee('Laravel');
-//        });
-//    }
+    public function testSuccessWhenSendingWithComment()
+    {
+        TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
+                ->visit('/home')
+                ->assertpathIs('/home')
+                ->type('new-comment', 'hello')
+                ->click('#comment > button')
+                ->waitUntil('!$.active')
+                ->assertSee('Success');
+            TestUtilities::removeTestUsersInDb();
+        });
+    }
 }
