@@ -137,6 +137,8 @@ class HeaderComponentTest extends DuskTestCase
         });
     }
 
+    // TODO :: Test img src for img for contact options is correct
+
     public function elements()
     {
         return [
