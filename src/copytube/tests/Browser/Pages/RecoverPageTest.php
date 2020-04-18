@@ -41,30 +41,30 @@ class RecoverPageTest extends DuskTestCase
             TestUtilities::removeTestUsersInDb();
         });
     }
-//
-//    public function testUserWillSeeErrorsWithInvalidToken ()
-//    {
-//        TestUtilities::removeTestUsersInDb();
-//        TestUtilities::createTestUserInDb(['recover_token' => 'test_token', 'login_attempts' => 0]);
-//        $this->browse(function ($browser) {
-//            $browser->visit('/register?token=invalid')
-//                ->type('email', TestUtilities::$validEmail)
-//                ->type('password', TestUtilities::$validPassword)
-//                ->press('Submit')
-//                ->waitUntil('!$.active')
-//                ->assertSee('Token does not match');
-//            TestUtilities::removeTestUsersInDb();
-//        });
-//    }
-//
-//    public function testUserIsRedirectedWhenNoToken ()
-//    {
-//        TestUtilities::removeTestUsersInDb();
-//        $this->browse(function ($browser) {
-//            $browser->visit('/register');
-//            $browser->waitUntil('!$.active')
-//                ->pause(10)
-//                ->assertPathIs('/register');
-//        });
-//    }
+
+    public function testUserWillBeRedirectedWithInvalidToken ()
+    {
+        TestUtilities::removeTestUsersInDb();
+        TestUtilities::createTestUserInDb(['recover_token' => 'test_token', 'login_attempts' => 0]);
+        $this->browse(function ($browser) {
+            $browser->visit('/recover?token=invalid')
+                ->type('email', TestUtilities::$validEmail)
+                ->type('password', TestUtilities::$validPassword)
+                ->press('Submit')
+                ->waitUntil('!$.active')
+                ->assertPathIs('/login');
+            TestUtilities::removeTestUsersInDb();
+        });
+    }
+
+    public function testUserIsRedirectedWhenNoToken ()
+    {
+        TestUtilities::removeTestUsersInDb();
+        $this->browse(function ($browser) {
+            $browser->visit('/register');
+            $browser->waitUntil('!$.active')
+                ->pause(10)
+                ->assertPathIs('/register');
+        });
+    }
 }
