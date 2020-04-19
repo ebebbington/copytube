@@ -16,8 +16,6 @@ class BaseModel extends Model
     private function normaliseCacheKey($cacheKey = '')
     {
         $replacedKey = str_replace(' ', '+', $cacheKey);
-        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
-        Log::info($loggingPrefix . "Replaced $cacheKey with $replacedKey");
         return $replacedKey;
     }
 
@@ -49,12 +47,9 @@ class BaseModel extends Model
      */
     private function populate($Model = false)
     {
-        $loggingPrefix = "[BaseModel - ".__FUNCTION__.'] ';
         if ($Model !== false && !empty($Model)) {
-            Log::info($loggingPrefix . 'Passed in Model is not empty [GOOD]: ', [$Model]);
             foreach ($Model as $key => $value) {
                 if (property_exists($this, $key)) {
-                    Log::info($loggingPrefix . 'Calling class has property of ' . $key . ". Setting it to $value");
                     $this->$key = $value;
                     //$this[$key] = $value;
                 }
@@ -181,13 +176,15 @@ class BaseModel extends Model
      */
     public function UpdateQuery(array $query, array $newData, string $cacheKey = '')
     {
+        Log::info('Receieved data in update query method:');
+        Log::info(json_encode($newData));
         $result = DB::table($this->table)->where($query)->update($newData);
 
-        $cacheKey = $this->normaliseCacheKey($cacheKey);
-        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-            $row = DB::table($this->table)->where($newData)->first();
-            Cache::put($cacheKey, $row, 3600);
-        }
+//        $cacheKey = $this->normaliseCacheKey($cacheKey);
+//        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+//            $row = DB::table($this->table)->where($newData)->first();
+//            Cache::put($cacheKey, $row, 3600);
+//        }
         return $result >= 1 ? true : false;
     }
 
