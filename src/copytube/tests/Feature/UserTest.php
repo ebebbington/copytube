@@ -79,6 +79,6 @@ class UserTest extends TestCase
         $this->assertEquals(false, $user);
 
         // Check we were redirected (302) to register page
-        $res->assertStatus(302);
+        $res->assertStatus(200);
     }
 }

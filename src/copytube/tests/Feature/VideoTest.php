@@ -44,14 +44,14 @@ class VideoTest extends TestCase
             'X-CSRF-TOKEN' => csrf_token()
         ];
         $res = $this->post('/video/comment', ['videoPostedOn' => 'Something More'], $headers);
-        $res->assertStatus(401);
+        $res->assertStatus(406);
         $res->assertJson(['success' => false, 'message' => 'The comment field is required.']);
 
         // No date posted but with video title to test validation
         $data = ['comment' => 'hello'];
         $data['videoPostedOn'] = 'Something More';
         $res = $this->post('/video/comment', $data, $headers);
-        $res->assertStatus(401);
+        $res->assertStatus(406);
         $res->assertJson(['success' => false, 'message' => 'The date posted field is required.']);
 
         // No video posted on
