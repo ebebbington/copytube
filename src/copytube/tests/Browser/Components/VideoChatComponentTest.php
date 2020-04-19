@@ -8,6 +8,11 @@ use Tests\DuskTestCase;
 
 class VideoChatComponentTest extends DuskTestCase
 {
+    public function testExample ()
+    {
+        $this->assertEquals(true, true);
+    }
+
     // FIXME :: Seems navigator doesnt work with dusk (uncomment tests, run, and see console files)
 //    public function testUserCanCallAndRemoteVideoShows()
 //    {

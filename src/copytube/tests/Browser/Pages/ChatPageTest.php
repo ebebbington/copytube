@@ -8,5 +8,10 @@ use Tests\DuskTestCase;
 
 class ChatPageTest extends DuskTestCase
 {
+    public function testExample ()
+    {
+        $this->assertEquals(true, true);
+    }
+
     // No tests needed as its handled inside the component
 }
