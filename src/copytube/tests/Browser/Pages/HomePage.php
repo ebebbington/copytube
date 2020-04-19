@@ -4,8 +4,16 @@ namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
 
+/***
+ * Class HomePage
+ *
+ * @package Tests\Browser\Pages
+ *
+ * Not needed as our component tests cover this page
+ */
 class HomePage extends Page
 {
+
     /**
      * Get the URL for the page.
      *

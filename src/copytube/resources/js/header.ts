@@ -23,7 +23,10 @@ const Header = (function () {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         url: '/user',
-                        method: 'DELETE'
+                        method: 'DELETE',
+                        success: function () {
+                            window.location.href = '/register'
+                        }
                     })
                 }
             })

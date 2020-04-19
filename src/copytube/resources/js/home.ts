@@ -86,7 +86,8 @@ const Home = (function () {
                 },
                 error: function (err) {
                     console.log('error')
-                    Notifier.error('Add Comment', 'Failed')
+                        //@ts-ignore
+                    Notifier.error('Add Comment', JSON.parse(err.responseText).message)
                     console.error(err)
                     console.log(JSON.parse(err.responseText))
                     Loading(false)

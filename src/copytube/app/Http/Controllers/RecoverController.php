@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use View;
-use Cookie;
 use App\Mail\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cookie;
 
 class RecoverController extends Controller
 {
@@ -24,15 +24,15 @@ class RecoverController extends Controller
         $User = new UserModel;
         $user = $User->getByToken($token);
         if (!isset($token) || $user === false) return redirect()->route('login'); // because field is null and token might be null
-        Cookie::queue('recoverToken', $token, 10);
+        Log::debug('Going to queue cookie token: ' . $token);
+        Cookie::queue('recoverToken', $token, 3600);
         return View::make('recover')->with('title', 'Recover');
     }
 
     public function post (Request $request)
     {
-        $loggingPrefix = "[RecoverController - ".__FUNCTION__.'] ';
         // get data
-        $token = $request->session()->get('recoverToken');
+        $token = $request->cookie('recoverToken');
         $email = $request->input('email');
         $password = $request->input('password');
 
@@ -47,6 +47,12 @@ class RecoverController extends Controller
         }
 
         // validate
+        if ($user->recover_token !== $token) {
+            return json_encode([
+                'success' => false,
+                'message' => 'Token does not match'
+            ]);
+        }
         $validated = $User->validate(['username' => $user->username, 'email' => $user->email_address, 'password' => $password, 'profile_picture' => $user->profile_picture]);
         if ($validated !== true) {
             return response([

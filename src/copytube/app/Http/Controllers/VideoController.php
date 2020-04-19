@@ -63,7 +63,7 @@ class VideoController extends Controller
             return response([
                 'success' => false,
                 'message' => $validated
-            ], 401);
+            ], 406);
         }
         $row = $Comments->createComment($newComment);
         dispatch(new ProcessNewComment($row, $user->profile_picture));

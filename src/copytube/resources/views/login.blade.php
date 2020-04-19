@@ -12,4 +12,4 @@
         <input id="login-button" class="btn btn-primary form-submit" type="button" name="submit" value="Submit">
     @endcomponent
 </div>
-@stop  
+@stop

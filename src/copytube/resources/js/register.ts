@@ -40,7 +40,6 @@ const Register = (function () {
           contentType: false,
         data: formData,
         success: function (data, status, jqXHR) {
-          console.table(data)
             Loading(false)
           if (data.success === true) {
             $('form').trigger('reset')
@@ -52,10 +51,9 @@ const Register = (function () {
           return false
         },
         error: function (error) {
-          console.log(error)
             try {
                 const errors = error.responseJSON.errors
-                const errMsg = error.responseJSON.errors[Object.keys(errors)[0]]
+                const errMsg = error.responseJSON.message
                 //$('#register-form').trigger('reset')
                 Notifier.error('Error', errMsg)
             } catch (err) {

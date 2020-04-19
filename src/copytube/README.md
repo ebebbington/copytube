@@ -186,17 +186,34 @@ To do so, run: `npm run dev`. To understand a bit more, see the `webpack.mix.js`
 
 # PHPUnit Tests
 
-Tests have been developed for this project
+Tests have been developed for this project, whether it be feature, unit or browser testing.
+
+All the below commands should be ran inside the docker containers.
+
+See https://laravel.com/docs/5.4/dusk for information on browser testing.
 
 ## Writing the Tests
 
 Mimic existing file structure, and try to writ tests for each case
+
+* Make a unit test
+
+    `php artisan make:test --unit SomeModelTest`
+    
+* Make a feature test
+
+    `php artisan make:test SomeController Test`
+    
+* Make a browser test using Dusk
+
+    `php artisan dusk:make LoginTest`
 
 ## Running the Tests
 
 `vendor/bin/phpunit` - All
 `vendor/bin/phpunit --coverage-html reports/` - All with coverage
 `vendor/bin/phpunit theTestMethod theTestFile` - Specific method in specific test
+`php artisan dusk` - Browser tests
 
 # XDebug
 
