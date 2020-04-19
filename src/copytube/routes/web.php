@@ -34,7 +34,7 @@ Route::get('/video', 'VideoController@autocomplete')->middleware('auth');
 Route::get('/logout', 'LogoutController@logout')->middleware('auth');
 
 Route::get('/recover', 'RecoverController@index');
-Route::post('/recover', 'RecoverController@post');
+Route::post('/recover', ['as' => 'recover', 'uses' => 'RecoverController@post']);
 
 Route::get('/chat', 'ChatController@index');
 
