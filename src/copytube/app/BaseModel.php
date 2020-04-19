@@ -180,11 +180,11 @@ class BaseModel extends Model
         Log::info(json_encode($newData));
         $result = DB::table($this->table)->where($query)->update($newData);
 
-//        $cacheKey = $this->normaliseCacheKey($cacheKey);
-//        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-//            $row = DB::table($this->table)->where($newData)->first();
-//            Cache::put($cacheKey, $row, 3600);
-//        }
+        $cacheKey = $this->normaliseCacheKey($cacheKey);
+        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
+            $row = DB::table($this->table)->where($newData)->first();
+            Cache::put($cacheKey, $row, 3600);
+        }
         return $result >= 1 ? true : false;
     }
 
