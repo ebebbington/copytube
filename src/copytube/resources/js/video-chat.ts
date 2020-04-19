@@ -3,8 +3,15 @@ import Notifier from "./notifier";
 import Loading from "./loading";
 if (window.location.pathname === '/chat') {
     const VideoChat = (function () {
-
-        const socket = io('http://127.0.0.1:9009')
+        let url = 'http://'
+        if (window.location.hostname === '127.0.0.1')
+            // development
+            url += window.location.hostname
+        else if (window.location.hostname === 'copytube_nginx')
+            // laravel dusk testing
+            url += 'copytube_socket'
+        url += ':9009'
+        const socket = io(url)
         let peerConnection = new RTCPeerConnection()
         let isAlreadyCalling = false
 
