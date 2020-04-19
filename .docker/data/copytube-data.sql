@@ -102,7 +102,7 @@ CREATE TABLE `users` (
   `logged_in` tinyint(1) NOT NULL,
   `login_attempts` int(10) UNSIGNED NOT NULL,
   `profile_picture` varchar(155),
-  `recover_token` varchar(155),
+  `recover_token` varchar(8000),
   `updated_at` timestamp NOT NULL DEFAULT NOW() ON UPDATE NOW(),
   `created_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
