@@ -37,6 +37,7 @@ class HomeControllerTest extends TestCase
         // create user
         $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
         // Auth user
+        var_dump($id);
         TestUtilities::logUserIn($id);
         // Make request with no video request
         $response = $this->get('/home');
@@ -67,6 +68,7 @@ class HomeControllerTest extends TestCase
     {
         Cache::flush();
         $id = TestUtilities::createTestUserInDb();
+        var_dump($id);
         TestUtilities::logUserIn($id);
         // make request with correct title
         $response = $this->get('/home?requestedVideo=Lava Sample');
