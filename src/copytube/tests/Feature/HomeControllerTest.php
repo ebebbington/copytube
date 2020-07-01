@@ -38,6 +38,7 @@ class HomeControllerTest extends TestCase
         $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
         // Auth user
         var_dump($id);
+
         TestUtilities::logUserIn($id);
         // Make request with no video request
         $response = $this->get('/home');
