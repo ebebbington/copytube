@@ -65,6 +65,17 @@ Selenium: 4444
     * Realtime tests
     * Socket tests
     * Copytube tests (browser tests using Selenium container and Laravel Dusk)
+    
+# CI
+
+CI is setup for the following:
+
+    * Testing
+        * Run all tests for each app (realtime, copytube and socket)
+            * The respective workflows start the environment and run the tests for the container
+            
+    * Upgrader
+        * Checks and upgrades all dependencies each week
 
 # Containers
 
