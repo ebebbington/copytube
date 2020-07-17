@@ -6,7 +6,7 @@ export {
     config
 };
 
-// import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+// import { assertEquals } from "https://deno.land/std/testing@v0.39.0/asserts.ts";
 // const testing = {
 //     test: Deno.test,
 //     assertEquals: assertEquals
