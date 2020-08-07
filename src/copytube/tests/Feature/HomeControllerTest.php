@@ -33,13 +33,14 @@ class HomeControllerTest extends TestCase
 
     public function testGetWithAuthWithNoQuery ()
     {
-        Cache::flush();
+        //Cache::flush();
         // create user
         $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
         // Auth user
         TestUtilities::logUserIn($id);
         // Make request with no video request
         $response = $this->get('/home');
+        var_dump($response);
         // Assert the view
         $response->assertViewIs('Home');
         // Assert the status
