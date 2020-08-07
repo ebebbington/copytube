@@ -1,0 +1,46 @@
+name: Master
+
+#on:
+#  push:
+#    branches: [ master ]
+#    paths:
+#      - 'src/realtime/*'
+#  pull_request:
+#    branches: [ master ]
+#    paths:
+#      - 'src/realtime/*'
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  laravel-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Laravel Tests
+        run: |
+          docker-compose up -d > /dev/null
+          sleep 300
+          docker exec copytube_phpfpm vendor/bin/phpunit
+          docker exec copytube_phpfpm php artisan dusk
+
+  realtime-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Realtime Tests
+        run: |
+          docker-compose up -d > /dev/null
+          docker exec copytube_realtime deno test --allow-net
+
+  socket-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Socket Tests
+        run: |
+          docker-compose up -d > /dev/null
+          sleep 60
+          docker exec copytube_socket npm run testTS
