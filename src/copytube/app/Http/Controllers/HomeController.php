@@ -60,6 +60,9 @@ class HomeController extends Controller
 
         // Get the videos
         $videoRequested = $request->query('requestedVideo') ?? 'Something More'; // default to some video if we are routing to /home
+        if (!$videoRequested || empty($videoRequested) || !isset($videoRequested)) {
+            $videoRequested = "Something More";
+        }
         $VideosModel = new VideosModel;
         $mainVideo = $VideosModel->getVideoByTitle($videoRequested);
         Log::debug('THE VIDEO of req title '.$videoRequested.': ' . json_encode($mainVideo));
