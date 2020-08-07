@@ -1,7 +1,16 @@
-# CopyTube (Project)
+<p align="center">
+  <h1 align="center">Copytube</h1>
+</p>
+<p align="center">
+  <a href="https://github.com/ebebbington/copytube/actions">
+    <img src="https://img.shields.io/github/workflow/status/ebebbington/copytube/Master?label=ci">
+  </a>
+  <a href="https://codecov.io/gh/ebebbington/copytube">
+    <img src="https://codecov.io/gh/ebebbington/copytube/branch/master/graph/badge.svg">
+  </a>
+</p>
 
-[![Build Status](https://travis-ci.com/ebebbington/copytube.svg?branch=master)](https://travis-ci.com/ebebbington/copytube)
-[![codecov](https://codecov.io/gh/ebebbington/copytube/branch/master/graph/badge.svg)](https://codecov.io/gh/ebebbington/copytube)
+---
 
 *(Note this is a learning project)*
 
