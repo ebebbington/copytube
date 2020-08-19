@@ -3,7 +3,7 @@
 </p>
 <p align="center">
   <a href="https://github.com/ebebbington/copytube/actions">
-    <img src="https://img.shields.io/github/workflow/status/ebebbington/copytube/Master?label=ci">
+    <img src="https://img.shields.io/github/workflow/status/ebebbington/copytube/master?label=ci">
   </a>
   <a href="https://codecov.io/gh/ebebbington/copytube">
     <img src="https://codecov.io/gh/ebebbington/copytube/branch/master/graph/badge.svg">
