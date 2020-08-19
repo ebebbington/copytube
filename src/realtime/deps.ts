@@ -1,10 +1,7 @@
 // Best practice regarding a Deno project is have a similar 'package.json' file to call your imports and then export them locally, that way there is a single point for imports
 
 
-import { config } from "https://deno.land/x/dotenv@v0.2.2/dotenv.ts";
-export {
-    config
-};
+export { config } from "https://deno.land/x/dotenv@v0.2.2/dotenv.ts";
 
 // import { assertEquals } from "https://deno.land/std/testing@v0.39.0/asserts.ts";
 // const testing = {
