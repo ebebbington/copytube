@@ -8,7 +8,7 @@ class Redis {
     });
     return redis;
   }
-  public static async createSubscriber(redis: any) {
+  public static async createSubscriber(redis: Redis) {
     const channels = ["realtime.comments.new", "realtime.users.delete"];
     console.info(
       "Subscribed to redis and awaiting messages on the following channels:",
@@ -16,7 +16,11 @@ class Redis {
     console.info(channels);
     return await redis.subscribe(...channels);
   }
-  public static async listen(sub: any, sendMessageCallback: Function) {
+  // deno-lint-ignore allow-no-explicit-any
+  public static async listen(
+    sub: any,
+    sendMessageCallback: (message: string) => void,
+  ) {
     (async () => {
       for await (const { channel, message } of sub.receive()) {
         console.info(

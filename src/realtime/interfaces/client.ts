@@ -1,8 +1,6 @@
 import { WebSocket } from "../deps.ts";
 
-interface IClient {
+export default interface IClient {
   id: number;
   socket: WebSocket;
 }
-
-export default IClient;

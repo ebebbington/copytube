@@ -24,7 +24,7 @@ Deno.test(async function testSubscribe() {
 
 Deno.test({
   name: "`connect` method",
-  async fn(): Promise<any> {
+  async fn(): Promise<void> {
     const redis = await Redis.connect();
     assertEquals(await redis.ping(), "PONG");
     assertEquals(false, redis.isClosed);

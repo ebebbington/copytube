@@ -41,7 +41,7 @@ class SocketServer {
               console.info(
                 "Socket connection disconnected. Removing user from client list",
               );
-              allClients = allClients.filter((client: any) =>
+              allClients = allClients.filter((client) =>
                 client.id !== conn.rid
               );
               console.log("a client has disconned, heres the updated list:");
@@ -53,9 +53,7 @@ class SocketServer {
             "Failed when trying to remove socket connection on a disconnect. Trying again but here's the error:",
           );
           console.error(err);
-          allClients = allClients.filter((client: any) =>
-            client.id !== conn.rid
-          );
+          allClients = allClients.filter((client) => client.id !== conn.rid);
           console.log("a client has disconned, heres the updated list:");
           console.log(allClients);
         }
@@ -69,7 +67,7 @@ class SocketServer {
     try {
       // If no clients have joined then dont send - acts as an error handler as error will be thrown: forEach of undefined
       if (!allClients || !allClients.length) return false;
-      allClients.forEach((client: any) => {
+      allClients.forEach((client) => {
         console.info("Emitting socket message to id " + client.id);
         client.socket.send(message);
       });
