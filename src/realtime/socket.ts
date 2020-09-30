@@ -1,4 +1,4 @@
-import {acceptWebSocket, serve, WebSocket} from "./deps.ts";
+import {acceptWebSocket, isWebSocketCloseEvent, serve, WebSocket} from "./deps.ts";
 import IClient from "./interfaces/client.ts";
 import {config} from "./deps.ts";
 
@@ -28,24 +28,21 @@ class SocketServer {
                 allClients.push({id: conn.rid, socket: sock})
                 console.log('new client has just joined, heres the updated list:')
                 console.log(allClients)
-                const it = sock.receive();
-                while (true) {
-                    try {
-                        const {done, value} = await it.next();
-                        if (done) {
+                try {
+                    for await (const ev of  sock) {
+                        if (isWebSocketCloseEvent(ev)) {
                             console.info('Socket connection disconnected. Removing user from client list')
                             allClients = allClients.filter((client: any) => client.id !== conn.rid)
                             console.log('a client has disconned, heres the updated list:')
                             console.log(allClients)
-                            break;
                         }
-                    } catch (e) {
-                        console.error('Failed when trying to remove socket connection on a disconnect. Trying again but here\'s the error:')
-                        console.error(e)
-                        allClients = allClients.filter((client: any) => client.id !== conn.rid)
-                        console.log('a client has disconned, heres the updated list:')
-                        console.log(allClients)
                     }
+                } catch (err) {
+                    console.error('Failed when trying to remove socket connection on a disconnect. Trying again but here\'s the error:')
+                    console.error(err)
+                    allClients = allClients.filter((client: any) => client.id !== conn.rid)
+                    console.log('a client has disconned, heres the updated list:')
+                    console.log(allClients)
                 }
             }).catch((err: Error): void => {
                 console.error(`failed to accept websocket: ${err}`);
