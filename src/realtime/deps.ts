@@ -24,6 +24,7 @@ export {
 } from "https://deno.land/std@0.71.0/ws/mod.ts";
 
 export { connect } from "https://deno.land/x/redis@v0.13.0/redis.ts";
+export type { Redis as IRedis } from "https://deno.land/x/redis@v0.13.0/mod.ts"
 
 export { assertEquals } from "https://deno.land/std@0.71.0/testing/asserts.ts";
 

@@ -33,10 +33,12 @@ class SocketServer {
             ". Adding this connection to the list of clients",
         );
         allClients.push({ id: conn.rid, socket: sock });
-        console.log("new client has just joined, heres the updated list:");
+        console.log("new client has just joined, here's the updated list:");
         console.log(allClients);
         try {
           for await (const ev of sock) {
+            console.log('event form sock')
+            console.log(ev)
             if (isWebSocketCloseEvent(ev)) {
               console.info(
                 "Socket connection disconnected. Removing user from client list",
@@ -67,9 +69,15 @@ class SocketServer {
     try {
       // If no clients have joined then dont send - acts as an error handler as error will be thrown: forEach of undefined
       if (!allClients || !allClients.length) return false;
-      allClients.forEach((client) => {
-        console.info("Emitting socket message to id " + client.id);
-        client.socket.send(message);
+      allClients.forEach((client, i) => {
+        console.log(client)
+        try {
+          console.info("Emitting socket message to id " + client.id);
+          client.socket.send(message);
+        } catch (e) {
+          console.error(`Tried to send a message to a closed socket. removing ${client.id}.`)
+          allClients.splice(i, 1)
+        }
       });
     } catch (err) {
       console.error(err);
