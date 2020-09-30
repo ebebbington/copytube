@@ -89,7 +89,7 @@ services:
     ports:
       - "9008:9008"
     working_dir: /var/www/realtime
-    command: bash -c "deno --allow-net --allow-read --allow-run --allow-env --allow-write app.ts"
+    command: bash -c "deno run --allow-net --allow-read --allow-run --allow-env --allow-write app.ts"
     networks:
       - copytube-network
 

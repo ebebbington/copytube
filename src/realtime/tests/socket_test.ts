@@ -1,4 +1,4 @@
-import {assertEquals, connectWebSocket} from "../deps.ts"
+import {assertEquals, deferred} from "../deps.ts"
 import Redis from "../redis.ts";
 import SocketServer from "../socket.ts";
 
@@ -31,19 +31,22 @@ Deno.test({
     name: 'The Socket Server Should Recieve and Send a Message to the Client',
     async fn(): Promise<any> {
         // Create the socket client
-        const client = await connectWebSocket("ws://127.0.0.1:9008/realtime");
+        const promise = deferred()
+        const client = new WebSocket("ws://127.0.0.1:9008/realtime");
         const msgToSend = 'Hello from Client :)';
         // listen for recieved messages when they come in
-        (async function (): Promise<void> {
-            for await (const msg of client.receive()) {
-                assertEquals(msgToSend, msg)
-                await client.close(1000);
-            }
-        })();
+        client.onmessage = function (msg) {
+            assertEquals(msgToSend, msg)
+            client.close();
+        }
+        client.onclose = function () {
+            promise.resolve()
+        }
         // Sennd a message through redis so the socket server can send it to us
         const redis = await Redis.connect()
         const pub = await Redis.connect()
         await pub.publish('realtime.comments.new', msgToSend)
+        await promise()
     }
 })
 

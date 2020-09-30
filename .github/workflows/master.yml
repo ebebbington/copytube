@@ -46,3 +46,13 @@ jobs:
           docker-compose up -d > /dev/null
           sleep 60
           docker exec copytube_socket npm run testTS
+
+  realtime-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Realtime Linter
+        run: |
+          cd src/realtime
+          deno fmt --check
+          deno lint --unstable

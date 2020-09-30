@@ -14,17 +14,20 @@ export { config } from "https://deno.land/x/dotenv@v0.5.0/dotenv.ts";
 
 export {
     serve
-} from "https://deno.land/std@v0.71.0/http/server.ts";
+} from "https://deno.land/std@0.71.0/http/server.ts";
 
 export {
-    connectWebSocket,
     isWebSocketCloseEvent,
     isWebSocketPingEvent,
     isWebSocketPongEvent,
     acceptWebSocket,
     WebSocket
-} from "https://deno.land/std@v0.71.0/ws/mod.ts";
+} from "https://deno.land/std@0.71.0/ws/mod.ts";
 
 export { connect } from "https://deno.land/x/redis@v0.13.0/redis.ts";
 
-export { assertEquals } from "https://deno.land/std@v0.71.0/testing/asserts.ts";
+export { assertEquals } from "https://deno.land/std@0.71.0/testing/asserts.ts";
+
+export {
+    deferred,
+} from "https://deno.land/std@0.71.0/async/deferred.ts";
