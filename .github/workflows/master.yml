@@ -53,6 +53,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Realtime Linter
         run: |
-          cd src/realtime
-          deno fmt --check
-          deno lint --unstable
+          docker exec copytube_realtime deno fmt --check
+          docker exec copytube_realtime deno lint --unstable
