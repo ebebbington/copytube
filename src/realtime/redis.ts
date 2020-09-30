@@ -28,9 +28,9 @@ class Redis {
     console.info(channels);
     return await redis.subscribe(...channels);
   }
-  // deno-lint-ignore allow-no-explicit-any
   public static async listen(
-    sub: any,
+      // deno-lint-ignore allow-no-explicit-any
+      sub: any,
     sendMessageCallback: (message: string) => void,
   ) {
     (async () => {
