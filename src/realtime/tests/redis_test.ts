@@ -22,7 +22,7 @@ Deno.test({
     await sub.close();
     pub.close();
     redis.close();
-  }
+  },
 });
 
 Deno.test({

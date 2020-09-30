@@ -28,7 +28,8 @@ import SocketServer from "../socket.ts";
 // })
 
 Deno.test({
-  name: "The Socket Server Should Recieve a message from redis and Send the message to the Client",
+  name:
+    "The Socket Server Should Recieve a message from redis and Send the message to the Client",
   async fn(): Promise<void> {
     // Create the socket client
     const promise = deferred();
@@ -41,7 +42,7 @@ Deno.test({
       client.close();
     };
     client.onclose = function () {
-      pub.close()
+      pub.close();
       promise.resolve();
     };
     // Sennd a message through redis so the socket server can send it to us

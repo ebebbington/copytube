@@ -1,5 +1,5 @@
-import {config, connect} from "./deps.ts";
-import type { IRedis} from "./deps.ts";
+import { config, connect } from "./deps.ts";
+import type { IRedis } from "./deps.ts";
 
 class Redis {
   /**
