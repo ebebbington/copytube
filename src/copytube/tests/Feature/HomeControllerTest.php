@@ -72,7 +72,7 @@ class HomeControllerTest extends TestCase
         // make request with correct title
         $response = $this->get('/home?requestedVideo=Lava Sample');
         // Assert the view
-        $response->assertViewIs('Home');
+        $response->assertViewIs('home');
         // Assert the status
         $response->assertStatus(200);
         // assert the data sent back to view
