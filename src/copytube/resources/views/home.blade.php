@@ -10,29 +10,11 @@
     @component('components/video-search')
     @endcomponent
 </div>
-<!-- main video -->
-<div class="row pardon-me">
-    @component('components/main-video', [
-        'title' => $mainVideo->title,
-        'description' => $mainVideo->description,
-        'poster' => $mainVideo->poster,
-        'src' => $mainVideo->src
-    ])
-    @endcomponent
-</div>
 <!-- rabbit hole videos -->
 <div class="row pardon-me">
-    @component('components/rabbit-hole', ['rabbitHoleVideos' => $rabbitHoleVideos])
+    @if ($videos !== '' || $videos || !empty($videos))
+    @component('components/rabbit-hole', ['rabbitHoleVideos' => $videos])
     @endcomponent
-</div>
-<!-- comment -->
-<div class="row">
-    @component('components/add-comment')
-    @endcomponent
-</div>
-<!-- list of comments -->
-<div class="row">
-    @component('components/comment-list', ['comments' => $comments])
-    @endcomponent
+    @endif
 </div>
 @stop

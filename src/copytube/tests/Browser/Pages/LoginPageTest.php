@@ -32,6 +32,7 @@ class LoginPageTest extends DuskTestCase
 
     public function testUnsuccessfulLogin ()
     {
+        TestUtilities::removeTestUsersInDb();
         $this->browse(function ($browser) {
             $browser->visit('/login')
                 ->type('email', 'Hello')
@@ -44,6 +45,7 @@ class LoginPageTest extends DuskTestCase
 
     public function testCannotSeeLoginIfLoggedIn ()
     {
+        TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
         $user = TestUtilities::getTestUserInDb();
         $this->browse(function ($browser) use ($user) {

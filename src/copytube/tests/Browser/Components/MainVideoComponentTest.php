@@ -15,8 +15,8 @@ class MainVideoComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
-                ->assertPathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertPathIs('/video');
             $this->assertEquals(
                 'http://copytube_nginx:9002/videos/something_more.mp4',
                 $browser->attribute('#main-video-holder > video', 'src'));
@@ -37,10 +37,10 @@ class MainVideoComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
-                ->assertPathIs('/home')
-                ->visit('/home?requestedVideo=Lava+Sample')
-                ->assertPathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertPathIs('/video')
+                ->visit('/video?requestedVideo=Lava+Sample')
+                ->assertPathIs('/video');
             $this->assertEquals(
                 'http://copytube_nginx:9002/videos/lava_sample.mp4',
                 $browser->attribute('#main-video-holder > video', 'src'));
