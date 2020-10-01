@@ -2,6 +2,8 @@ import Notifier from './notifier'
 import Loading from "./loading";
 import Realtime from "./realtime";
 
+let xhr: any;
+
 const Home = (function () {
 
     const Methods = (function () {
@@ -135,7 +137,10 @@ const Home = (function () {
                 const dropdown = $('#search-bar-matching-dropdown')
                 dropdown.empty()
                 dropdown.append('<li>Loading...</li>')
-                $.ajax({
+                if(xhr && xhr.readyState !== 4){
+                    xhr.abort();
+                }
+                xhr = $.ajax({
                     url: '/video?title=' + value,
                     method: 'GET',
                     dataType: 'json',
@@ -150,7 +155,9 @@ const Home = (function () {
                         }
                     },
                     error: function (err) {
-                        console.error(err)
+                        if (err.statusText !== "abort") {
+                            console.error(err)
+                        }
                     }
                 })
             })

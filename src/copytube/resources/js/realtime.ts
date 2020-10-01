@@ -1,11 +1,9 @@
 let url = 'ws://'
-
-if (window.location.hostname === '127.0.0.1')
-    // development
-    url += window.location.hostname
-else if (window.location.hostname === 'copytube_nginx')
+if (window.location.hostname === 'copytube_nginx')
     // laravel dusk testing
     url += 'copytube_realtime'
+else
+    url += window.location.hostname
 url += ':9008/realtime'
 
 let Realtime = new WebSocket(url)
