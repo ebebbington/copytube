@@ -7,7 +7,7 @@ const RabbitHole = (function () {
             Loading(true)
             const form = document.createElement('form')
             form.method = 'GET'
-            form.action = '/home'
+            form.action = '/video'
             const data = document.createElement('input')
             data.name = 'requestedVideo'
             data.value = videoTitle

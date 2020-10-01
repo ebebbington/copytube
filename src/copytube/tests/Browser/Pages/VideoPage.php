@@ -12,7 +12,7 @@ use Laravel\Dusk\Browser;
  * Not needed as our component tests cover this page
  */
 // TODO
-class HomePage extends Page
+class VideoPage extends Page
 {
 
     /**
