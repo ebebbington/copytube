@@ -116,4 +116,15 @@ class VideosModel extends BaseModel
         $rabbitHoleVideos = $this->SelectQuery($query, $cacheKey);
         return $rabbitHoleVideos;
     }
+
+    public function getVideosForHomePage ()
+    {
+        $loggingPrefix = '[VideosModel -' . __FUNCTION__ . '] ';
+        $query = [
+            'limit' => 3
+        ];
+        $cacheKey = 'db:videos:limit=3';
+        $videos = $this->SelectQuery($query, $cacheKey);
+        return $videos;
+    }
 }
