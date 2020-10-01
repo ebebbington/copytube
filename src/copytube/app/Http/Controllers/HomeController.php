@@ -95,7 +95,7 @@ class HomeController extends Controller
             'comments' => $comments
         ];
         Log::info($loggingPrefix . 'Return view of `home` with the following data:', $renderData);
-        return View::make($renderData['title'])
+        return View::make(strtolower($renderData['title']))
             ->with('title', $renderData['title'])
             ->with('username', $renderData['username'])
             ->with('mainVideo', $renderData['mainVideo'])

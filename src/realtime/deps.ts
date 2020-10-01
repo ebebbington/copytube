@@ -1,7 +1,6 @@
 // Best practice regarding a Deno project is have a similar 'package.json' file to call your imports and then export them locally, that way there is a single point for imports
 
-
-export { config } from "https://deno.land/x/dotenv@v0.2.2/dotenv.ts";
+export { config } from "https://deno.land/x/dotenv@v0.5.0/dotenv.ts";
 
 // import { assertEquals } from "https://deno.land/std/testing@v0.39.0/asserts.ts";
 // const testing = {
@@ -13,18 +12,27 @@ export { config } from "https://deno.land/x/dotenv@v0.2.2/dotenv.ts";
 // }
 
 export {
-    serve
-} from "https://deno.land/std@v0.39.0/http/server.ts";
+  serve,
+} from "https://deno.land/std@0.71.0/http/server.ts";
 
 export {
-    connectWebSocket,
-    isWebSocketCloseEvent,
-    isWebSocketPingEvent,
-    isWebSocketPongEvent,
-    acceptWebSocket,
-    WebSocket
-} from "https://deno.land/std@v0.39.0/ws/mod.ts";
+  isWebSocketCloseEvent,
+  isWebSocketPingEvent,
+  isWebSocketPongEvent,
+  acceptWebSocket,
+} from "https://deno.land/std@0.71.0/ws/mod.ts";
+export type { WebSocket } from "https://deno.land/std@0.71.0/ws/mod.ts";
 
-export { connect } from "https://deno.land/x/redis@v0.9.3/redis.ts";
+export { connect } from "https://deno.land/x/redis@v0.13.1/redis.ts";
+export type {
+  Redis as IRedis,
+  RedisSubscription,
+} from "https://deno.land/x/redis@v0.13.1/mod.ts";
 
-export { assertEquals } from "https://deno.land/std@v0.39.0/testing/asserts.ts";
+export { assertEquals } from "https://deno.land/std@0.71.0/testing/asserts.ts";
+
+export {
+  deferred,
+} from "https://deno.land/std@0.71.0/async/deferred.ts";
+
+export { Rhum } from "https://deno.land/x/rhum@v1.1.4/mod.ts";
