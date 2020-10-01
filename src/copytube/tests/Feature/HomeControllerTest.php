@@ -41,7 +41,6 @@ class HomeControllerTest extends TestCase
         // Make request with no video request
         $response = $this->get('/home');
         // Assert the view
-        var_dump($response);
         //$response->assertViewIs('Home');
         // Assert the status
         $response->assertStatus(200);
