@@ -4,21 +4,26 @@ import {
   serve,
   WebSocket,
 } from "./deps.ts";
-import IClient from "./interfaces/client.ts";
+import type IClient from "./interfaces/client.ts";
 import { config } from "./deps.ts";
 
 let allClients: Array<IClient> = [];
 const port = config().PORT;
 
-class SocketServer {
-  public static getAllClients() {
+export class SocketServer {
+  /**
+   * Gets all connected clients
+   *
+   * @returns The list of all clients
+   */
+  public static getAllClients(): IClient[] {
     return allClients;
   }
 
   // Blocks the event loop, needs to be at the end
   // Start the websocket server, and with each connection, append to a list of clients
   // And on each disconnect, remove the client from the list
-  public static async startSocketServerAndListen() {
+  public static async startSocketServerAndListen(): Promise<void> {
     console.info(`websocket server is running on :${port}`);
     for await (const req of serve(`:${port}`)) {
       const { headers, conn } = req;
@@ -65,10 +70,17 @@ class SocketServer {
     }
   }
 
-  public static async sendRedisMessageToSocketClients(message: string) {
+  /**
+   * Send a message to each connected client
+   *
+   * @param message - The message to send
+   */
+  public static async sendRedisMessageToSocketClients(
+    message: string,
+  ): Promise<void> {
     try {
       // If no clients have joined then dont send - acts as an error handler as error will be thrown: forEach of undefined
-      if (!allClients || !allClients.length) return false;
+      if (!allClients || !allClients.length) return;
       allClients.forEach((client, i) => {
         console.log(client);
         try {
@@ -86,5 +98,3 @@ class SocketServer {
     }
   }
 }
-
-export default SocketServer;

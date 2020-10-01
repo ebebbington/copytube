@@ -1,8 +1,10 @@
-import { config, connect } from "./deps.ts";
+import { config, connect, RedisSubscription } from "./deps.ts";
 import type { IRedis } from "./deps.ts";
 
-class Redis {
+export class Redis {
   /**
+   * Create a connection to redis
+   *
    * @returns A Redis instance
    */
   public static async connect(): Promise<IRedis> {
@@ -20,7 +22,9 @@ class Redis {
    *
    * @returns
    */
-  public static async createSubscriber(redis: IRedis) {
+  public static async createSubscriber(
+    redis: IRedis,
+  ): Promise<RedisSubscription> {
     const channels = ["realtime.comments.new", "realtime.users.delete"];
     console.info(
       "Subscribed to redis and awaiting messages on the following channels:",
@@ -28,11 +32,17 @@ class Redis {
     console.info(channels);
     return await redis.subscribe(...channels);
   }
+
+  /**
+   * Listen for messages on the subscriber
+   *
+   * @param sub - The subscribe to listen on messages for
+   * @param sendMessageCallback - CB for when the sub gets a message
+   */
   public static async listen(
-      // deno-lint-ignore allow-no-explicit-any
-      sub: any,
+    sub: RedisSubscription,
     sendMessageCallback: (message: string) => void,
-  ) {
+  ): Promise<void> {
     (async () => {
       for await (const { channel, message } of sub.receive()) {
         console.info(
@@ -46,5 +56,3 @@ class Redis {
     })();
   }
 }
-
-export default Redis;

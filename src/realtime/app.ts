@@ -4,8 +4,8 @@
  * socket.onmessage = function (event) { const message = JSON.parse(event.data) }
  */
 import { config, connect, serve, acceptWebSocket, WebSocket } from "./deps.ts";
-import Redis from "./redis.ts";
-import SocketServer from "./socket.ts";
+import { Redis } from "./redis.ts";
+import { SocketServer } from "./socket.ts";
 
 // Subscribe to redis channels and handle events when they come in
 const redis = await Redis.connect();

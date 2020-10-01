@@ -20,14 +20,19 @@ export {
   isWebSocketPingEvent,
   isWebSocketPongEvent,
   acceptWebSocket,
-  WebSocket,
 } from "https://deno.land/std@0.71.0/ws/mod.ts";
+export type { WebSocket } from "https://deno.land/std@0.71.0/ws/mod.ts";
 
-export { connect } from "https://deno.land/x/redis@v0.13.0/redis.ts";
-export type { Redis as IRedis } from "https://deno.land/x/redis@v0.13.0/mod.ts";
+export { connect } from "https://deno.land/x/redis@v0.13.1/redis.ts";
+export type {
+  Redis as IRedis,
+  RedisSubscription,
+} from "https://deno.land/x/redis@v0.13.1/mod.ts";
 
 export { assertEquals } from "https://deno.land/std@0.71.0/testing/asserts.ts";
 
 export {
   deferred,
 } from "https://deno.land/std@0.71.0/async/deferred.ts";
+
+export { Rhum } from "https://deno.land/x/rhum@v1.1.4/mod.ts";

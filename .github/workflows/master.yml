@@ -35,7 +35,8 @@ jobs:
       - name: Realtime Tests
         run: |
           docker-compose up -d > /dev/null
-          docker exec copytube_realtime deno test --allow-net
+          docker exec copytube_realtime deno test -A tests/integration/tests.ts
+          docker exec copytube_realtime deno test -A  tests/unit/tests.ts
 
   socket-tests:
     runs-on: ubuntu-latest
