@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
-import Notifier from "./notifier";
-import Loading from "./loading";
+import Notifier from "./components/notifier";
+import Loading from "./components/loading";
 if (window.location.pathname === '/chat') {
     const VideoChat = (function () {
         let url = 'http://'

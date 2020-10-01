@@ -1,7 +1,7 @@
 'use strict'
 
-import Notifier from "./notifier"
-import Loading from "./loading";
+import Notifier from "./components/notifier"
+import Loading from "./components/loading";
 
 const Login = (function () {
 

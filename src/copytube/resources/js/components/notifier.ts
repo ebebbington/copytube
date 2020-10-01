@@ -6,6 +6,10 @@
  *  <p id="notifier-message"></p>
  * </div>
  */
+
+type MessageTypes =
+    "success" | "warning" | "error"
+
 const Notifier = (function () {
 
     const classNames: string[] = [
@@ -16,7 +20,7 @@ const Notifier = (function () {
 
     const FADE_OUT_DELAY: number = 4000;
 
-    function show (messageType: string, title: string, message: string): void {
+    function show (messageType: MessageTypes, title: string, message: string): void {
       const $notifierContainer = $('#notifier-container')
       if (messageType && title && message) {
         $notifierContainer.removeClass(classNames.toString().replace(',', ' '));
