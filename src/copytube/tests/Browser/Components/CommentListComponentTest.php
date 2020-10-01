@@ -17,32 +17,28 @@ class CommentListComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->assertpathIs('/home')
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertpathIs('/video')
                 ->type('new-comment', 'TEST COMMENT FROM DUSK')
                 ->click('#comment > button')
                 ->waitUntil('!$.active')
-                ->pause(5000)
+                ->pause(9000)
                 ->assertSee('TEST COMMENT FROM DUSK');
             TestUtilities::removeTestUsersInDb();
         });
     }
 
-    /**
-     * FIXME :: `invalid session id`, only shows when browserTwo is trying to login as another user
-     * @throws \Throwable
-     */
     public function testANewCommentShowsWhenAddedByAnotherUser()
     {
         TestUtilities::createTestUserInDb(['email_address' => 'TestEmail1@hotmail.com', 'profile_picture' => 'img/sample.jpg']);
         TestUtilities::createTestUserInDb(['email_address' => 'TestEmail2@hotmail.com', 'profile_picture' => 'img/sample.jpg']);
         $this->browse(function (Browser $browser, Browser $browserTwo) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail1@hotmail.com')->first())
-                ->visit('/home');
+                ->visit('/video?requestedVideo=Something+More');
             //$browserTwo->loginAs(UserModel::where('email_address', '=', 'TestEmail1@hotmail.com')->first())
                 //->visit('/home');
             $browser
-                ->assertpathIs('/home')
+                ->assertpathIs('/video')
                 ->waitUntil('!$.active')
                 ->type('new-comment', 'TEST COMMENT FROM DUSK TWO');
             //$browserTwo->assertPathIs('/home');

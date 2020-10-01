@@ -24,8 +24,8 @@ class RabbitHoleComponentTest extends DuskTestCase
         //TestUtilities::logUserIn($id);
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
-                ->assertPathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertPathIs('/video');
                 //->assertSee('Lava Sample')
                 //->assertSee('An Iceland Venture')
                 //->assertPresent('.rabbit-hole-video-holder > video[src="videos/lava_sample.mp4"]')
@@ -50,8 +50,8 @@ class RabbitHoleComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             // login
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
-                ->assertPathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertPathIs('/video');
             // change path
             $browser->click('.rabbit-hole-video-holder > video[src="videos/lava_sample.mp4"]')
                 ->waitUntil('!$.active');

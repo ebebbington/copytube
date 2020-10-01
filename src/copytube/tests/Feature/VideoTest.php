@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\UserModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
@@ -89,7 +90,7 @@ class VideoTest extends TestCase
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
             'X-CSRF-TOKEN' => csrf_token()
         ];
-        $res = $this->get('/video?title=Hello', $headers);
+        $res = $this->get('/video/titles?title=Hello', $headers);
         $res->assertStatus(302);
 
         // Auth myself
@@ -97,20 +98,101 @@ class VideoTest extends TestCase
         Auth::loginUsingId($id);
 
         // send requestResponds with empty array when no title is passed in e.g. no value in search bar
-        $res = $this->get('/video?title=', $headers);
+        $res = $this->get('/video/titles?title=', $headers);
         $res->assertStatus(200);
         $res->assertJson(['success' => true, 'data' => []]);
 
         // Send request with correct titles and Finds titles based on it
-        $res = $this->get('/video?title=S', $headers); // should match lava sample and something more
+        $res = $this->get('/video/titles?title=S', $headers); // should match lava sample and something more
         $res->assertStatus(200);
         $res->assertJson(['success' => true, 'data' => ['Something More', 'Lava Sample']]);
 
         // make request with an incorrect title that will respond with no data
-        $res = $this->get('/video?title=I Dont exist', $headers);
+        $res = $this->get('/video/titles?title=I Dont exist', $headers);
         $res->assertStatus(200);
         $res->assertJson(['success' => true, 'data' => []]);
 
+        TestUtilities::removeTestUsersInDb();
+    }
+
+    public function testWatchSingleVideoWithoutAuth()
+    {
+        Auth::logout();
+        $response = $this->get('/video');
+        $response->assertStatus(302);
+        $response = $this->get('/');
+        $response->assertStatus(302);
+    }
+
+    public function tesWatchSingleVideoWithAuthWithInvalidQuery ()
+    {
+        $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
+        TestUtilities::logUserIn($id);
+        // make request with title but doesnt exist
+        $response = $this->get('/video?requestedVideo=Idontexist');
+        $response->assertStatus(404);
+        TestUtilities::removeTestUsersInDb();
+    }
+
+    public function testWatchSingleVideoWithAuthWithNoQuery ()
+    {
+        Cache::flush();
+        // create user
+        $id = TestUtilities::createTestUserInDb(['logged_in' => 0]);
+        // Auth user
+        TestUtilities::logUserIn($id);
+        // Make request with no video request
+        $response = $this->get('/video');
+        // Assert the view
+        //$response->assertViewIs('Home');
+        // Assert the status
+        $response->assertStatus(403);
+        // assert the data sent back to view
+//        $content = $response->getOriginalContent();
+//        $data = $content->getData();
+//        $this->assertEquals('Home', $data['title']); // defaults to something more
+//        $this->assertEquals('TestUsername', $data['username']);
+//        $this->assertEquals('Something More', $data['mainVideo']->title);
+//        $this->assertEquals('2', sizeof($data['rabbitHoleVideos']));
+//        // Shouldn't be the main video
+//        foreach ($data['rabbitHoleVideos'] as $vid) {
+//            $this->assertEquals(true, $vid->title !== 'Something More');
+//        }
+//        $this->assertEquals(9, sizeof($data['comments']));
+//        foreach ($data['comments'] as $comment) {
+//            $this->assertEquals(true, $comment->video_posted_on === 'Something More');
+//        }
+//        $this->assertEquals(true, $data['email'] === 'TestEmail@hotmail.com');
+//        TestUtilities::removeTestUsersInDb();
+    }
+
+    public function testWatchSingleVideoWithAuthWithQuery ()
+    {
+        Cache::flush();
+        $id = TestUtilities::createTestUserInDb();
+        TestUtilities::logUserIn($id);
+        // make request with correct title
+        $response = $this->get('/video?requestedVideo=Lava Sample');
+        // Assert the view
+        $response->assertViewIs('watch');
+        // Assert the status
+        $response->assertStatus(200);
+        // assert the data sent back to view
+        $content = $response->getOriginalContent();
+        $data = $content->getData();
+        $this->assertEquals('Lava Sample', $data['title']); // defaults to something more
+        $this->assertEquals('TestUsername', $data['username']);
+        $this->assertEquals('Lava Sample', $data['mainVideo']->title);
+        $this->assertEquals('2', sizeof($data['rabbitHoleVideos']));
+        // Shouldn't be the main video
+        foreach ($data['rabbitHoleVideos'] as $vid) {
+            $this->assertEquals(true, $vid->title !== 'Lava Sample');
+        }
+        $this->assertEquals(3, sizeof($data['comments']));
+        foreach ($data['comments'] as $comment) {
+            $this->assertEquals(true, $comment->video_posted_on === 'Lava Sample');
+        }
+        $this->assertEquals(true, $data['email'] === 'TestEmail@hotmail.com');
         TestUtilities::removeTestUsersInDb();
     }
 

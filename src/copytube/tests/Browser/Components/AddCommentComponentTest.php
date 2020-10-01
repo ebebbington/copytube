@@ -15,8 +15,8 @@ class AddCommentComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->assertpathIs('/home')
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertpathIs('/video')
                 ->type('new-comment', 'hello');
             $count = $browser->attribute('#comment-character-count', 'innerHTML');
             $comment = $browser->value('#add-comment-input');
@@ -32,8 +32,8 @@ class AddCommentComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->assertpathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertpathIs('/video');
             $browser->click('#comment > button')
                 ->waitUntil('!$.active');
             $browser->assertSee('The comment field is required');
@@ -46,8 +46,8 @@ class AddCommentComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->assertpathIs('/home')
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertpathIs('/video')
                 ->type('new-comment', 'hello')
                 ->click('#comment > button')
                 ->waitUntil('!$.active')

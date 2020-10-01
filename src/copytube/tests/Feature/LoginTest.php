@@ -35,7 +35,7 @@ class LoginTest extends TestCase
         return $response;
     }
 
-    public function testGetRequest()
+    public function testGetRequestWhenNotAuthed()
     {
         $response = $this->json('GET', '/login');
         $response->assertStatus(200);

@@ -20,7 +20,7 @@ class VideoSearchComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
+                ->visit('/video?requestedVideo=Something+More')
                 ->type('#search-bar', 'Something More');
             $value = $browser->attribute(
                 '#search-bar',
@@ -36,7 +36,7 @@ class VideoSearchComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
+                ->visit('/video?requestedVideo=Something+More')
                 ->type('#search-bar', 'Something More');
             $value = $browser->attribute(
                 '#search-bar-matching-dropdown > li',
@@ -58,7 +58,7 @@ class VideoSearchComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
+                ->visit('/video?requestedVideo=Something+More')
                 ->type('#search-bar', 'Lava Sample')
                 ->click('#search-button')
                 ->waitUntil('!$.active');
@@ -82,7 +82,7 @@ class VideoSearchComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home')
+                ->visit('/video?requestedVideo=Something+More')
                 ->type('#search-bar', 'Lava Sample')
                 ->waitUntil('!$.active');
             $browser->click('#search-bar-matching-dropdown > li')
@@ -107,7 +107,7 @@ class VideoSearchComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/home');
+                ->visit('/video?requestedVideo=Something+More');
             $this->assertEquals(
                 'input-group',
                 $browser->attribute('#search', 'class')

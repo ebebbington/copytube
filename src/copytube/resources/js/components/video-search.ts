@@ -21,50 +21,11 @@ const Home = (function () {
             }
         }
 
-        /**
-         * AJAX request to post a comment
-         * @param comment
-         * @param date
-         * @param videoPostedOn
-         * @param newCommentHtml
-         */
-        function postComment(comment: string, date: string, videoPostedOn: string) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/video/comment',
-                method: 'POST',
-                data: {
-                    comment: comment,
-                    datePosted: date,
-                    videoPostedOn: videoPostedOn
-                },
-                success: function (data) {
-                    if (data.success) {
-                        Notifier.success('Add Comment', 'Success')
-                        //newCommentHtml[0].children[0].children[0].src = data.data.image
-                        $('#add-comment-input').val('')
-                        $('#comment > span > p').text('0')
-                    }
-                    Loading(false)
-                },
-                error: function (err) {
-                    console.log('error')
-                    //@ts-ignore
-                    Notifier.error('Add Comment', JSON.parse(err.responseText).message)
-                    console.error(err)
-                    console.log(JSON.parse(err.responseText))
-                    Loading(false)
-                }
-            })
-        }
-
         function requestVideo(videoTitle: string) {
             Loading(true)
             const form = document.createElement('form')
             form.method = 'GET'
-            form.action = '/home'
+            form.action = '/video'
             const data = document.createElement('input')
             data.name = 'requestedVideo'
             data.value = videoTitle
@@ -75,7 +36,6 @@ const Home = (function () {
 
         return {
             handleScroll: handleScroll,
-            postComment: postComment,
             requestVideo: requestVideo
         }
 
@@ -131,7 +91,7 @@ const Home = (function () {
                     xhr.abort();
                 }
                 xhr = $.ajax({
-                    url: '/video?title=' + value,
+                    url: '/video/titles?title=' + value,
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {

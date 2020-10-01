@@ -16,8 +16,8 @@ class HeaderComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function ($browser) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->waitForText('Home')
+                ->visit('/video?requestedVideo=Something+More')
+                ->waitForText('Something More')
                 ->clickLink('Home')
                 ->assertPathIs('/home');
             TestUtilities::removeTestUsersInDb();
@@ -30,9 +30,9 @@ class HeaderComponentTest extends DuskTestCase
         $user = TestUtilities::getTestUserInDb();
         $this->browse(function ($browser) use ($user) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
+                ->visit('/video?requestedVideo=Something+More')
                 ->waitForText('Chat')
-                ->assertPathIs('/home')
+                ->assertPathIs('/video')
                 ->clickLink('Login')
                 ->pause(5)
                 ->assertPathIs('/home');
@@ -61,9 +61,9 @@ class HeaderComponentTest extends DuskTestCase
         $user = TestUtilities::getTestUserInDb();
         $this->browse(function ($browser) use ($user) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->waitForText('Home')
-                ->assertPathIs('/home')
+                ->visit('/video?requestedVideo=Something+More')
+                ->waitForText('Something More')
+                ->assertPathIs('/video')
                 ->clickLink('Chat')
                 ->assertPathIs('/chat');
             TestUtilities::removeTestUsersInDb();
@@ -86,8 +86,8 @@ class HeaderComponentTest extends DuskTestCase
         $user = User::find(1);
         $this->browse(function ($browser) use ($user) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->assertPathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertPathIs('/video');
             $browser
                 ->press('#account-options')
                 ->clickLink('Logout')
@@ -103,8 +103,8 @@ class HeaderComponentTest extends DuskTestCase
         $user = User::find(1);
         $this->browse(function ($browser) use ($user) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->assertPathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertPathIs('/video');
             $browser
                 ->press('#account-options');
             $this->assertEquals('gear-dropdown', $browser->attribute('.gear-dropdown', 'class'));
@@ -124,8 +124,8 @@ class HeaderComponentTest extends DuskTestCase
         $user = User::find(1);
         $this->browse(function ($browser) use ($user) {
             $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/home')
-                ->assertpathIs('/home');
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertpathIs('/video');
             $this->assertEquals('hide gear-dropdown', $browser->attribute('.gear-dropdown', 'class'));
             $browser
                 ->press('#account-options');

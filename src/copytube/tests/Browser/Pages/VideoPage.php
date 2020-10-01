@@ -3,7 +3,6 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
-use Tests\Feature\TestUtilities;
 
 /***
  * Class HomePage
@@ -12,8 +11,8 @@ use Tests\Feature\TestUtilities;
  *
  * Not needed as our component tests cover this page
  */
-// TODO Could expand upon this
-class HomePage extends Page
+// TODO
+class VideoPage extends Page
 {
 
     /**
@@ -32,19 +31,9 @@ class HomePage extends Page
      * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      */
-    public function assertVideosDisplay(Browser $browser)
+    public function assert(Browser $browser)
     {
-        TestUtilities::removeTestUsersInDb();
-        TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb();
-        $this->browse(function ($browser) use ($user) {
-            $browser->visit('/home')
-                ->assertPathIs('/home')
-                ->assertSee("Something More")
-                ->assertSee("Lava Sample")
-                ->assertSee("An Iceland Venture");
-            TestUtilities::removeTestUsersInDb();
-        });
+        //
     }
 
     /**

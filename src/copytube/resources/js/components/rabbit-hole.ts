@@ -5,15 +5,17 @@ const RabbitHole = (function () {
 
         function requestVideo (videoTitle: string) {
             Loading(true)
-            const form = document.createElement('form')
-            form.method = 'GET'
-            form.action = '/home'
-            const data = document.createElement('input')
-            data.name = 'requestedVideo'
-            data.value = videoTitle
-            form.appendChild(data)
-            document.body.appendChild(form)
-            form.submit()
+            window.location.href = "/video?requestedVideo=" + videoTitle
+            // Loading(true)
+            // const form = document.createElement('form')
+            // form.method = 'GET'
+            // form.action = '/video'
+            // const data = document.createElement('input')
+            // data.name = 'requestedVideo'
+            // data.value = videoTitle
+            // form.appendChild(data)
+            // document.body.appendChild(form)
+            // form.submit()
         }
 
         return {
