@@ -17,7 +17,9 @@ class RabbitHoleComponentTest extends DuskTestCase
      */
     public function testDataShows()
     {
+        TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
+        //TestUtilities::logUserIn($id);
         $this->browse(function (Browser $browser) {
             $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
                 ->visit('/home')
