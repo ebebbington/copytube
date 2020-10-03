@@ -10,6 +10,7 @@ use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class VideoController extends Controller
      * Gets a video to watch and it's comments, and extra rabbit hold vids
      * @param Request $request
      */
-    public function getVideo (Request $request)
+    public function index (Request $request)
     {
         $loggingPrefix = "[VideoController - ".__FUNCTION__.'] ';
 
@@ -106,24 +107,8 @@ class VideoController extends Controller
             ->with('rabbitHoleVideos', $renderData['rabbitHoleVideos'])
             ->with('comments', $renderData['comments'])
             ->with('profilePicture', $renderData['profilePicture'])
-            ->with('email', $renderData['email']);
-    }
-
-    /**
-     * Ex: AJAX GET/videos
-     * Gets all videos for the home page
-     * @param Request $request
-     */
-    public function getVideos (Request $request)
-    {
-        if (!$request->ajax()) {
-            abort (403);
-        }
-        $videoNameRequested = $request->input("title");
-        if (!$videoNameRequested) {
-            abort(403);
-        }
-        var_dump($videoNameRequested);
+            ->with('email', $renderData['email'])
+            ->with("loggedInUserId", $user->id);
     }
 
     public function postComment (Request $request)
@@ -198,5 +183,62 @@ class VideoController extends Controller
             }
         } else { $titles = []; }
         return response()->json(['success' => true, 'data' => $titles]);
+    }
+
+    public function deleteComment (Request  $request)
+    {
+        $commentId = $request->input("id");
+        if (!$commentId) {
+            return response()->json(['success' => false, 'message' => 'Failed to delete. Id must be provided']);
+        }
+        $CommentsModel = new CommentsModel();
+        $user = Auth::user();
+        $comment = $CommentsModel->SelectQuery([
+            'where' => "id = $commentId AND user_id = $user->id",
+            'limit' => 1
+        ]);
+        if (!$comment || !isset($comment) || $comment->author !== $user->username) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated. Not allowed to delete other peoples comments'
+            ]);
+        }
+        $success = $CommentsModel->DeleteQuery([
+            'id' => $commentId
+        ]);
+        $videoTitle = $comment->video_posted_on;
+        $cacheKey = str_replace(' ', '+', "db:comments:videoTitle=" . $videoTitle);
+        Cache::forget($cacheKey);
+        return response()->json(['success' => $success, 'message' => 'Successfully deleted']);
+    }
+
+    public function updateComment (Request $request)
+    {
+        $commentId = $request->input("id");
+        $commentText = $request->input("newComment");
+        if (!$commentId || !$commentText) {
+            return response()->json(['success' => false, 'message' => 'Failed to delete. The id and text must be provided']);
+        }
+        $CommentsModel = new CommentsModel();
+        $user = Auth::user();
+        $comment = $CommentsModel->SelectQuery([
+            'where' => "id = $commentId AND user_id = $user->id",
+            'limit' => 1
+        ]);
+        if (!$comment || !isset($comment) || $comment->author !== $user->username) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated. Not allowed to delete other peoples comments'
+            ]);
+        }
+        $success = $CommentsModel->UpdateQuery([
+            'id' => $commentId
+        ], [
+            'comment' => $commentText
+        ]);
+        $videoTitle = $comment->video_posted_on;
+        $cacheKey = str_replace(' ', '+', "db:comments:videoTitle=" . $videoTitle);
+        Cache::forget($cacheKey);
+        return response()->json(['success' => $success, 'message' => 'Successfully updated']);
     }
 }

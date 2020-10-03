@@ -4,6 +4,7 @@
 namespace Tests\Feature;
 
 
+use App\User;
 use App\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,15 @@ class TestUtilities
             'testPas', // must be min len of 8
         ];
 
+    public static function removeTestCommentsInDB (int $id = null)
+    {
+        if ($id) {
+            DB::table('comments')->where('id', '=', $id)->delete();
+        } else {
+            DB::table('comments')->where('author', '=', TestUtilities::$validUsername)->delete();
+        }
+    }
+
     public static function createTestUserInDb (array $overrides = [])
     {
         $data = [
@@ -37,6 +47,19 @@ class TestUtilities
         return $id;
     }
 
+    public static function createTestCommentInDb ($user): int
+    {
+        $data = [
+            'comment' => 'TEST COMMENT FROM DUSK',
+            'author' => $user->username,
+            'date_posted' => '2020-09-04',
+            'video_posted_on' => 'Something More',
+            'user_id' => $user->id
+        ];
+        $id = DB::table('comments')->insertGetId($data);
+        return $id;
+    }
+
     public static function removeTestUsersInDb (array $query = [])
     {
         if (isset($query) && sizeof($query) >= 1)
@@ -45,8 +68,11 @@ class TestUtilities
             DB::table('users')->where(['username' => TestUtilities::$validUsername])->delete();
     }
 
-    public static function getTestUserInDb ()
+    public static function getTestUserInDb (int $id = null)
     {
+        if ($id) {
+            return DB::table('users')->where('id', '=', $id)->first();
+        }
         return DB::table('users')->where('email_address', '=', TestUtilities::$validEmail)->first();
     }
 

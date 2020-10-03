@@ -28,6 +28,8 @@
                     <small></small>
                     <p></p>
                 </div>
+                <i class="ml-4 delete-comment">&#2716;</i>
+                <i class="ml-4 edit-comment">&#x270E;</i>
             </div>
         </div>
         <header>

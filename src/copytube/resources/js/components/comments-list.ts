@@ -1,4 +1,6 @@
 import Realtime from "./realtime";
+import Notifier from "./notifier";
+import Loading from "./loading";
 
 const Commentslist = (function () {
 
@@ -32,8 +34,83 @@ const Commentslist = (function () {
                 newCommentHtml[0].children[1].children[2].textContent = message.comment.comment
                 newCommentHtml[0].children[0].children[0].src = message.comment.profile_picture
                 newCommentHtml[0].children[1].children[0].textContent = message.comment.author
+                newCommentHtml.find('i.delete-comment').data('comment-id', message.comment.id)
+                newCommentHtml.find('i.edit-comment').data('comment-id', message.comment.id)
+                // TODO set comment id for edit and delete icon
+
                 $('#comment-list').prepend(newCommentHtml)
             }
+
+            $('body').on('click', '#comment-list .media > i.delete-comment', function () {
+                const wantsToDelete = confirm("Are you sure you want to delete this comment?")
+                if (!wantsToDelete) {
+                    return false
+                }
+                const commentId = $(this).attr("data-comment-id")
+                if (!commentId) {
+                    return false
+                }
+                Loading(true)
+                const $deleteElem = $(this)
+                $.ajax({
+                    url: "/video/comment?id=" + commentId,
+                    method: "DELETE",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success(data: any, textStatus: string, jqXHR: JQueryXHR): any {
+                        console.log(data)
+                        Loading(false)
+                        if (data.success === false) {
+                            Notifier.error('Delete comment',  data.message)
+                        } else {
+                            Notifier.success("Delete comment", data.message)
+                            $deleteElem.closest('.media').remove()
+                        }
+                    },
+                    error(jqXHR: JQueryXHR, textStatus: string, errorThrown: string): any {
+                        Loading(false)
+                        console.log(errorThrown)
+                    }
+                })
+            })
+
+            $('body').on('click', '#comment-list .media > i.edit-comment', function () {
+                const $container = $(this).closest('.media')
+                const $comment = $container.find('p')
+                if ($comment.attr('contenteditable')) {
+                    $comment.attr('contenteditable', 'false')
+                    const id = $(this).data('cdata-comment-id')
+                    const newComment = $comment.text()
+                    // send post
+                    Loading(true)
+                    $.ajax({
+                        url: "/video/comment",
+                        method: "PUT",
+                        dataType: 'json',
+                        data: {
+                            id: id,
+                            newComment: newComment
+                        },
+                        success: function (res) {
+                            Loading(false)
+                            if (res.success) {
+                                Notifier.success('Update', res.message)
+                            } else {
+                                Notifier.error('Update', res.message)
+                            }
+                        },
+                        error: function (err) {
+                            Loading(false)
+                            console.error(err)
+                        }
+                    })
+                } else {
+                    $comment.attr('contenteditable', 'true')
+                    $comment.focus();
+                }
+            })
         })
 
     })()

@@ -1,4 +1,5 @@
 <div id="comment-list">
+    // TODO whenn clicking del icon, delete from db and send redis msg, and when clicking edit,makeit editableand then update db (and sendrequest to  socket)
     @if (isset($comments))
     @foreach ($comments as $comment)
     <div class="media" data-user-id="{{ $comment->user_id }}">
@@ -12,6 +13,10 @@
             <small>{{ $comment->date_posted }}</small>
             <p>{{ $comment->comment }}</p>
         </div>
+        @if ($loggedInUserId === $comment->user_id)
+        <i class="ml-4 delete-comment" data-comment-id="{{ $comment->id }}">&#2716;</i>
+        <i class="ml-4 edit-comment" data-comment-id="{{ $comment->id }}">&#x270E;</i>
+        @endif
     </div>
     @endforeach
     @endif
