@@ -28,6 +28,73 @@ class VideoTest extends TestCase
         $res->assertRedirect('/login');
     }
 
+    public function testDeleteCommentWithoutAuth ()
+    {
+        $res = $this->delete('/video/comment?id=12345');
+        $res->assertStatus(302);
+        $res->assertRedirect('/login');
+    }
+
+    public function testDeleteCommentWithAllValidData ()
+    {
+        TestUtilities::removeTestUsersInDb();
+        $id = TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
+        Auth::loginUsingId($id);
+        $user = Auth::user();
+        $headers = [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            'X-CSRF-TOKEN' => csrf_token()
+        ];
+        $user = Auth::user();
+        $commentId = TestUtilities::createTestCommentInDb($user);
+        $res = $this->delete('/video/comment?id=' . $commentId);
+        $res->assertSee("Successfully deleted");
+        $comment = DB::table("comments")->whereRaw("id = $commentId")->first();
+        $this->assertEquals(NULL, $comment);
+        TestUtilities::removeTestUsersInDb();
+        DB::table('comments')->whereRaw("id = $commentId")->delete();
+    }
+
+    public function testDeleteCommentWhenNoIDPassedIn ()
+    {
+        TestUtilities::removeTestUsersInDb();
+        $id = TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
+        Auth::loginUsingId($id);
+        $user = Auth::user();
+        $headers = [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            'X-CSRF-TOKEN' => csrf_token()
+        ];
+        $user = Auth::user();
+        $commentId = TestUtilities::createTestCommentInDb($user);
+        $res = $this->delete('/video/comment');
+        $res->assertSee("Failed to delete. Id must be provided");
+    }
+
+    public function testDeleteCommentOnlyDeletedWhenIsUsers ()
+    {
+        TestUtilities::removeTestUsersInDb();
+        $userId1 = TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
+        Auth::loginUsingId($userId1);
+        $userId2 = TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
+        $user2 = TestUtilities::getTestUserInDb($userId2);
+        $user1 = Auth::user();
+        $headers = [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            'X-CSRF-TOKEN' => csrf_token()
+        ];
+        $commentId1 = TestUtilities::createTestCommentInDb($user1);
+        $commentId2 = TestUtilities::createTestCommentInDb($user2);
+        $res = $this->delete('/video/comment?id=' . $commentId2);
+        $res->assertSee("Not allowed to delete other peoples comments");
+        $comment2 = DB::table("comments")->whereRaw("id = $commentId2")->first();
+        $this->assertEquals(false, $comment2 === NULL);
+        TestUtilities::removeTestUsersInDb();
+        DB::table('comments')->whereRaw("id = $commentId1")->delete();
+        DB::table('comments')->whereRaw("id = $commentId2")->delete();
+    }
+
+
     public function testPostCommentWithAuth ()
     {
         // Auth myself
