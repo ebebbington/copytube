@@ -11,15 +11,13 @@ export { config } from "https://deno.land/x/dotenv@v0.5.0/dotenv.ts";
 //     testing
 // }
 
-export {
-  serve,
-} from "https://deno.land/std@0.71.0/http/server.ts";
+export { serve } from "https://deno.land/std@0.71.0/http/server.ts";
 
 export {
+  acceptWebSocket,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
   isWebSocketPongEvent,
-  acceptWebSocket,
 } from "https://deno.land/std@0.71.0/ws/mod.ts";
 export type { WebSocket } from "https://deno.land/std@0.71.0/ws/mod.ts";
 
@@ -31,8 +29,6 @@ export type {
 
 export { assertEquals } from "https://deno.land/std@0.71.0/testing/asserts.ts";
 
-export {
-  deferred,
-} from "https://deno.land/std@0.71.0/async/deferred.ts";
+export { deferred } from "https://deno.land/std@0.71.0/async/deferred.ts";
 
 export { Rhum } from "https://deno.land/x/rhum@v1.1.4/mod.ts";
