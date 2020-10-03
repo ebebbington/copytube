@@ -30,8 +30,10 @@ Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'])->middlew
 
 Route::post('/video/comment', 'VideoController@postComment')->middleware('auth');
 Route::get('/video/titles', 'VideoController@autocomplete')->middleware('auth');
-Route::get("/video", ['as' => 'video', 'uses' => 'VideoController@getVideo'])->middleware("auth");
+Route::get("/video", ['as' => 'video', 'uses' => 'VideoController@index'])->middleware("auth");
 Route::get("/videos", 'VideoController@getVideos')->middleware("auth");
+Route::delete("/video/comment", 'VideoController@deleteComment')->middleware("auth");
+Route::put("video/comment", 'VideController@updateCommet')->middleware("auth");
 
 Route::get('/logout', 'LogoutController@logout')->middleware('auth');
 
