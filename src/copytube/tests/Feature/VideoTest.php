@@ -263,4 +263,67 @@ class VideoTest extends TestCase
         TestUtilities::removeTestUsersInDb();
     }
 
+    public function testUpdateCommentWithNoAuth ()
+    {
+        Cache::flush();
+        // make request with correct title
+        $response = $this->put('/video/comment');
+        $response->assertRedirect("/login");
+    }
+
+    public function testUpdateCommentWithInvalidBody ()
+    {
+        Cache::flush();
+        $userId = TestUtilities::createTestUserInDb();
+        $user = TestUtilities::getTestUserInDb($userId);
+        $commentId = TestUtilities::createTestCommentInDb($user);
+        $comment = DB::table("comments")->where('id', '=', $commentId)->first();
+        TestUtilities::logUserIn($userId);
+        // make request with correct title
+        $response = $this->put('/video/comment');
+        $response->assertSee("Failed to delete. The id and text must be provided");
+        TestUtilities::removeTestUsersInDb();
+        TestUtilities::removeTestCommentsInDB($commentId);
+    }
+
+    public function testUpdateCommentWhenCommentToUpdateIsntUsers ()
+    {
+        Cache::flush();
+        $userId1 = TestUtilities::createTestUserInDb();
+        $userId2 = TestUtilities::createTestUserInDb();
+        $user1 = TestUtilities::getTestUserInDb($userId1);
+        $user2 = TestUtilities::getTestUserInDb($userId2);
+        $commentId = TestUtilities::createTestCommentInDb($user1);
+        $comment = DB::table("comments")->where('id', '=', $commentId)->first();
+        TestUtilities::logUserIn($userId2);
+        // make request with correct title
+        $response = $this->put('/video/comment', [
+            'id' => $commentId,
+            'newComment' => 'Hello world :)'
+        ]);
+        $response->assertSee("Unauthenticated. Not allowed to delete other peoples comments");
+        TestUtilities::removeTestUsersInDb();
+        TestUtilities::removeTestCommentsInDB($commentId);
+    }
+
+    public function testUpdateCommentWhenAllDataIsCorrect ()
+    {
+        Cache::flush();
+        $id = TestUtilities::createTestUserInDb();
+        $user = TestUtilities::getTestUserInDb($id);
+        $commentId = TestUtilities::createTestCommentInDb($user);
+        $comment = DB::table("comments")->where('id', '=', $commentId)->first();
+        TestUtilities::logUserIn($id);
+        // make request with correct title
+        $response = $this->put('/video/comment', [
+            'id' => $commentId,
+            'newComment' => 'Hello world :)'
+        ]);
+        $response->assertSee("Successfully updated");
+        $updatedComment = DB::table("comments")->where('id', '=', $commentId)->first();
+        $this->assertEquals($updatedComment->comment, 'Hello world :)');
+        TestUtilities::removeTestUsersInDb();
+        TestUtilities::removeTestCommentsInDB($commentId);
+    }
+
 }
