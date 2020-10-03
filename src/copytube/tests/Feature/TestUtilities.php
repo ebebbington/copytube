@@ -23,6 +23,15 @@ class TestUtilities
             'testPas', // must be min len of 8
         ];
 
+    public static function removeTestCommentsInDB (int $id = null)
+    {
+        if ($id) {
+            DB::table('comments')->where('id', '=', $id)->delete();
+        } else {
+            DB::table('comments')->where('author', '=', TestUtilities::$validUsername)->delete();
+        }
+    }
+
     public static function createTestUserInDb (array $overrides = [])
     {
         $data = [
@@ -41,7 +50,7 @@ class TestUtilities
     public static function createTestCommentInDb ($user): int
     {
         $data = [
-            'comment' => 'TEST COMMENNT FROM DUSK',
+            'comment' => 'TEST COMMENT FROM DUSK',
             'author' => $user->username,
             'date_posted' => '2020-09-04',
             'video_posted_on' => 'Something More',

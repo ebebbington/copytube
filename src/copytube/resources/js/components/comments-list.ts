@@ -34,7 +34,10 @@ const Commentslist = (function () {
                 newCommentHtml[0].children[1].children[2].textContent = message.comment.comment
                 newCommentHtml[0].children[0].children[0].src = message.comment.profile_picture
                 newCommentHtml[0].children[1].children[0].textContent = message.comment.author
+                newCommentHtml.find('i.delete-comment').data('comment-id', message.comment.id)
+                newCommentHtml.find('i.edit-comment').data('comment-id', message.comment.id)
                 // TODO set comment id for edit and delete icon
+
                 $('#comment-list').prepend(newCommentHtml)
             }
 
@@ -48,6 +51,7 @@ const Commentslist = (function () {
                     return false
                 }
                 Loading(true)
+                const $deleteElem = $(this)
                 $.ajax({
                     url: "/video/comment?id=" + commentId,
                     method: "DELETE",
@@ -56,13 +60,13 @@ const Commentslist = (function () {
                     },
                     dataType: 'json',
                     success(data: any, textStatus: string, jqXHR: JQueryXHR): any {
+                        console.log(data)
                         Loading(false)
-                        const json = JSON.parse(data)
-                        if (json.data.success === false) {
-                            Notifier.error('Delete comment',  json.data.message)
+                        if (data.success === false) {
+                            Notifier.error('Delete comment',  data.message)
                         } else {
-                            Notifier.success("Delete comment", json.data.message)
-                            $(this).closest('.media').remove()
+                            Notifier.success("Delete comment", data.message)
+                            $deleteElem.closest('.media').remove()
                         }
                     },
                     error(jqXHR: JQueryXHR, textStatus: string, errorThrown: string): any {
@@ -72,7 +76,7 @@ const Commentslist = (function () {
                 })
             })
 
-            $('body').on('click', '#comment-list > media> i.edit-comment', function () {
+            $('body').on('click', '#comment-list > media > i.edit-comment', function () {
                 console.log($(this))
                 // TODO
             })

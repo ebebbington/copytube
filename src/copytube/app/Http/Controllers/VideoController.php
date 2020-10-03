@@ -207,7 +207,8 @@ class VideoController extends Controller
             'id' => $commentId
         ]);
         $videoTitle = $comment->video_posted_on;
-        Cache::forget("db:comments:videoTitle=" . $videoTitle);
+        $cacheKey = str_replace(' ', '+', "db:comments:videoTitle=" . $videoTitle);
+        Cache::forget($cacheKey);
         return response()->json(['success' => $success, 'message' => 'Successfully deleted']);
     }
 }
