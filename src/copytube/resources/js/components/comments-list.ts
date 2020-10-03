@@ -80,6 +80,7 @@ const Commentslist = (function () {
                 const $container = $(this).closest('.media')
                 const $comment = $container.find('p')
                 if ($comment.attr('contenteditable')) {
+                    $comment.attr('contenteditable', 'false')
                     const id = $(this).data('cdata-comment-id')
                     const newComment = $comment.text()
                     // send post

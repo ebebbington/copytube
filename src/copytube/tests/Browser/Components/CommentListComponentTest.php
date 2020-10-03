@@ -92,11 +92,6 @@ class CommentListComponentTest extends DuskTestCase
         });
     }
 
-    public function testEditButtonChangesCommentElement ()
-    {
-
-    }
-
     public function testDeletingACommentDisplaysAPromptAndThenRemovesItFromDOM ()
     {
         Cache::flush();
@@ -115,6 +110,30 @@ class CommentListComponentTest extends DuskTestCase
                 ->waitUntil('!$.active');
             $elems = $browser->elements('i.delete-comment');
             $this->assertEquals(1, sizeof($elems));
+            TestUtilities::removeTestCommentsInDB();
+            TestUtilities::removeTestUsersInDb();
+        });
+    }
+
+    public function testClickingEditButtonMakesCommentEditableAndThenCanSaveUpdatedComment ()
+    {
+        Cache::flush();
+        $id = TestUtilities::createTestUserInDb();
+        $user = TestUtilities::getTestUserInDb($id);
+        $commentId = TestUtilities::createTestCommentInDb($user);
+        $this->browse(function (Browser $browser, Browser $browserTwo) use ($commentId) {
+            $browser
+                ->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->first())
+                ->visit('/video?requestedVideo=Something+More')
+                ->assertpathIs('/video')
+                ->waitUntil('!$.active');
+            $browser->click('i.edit-comment[data-comment-id="'.$commentId.'"]');
+            $element = $browser->element('.media > .media-body > p[contenteditable="true"]');
+            $this->assertEquals(true, $element !== NULL);
+            $browser->click('i.edit-comment[data-comment-id="'.$commentId.'"]')
+                ->waitUntil('!$.active');
+            $element = $browser->element('.media > .media-body > p[contenteditable="false"]');
+            $this->assertEquals(true, $element !== NULL);
             TestUtilities::removeTestCommentsInDB();
             TestUtilities::removeTestUsersInDb();
         });
