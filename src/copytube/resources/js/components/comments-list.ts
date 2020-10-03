@@ -1,4 +1,6 @@
 import Realtime from "./realtime";
+import Notifier from "./notifier";
+import Loading from "./loading";
 
 const Commentslist = (function () {
 
@@ -32,8 +34,48 @@ const Commentslist = (function () {
                 newCommentHtml[0].children[1].children[2].textContent = message.comment.comment
                 newCommentHtml[0].children[0].children[0].src = message.comment.profile_picture
                 newCommentHtml[0].children[1].children[0].textContent = message.comment.author
+                // TODO set comment id for edit and delete icon
                 $('#comment-list').prepend(newCommentHtml)
             }
+
+            $('body').on('click', '#comment-list .media > i.delete-comment', function () {
+                const wantsToDelete = confirm("Are you sure you want to delete this comment?")
+                if (!wantsToDelete) {
+                    return false
+                }
+                const commentId = $(this).attr("data-comment-id")
+                if (!commentId) {
+                    return false
+                }
+                Loading(true)
+                $.ajax({
+                    url: "/video/comment?id=" + commentId,
+                    method: "DELETE",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success(data: any, textStatus: string, jqXHR: JQueryXHR): any {
+                        Loading(false)
+                        const json = JSON.parse(data)
+                        if (json.data.success === false) {
+                            Notifier.error('Delete comment',  json.data.message)
+                        } else {
+                            Notifier.success("Delete comment", json.data.message)
+                            $(this).closest('.media').remove()
+                        }
+                    },
+                    error(jqXHR: JQueryXHR, textStatus: string, errorThrown: string): any {
+                        Loading(false)
+                        console.log(errorThrown)
+                    }
+                })
+            })
+
+            $('body').on('click', '#comment-list > media> i.edit-comment', function () {
+                console.log($(this))
+                // TODO
+            })
         })
 
     })()

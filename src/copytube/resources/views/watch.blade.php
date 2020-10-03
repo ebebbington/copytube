@@ -16,7 +16,7 @@
             'title' => $mainVideo->title,
             'description' => $mainVideo->description,
             'poster' => $mainVideo->poster,
-            'src' => $mainVideo->src
+            'src' => $mainVideo->src,
         ])
         @endcomponent
     </div>
@@ -32,7 +32,7 @@
     </div>
     <!-- list of comments -->
     <div class="row">
-        @component('components/comment-list', ['comments' => $comments])
+        @component('components/comment-list', ['comments' => $comments, 'loggedInUserId' => $loggedInUserId])
         @endcomponent
     </div>
 @stop
