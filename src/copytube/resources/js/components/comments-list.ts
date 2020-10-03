@@ -76,9 +76,39 @@ const Commentslist = (function () {
                 })
             })
 
-            $('body').on('click', '#comment-list > media > i.edit-comment', function () {
-                console.log($(this))
-                // TODO
+            $('body').on('click', '#comment-list .media > i.edit-comment', function () {
+                const $container = $(this).closest('.media')
+                const $comment = $container.find('p')
+                if ($comment.attr('contenteditable')) {
+                    const id = $(this).data('cdata-comment-id')
+                    const newComment = $comment.text()
+                    // send post
+                    Loading(true)
+                    $.ajax({
+                        url: "/video/comment",
+                        method: "PUT",
+                        dataType: 'json',
+                        data: {
+                            id: id,
+                            newComment: newComment
+                        },
+                        success: function (res) {
+                            Loading(false)
+                            if (res.success) {
+                                Notifier.success('Update', res.message)
+                            } else {
+                                Notifier.error('Update', res.message)
+                            }
+                        },
+                        error: function (err) {
+                            Loading(false)
+                            console.error(err)
+                        }
+                    })
+                } else {
+                    $comment.attr('contenteditable', 'true')
+                    $comment.focus();
+                }
             })
         })
 

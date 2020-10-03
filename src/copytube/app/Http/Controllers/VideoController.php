@@ -211,4 +211,34 @@ class VideoController extends Controller
         Cache::forget($cacheKey);
         return response()->json(['success' => $success, 'message' => 'Successfully deleted']);
     }
+
+    public function updateComment (Request $request)
+    {
+        $commentId = $request->input("id");
+        $commentText = $request->input("newComment");
+        if (!$commentId || !$commentText) {
+            return response()->json(['success' => false, 'message' => 'Failed to delete. The id and text must be provided']);
+        }
+        $CommentsModel = new CommentsModel();
+        $user = Auth::user();
+        $comment = $CommentsModel->SelectQuery([
+            'where' => "id = $commentId AND user_id = $user->id",
+            'limit' => 1
+        ]);
+        if (!$comment || !isset($comment) || $comment->author !== $user->username) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated. Not allowed to delete other peoples comments'
+            ]);
+        }
+        $success = $CommentsModel->UpdateQuery([
+            'id' => $commentId
+        ], [
+            'comment' => $commentText
+        ]);
+        $videoTitle = $comment->video_posted_on;
+        $cacheKey = str_replace(' ', '+', "db:comments:videoTitle=" . $videoTitle);
+        Cache::forget($cacheKey);
+        return response()->json(['success' => $success, 'message' => 'Successfully updated']);
+    }
 }
