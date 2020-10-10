@@ -30,9 +30,10 @@ jobs:
       - name: Laravel Tests
         run: |
           cd src/copytube
-          php ../../composer.phar install
-          npm i
-          npm run dev
+          php ../../composer.phar install > /dev/null
+          npm i > /dev/null
+          npm run dev > /dev/nyll
+          cd ../../
           docker-compose build > /dev/null
           docker-compose -f docker-compose-test.yml up
 
