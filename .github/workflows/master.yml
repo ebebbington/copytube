@@ -21,22 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: '12'
+
       - name: Laravel Tests
         run: |
-          cd src/copytube
-          php ../../composer.phar install > /dev/null
-          npm i > /dev/null
-          npm run dev > /dev/null
-          cd ../../
-          docker-compose build > /dev/null
           cp src/copytube/.env-dusk-ci src/copytube/.env
-          docker-compose -f docker-compose-test.yml up
+          docker-compose -f docker-compose-test.yml up -d
+          sleep 300
+          docker exec copytube_phpfpm  php artisan dusk tests/Browser/Components/HeaderComponentTest.php
 
   realtime-tests:
     runs-on: ubuntu-latest
