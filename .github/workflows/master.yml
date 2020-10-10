@@ -34,7 +34,7 @@ jobs:
           npm i
           npm run dev
           docker-compose build > /dev/null
-          docker-compose up -f docker-compose-test.yml
+          docker-compose -f docker-compose-test.yml up
 
   realtime-tests:
     runs-on: ubuntu-latest
