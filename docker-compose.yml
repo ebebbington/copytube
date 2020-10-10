@@ -12,7 +12,6 @@ services:
     working_dir: /var/www/copytube
     depends_on:
       - phpfpm
-      - socket
       - realtime
     ports:
       - "9002:9002"
@@ -47,20 +46,6 @@ services:
       - "3007:3006"
     env_file:
       - ./.docker/env/sql.env
-    networks:
-      - copytube-network
-
-  socket:
-    container_name: copytube_socket
-    build:
-      context: .
-      dockerfile: .docker/node.dockerfile
-    volumes:
-      - ./src/socket:/var/www/socket
-    ports:
-      - "9009:9009"
-    working_dir: /var/www/socket
-    command: bash -c "npm run start"
     networks:
       - copytube-network
 
