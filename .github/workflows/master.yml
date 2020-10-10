@@ -21,12 +21,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'
       - name: Laravel Tests
         run: |
-          docker-compose up -d > /dev/null
-          sleep 300
-          docker exec copytube_phpfpm vendor/bin/phpunit
-          docker exec copytube_phpfpm php artisan dusk
+          cd src/copytube
+          php composer install
+          npm i
+          npm run dev
+          docker-compose build > /dev/null
+          docker-compose up -f docker-compose-test.yml
 
   realtime-tests:
     runs-on: ubuntu-latest
