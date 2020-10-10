@@ -20,15 +20,6 @@ jobs:
           cd src/copytube
           php ../../composer.phar update
 
-      # node
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: '12'
-      - name: Socket NPM -> Upgrade Dependencies
-        run: |
-          cd src/socket
-          npm update
-
       # deno
       - name: Install Deno
         uses: denolib/setup-deno@v2
