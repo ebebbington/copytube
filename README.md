@@ -22,20 +22,16 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 * MySQL
 
 * PHP
-
-* Node
-
-* SocketIO
+    * Laravel
+    * Blade
 
 * Deno
     
 * Redis
-
     * DB Caching
     * Pub/Sub
     
 * Testing
-
     * Unit
     * Feature
     * Browser (Laravel Dusk, Selenium container)
@@ -45,8 +41,6 @@ CopyTube is an impersonation of YouTube, utilising videos, comments, a login sys
 Nginx: 9002
 
 PHP-FPM: 9000
-
-Socket: 9009
 
 Realtime: 9008
 
@@ -60,17 +54,11 @@ Selenium: 4444
 
 * Database Caching inside PHP using Redis
 
-* Realtime SocketIO chat application using Node
-
 * Laravel Authorisation
 
 * Realtime updates using Laravel jobs, Redis and a Deno WebSocket
 
 * Testing all around
-
-    * Realtime tests
-    * Socket tests
-    * Copytube tests (browser tests using Selenium container and Laravel Dusk)
     
 # CI
 
@@ -93,14 +81,6 @@ This is the main application that holds the majority of this project, such as th
 It's the brain essentially.
 
 See the `README.md` for the main app [here](https://github.com/ebebbington/copytube/blob/master/src/copytube/README.md)
-
-## Socket (Web Socket)
-
-This handles the server-side for our WebRTC applications. Currently it is only video chat, but this section
-is responsible for these types of tasks. This is because I want to keep each socket server as simple as possible, because they
-can easily get too overwhelming and hard to manage.
-
-See the `README.md` for the Socket app [here](https://github.com/ebebbington/copytube/blob/master/src/socket/README.md)
 
 ## SQL
 
@@ -184,7 +164,7 @@ Finally, go to the website
 # Built With
 
 * [PHP](http://www.php.net) - Server Side Language
-* [Nginx](https://nginx.com) - Webserver
+* [Nginx](https://nginx.com) - Proxy server
 * [Docker](https://docker.com) - Used for Building the Environment
 
 # Authors
