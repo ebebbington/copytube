@@ -35,7 +35,7 @@ jobs:
           npm run dev > /dev/null
           cd ../../
           docker-compose build > /dev/null
-          cp src/coptube/.env-dusk-ci src/copytube/.env
+          cp src/copytube/.env-dusk-ci src/copytube/.env
           docker-compose -f docker-compose-test.yml up
 
   realtime-tests:
