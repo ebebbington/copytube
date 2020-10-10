@@ -22,7 +22,7 @@ services:
     container_name: copytube_phpfpm
     build:
       context: .
-      dockerfile: .docker/phpfpm.dockerfile
+      dockerfile: .docker/phpfpm-test.dockerfile
     depends_on:
       - sql
     env_file:
