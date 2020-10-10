@@ -16,10 +16,6 @@ This section provides the main application for this project, such as:
 
 * Routing (MVC Architecture)
 
-* Video chat
-
-* 100% Code Coverage
-
 # Directory Structure / Description
 
 * `app/`
@@ -177,8 +173,6 @@ This is the list of all tools used here, which also act as the tools learnt, or 
     * Sessions
     * Handling auth (User logging in)
     
-* SocketIO Client
-
 # Building
 
 We use the `package.json` file to build the JS and CSS.

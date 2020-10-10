@@ -34,8 +34,8 @@ const Commentslist = (function () {
                 newCommentHtml[0].children[1].children[2].textContent = message.comment.comment
                 newCommentHtml[0].children[0].children[0].src = message.comment.profile_picture
                 newCommentHtml[0].children[1].children[0].textContent = message.comment.author
-                newCommentHtml.find('i.delete-comment').data('comment-id', message.comment.id)
-                newCommentHtml.find('i.edit-comment').data('comment-id', message.comment.id)
+                newCommentHtml.find('i.ml-4.delete-comment').attr('data-comment-id', message.comment.id)
+                newCommentHtml.find('i.ml-4.edit-comment').attr('data-comment-id', message.comment.id)
                 // TODO set comment id for edit and delete icon
 
                 $('#comment-list').prepend(newCommentHtml)

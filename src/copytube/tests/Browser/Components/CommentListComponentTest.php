@@ -139,6 +139,27 @@ class CommentListComponentTest extends DuskTestCase
         });
     }
 
+    // TODO :: fails, fix it
+//    public function testClickingDeleteButtonRemovesCommentFromDOM ()
+//    {
+//        Cache::flush();
+//        $id = TestUtilities::createTestUserInDb();
+//        $user = TestUtilities::getTestUserInDb($id);
+//        $commentId = TestUtilities::createTestCommentInDb($user);
+//        $this->browse(function (Browser $browser, Browser $browserTwo) use ($commentId) {
+//            $browser
+//                ->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->first())
+//                ->visit('/video?requestedVideo=Something+More')
+//                ->assertpathIs('/video')
+//                ->waitUntil('!$.active');
+//            $browser->click('i.delete-comment[data-comment-id="'.$commentId.'"]')->waitUntil("!$.active");
+//            $element = $browser->element('i.delete-comment[data-comment-id="'.$commentId.'"]');
+//            $this->assertEquals(true, $element === NULL);
+//            TestUtilities::removeTestCommentsInDB();
+//            TestUtilities::removeTestUsersInDb();
+//        });
+//    }
+
 
     /**
      * TODO
