@@ -16,17 +16,17 @@ on:
     branches: [ master ]
 
 jobs:
-
   laravel-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Laravel Tests
         run: |
           docker-compose up -d > /dev/null
           sleep 300
           docker exec copytube_phpfpm vendor/bin/phpunit
-          docker exec copytube_phpfpm php artisan dusk
+#          docker exec copytube_phpfpm php artisan dusk
 
   realtime-tests:
     runs-on: ubuntu-latest
@@ -35,6 +35,7 @@ jobs:
       - name: Realtime Tests
         run: |
           docker-compose up -d > /dev/null
+          sleep 20
           docker exec copytube_realtime deno test -A tests/integration/tests.ts
           docker exec copytube_realtime deno test -A  tests/unit/tests.ts
 
