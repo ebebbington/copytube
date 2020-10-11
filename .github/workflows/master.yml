@@ -26,7 +26,7 @@ jobs:
         run: |
           docker-compose up -d > /dev/null
           sleep 300
-          docker exec copytube_phpfpm vedor/bin/phpunit
+          docker exec copytube_phpfpm vendor/bin/phpunit
           docker exec copytube_phpfpm php artisan dusk
 
   realtime-tests:
