@@ -39,7 +39,7 @@ export class Redis {
    * @param sub - The subscribe to listen on messages for
    * @param sendMessageCallback - CB for when the sub gets a message
    */
-  public static async listen(
+  public static listen(
     sub: RedisSubscription,
     sendMessageCallback: (message: string) => void,
   ): Promise<void> {

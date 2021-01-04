@@ -75,7 +75,7 @@ export class SocketServer {
    *
    * @param message - The message to send
    */
-  public static async sendRedisMessageToSocketClients(
+  public static sendRedisMessageToSocketClients(
     message: string,
   ): Promise<void> {
     try {
