@@ -75,9 +75,9 @@ export class SocketServer {
    *
    * @param message - The message to send
    */
-  public static async sendRedisMessageToSocketClients(
+  public static sendRedisMessageToSocketClients(
     message: string,
-  ): Promise<void> {
+  ): void {
     try {
       // If no clients have joined then dont send - acts as an error handler as error will be thrown: forEach of undefined
       if (!allClients || !allClients.length) return;
