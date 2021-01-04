@@ -42,7 +42,7 @@ export class Redis {
   public static listen(
     sub: RedisSubscription,
     sendMessageCallback: (message: string) => void,
-  ): Promise<void> {
+  ): void {
     (async () => {
       for await (const { channel, message } of sub.receive()) {
         console.info(
