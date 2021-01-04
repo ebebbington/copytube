@@ -19,6 +19,11 @@ jobs:
         run: |
           cd src/copytube
           php ../../composer.phar update
+          
+      - name: Yarn --> Update Dependencies
+        run: |
+          cd src/copytube
+          yarn upgrade
 
       # deno
       - name: Install Deno
