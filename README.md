@@ -5,7 +5,7 @@
   <a href="https://github.com/ebebbington/copytube/actions">
     <img src="https://img.shields.io/github/workflow/status/ebebbington/copytube/master?label=ci">
   </a>
-  <a href="https://github.com/drashland/copytube/actions">
+  <a href="https://github.com/ebebbington/copytube/actions">
     <img src="https://img.shields.io/github/workflow/status/ebebbington/copytube/CodeQL?label=CodeQL">
   </a>
   <a href="https://sonarcloud.io/dashboard?id=ebebbington_copytube">
