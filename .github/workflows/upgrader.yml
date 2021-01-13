@@ -19,6 +19,7 @@ jobs:
         run: |
           cd src/copytube
           php ../../composer.phar update
+          npm update
           
       - name: Yarn --> Update Dependencies
         run: |
