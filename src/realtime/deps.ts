@@ -21,11 +21,11 @@ export {
 } from "https://deno.land/std@0.83.0/ws/mod.ts";
 export type { WebSocket } from "https://deno.land/std@0.83.0/ws/mod.ts";
 
-export { connect } from "https://deno.land/x/redis@v0.14.1/redis.ts";
+export { connect } from "https://deno.land/x/redis@v0.16.0/redis.ts";
 export type {
   Redis as IRedis,
   RedisSubscription,
-} from "https://deno.land/x/redis@v0.14.1/mod.ts";
+} from "https://deno.land/x/redis@v0.16.0/mod.ts";
 
 export { assertEquals } from "https://deno.land/std@0.83.0/testing/asserts.ts";
 
