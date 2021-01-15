@@ -23,7 +23,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Format Checks
         run: |
-          npm i
+          cd src/copytube
+          npm ci
           npm run fmt:check
 
       - name: Laravel Tests
