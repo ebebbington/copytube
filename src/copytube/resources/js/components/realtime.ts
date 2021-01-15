@@ -26,11 +26,13 @@ Realtime.onmessage = function (event) {
             case "realtime.comments.new":
                 //@ts-ignore
                 if (Realtime.handleNewVideoComment)
+                    // @ts-ignore
                     Realtime.handleNewVideoComment(message);
                 break;
             case "realtime.users.delete":
                 //@ts-ignore
                 if (Realtime.handleUserDeleted)
+                    // @ts-ignore
                     Realtime.handleUserDeleted(message);
                 break;
         }

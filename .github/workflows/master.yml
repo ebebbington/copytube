@@ -27,18 +27,18 @@ jobs:
           npm ci
           npm run fmt:check
 
+      - name: Laravel Tests
+        run: |
+          docker-compose up -d > /dev/null
+          sleep 400
+          docker exec copytube_phpfpm vendor/bin/phpunit
+#          docker exec copytube_phpfpm php artisan dusk
+
       - uses: php-actions/composer@v5
       - name: Lint Check
         run: |
           composer install
           composer lint
-
-      - name: Laravel Tests
-        run: |
-          docker-compose up -d > /dev/null
-          sleep 300
-          docker exec copytube_phpfpm vendor/bin/phpunit
-#          docker exec copytube_phpfpm php artisan dusk
 
   realtime-tests:
     runs-on: ubuntu-latest
