@@ -45,6 +45,7 @@ jobs:
 
       - name: Lint Check
         run: |
+          cd src/copytube
           composer install
           composer lint
 
