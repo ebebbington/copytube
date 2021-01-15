@@ -35,6 +35,7 @@ jobs:
 #          docker exec copytube_phpfpm php artisan dusk
 
       - uses: php-actions/composer@v5
+        working_dir: src/copytube
       - name: Lint Check
         run: |
           composer install
