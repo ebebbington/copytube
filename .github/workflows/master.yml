@@ -27,6 +27,12 @@ jobs:
           npm ci
           npm run fmt:check
 
+      - uses: php-actions/composer@v5
+      - name: Lint Check
+        run: |
+          composer install
+          composer lint
+
       - name: Laravel Tests
         run: |
           docker-compose up -d > /dev/null
