@@ -17,14 +17,14 @@ class VideosModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'videos';
+    protected $table = "videos";
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = "id";
 
     /**
      * The video title
@@ -78,15 +78,15 @@ class VideosModel extends BaseModel
      * @example
      * $video = $VideosModel->getVideoByTitle('Something More'); // object or false
      */
-    public function getVideoByTitle (string $videoTitle)
+    public function getVideoByTitle(string $videoTitle)
     {
-        $loggingPrefix = '[VideosModel -' . __FUNCTION__ . '] ';
-        Log::info($loggingPrefix . 'Getting video by ' . $videoTitle);
+        $loggingPrefix = "[VideosModel -" . __FUNCTION__ . "] ";
+        Log::info($loggingPrefix . "Getting video by " . $videoTitle);
         $query = [
-            'where' => "title = '$videoTitle'",
-            'limit' => 1,
+            "where" => "title = '$videoTitle'",
+            "limit" => 1,
         ];
-        $cacheKey = 'db:videos:title=' . $videoTitle;
+        $cacheKey = "db:videos:title=" . $videoTitle;
         $video = $this->SelectQuery($query, $cacheKey);
         return $video;
     }
@@ -104,26 +104,28 @@ class VideosModel extends BaseModel
      * @example
      * $videos = $VideosModel->getRabbitHoleVideos('Lava Sample'); // array if > 1, object is 1, false if none
      */
-    public function getRabbitHoleVideos (string $videoToIgnore)
+    public function getRabbitHoleVideos(string $videoToIgnore)
     {
-        $loggingPrefix = '[VideosModel -' . __FUNCTION__ . '] ';
-        Log::info($loggingPrefix . 'Getting videos by title !== ' . $videoToIgnore);
+        $loggingPrefix = "[VideosModel -" . __FUNCTION__ . "] ";
+        Log::info(
+            $loggingPrefix . "Getting videos by title !== " . $videoToIgnore
+        );
         $query = [
-            'where' => "title != '$videoToIgnore'",
-            'limit' => 2
+            "where" => "title != '$videoToIgnore'",
+            "limit" => 2,
         ];
-        $cacheKey = 'db:videos:title!='.$videoToIgnore.'&limit=2';
+        $cacheKey = "db:videos:title!=" . $videoToIgnore . "&limit=2";
         $rabbitHoleVideos = $this->SelectQuery($query, $cacheKey);
         return $rabbitHoleVideos;
     }
 
-    public function getVideosForHomePage ()
+    public function getVideosForHomePage()
     {
-        $loggingPrefix = '[VideosModel -' . __FUNCTION__ . '] ';
+        $loggingPrefix = "[VideosModel -" . __FUNCTION__ . "] ";
         $query = [
-            'limit' => 3
+            "limit" => 3,
         ];
-        $cacheKey = 'db:videos:limit=3';
+        $cacheKey = "db:videos:limit=3";
         $videos = $this->SelectQuery($query, $cacheKey);
         return $videos;
     }

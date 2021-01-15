@@ -11,27 +11,28 @@
 // /classes/MyModel.php
 namespace App\Models\Classes; // or remove the "MyModel" bit? as i would do: App\Models\MyModel()
 
-require'DatabaseModel.php';
-require 'UserInterface.php';
+require "DatabaseModel.php";
+require "UserInterface.php";
 use App\Models\Interfaces\UserInterface;
 use App\Models\Classes\DatabaseModel;
 
-class UserModel extends DatabaseModel implements UserInterface {
+class UserModel extends DatabaseModel implements UserInterface
+{
+    private $data;
 
-  private $data;
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
 
-  public function __construct($data)
-  {
-    $this->data = $data;
-  }
-
-  public function insertComment ()
-  {
-    var_dump($this->data);
-  }
-
+    public function insertComment()
+    {
+        var_dump($this->data);
+    }
 }
 
-function myFunction () {}
+function myFunction()
+{
+}
 
 const MY_CONST = 0;

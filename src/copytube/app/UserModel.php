@@ -20,14 +20,14 @@ class UserModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = "users";
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = "id";
 
     public $id;
 
@@ -81,16 +81,20 @@ class UserModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['username', 'email_address', 'password', 'logged_in', 'login_attempts'];
+    protected $fillable = [
+        "username",
+        "email_address",
+        "password",
+        "logged_in",
+        "login_attempts",
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $hidden = [
-        'password'
-    ];
+    protected $hidden = ["password"];
 
     /**
      * Rules for validation
@@ -98,10 +102,10 @@ class UserModel extends BaseModel
      * @var array
      */
     protected $rules = [
-      'username' => 'required',
-      'email'    => 'required|email',
-      'password' => 'required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/',
-        'profile_picture' => ['required', 'regex:/.*\.(jpg|jpeg|png)\b/']
+        "username" => "required",
+        "email" => "required|email",
+        "password" => "required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/",
+        "profile_picture" => ["required", "regex:/.*\.(jpg|jpeg|png)\b/"],
     ];
 
     /**
@@ -113,20 +117,20 @@ class UserModel extends BaseModel
      */
     public static function exists(string $email): bool
     {
-        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
-        $result = UserModel::where('email_address', $email)->first();
-        Log::info($loggingPrefix . 'User exists: ' . $result ? true : false);
+        $loggingPrefix = "[UserModel - " . __FUNCTION__ . "] ";
+        $result = UserModel::where("email_address", $email)->first();
+        Log::info($loggingPrefix . "User exists: " . $result ? true : false);
         return $result ? true : false;
     }
 
-//    public function logout (int $id): void
-//    {
-//        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
-//        session(['user' => null]);
-//        $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);
-//        $SessionModel = new SessionModel;
-//        $SessionModel->DeleteQuery(['user_id' => $id]);
-//    }
+    //    public function logout (int $id): void
+    //    {
+    //        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
+    //        session(['user' => null]);
+    //        $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);
+    //        $SessionModel = new SessionModel;
+    //        $SessionModel->DeleteQuery(['user_id' => $id]);
+    //    }
 
     /**
      * @method getByEmail
@@ -141,11 +145,11 @@ class UserModel extends BaseModel
      * @example
      * $user = $UserModel->getByEmail('edward.bebbington...')' // object or false
      */
-    public function getByEmail (string $email)
+    public function getByEmail(string $email)
     {
         $query = [
-            'where' => "email_address = '$email'",
-            'limit' => 1
+            "where" => "email_address = '$email'",
+            "limit" => 1,
         ];
         //$cacheKey = 'db:users:email_address='.$email;
         $user = $this->SelectQuery($query);
@@ -166,10 +170,14 @@ class UserModel extends BaseModel
      * @example
      * $token = $UserModel->lockAccount($user->id, $user->email_address); // token if success, false if failed
      */
-    public function lockAccount ($id, string $email)
+    public function lockAccount($id, string $email)
     {
         $recoverToken = Str::random(32);
-        $success = $this->UpdateQuery(['id' => $id], ['recover_token' => $recoverToken], 'db:users:email_address='.$email);
+        $success = $this->UpdateQuery(
+            ["id" => $id],
+            ["recover_token" => $recoverToken],
+            "db:users:email_address=" . $email
+        );
         return $recoverToken;
     }
 
@@ -188,15 +196,15 @@ class UserModel extends BaseModel
      * // Log user in
      * $UserModel->updateLoggedIn(0, $user->email);
      */
-    public function updateLoggedIn (int $loggedInValue, string $email)
+    public function updateLoggedIn(int $loggedInValue, string $email)
     {
         $query = [
-            'email_address' => $email
+            "email_address" => $email,
         ];
         $updateData = [
-            'logged_in' => $loggedInValue
+            "logged_in" => $loggedInValue,
         ];
-        $cacheKey = 'db:users:email_address='.$email;
+        $cacheKey = "db:users:email_address=" . $email;
         $updated = $this->UpdateQuery($query, $updateData, $cacheKey);
         return $updated;
     }
@@ -210,23 +218,23 @@ class UserModel extends BaseModel
      * @param string $email
      * @param int    $loginAttempts
      */
-    public function updateLoginAttempts (string $email, int $loginAttempts)
+    public function updateLoginAttempts(string $email, int $loginAttempts)
     {
         $query = [
-            'email_address' => $email
+            "email_address" => $email,
         ];
         $updateData = [
-            'login_attempts' => $loginAttempts
+            "login_attempts" => $loginAttempts,
         ];
-        $cacheKey = 'db:users:email_address='.$email;
+        $cacheKey = "db:users:email_address=" . $email;
         $this->UpdateQuery($query, $updateData, $cacheKey);
     }
 
-    public function getByToken ($token)
+    public function getByToken($token)
     {
         $query = [
-            'where' => "recover_token = '$token'",
-            'limit' => 1
+            "where" => "recover_token = '$token'",
+            "limit" => 1,
         ];
         $cacheKey = "db:users:recover_token=$token'";
         $user = $this->SelectQuery($query, $cacheKey);
@@ -242,15 +250,15 @@ class UserModel extends BaseModel
      * @param string $email
      * @param string $rawPassword
      */
-    public function updateAfterRecover (string $email, string $rawPassword)
+    public function updateAfterRecover(string $email, string $rawPassword)
     {
         $query = [
-            'email_address' => $email
+            "email_address" => $email,
         ];
         $updateData = [
-            'password' => UserModel::generateHash($rawPassword),
-            'login_attempts' => 3,
-            'recover_token' => null
+            "password" => UserModel::generateHash($rawPassword),
+            "login_attempts" => 3,
+            "recover_token" => null,
         ];
         $this->UpdateQuery($query, $updateData);
     }
@@ -260,10 +268,10 @@ class UserModel extends BaseModel
      *
      * @return string
      */
-    public static function generateHash ($rawPassword)
+    public static function generateHash($rawPassword)
     {
         $hash = Hash::make($rawPassword, [
-            'rounds' => 12,
+            "rounds" => 12,
         ]);
         return $hash;
     }

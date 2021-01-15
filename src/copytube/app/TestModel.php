@@ -19,14 +19,14 @@ class TestModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'test';
+    protected $table = "test";
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = "id";
 
     public $timestamps = false;
 
@@ -37,25 +37,21 @@ class TestModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['test'];
+    protected $fillable = ["test"];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $hidden
-        = [
-            ''
-        ];
+    protected $hidden = [""];
 
     /**
      * Rules for validation
      *
      * @var array
      */
-    protected $rules
-        = [
-            'test' => 'required'
-        ];
+    protected $rules = [
+        "test" => "required",
+    ];
 }

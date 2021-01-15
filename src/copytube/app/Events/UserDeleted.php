@@ -26,8 +26,8 @@ class UserDeleted
     public function __construct(int $userId)
     {
         $this->userId = $userId;
-        $this->type = 'delete';
-        $this->channel = 'realtime.users.delete';
+        $this->type = "delete";
+        $this->channel = "realtime.users.delete";
     }
 
     /**
@@ -37,6 +37,6 @@ class UserDeleted
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel("channel-name");
     }
 }

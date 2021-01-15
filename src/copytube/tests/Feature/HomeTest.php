@@ -12,20 +12,21 @@ use Tests\TestCase;
 
 class HomeTest extends TestCase
 {
-    public function testGetWithAuth () {
+    public function testGetWithAuth()
+    {
         $id = TestUtilities::createTestUserInDb();
         TestUtilities::logUserIn($id);
-        $response = $this->json('GET', '/home');
+        $response = $this->json("GET", "/home");
         $response->assertStatus(200);
-        $response->assertViewIs('home');
+        $response->assertViewIs("home");
         TestUtilities::removeTestUsersInDb();
     }
 
-    public function testGetWithoutAuth ()
+    public function testGetWithoutAuth()
     {
         TestUtilities::removeTestUsersInDb();
-        $response = $this->json('GET', '/home');
+        $response = $this->json("GET", "/home");
         //$response->assertStatus(401);
-        $response->assertSee('Unauthenticated');
+        $response->assertSee("Unauthenticated");
     }
 }

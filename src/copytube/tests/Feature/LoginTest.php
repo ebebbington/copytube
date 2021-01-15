@@ -20,64 +20,91 @@ class LoginTest extends TestCase
         Cache::flush();
     }
 
-    private function makePostRequest ($email, $password): ?Object
+    private function makePostRequest($email, $password): ?object
     {
         $data = [];
-        if (isset($email)) $data['email'] = $email;
-        if (isset($password)) $data['password'] = $password;
+        if (isset($email)) {
+            $data["email"] = $email;
+        }
+        if (isset($password)) {
+            $data["password"] = $password;
+        }
 
         $headers = [
-            'HTTP_X-Requested-With' => 'XMLHttpRequest',
-            'X-CSRF-TOKEN' => csrf_token()
+            "HTTP_X-Requested-With" => "XMLHttpRequest",
+            "X-CSRF-TOKEN" => csrf_token(),
         ];
         // Send the request
-        $response = $this->post('/login', $data, $headers);
+        $response = $this->post("/login", $data, $headers);
         return $response;
     }
 
     public function testGetRequestWhenNotAuthed()
     {
-        $response = $this->json('GET', '/login');
+        $response = $this->json("GET", "/login");
         $response->assertStatus(200);
-        $response->assertViewIs('login');
+        $response->assertViewIs("login");
     }
 
-    public function testPostLockedAccount ()
+    public function testPostLockedAccount()
     {
         Cache::flush();
         TestUtilities::removeTestUsersInDb();
-        TestUtilities::createTestUserInDb(['login_attempts' => 0]);
+        TestUtilities::createTestUserInDb(["login_attempts" => 0]);
         // Send post request
-        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$validPassword);
-        $response->assertJson(['success' => false, 'message' => 'This account has been locked.']);
+        $response = $this->makePostRequest(
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "This account has been locked.",
+        ]);
         $response->assertStatus(403);
         TestUtilities::removeTestUsersInDb();
     }
 
-    public function testPostIncorrectPasswordButValidEmail ()
+    public function testPostIncorrectPasswordButValidEmail()
     {
         TestUtilities::createTestUserInDb();
-        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$invalidPasswords[0]);
-        $response->assertJson(['success' => false, 'message' => 'Failed to authenticate']);
+        $response = $this->makePostRequest(
+            TestUtilities::$validEmail,
+            TestUtilities::$invalidPasswords[0]
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "Failed to authenticate",
+        ]);
         $response->assertStatus(403);
         TestUtilities::removeTestUsersInDb();
     }
 
     // eg cannot auth attempt it as the user isnt in db
-    public function testPostNonExistingUser ()
+    public function testPostNonExistingUser()
     {
-        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$validPassword);
-        $response->assertJson(['success' => false, 'message' => 'This account does not exist with that email']);
+        $response = $this->makePostRequest(
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "This account does not exist with that email",
+        ]);
         $response->assertStatus(403);
     }
 
-    public function testPostSuccessfulLogin ()
+    public function testPostSuccessfulLogin()
     {
         TestUtilities::createTestUserInDb();
-        $response = $this->makePostRequest(TestUtilities::$validEmail, TestUtilities::$validPassword);
-        $user = DB::table('users')->where('email_address', '=', TestUtilities::$validEmail)->first();
+        $response = $this->makePostRequest(
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword
+        );
+        $user = DB::table("users")
+            ->where("email_address", "=", TestUtilities::$validEmail)
+            ->first();
         $this->assertEquals(0, $user->logged_in);
-        $response->assertJson(['success' => true]);
+        $response->assertJson(["success" => true]);
         $response->assertStatus(200);
         TestUtilities::removeTestUsersInDb();
     }

@@ -20,80 +20,98 @@ use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
-
-    public function post (Request $request)
+    public function post(Request $request)
     {
-        if (Auth::user())
-            return response()->redirectTo('/home');
+        if (Auth::user()) {
+            return response()->redirectTo("/home");
+        }
 
         // get data
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $email = $request->input("email");
+        $password = $request->input("password");
         $credentials = [
-            'email_address' => $email,
-            'password' => $password
+            "email_address" => $email,
+            "password" => $password,
         ];
 
         // Get user
-        $UserModel = new UserModel;
+        $UserModel = new UserModel();
         $user = $UserModel->getByEmail($email);
         if ($user === false) {
-            return response([
-                'success' => false,
-                'message' => 'This account does not exist with that email'
-            ], 403);
+            return response(
+                [
+                    "success" => false,
+                    "message" => "This account does not exist with that email",
+                ],
+                403
+            );
         }
         // Disable their account if no login attempts are left
         if ($user->login_attempts === 0) {
             $token = $UserModel->lockAccount($user->id, $email);
-            $title = 'Account Locked';
-            $message
-                = 'Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token='
-                . $token;
-            Mail::to($user->email_address)->send(new AccountLocked($title, $message));
+            $title = "Account Locked";
+            $message =
+                "Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token=" .
+                $token;
+            Mail::to($user->email_address)->send(
+                new AccountLocked($title, $message)
+            );
             //$Mail = new Mail($user->email_address, $user->username, 'Account Locked', $message);
             //$Mail->send();
-            return response([
-                'success' => false,
-                'message' => 'This account has been locked.'
-            ], 403);
+            return response(
+                [
+                    "success" => false,
+                    "message" => "This account has been locked.",
+                ],
+                403
+            );
         }
         // Auth
         if (Auth::attempt($credentials)) {
             // Set the user to logged in
             $updated = $UserModel->updateLoggedIn(0, $email);
-//            if ($updated === false) {
-//                Log::debug('Failed to update the model when updating logged_in');
-//                return response([
-//                    'success' => false,
-//                    'message' => 'Failed to update the model'
-//                ]);
-//            }
+            //            if ($updated === false) {
+            //                Log::debug('Failed to update the model when updating logged_in');
+            //                return response([
+            //                    'success' => false,
+            //                    'message' => 'Failed to update the model'
+            //                ]);
+            //            }
 
-            return response([
-                'success' => true
-            ], 200);
+            return response(
+                [
+                    "success" => true,
+                ],
+                200
+            );
         } else {
             // Reduce login attempts
             if ($user->login_attempts > 0) {
-                $UserModel->updateLoginAttempts($email, $user->login_attempts -1);
+                $UserModel->updateLoginAttempts(
+                    $email,
+                    $user->login_attempts - 1
+                );
             }
-            return response([
-                'success' => false,
-                'message' => 'Failed to authenticate'
-            ], 403);
+            return response(
+                [
+                    "success" => false,
+                    "message" => "Failed to authenticate",
+                ],
+                403
+            );
         }
     }
 
-    public function get (Request $request)
+    public function get(Request $request)
     {
-        if (Auth::user())
-            return response()->redirectTo('/home');
-        $loggingPrefix = "[LoginController - ".__FUNCTION__.'] ';
+        if (Auth::user()) {
+            return response()->redirectTo("/home");
+        }
+        $loggingPrefix = "[LoginController - " . __FUNCTION__ . "] ";
         // session(['hi' => 'hello']);
         // $var = 'hi';
         // echo $var;
         // print_r($request->session()->get('_token'));
-        return View::make('login')->with('title', 'Login');
+        return View::make("login")->with("title", "Login");
     }
 }

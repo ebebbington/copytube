@@ -18,13 +18,13 @@ class CommentAddedTest extends TestCase
     public function testEventFired()
     {
         Event::fake();
-        $CommentsModel = new CommentsModel;
+        $CommentsModel = new CommentsModel();
         $comment = $CommentsModel->CreateQuery([
-            'comment' => 'Test',
-            'author' => 'Test',
-            'date_posted' => '2020-02-02',
-            'user_id' => 2,
-            'video_posted_on' => 'test'
+            "comment" => "Test",
+            "author" => "Test",
+            "date_posted" => "2020-02-02",
+            "user_id" => 2,
+            "video_posted_on" => "test",
         ]);
         // Send event
         Event::dispatch(new CommentAdded($comment));

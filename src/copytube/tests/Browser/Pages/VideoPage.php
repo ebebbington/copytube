@@ -14,7 +14,6 @@ use Laravel\Dusk\Browser;
 // TODO
 class VideoPage extends Page
 {
-
     /**
      * Get the URL for the page.
      *
@@ -22,7 +21,7 @@ class VideoPage extends Page
      */
     public function url()
     {
-        return '/';
+        return "/";
     }
 
     /**
@@ -44,7 +43,7 @@ class VideoPage extends Page
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            "@element" => "#selector",
         ];
     }
 }

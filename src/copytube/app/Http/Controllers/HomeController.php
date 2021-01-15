@@ -21,10 +21,9 @@ use Cookie;
 
 class HomeController extends Controller
 {
-
-    public function index (Request $request)
+    public function index(Request $request)
     {
-        $loggingPrefix = "[HomeController - ".__FUNCTION__.'] ';
+        $loggingPrefix = "[HomeController - " . __FUNCTION__ . "] ";
         Log::info($loggingPrefix);
         // TODO Get and display all videos
         $VideosModel = new VideosModel();

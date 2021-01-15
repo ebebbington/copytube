@@ -11,13 +11,13 @@
 //#php artisan optimize # No longer needed/available in Laravel 5.6.
 
 $command =
-    'composer dumpautoload -o' .
-    '&&' .
-    'php artisan route:cache' .
-    '&&' .
-    'php artisan cache:clear' .
-    '&&' .
-    'php artisan api:cache' .
-    '&&' .
-    'php artisan config:cache';
+    "composer dumpautoload -o" .
+    "&&" .
+    "php artisan route:cache" .
+    "&&" .
+    "php artisan cache:clear" .
+    "&&" .
+    "php artisan api:cache" .
+    "&&" .
+    "php artisan config:cache";
 shell_exec($command);

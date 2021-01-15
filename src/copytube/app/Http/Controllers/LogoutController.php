@@ -17,16 +17,16 @@ use Cookie;
 
 class LogoutController extends Controller
 {
-    public function logout (Request $request)
+    public function logout(Request $request)
     {
-        $loggingPrefix = "[LogoutController - ".__FUNCTION__.'] ';
+        $loggingPrefix = "[LogoutController - " . __FUNCTION__ . "] ";
         // update db
         $user = Auth::user();
         Log::debug($user);
-        $User = new UserModel;
+        $User = new UserModel();
         $User->updateLoggedIn(1, $user->email_address);
 
         Auth::logout();
-        return redirect('/login');
+        return redirect("/login");
     }
 }

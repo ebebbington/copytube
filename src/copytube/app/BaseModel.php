@@ -12,10 +12,9 @@ use phpDocumentor\Reflection\Types\Boolean;
 
 class BaseModel extends Model
 {
-
-    private function normaliseCacheKey($cacheKey = '')
+    private function normaliseCacheKey($cacheKey = "")
     {
-        $replacedKey = str_replace(' ', '+', $cacheKey);
+        $replacedKey = str_replace(" ", "+", $cacheKey);
         return $replacedKey;
     }
 
@@ -36,8 +35,9 @@ class BaseModel extends Model
     public function validate(array $data)
     {
         $validator = Validator::make($data, $this->rules);
-        if ($validator->fails())
-            return $validator->errors()->first();;
+        if ($validator->fails()) {
+            return $validator->errors()->first();
+        }
         return true;
     }
 
@@ -91,41 +91,54 @@ class BaseModel extends Model
      * $cacheKey = 'db:users:name=edward&age!=200&limit=1';
      * $SomeModel->SelectQuery($query, $cacheKey);
      */
-    public function SelectQuery(array $query, string $cacheKey = '')
+    public function SelectQuery(array $query, string $cacheKey = "")
     {
         $cacheKey = $this->normaliseCacheKey($cacheKey);
         // If the cached data already exists with the given key then return that instead
-        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey))
+        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
+        }
 
-        $select = isset($query['select']) ? $query['select'] : null;
-        $join = isset($query['join']) ? $query['join'] : null;
-        $where = isset($query['where']) ? $query['where'] : null;
-        $limit = $query['limit'] ?? 1;
-        $orderByColumn = $query['orderBy']['column'] ?? 'id';
-        $orderByDirection = $query['orderBy']['direction'] ?? 'ASC';
+        $select = isset($query["select"]) ? $query["select"] : null;
+        $join = isset($query["join"]) ? $query["join"] : null;
+        $where = isset($query["where"]) ? $query["where"] : null;
+        $limit = $query["limit"] ?? 1;
+        $orderByColumn = $query["orderBy"]["column"] ?? "id";
+        $orderByDirection = $query["orderBy"]["direction"] ?? "ASC";
 
         $result = DB::table($this->table);
-        if (isset($select))
+        if (isset($select)) {
             $result = $result->select($select);
-        if (isset($join) && sizeof($join) === 4)
+        }
+        if (isset($join) && sizeof($join) === 4) {
             $result = $result->join($join[0], $join[1], $join[2], $join[3]);
-        if (isset($where))
+        }
+        if (isset($where)) {
             $result = $result->whereRaw($where);
+        }
         $result = $result->orderBy($orderByColumn, $orderByDirection);
-        if (isset($limit))
+        if (isset($limit)) {
             $result = $result->take($limit);
+        }
         $result = $result->get();
-        if ($result->toArray() === [] || empty($result) || !isset($result) || !$result)
+        if (
+            $result->toArray() === [] ||
+            empty($result) ||
+            !isset($result) ||
+            !$result
+        ) {
             return false;
+        }
 
         // When asking for 1 record, return a single object as they dont expect an array
-        if ($limit === 1 && sizeof($result) >= 1)
+        if ($limit === 1 && sizeof($result) >= 1) {
             $result = $result[0];
+        }
 
         // Cache the result
-        if ($cacheKey && !empty($cacheKey) && isset($cacheKey))
+        if ($cacheKey && !empty($cacheKey) && isset($cacheKey)) {
             Cache::put($cacheKey, $result, 3600);
+        }
 
         return $result;
     }
@@ -146,7 +159,7 @@ class BaseModel extends Model
      * $User = $UserModel->CreateQuery(['name' => 'edward', ...])
      *
      */
-    public function CreateQuery(array $data, string $cacheKey = '')
+    public function CreateQuery(array $data, string $cacheKey = "")
     {
         $row = $this->create($data);
 
@@ -174,15 +187,22 @@ class BaseModel extends Model
      * $updated = $UserModel->UpdateQuery([...], [...]); // true or false
      *
      */
-    public function UpdateQuery(array $query, array $newData, string $cacheKey = '')
-    {
-        Log::info('Receieved data in update query method:');
+    public function UpdateQuery(
+        array $query,
+        array $newData,
+        string $cacheKey = ""
+    ) {
+        Log::info("Receieved data in update query method:");
         Log::info(json_encode($newData));
-        $result = DB::table($this->table)->where($query)->update($newData);
+        $result = DB::table($this->table)
+            ->where($query)
+            ->update($newData);
 
         $cacheKey = $this->normaliseCacheKey($cacheKey);
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
-            $row = DB::table($this->table)->where($newData)->first();
+            $row = DB::table($this->table)
+                ->where($newData)
+                ->first();
             Cache::put($cacheKey, $row, 3600);
         }
         return $result >= 1 ? true : false;
@@ -194,13 +214,16 @@ class BaseModel extends Model
      *
      * @return int
      */
-    public function DeleteQuery(array $query, string $cacheKey = '')
+    public function DeleteQuery(array $query, string $cacheKey = "")
     {
         $cacheKey = $this->normaliseCacheKey($cacheKey);
-        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey))
+        if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
             Cache::forget($cacheKey);
+        }
 
-        $result = DB::table($this->table)->where($query)->delete();
+        $result = DB::table($this->table)
+            ->where($query)
+            ->delete();
         $success = $result === 1 || $result === true ? true : false;
         return $success;
     }

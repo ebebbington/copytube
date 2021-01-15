@@ -9,85 +9,93 @@ use Tests\TestCase;
 
 class UserModelTest extends TestCase
 {
-    private function createTestUser ($recoverToken = null)
+    private function createTestUser($recoverToken = null)
     {
-        DB::table('users')->insert([
-            'username' => 'Test User',
-            'password' => 'Test',
-            'logged_in' => 1,
-            'login_attempts' => 3,
-            'email_address' => 'testemail',
-            'recover_token' => $recoverToken
+        DB::table("users")->insert([
+            "username" => "Test User",
+            "password" => "Test",
+            "logged_in" => 1,
+            "login_attempts" => 3,
+            "email_address" => "testemail",
+            "recover_token" => $recoverToken,
         ]);
     }
 
-    private function deleteTestUser ()
+    private function deleteTestUser()
     {
-        DB::table('users')->where('username', '=', 'Test User')->delete();
+        DB::table("users")
+            ->where("username", "=", "Test User")
+            ->delete();
     }
 
-    public function testExistsMethod ()
+    public function testExistsMethod()
     {
-        $exists = UserModel::exists('edward.bebbington@intercity.technology');
+        $exists = UserModel::exists("edward.bebbington@intercity.technology");
         $this->assertEquals(true, $exists);
-        $exists = UserModel::exists('idontexist');
+        $exists = UserModel::exists("idontexist");
         $this->assertEquals(false, $exists);
     }
 
-    public function testGetMyEmailMethod ()
+    public function testGetMyEmailMethod()
     {
-        $UserModel = new UserModel;
-        $user = $UserModel->getByEmail('EdwardSBebbington@hotmail.com');
+        $UserModel = new UserModel();
+        $user = $UserModel->getByEmail("EdwardSBebbington@hotmail.com");
         $this->assertEquals(true, isset($user) && !empty($user));
-        $user = $UserModel->getByEmail('idonteixst');
+        $user = $UserModel->getByEmail("idonteixst");
         $this->assertEquals(false, !isset($user) && empty($user));
     }
 
-    public function testLockAccountMethod ()
+    public function testLockAccountMethod()
     {
-        $UserModel = new UserModel;
+        $UserModel = new UserModel();
         $this->createTestUser();
-        $user = DB::table('users')->whereRaw("username = 'Test User'")->first();
+        $user = DB::table("users")
+            ->whereRaw("username = 'Test User'")
+            ->first();
         $success = $UserModel->lockAccount($user->id, $user->email_address);
         $this->assertEquals(true, isset($success));
-//        $success = $UserModel->lockAccount('none', 'none');
-//        $this->assertEquals(false, $success);
+        //        $success = $UserModel->lockAccount('none', 'none');
+        //        $this->assertEquals(false, $success);
         $this->deleteTestUser();
     }
 
-    public function testUpdateLoginAttemps ()
+    public function testUpdateLoginAttemps()
     {
         $this->createTestUser();
-        $UserModel = new UserModel;
-        $res = $UserModel->updateLoginAttempts('testemail', 2);
-        $user = DB::table('users')->where('username', '=', 'Test User')->first();
+        $UserModel = new UserModel();
+        $res = $UserModel->updateLoginAttempts("testemail", 2);
+        $user = DB::table("users")
+            ->where("username", "=", "Test User")
+            ->first();
         $this->assertEquals(2, $user->login_attempts);
         $this->deleteTestUser();
     }
 
-    public function testGetByToken ()
+    public function testGetByToken()
     {
-        $this->createTestUser('testtoken');
-        $UserModel = new UserModel;
-        $user = $UserModel->getByToken('testtoken');
+        $this->createTestUser("testtoken");
+        $UserModel = new UserModel();
+        $user = $UserModel->getByToken("testtoken");
         $this->assertEquals(true, isset($user) && !empty($user));
         $this->deleteTestUser();
     }
 
-    public function testUpdateAfterRecover ()
+    public function testUpdateAfterRecover()
     {
-        $this->createTestUser('testtoken');
-        $UserModel = new UserModel;
-        $res = $UserModel->updateAfterRecover('testemail', 'testpassword');
-        $user = DB::table('users')->where('email_address', '=', 'testemail')->first();
+        $this->createTestUser("testtoken");
+        $UserModel = new UserModel();
+        $res = $UserModel->updateAfterRecover("testemail", "testpassword");
+        $user = DB::table("users")
+            ->where("email_address", "=", "testemail")
+            ->first();
         $this->assertEquals(3, $user->login_attempts);
         $this->assertEquals(null, $user->recover_token);
         $this->deleteTestUser();
     }
 
-    public function testGenerateHashMethod ()
+    public function testGenerateHashMethod()
     {
-        $rawPass = 'Hello';
+        $rawPass = "Hello";
         $hash = UserModel::generateHash($rawPass);
         $this->assertEquals(true, Hash::check($rawPass, $hash));
     }

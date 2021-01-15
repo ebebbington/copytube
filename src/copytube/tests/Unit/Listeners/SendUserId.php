@@ -18,30 +18,31 @@ use Tests\TestCase;
 
 class SendUserId extends TestCase
 {
-    public function testHandle ()
+    public function testHandle()
     {
         // Make queue synchronous
-        $defaultDriver = app('queue')->getDefaultDriver();
-        app('queue')->setDefaultDriver('sync');
+        $defaultDriver = app("queue")->getDefaultDriver();
+        app("queue")->setDefaultDriver("sync");
 
         // Setup data
-        $UserModel = new UserModel;
+        $UserModel = new UserModel();
         $UserModel->CreateQuery([
-            'username' => 'Test',
-            'email_address' => 'TestEmail@hotmail.com',
-            'password' => UserModel::generateHash('ValidPassword1'),
-            'login_attempts' => 3,
-            'logged_in' => 0
+            "username" => "Test",
+            "email_address" => "TestEmail@hotmail.com",
+            "password" => UserModel::generateHash("ValidPassword1"),
+            "login_attempts" => 3,
+            "logged_in" => 0,
         ]);
-        $user = DB::table('users')->whereRaw("username = 'Test'")->first();
-        $listener = \Mockery::mock('SendUserId');
+        $user = DB::table("users")
+            ->whereRaw("username = 'Test'")
+            ->first();
+        $listener = \Mockery::mock("SendUserId");
 
         // Assertions
-        $listener->shouldReceive('handle')->once();
+        $listener->shouldReceive("handle")->once();
         $this->app->instance(\App\Listeners\SendUserId::class, $listener);
         dispatch(new ProcessUserDeleted($user->id));
-        app('queue')->setDefaultDriver($defaultDriver);
+        app("queue")->setDefaultDriver($defaultDriver);
         // TODO :: Assert redis got message
-
     }
 }

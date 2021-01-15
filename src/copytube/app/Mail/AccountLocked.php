@@ -34,8 +34,8 @@ class AccountLocked extends Mailable
      */
     public function build()
     {
-        return $this
-            ->from('ebebbington.copytube@gmail.com')
-            ->view('emails.user.locked');
+        return $this->from("ebebbington.copytube@gmail.com")->view(
+            "emails.user.locked"
+        );
     }
 }

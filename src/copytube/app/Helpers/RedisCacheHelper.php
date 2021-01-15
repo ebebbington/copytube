@@ -26,8 +26,8 @@ use Illuminate\Support\Facades\Redis;
  * Mainly because this is database data so we are encoding and decoding the data.
  * To get, update or set, you only need to call the respective method e.g. for updating, don't call `update` and `set`
  */
-class RedisCacheHelper {
-
+class RedisCacheHelper
+{
     /**
      * @method get
      *
@@ -42,18 +42,24 @@ class RedisCacheHelper {
      *
      * @return bool|mixed
      */
-    public static function get ($cacheKey)
+    public static function get($cacheKey)
     {
-        $loggingPrefix = '[RedisCacheHelper - get]';
+        $loggingPrefix = "[RedisCacheHelper - get]";
         $Redis = Redis::connection();
         $cacheKey = RedisCacheHelper::normaliseCacheKey($cacheKey);
-        Log::debug($loggingPrefix . ' Going to get the caches data for the key of: ' . $cacheKey);
+        Log::debug(
+            $loggingPrefix .
+                " Going to get the caches data for the key of: " .
+                $cacheKey
+        );
         if ($cacheData = $Redis->get($cacheKey)) {
-            Log::debug($loggingPrefix . ' Cached data was found, see below:');
+            Log::debug($loggingPrefix . " Cached data was found, see below:");
             Log::debug($cacheData);
             return json_decode($cacheData);
         } else {
-            Log::debug($loggingPrefix . ' No cached data was found for that key');
+            Log::debug(
+                $loggingPrefix . " No cached data was found for that key"
+            );
             return false;
         }
     }
@@ -75,17 +81,25 @@ class RedisCacheHelper {
      * $data = {...} // e.g. could be a new comment for a video
      * RedisCacheHelper::update($data, $cacheKey);
      */
-    public static function update ($data, $cacheKey): void
+    public static function update($data, $cacheKey): void
     {
-        $loggingPrefix = '[RedisCacheHelper - update]';
+        $loggingPrefix = "[RedisCacheHelper - update]";
         $cacheKey = RedisCacheHelper::normaliseCacheKey($cacheKey);
         if ($cacheData = RedisCacheHelper::get($cacheKey)) {
-            Log::debug($loggingPrefix . ' Cached data exists for ' . $cacheKey . '. Going to update it with:');
+            Log::debug(
+                $loggingPrefix .
+                    " Cached data exists for " .
+                    $cacheKey .
+                    ". Going to update it with:"
+            );
             Log::debug($data);
             array_unshift($cacheData, $data);
             RedisCacheHelper::set($cacheData, $cacheKey);
         } else {
-            Log::debug($loggingPrefix . ' No cached data was found. Not going to update.');
+            Log::debug(
+                $loggingPrefix .
+                    " No cached data was found. Not going to update."
+            );
         }
     }
 
@@ -103,12 +117,17 @@ class RedisCacheHelper {
      * $cacheKey = 'test'
      * RedisCacheHelper::set($data, $cacheKey);
      */
-    public static function set ($data, $cacheKey): void
+    public static function set($data, $cacheKey): void
     {
-        $loggingPrefix = '[RedisCacheHelper - set]';
+        $loggingPrefix = "[RedisCacheHelper - set]";
         $Redis = Redis::connection();
         $cacheKey = RedisCacheHelper::normaliseCacheKey($cacheKey);
-        Log::debug($loggingPrefix . ' Going to set the below data to ' . $cacheKey . ':');
+        Log::debug(
+            $loggingPrefix .
+                " Going to set the below data to " .
+                $cacheKey .
+                ":"
+        );
         Log::debug($data);
         $Redis->set($cacheKey, json_encode($data));
     }
@@ -130,9 +149,8 @@ class RedisCacheHelper {
      *
      * @return string
      */
-    private static function normaliseCacheKey ($cacheKey): string
+    private static function normaliseCacheKey($cacheKey): string
     {
-        return str_replace(' ', '+', $cacheKey);
+        return str_replace(" ", "+", $cacheKey);
     }
-
 }

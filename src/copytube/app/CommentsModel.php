@@ -17,14 +17,14 @@ class CommentsModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'comments';
+    protected $table = "comments";
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = "id";
 
     /**
      * The comment
@@ -61,7 +61,13 @@ class CommentsModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['comment', 'author', 'date_posted', 'video_posted_on', 'user_id'];
+    protected $fillable = [
+        "comment",
+        "author",
+        "date_posted",
+        "video_posted_on",
+        "user_id",
+    ];
 
     /**
      * Rules for validation
@@ -69,11 +75,11 @@ class CommentsModel extends BaseModel
      * @var array
      */
     protected $rules = [
-        'comment' => 'required',
-      'author'    => 'required',
-      'date_posted' => 'required',
-      'video_posted_on' => 'required',
-        'user_id' => 'required'
+        "comment" => "required",
+        "author" => "required",
+        "date_posted" => "required",
+        "video_posted_on" => "required",
+        "user_id" => "required",
     ];
 
     public $timestamps = false;
@@ -88,20 +94,22 @@ class CommentsModel extends BaseModel
      *
      * @return object The same list but with modified date formats
      */
-    public function formatDates (object $commentList)
+    public function formatDates(object $commentList)
     {
-        $loggingPrefix = "[CommentsModel - ".__FUNCTION__.'] ';
+        $loggingPrefix = "[CommentsModel - " . __FUNCTION__ . "] ";
         for ($i = 0; $i < sizeof($commentList); $i++) {
-            $commentList[$i]->date_posted = $this->convertDate($commentList[$i]->date_posted);
+            $commentList[$i]->date_posted = $this->convertDate(
+                $commentList[$i]->date_posted
+            );
         }
         return $commentList;
     }
 
-    public function convertDate (string $date)
+    public function convertDate(string $date)
     {
         // expected: "yyyy-mm-dd"
-        list($year, $month, $day) = explode('-', $date);
-        $formattedDate = $day . '/' . $month . '/' . $year;
+        list($year, $month, $day) = explode("-", $date);
+        $formattedDate = $day . "/" . $month . "/" . $year;
         return $formattedDate;
     }
 
@@ -118,27 +126,28 @@ class CommentsModel extends BaseModel
      * @example
      * $comments = $CommentsModel->getAllByVideoTitle('Something More'); array or false
      */
-    public function getAllByVideoTitleAndJoinProfilePicture (string $videoTitle)
+    public function getAllByVideoTitleAndJoinProfilePicture(string $videoTitle)
     {
         $query = [
-            'select' => ['comments.*', 'users.profile_picture'],
-            'join' => ['users', 'comments.user_id', '=', 'users.id'],
-            'where' => "video_posted_on = '$videoTitle'",
-            'limit' => -1,
-            'orderBy' => ['column' => 'date_posted', 'direction' => 'DESC']
+            "select" => ["comments.*", "users.profile_picture"],
+            "join" => ["users", "comments.user_id", "=", "users.id"],
+            "where" => "video_posted_on = '$videoTitle'",
+            "limit" => -1,
+            "orderBy" => ["column" => "date_posted", "direction" => "DESC"],
         ];
-        $cacheKey = "db:comments:videoTitle=".$videoTitle;
+        $cacheKey = "db:comments:videoTitle=" . $videoTitle;
         $comments = $this->SelectQuery($query, $cacheKey);
-        if ($comments)
+        if ($comments) {
             $comments = $this->formatDates($comments);
-        else
+        } else {
             $comments = [];
+        }
         return $comments;
     }
 
-    public function createComment (array $data)
+    public function createComment(array $data)
     {
-        $cacheKey = "db:comments:videoTitle=" . $data['video_posted_on'];
+        $cacheKey = "db:comments:videoTitle=" . $data["video_posted_on"];
         return $this->CreateQuery($data, $cacheKey);
     }
 }

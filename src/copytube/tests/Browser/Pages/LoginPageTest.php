@@ -20,43 +20,45 @@ class LoginPageTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $user = TestUtilities::getTestUserInDb();
         $this->browse(function ($browser) use ($user) {
-            $browser->visit('/login')
-                ->type('email', $user->email_address)
-                ->type('password', 'Welcome1')
-                ->press('Submit')
+            $browser
+                ->visit("/login")
+                ->type("email", $user->email_address)
+                ->type("password", "Welcome1")
+                ->press("Submit")
                 ->waitUntil('!$.active')
-                ->assertPathIs('/home');
+                ->assertPathIs("/home");
             TestUtilities::removeTestUsersInDb();
         });
     }
 
-    public function testUnsuccessfulLogin ()
+    public function testUnsuccessfulLogin()
     {
         TestUtilities::removeTestUsersInDb();
         $this->browse(function ($browser) {
-            $browser->visit('/login')
-                ->type('email', 'Hello')
-                ->type('password', 'Hello')
-                ->press('Submit')
+            $browser
+                ->visit("/login")
+                ->type("email", "Hello")
+                ->type("password", "Hello")
+                ->press("Submit")
                 ->waitUntil('!$.active')
-                ->assertPathIs('/login');
+                ->assertPathIs("/login");
         });
     }
 
-    public function testCannotSeeLoginIfLoggedIn ()
+    public function testCannotSeeLoginIfLoggedIn()
     {
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
         $user = TestUtilities::getTestUserInDb();
         $this->browse(function ($browser) use ($user) {
-            $browser->visit('/login')
-                ->type('email', $user->email_address)
-                ->type('password', 'Welcome1')
-                ->press('Submit')
+            $browser
+                ->visit("/login")
+                ->type("email", $user->email_address)
+                ->type("password", "Welcome1")
+                ->press("Submit")
                 ->waitUntil('!$.active')
-                ->assertPathIs('/home');
-            $browser->visit('/login')
-                ->assertPathIs('/home');
+                ->assertPathIs("/home");
+            $browser->visit("/login")->assertPathIs("/home");
             TestUtilities::removeTestUsersInDb();
         });
     }

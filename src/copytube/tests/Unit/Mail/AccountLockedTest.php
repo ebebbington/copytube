@@ -14,15 +14,15 @@ class AccountLockedTest extends TestCase
      *
      * @return void
      */
-    public function testEmailIsSent ()
+    public function testEmailIsSent()
     {
         Mail::fake();
         Mail::assertNothingSent();
-        Mail::to('EdwardSBebbington@hotmail.com')->send(new AccountLocked(
-            'Test Email',
-            'Generated from unit tests'));
+        Mail::to("EdwardSBebbington@hotmail.com")->send(
+            new AccountLocked("Test Email", "Generated from unit tests")
+        );
         Mail::assertSent(AccountLocked::class, function ($mail) {
-            return $mail->hasTo('EdwardSBebbington@hotmail.com');
+            return $mail->hasTo("EdwardSBebbington@hotmail.com");
         });
         Mail::assertSent(AccountLocked::class, 1);
     }

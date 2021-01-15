@@ -16,11 +16,10 @@ use Cookie;
 
 class ChatController extends Controller
 {
-
-    public function index (Request $request)
+    public function index(Request $request)
     {
-        $loggingPrefix = "[ChatController - ".__FUNCTION__.'] ';
-        Log::info($loggingPrefix . 'Return view of `chat`');
-        return View::make('chat')->with('title', 'Chat');
+        $loggingPrefix = "[ChatController - " . __FUNCTION__ . "] ";
+        Log::info($loggingPrefix . "Return view of `chat`");
+        return View::make("chat")->with("title", "Chat");
     }
 }

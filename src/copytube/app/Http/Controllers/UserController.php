@@ -14,20 +14,20 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class UserController extends Controller
 {
-    public function Delete (Request $request)
+    public function Delete(Request $request)
     {
         $user = Auth::user();
 
         // Remove file from fs
-        Storage::disk('local_public')->deleteDirectory('img/'.$user->id);                //Storage::disk('local_public')->delete('img/'.$user['id']);
+        Storage::disk("local_public")->deleteDirectory("img/" . $user->id); //Storage::disk('local_public')->delete('img/'.$user['id']);
 
         // Remove row from db
         $UserModel = new UserModel();
-        $UserModel->DeleteQuery(['email_address' => $user['email_address']]);
+        $UserModel->DeleteQuery(["email_address" => $user["email_address"]]);
 
         // Remove all comments
         $CommentsModel = new CommentsModel();
-        $CommentsModel->DeleteQuery(['user_id' => $user->id]);
+        $CommentsModel->DeleteQuery(["user_id" => $user->id]);
 
         // Log user out from Auth
         Auth::logout();

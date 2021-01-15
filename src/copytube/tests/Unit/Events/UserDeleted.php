@@ -15,15 +15,17 @@ class UserDeleted extends TestCase
     public function testEventFired()
     {
         Event::fake();
-        $UserModel = new UserModel;
+        $UserModel = new UserModel();
         $UserModel->CreateQuery([
-            'username' => 'Test',
-            'email_address' => 'TestEmail@hotmail.com',
-            'password' => UserModel::generateHash('ValidPassword1'),
-            'login_attempts' => 3,
-            'logged_in' => 0
+            "username" => "Test",
+            "email_address" => "TestEmail@hotmail.com",
+            "password" => UserModel::generateHash("ValidPassword1"),
+            "login_attempts" => 3,
+            "logged_in" => 0,
         ]);
-        $user = DB::table('users')->whereRaw("username = 'Test'")->first();
+        $user = DB::table("users")
+            ->whereRaw("username = 'Test'")
+            ->first();
 
         // Send event
         Event::dispatch(new \App\Events\UserDeleted($user->id));
