@@ -25,9 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: pwd
-
-      - uses: php-actions/composer@v5
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
 
       - name: Lint Check
         run: |
