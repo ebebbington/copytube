@@ -39,9 +39,7 @@ jobs:
         with:
           php-version: '7.4'
 
-      - name: Install Composer
-        run: |
-          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - uses: MilesChou/composer-action@master
 
       - name: Lint Check
         run: |
