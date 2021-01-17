@@ -25,16 +25,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Format Checks
+        run: |
+          npm ci
+          npm run fmt:check
+
+  laravel-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/copytube
+    steps:
+      - uses: actions/checkout@v2
+
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           tools: composer
-
-      - name: Format Checks
-        run: |
-          npm ci
-          npm run fmt:check
 
       - name: Laravel Tests
         run: |
@@ -42,7 +50,6 @@ jobs:
           composer install
           npm run dev
           docker-compose up -d > /dev/null
-          sleep 20
           docker exec copytube_phpfpm vendor/bin/phpunit
 #          docker exec copytube_phpfpm php artisan dusk
 
