@@ -33,7 +33,8 @@ class UserTest extends TestCase
         // Update user in table
         $Database = new DB();
         $TestUtilities = new TestUtilities();
-        $Database::table("users")
+        $Database
+            ::table("users")
             ->where("email_address", "=", $TestUtilities::$validEmail)
             ->update(["profile_picture" => $profilePicPath]);
 
@@ -74,7 +75,8 @@ class UserTest extends TestCase
         $this->assertEquals(false, $row);
 
         // Check all comments were deleted
-        $comments = $Database::table("comments")
+        $comments = $Database
+            ::table("comments")
             ->where("user_id", "=", $userId)
             ->get();
         $this->assertEquals(false, sizeof($comments) >= 1);

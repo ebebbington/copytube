@@ -46,22 +46,24 @@ class VideoTest extends TestCase
             "profile_picture" => "img/sample.jpg",
         ]);
         $Auth::loginUsingId($userId);
-       // $user = Auth::user();
-//        $headers = [
-//            "HTTP_X-Requested-With" => "XMLHttpRequest",
-//            "X-CSRF-TOKEN" => csrf_token(),
-//        ];
+        // $user = Auth::user();
+        //        $headers = [
+        //            "HTTP_X-Requested-With" => "XMLHttpRequest",
+        //            "X-CSRF-TOKEN" => csrf_token(),
+        //        ];
         $user = $Auth::user();
         $TestUtilities = new TestUtilities();
         $commentId = $TestUtilities::createTestCommentInDb($user);
         $res = $this->delete("/video/comment?id=" . $commentId);
         $res->assertSee("Successfully deleted");
-        $comment = $Database::table("comments")
+        $comment = $Database
+            ::table("comments")
             ->whereRaw("id = $commentId")
             ->first();
         $this->assertEquals(null, $comment);
         $TestUtilities::removeTestUsersInDb();
-        $Database::table("comments")
+        $Database
+            ::table("comments")
             ->whereRaw("id = $commentId")
             ->delete();
     }
@@ -75,11 +77,11 @@ class VideoTest extends TestCase
             "profile_picture" => "img/sample.jpg",
         ]);
         $Auth::loginUsingId($userId);
-//        $user = Auth::user();
-//        $headers = [
-//            "HTTP_X-Requested-With" => "XMLHttpRequest",
-//            "X-CSRF-TOKEN" => csrf_token(),
-//        ];
+        //        $user = Auth::user();
+        //        $headers = [
+        //            "HTTP_X-Requested-With" => "XMLHttpRequest",
+        //            "X-CSRF-TOKEN" => csrf_token(),
+        //        ];
         $user = $Auth::user();
         $TestUtilities::createTestCommentInDb($user);
         $res = $this->delete("/video/comment");
@@ -89,7 +91,7 @@ class VideoTest extends TestCase
     public function testDeleteCommentOnlyDeletedWhenIsUsers()
     {
         $Auth = new Auth();
-        $Database  = new DB();
+        $Database = new DB();
         $TestUtilities = new TestUtilities();
         $TestUtilities::removeTestUsersInDb();
         $userId1 = $TestUtilities::createTestUserInDb([
@@ -101,23 +103,26 @@ class VideoTest extends TestCase
         ]);
         $user2 = $TestUtilities::getTestUserInDb($userId2);
         $user1 = $Auth::user();
-//        $headers = [
-//            "HTTP_X-Requested-With" => "XMLHttpRequest",
-//            "X-CSRF-TOKEN" => csrf_token(),
-//        ];
+        //        $headers = [
+        //            "HTTP_X-Requested-With" => "XMLHttpRequest",
+        //            "X-CSRF-TOKEN" => csrf_token(),
+        //        ];
         $commentId1 = $TestUtilities::createTestCommentInDb($user1);
         $commentId2 = $TestUtilities::createTestCommentInDb($user2);
         $res = $this->delete("/video/comment?id=" . $commentId2);
         $res->assertSee("Not allowed to delete other peoples comments");
-        $comment2 = $Database::table("comments")
+        $comment2 = $Database
+            ::table("comments")
             ->whereRaw("id = $commentId2")
             ->first();
         $this->assertEquals(false, $comment2 === null);
         $TestUtilities::removeTestUsersInDb();
-        $Database::table("comments")
+        $Database
+            ::table("comments")
             ->whereRaw("id = $commentId1")
             ->delete();
-        $Database::table("comments")
+        $Database
+            ::table("comments")
             ->whereRaw("id = $commentId2")
             ->delete();
     }
@@ -193,7 +198,8 @@ class VideoTest extends TestCase
         $res->assertJson(["success" => true]);
 
         // Remove all comments and user
-        $Database::table("comments")
+        $Database
+            ::table("comments")
             ->where("user_id", "=", $userId)
             ->delete();
         $TestUtilities::removeTestUsersInDb();
@@ -363,7 +369,8 @@ class VideoTest extends TestCase
         $user1 = $TestUtilities::getTestUserInDb($userId1);
         $commentId = $TestUtilities::createTestCommentInDb($user1);
         $Database = new DB();
-        $Database::table("comments")
+        $Database
+            ::table("comments")
             ->where("id", "=", $commentId)
             ->first();
         $TestUtilities::logUserIn($userId2);
@@ -388,7 +395,8 @@ class VideoTest extends TestCase
         $user = $TestUtilities::getTestUserInDb($userId);
         $commentId = $TestUtilities::createTestCommentInDb($user);
         $Database = new DB();
-        $Database::table("comments")
+        $Database
+            ::table("comments")
             ->where("id", "=", $commentId)
             ->first();
         $TestUtilities::logUserIn($userId);
@@ -398,7 +406,8 @@ class VideoTest extends TestCase
             "newComment" => "Hello world :)",
         ]);
         $response->assertSee("Successfully updated");
-        $updatedComment = $Database::table("comments")
+        $updatedComment = $Database
+            ::table("comments")
             ->where("id", "=", $commentId)
             ->first();
         $this->assertEquals($updatedComment->comment, "Hello world :)");

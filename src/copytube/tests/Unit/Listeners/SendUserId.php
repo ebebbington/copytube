@@ -34,7 +34,8 @@ class SendUserId extends TestCase
             "logged_in" => 0,
         ]);
         $Database = new DB();
-        $user = $Database::table("users")
+        $user = $Database
+            ::table("users")
             ->whereRaw("username = 'Test'")
             ->first();
         $Mockery = new \Mockery();

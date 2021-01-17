@@ -132,9 +132,7 @@ class CommentListComponentTest extends DuskTestCase
         $userId = TestUtilities::createTestUserInDb();
         $user = TestUtilities::getTestUserInDb($userId);
         $commentId = TestUtilities::createTestCommentInDb($user);
-        $this->browse(function (Browser $browser) use (
-            $commentId
-        ) {
+        $this->browse(function (Browser $browser) use ($commentId) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -167,9 +165,7 @@ class CommentListComponentTest extends DuskTestCase
         $userId = TestUtilities::createTestUserInDb();
         $user = TestUtilities::getTestUserInDb($userId);
         $commentId = TestUtilities::createTestCommentInDb($user);
-        $this->browse(function (Browser $browser) use (
-            $commentId
-        ) {
+        $this->browse(function (Browser $browser) use ($commentId) {
             $browser
                 ->loginAs(
                     UserModel::where(

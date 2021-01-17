@@ -9,7 +9,7 @@ use App\UserModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
-use \App\Events\UserDeleted;
+use App\Events\UserDeleted;
 
 class UserDeleted extends TestCase
 {
@@ -26,7 +26,8 @@ class UserDeleted extends TestCase
             "logged_in" => 0,
         ]);
         $Database = new DB();
-        $user = $Database::table("users")
+        $user = $Database
+            ::table("users")
             ->whereRaw("username = 'Test'")
             ->first();
 

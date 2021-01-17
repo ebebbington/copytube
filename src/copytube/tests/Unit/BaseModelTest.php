@@ -237,7 +237,7 @@ class BaseModelTest extends TestCase
         $this->deleteAllRows();
 
         // Test it forgets the cache key if passed in
-        $Cache  = new Cache();
+        $Cache = new Cache();
         $Cache::put("db:test:createQuery", "hi", 3600);
         $TestModel->CreateQuery(["test" => "Hi"], "db:test:createQuery");
         $redisData = $Cache::get("db:test:createQuery");

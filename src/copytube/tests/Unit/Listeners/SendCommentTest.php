@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 use Mockery;
 
-
 class SendCommentTest extends TestCase
 {
     public function testHandle()

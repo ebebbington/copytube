@@ -134,7 +134,8 @@ class HeaderComponentTest extends DuskTestCase
     {
         TestUtilities::createTestUserInDb();
         //$user = User::find(1);
-        $this->browse(function ($browser) { // ) user ($user)
+        $this->browse(function ($browser) {
+            // ) user ($user)
             $browser
                 ->loginAs(
                     UserModel::where(

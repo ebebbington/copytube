@@ -8,7 +8,7 @@ use App\UserModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
-use \App\Jobs\ProcessUserDeleted;
+use App\Jobs\ProcessUserDeleted;
 
 class ProcessUserDeletedTest extends TestCase
 {
@@ -36,8 +36,9 @@ class ProcessUserDeletedTest extends TestCase
         //        });
 
         // Run the faked job
-        $Database  = new DB();
-        $user = $Database::table("users")
+        $Database = new DB();
+        $user = $Database
+            ::table("users")
             ->whereRaw("username = 'Test'")
             ->first();
         print_r($user->id);
@@ -48,7 +49,8 @@ class ProcessUserDeletedTest extends TestCase
 
         $Queue::assertPushedOn("users", \App\Jobs\ProcessUserDeleted::class);
 
-        $Database::table("users")
+        $Database
+            ::table("users")
             ->whereRaw("email_address = 'TestEmail@hotmail.com'")
             ->delete();
     }

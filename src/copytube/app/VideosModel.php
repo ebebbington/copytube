@@ -122,9 +122,7 @@ class VideosModel extends BaseModel
     public function getVideosForHomePage()
     {
         $loggingPrefix = "[VideosModel -" . __FUNCTION__ . "] ";
-        Log::info(
-            $loggingPrefix . "Getting all videos for home page"
-        );
+        Log::info($loggingPrefix . "Getting all videos for home page");
         $query = [
             "limit" => 3,
         ];

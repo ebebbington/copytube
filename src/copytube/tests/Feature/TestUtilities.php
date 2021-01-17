@@ -24,12 +24,14 @@ class TestUtilities
     {
         $Database = new DB();
         if ($userId) {
-            $Database::table("comments")
+            $Database
+                ::table("comments")
                 ->where("id", "=", $userId)
                 ->delete();
         } else {
             $TestUtilities = new TestUtilities();
-            $Database::table("comments")
+            $Database
+                ::table("comments")
                 ->where("author", "=", $TestUtilities::$validUsername)
                 ->delete();
         }
@@ -85,12 +87,14 @@ class TestUtilities
     {
         $Database = new DB();
         if (isset($query) && sizeof($query) >= 1) {
-            $Database::table("users")
+            $Database
+                ::table("users")
                 ->where($query)
                 ->delete();
         } else {
             $TestUtilities = new TestUtilities();
-            $Database::table("users")
+            $Database
+                ::table("users")
                 ->where(["username" => $TestUtilities::$validUsername])
                 ->delete();
         }
@@ -106,7 +110,8 @@ class TestUtilities
                 ->where("id", "=", $userId)
                 ->first();
         }
-        return $Database::table("users")
+        return $Database
+            ::table("users")
             ->where("email_address", "=", $TestUtilities::$validEmail)
             ->first();
     }
