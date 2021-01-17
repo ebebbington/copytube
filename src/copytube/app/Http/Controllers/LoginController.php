@@ -56,8 +56,6 @@ class LoginController extends Controller
             Mail::to($user->email_address)->send(
                 new AccountLocked($title, $message)
             );
-            //$Mail = new Mail($user->email_address, $user->username, 'Account Locked', $message);
-            //$Mail->send();
             return response(
                 [
                     "success" => false,
@@ -108,11 +106,6 @@ class LoginController extends Controller
         if (Auth::user()) {
             return response()->redirectTo("/home");
         }
-        //$loggingPrefix = "[LoginController - " . __FUNCTION__ . "] ";
-        // session(['hi' => 'hello']);
-        // $var = 'hi';
-        // echo $var;
-        // print_r($request->session()->get('_token'));
         return View::make("login")->with("title", "Login");
     }
 }

@@ -4,7 +4,6 @@
 
 /* Styling for Forms */
 form {
-    width: auto;
     text-align: center;
     background: var(--custom-light-grey);
     border: 1px solid var(--custom-grey-border);
@@ -20,13 +19,11 @@ form {
         input.form-submit {
             color: var(--custom-white);
             background-color: var(--custom-pink);
-            font: 1em Arial;
+            font: 1em Arial Serif;
             text-decoration: none;
             transition-duration: 0.5s;
             border: 0;
             &:hover {
-                color: var(--custom-pink);
-                background-color: var(--custom-white);
                 color: var(--custom-pink);
                 background-color: var(--custom-white);
                 box-shadow: 0px 0px 5px 2px var(--custom-pink);

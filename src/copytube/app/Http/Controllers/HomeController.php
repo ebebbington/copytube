@@ -25,7 +25,6 @@ class HomeController extends Controller
     {
         $loggingPrefix = "[HomeController - " . __FUNCTION__ . "] ";
         Log::info($loggingPrefix);
-        // TODO Get and display all videos
         $VideosModel = new VideosModel();
         $user = Auth::user();
         $videos = $VideosModel->getVideosForHomePage();
