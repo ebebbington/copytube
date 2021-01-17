@@ -25,8 +25,6 @@ class RegisterController extends Controller
      */
     public function submit(Request $request)
     {
-        //$loggingPrefix = "[RegisterController - " . __FUNCTION__ . "] ";
-
         // get data
         $username = $request->input("username");
         $email = $request->input("email");
@@ -118,7 +116,6 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        //$loggingPrefix = "[RegisterController - " . __FUNCTION__ . "] ";
         return View::make("register")->with("title", "Register");
     }
 }

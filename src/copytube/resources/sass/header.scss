@@ -83,7 +83,7 @@ $icon_size: 1em;
 .gear {
     display: inline-block;
     position: relative;
-    margin: $icon_size/5;
+    //margin: $icon_size/5;
     width: $icon_size;
     height: $icon_size;
     background: white;
@@ -101,7 +101,7 @@ $icon_size: 1em;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-family: "times new roman";
+        font-family: "times new roman", Arial, Serif, serif;
         font-weight: bold;
         font-size: $icon_size * 2.5;
         color: gray;

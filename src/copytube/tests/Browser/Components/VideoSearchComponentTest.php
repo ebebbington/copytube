@@ -10,6 +10,10 @@ use Tests\Feature\TestUtilities;
 
 class VideoSearchComponentTest extends DuskTestCase
 {
+    private $active = "!$.active";
+
+    private $video_search_uri = "/video?requestedVideo=Something+More";
+
     /**
      * A Dusk test example.
      *
@@ -24,10 +28,10 @@ class VideoSearchComponentTest extends DuskTestCase
                     UserModel::where(
                         "email_address",
                         "=",
-                        "TestEmail@hotmail.com"
+                        TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
+                ->visit($this->video_search_uri)
                 ->type("#search-bar", "Something More");
             $value = $browser->attribute("#search-bar", "value");
             $this->assertEquals("Something More", $value);
@@ -44,17 +48,17 @@ class VideoSearchComponentTest extends DuskTestCase
                     UserModel::where(
                         "email_address",
                         "=",
-                        "TestEmail@hotmail.com"
+                        TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
+                ->visit($this->video_search_uri)
                 ->type("#search-bar", "Something More");
             $value = $browser->attribute(
                 "#search-bar-matching-dropdown > li",
                 "innerHTML"
             );
             $this->assertEquals("Loading...", $value);
-            $browser->waitUntil('!$.active');
+            $browser->waitUntil($this->active);
             $value = $browser->attribute(
                 "#search-bar-matching-dropdown > li",
                 "innerHTML"
@@ -73,13 +77,13 @@ class VideoSearchComponentTest extends DuskTestCase
                     UserModel::where(
                         "email_address",
                         "=",
-                        "TestEmail@hotmail.com"
+                        TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
+                ->visit($this->video_search_uri)
                 ->type("#search-bar", "Lava Sample")
                 ->click("#search-button")
-                ->waitUntil('!$.active');
+                ->waitUntil($this->active);
             $this->assertEquals(
                 "http://copytube_nginx:9002/videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
@@ -105,15 +109,15 @@ class VideoSearchComponentTest extends DuskTestCase
                     UserModel::where(
                         "email_address",
                         "=",
-                        "TestEmail@hotmail.com"
+                        TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
+                ->visit($this->video_search_uri)
                 ->type("#search-bar", "Lava Sample")
-                ->waitUntil('!$.active');
+                ->waitUntil($this->active);
             $browser
                 ->click("#search-bar-matching-dropdown > li")
-                ->waitUntil('!$.active');
+                ->waitUntil($this->active);
             $this->assertEquals(
                 "http://copytube_nginx:9002/videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
@@ -139,10 +143,10 @@ class VideoSearchComponentTest extends DuskTestCase
                     UserModel::where(
                         "email_address",
                         "=",
-                        "TestEmail@hotmail.com"
+                        TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More");
+                ->visit($this->video_search_uri);
             $this->assertEquals(
                 "input-group",
                 $browser->attribute("#search", "class")

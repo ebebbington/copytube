@@ -14,8 +14,7 @@ class BaseModel extends Model
 {
     private function normaliseCacheKey($cacheKey = "")
     {
-        $replacedKey = str_replace(" ", "+", $cacheKey);
-        return $replacedKey;
+        return str_replace(" ", "+", $cacheKey); // The replaced key
     }
 
     /**
@@ -224,7 +223,6 @@ class BaseModel extends Model
         $result = DB::table($this->table)
             ->where($query)
             ->delete();
-        $success = $result === 1 || $result === true ? true : false;
-        return $success;
+        return $result === 1 || $result === true ? true : false; // the success
     }
 }

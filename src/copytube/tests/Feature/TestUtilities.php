@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class TestUtilities
 {
+    public static string $active = "!$.active";
     public static string $validUsername = "TestUsername";
     public static string $validEmail = "TestEmail@hotmail.com";
     public static string $validPassword = "Welcome1";
@@ -65,8 +66,7 @@ class TestUtilities
                 : null,
         ];
         $Database = new DB();
-        $userId = $Database::table("users")->insertGetId($data);
-        return $userId;
+        return $Database::table("users")->insertGetId($data); // userId
     }
 
     public static function createTestCommentInDb($user): int
@@ -79,8 +79,7 @@ class TestUtilities
             "user_id" => $user->id,
         ];
         $Database = new DB();
-        $commentId = $Database::table("comments")->insertGetId($data);
-        return $commentId;
+        return $Database::table("comments")->insertGetId($data); // commentId
     }
 
     public static function removeTestUsersInDb(array $query = [])

@@ -38,29 +38,29 @@
     //background: var(--custom-dark-grey);
     visibility: hidden;
     //box-shadow: 0px 0px 10px 1px red;
-    & > i.loading-circles {
+    & > .loading-circles {
         position: absolute;
         background-color: var(--custom-white);
     }
-    & > i.loading-circles#loading-circle-one {
+    & > .loading-circles#loading-circle-one {
         left: 0;
         right: 0;
         margin: auto;
         top: 10%;
     }
-    & > i.loading-circles#loading-circle-two {
+    & > .loading-circles#loading-circle-two {
         left: 21%;
         top: 34%;
     }
-    & > i.loading-circles#loading-circle-three {
+    & > .loading-circles#loading-circle-three {
         right: 21%;
         top: 34%;
     }
-    & > i.loading-circles#loading-circle-four {
+    & > .loading-circles#loading-circle-four {
         left: 28%;
         top: 67%;
     }
-    & > i.loading-circles#loading-circle-five {
+    & > .loading-circles#loading-circle-five {
         right: 28%;
         top: 67%;
     }
