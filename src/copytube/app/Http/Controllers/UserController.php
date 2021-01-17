@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class UserController extends Controller
 {
-    public function Delete(Request $request)
+    public function Delete()
     {
         $user = Auth::user();
 

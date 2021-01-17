@@ -96,8 +96,9 @@ class CommentsModel extends BaseModel
      */
     public function formatDates(object $commentList)
     {
-        $loggingPrefix = "[CommentsModel - " . __FUNCTION__ . "] ";
-        for ($i = 0; $i < sizeof($commentList); $i++) {
+        //$loggingPrefix = "[CommentsModel - " . __FUNCTION__ . "] ";
+        $size = sizeof($commentList);
+        for ($i = 0; $i < $size; $i++) {
             $commentList[$i]->date_posted = $this->convertDate(
                 $commentList[$i]->date_posted
             );

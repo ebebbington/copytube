@@ -36,8 +36,7 @@ class HeaderComponentTest extends DuskTestCase
     public function testLoginLinkCanBeClickedWhenLoggedIn()
     {
         TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb();
-        $this->browse(function ($browser) use ($user) {
+        $this->browse(function ($browser) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -61,8 +60,7 @@ class HeaderComponentTest extends DuskTestCase
     public function testLoginLinkCanBeClickedWhenNotLoggedIn()
     {
         TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb();
-        $this->browse(function ($browser) use ($user) {
+        $this->browse(function ($browser) {
             $browser
                 ->visit("/register")
                 ->assertPathIs("/register")
@@ -76,8 +74,7 @@ class HeaderComponentTest extends DuskTestCase
     public function testChatLinkCanBeClicked()
     {
         TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb();
-        $this->browse(function ($browser) use ($user) {
+        $this->browse(function ($browser) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -111,8 +108,7 @@ class HeaderComponentTest extends DuskTestCase
     public function testUserOptionsLogoutButtonCanBeClicked()
     {
         TestUtilities::createTestUserInDb();
-        $user = User::find(1);
-        $this->browse(function ($browser) use ($user) {
+        $this->browse(function ($browser) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -137,8 +133,8 @@ class HeaderComponentTest extends DuskTestCase
     public function testUserOptionsDeleteButtonCanBeClicked()
     {
         TestUtilities::createTestUserInDb();
-        $user = User::find(1);
-        $this->browse(function ($browser) use ($user) {
+        //$user = User::find(1);
+        $this->browse(function ($browser) { // ) user ($user)
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -169,8 +165,7 @@ class HeaderComponentTest extends DuskTestCase
     public function testUserOptionsShowUsernameAndEmail()
     {
         TestUtilities::createTestUserInDb();
-        $user = User::find(1);
-        $this->browse(function ($browser) use ($user) {
+        $this->browse(function ($browser) {
             $browser
                 ->loginAs(
                     UserModel::where(

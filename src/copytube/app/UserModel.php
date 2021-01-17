@@ -29,6 +29,14 @@ class UserModel extends BaseModel
      */
     protected $primaryKey = "id";
 
+    /**
+     * This will suppress all the PMD warnings in
+     * this class.
+     *
+     * @var  mixed
+     *
+     * @SuppressErrors(PHPMD)
+     */
     public $id;
 
     /**
@@ -162,7 +170,7 @@ class UserModel extends BaseModel
      * @description
      * Lock the users account
      *
-     * @param mixed  $id    Users id
+     * @param mixed  $userid    Users id
      * @param string $email Users email
      *
      * @return bool|string
@@ -170,14 +178,15 @@ class UserModel extends BaseModel
      * @example
      * $token = $UserModel->lockAccount($user->id, $user->email_address); // token if success, false if failed
      */
-    public function lockAccount($id, string $email)
+    public function lockAccount($userId, string $email)
     {
         $recoverToken = Str::random(32);
-        $success = $this->UpdateQuery(
-            ["id" => $id],
+        $this->UpdateQuery(
+            ["id" => $userId],
             ["recover_token" => $recoverToken],
             "db:users:email_address=" . $email
         );
+        // TODO :: Check return val of query
         return $recoverToken;
     }
 

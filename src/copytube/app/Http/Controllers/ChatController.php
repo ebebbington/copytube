@@ -16,7 +16,7 @@ use Cookie;
 
 class ChatController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $loggingPrefix = "[ChatController - " . __FUNCTION__ . "] ";
         Log::info($loggingPrefix . "Return view of `chat`");

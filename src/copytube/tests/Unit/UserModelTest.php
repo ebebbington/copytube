@@ -30,9 +30,10 @@ class UserModelTest extends TestCase
 
     public function testExistsMethod()
     {
-        $exists = UserModel::exists("edward.bebbington@intercity.technology");
+        $UserModel = new UserModel();
+        $exists = $UserModel::exists("edward.bebbington@intercity.technology");
         $this->assertEquals(true, $exists);
-        $exists = UserModel::exists("idontexist");
+        $exists = $UserModel::exists("idontexist");
         $this->assertEquals(false, $exists);
     }
 
@@ -63,7 +64,7 @@ class UserModelTest extends TestCase
     {
         $this->createTestUser();
         $UserModel = new UserModel();
-        $res = $UserModel->updateLoginAttempts("testemail", 2);
+        $UserModel->updateLoginAttempts("testemail", 2);
         $user = DB::table("users")
             ->where("username", "=", "Test User")
             ->first();
@@ -84,7 +85,7 @@ class UserModelTest extends TestCase
     {
         $this->createTestUser("testtoken");
         $UserModel = new UserModel();
-        $res = $UserModel->updateAfterRecover("testemail", "testpassword");
+        $UserModel->updateAfterRecover("testemail", "testpassword");
         $user = DB::table("users")
             ->where("email_address", "=", "testemail")
             ->first();
@@ -96,7 +97,9 @@ class UserModelTest extends TestCase
     public function testGenerateHashMethod()
     {
         $rawPass = "Hello";
-        $hash = UserModel::generateHash($rawPass);
-        $this->assertEquals(true, Hash::check($rawPass, $hash));
+        $UserModel = new UserModel();
+        $hash = $UserModel::generateHash($rawPass);
+        $Hash = new Hash();
+        $this->assertEquals(true, $Hash::check($rawPass, $hash));
     }
 }

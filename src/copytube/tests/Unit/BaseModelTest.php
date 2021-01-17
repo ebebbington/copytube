@@ -14,12 +14,14 @@ class BaseModelTest extends TestCase
 {
     private function insertOne($value)
     {
-        DB::table("test")->insert(["test" => $value]);
+        $Database = new DB();
+        $Database::table("test")->insert(["test" => $value]);
     }
 
     private function deleteAllRows()
     {
-        DB::table("test")->delete();
+        $Database = new DB();
+        $Database::table("test")->delete();
     }
 
     public function testSelectQueryMethodWithCacheKey()
@@ -27,7 +29,8 @@ class BaseModelTest extends TestCase
         //
         // PASSING IN CACHE KEY
         //
-        Cache::flush();
+        $Cache = new Cache();
+        $Cache::flush();
         // Quickly create a row
         $value = "TEST1";
         $this->insertOne($value);
@@ -44,16 +47,16 @@ class BaseModelTest extends TestCase
             'db:test"testkey'
         );
         $this->assertEquals($row, $cachedRow);
-        $redisData = Cache::get("db:test:testkey");
+        $redisData = $Cache::get("db:test:testkey");
         $this->assertEquals($row, $redisData);
-        Cache::forget("db:test:testkey");
+        $Cache::forget("db:test:testkey");
         $this->deleteAllRows();
 
         //
         // Existing cache key - for code coverage
         //
 
-        Cache::put("test", "hi", 3600);
+        $Cache::put("test", "hi", 3600);
         $data = $TestModel->SelectQuery(["limit" => 1], "test");
         $this->assertEquals("hi", $data);
     }
@@ -165,7 +168,8 @@ class BaseModelTest extends TestCase
     public function testUpdateQueryWithCacheKey()
     {
         // iF CACHE key passed in expect the key value pair to not exist anymore
-        Cache::put("db:test:helloworld", "hello", 3600);
+        $Cache = new Cache();
+        $Cache::put("db:test:helloworld", "hello", 3600);
         $TestModel = new TestModel();
         $TestModel->CreateQuery(["test" => "Hello world"]);
         $TestModel->UpdateQuery(
@@ -173,12 +177,13 @@ class BaseModelTest extends TestCase
             ["test" => "Goodbye world"],
             "db:test:helloworld"
         );
-        $redisData = Cache::get("db:test:helloworld");
+        $redisData = $Cache::get("db:test:helloworld");
+        // TODO :: Assert above var
         $row = $TestModel->SelectQuery([
             "where" => "test = 'Goodbye world'",
             "limit" => 1,
         ]);
-        $redisData = Cache::get("db:test:helloworld");
+        $redisData = $Cache::get("db:test:helloworld");
         $this->assertEquals($redisData, $row);
         $this->deleteAllRows();
     }
@@ -197,14 +202,15 @@ class BaseModelTest extends TestCase
     public function testDeleteQueryMethodOnSuccess()
     {
         // Expect redis to forget the cache key if passed in on success
-        Cache::put("db:test:deleteQuery", "hi", 3600);
+        $Cache = new Cache();
+        $Cache::put("db:test:deleteQuery", "hi", 3600);
         $TestModel = new TestModel();
         $TestModel->CreateQuery(["test" => "Hello world"]);
         $success = $TestModel->DeleteQuery(
             ["test" => "Hello world"],
             "db:test:deleteQuery"
         );
-        $redisData = Cache::get("db:test:deleteQuery");
+        $redisData = $Cache::get("db:test:deleteQuery");
         $this->assertEquals(null, $redisData);
         $this->assertEquals(true, $success);
     }
@@ -231,9 +237,10 @@ class BaseModelTest extends TestCase
         $this->deleteAllRows();
 
         // Test it forgets the cache key if passed in
-        Cache::put("db:test:createQuery", "hi", 3600);
+        $Cache  = new Cache();
+        $Cache::put("db:test:createQuery", "hi", 3600);
         $TestModel->CreateQuery(["test" => "Hi"], "db:test:createQuery");
-        $redisData = Cache::get("db:test:createQuery");
+        $redisData = $Cache::get("db:test:createQuery");
         $this->assertEquals(null, $redisData);
         $this->deleteAllRows();
     }
@@ -245,13 +252,14 @@ class BaseModelTest extends TestCase
         $replacedKey = "db:test:title=Something+More";
         $TestModel = new TestModel();
         $TestModel->CreateQuery(["test" => "Hi"]);
-        Cache::put($replacedKey, "Hi", 3600);
+        $Cache = new Cache();
+        $Cache::put($replacedKey, "Hi", 3600);
         $TestModel->UpdateQuery(
             ["test" => "Hi"],
             ["test" => "Bye"],
             $exampleKey
         );
-        $redisData = Cache::get($replacedKey);
+        $redisData = $Cache::get($replacedKey);
         $this->assertEquals(true, !!$redisData);
     }
 

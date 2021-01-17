@@ -49,7 +49,9 @@ class CommentsModelTest extends TestCase
                 property_exists($comment, "profile_picture")
             );
         }
-        $redisData = Cache::get("db:comments:videoTitle=Something+More");
+
+        $Cache = new Cache();
+        $redisData = $Cache::get("db:comments:videoTitle=Something+More");
         $this->assertEquals(true, isset($redisData) && !empty($redisData));
 
         // And when no comments are found

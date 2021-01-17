@@ -29,14 +29,16 @@ class SendUserId extends TestCase
         $UserModel->CreateQuery([
             "username" => "Test",
             "email_address" => "TestEmail@hotmail.com",
-            "password" => UserModel::generateHash("ValidPassword1"),
+            "password" => $UserModel::generateHash("ValidPassword1"),
             "login_attempts" => 3,
             "logged_in" => 0,
         ]);
-        $user = DB::table("users")
+        $Database = new DB();
+        $user = $Database::table("users")
             ->whereRaw("username = 'Test'")
             ->first();
-        $listener = \Mockery::mock("SendUserId");
+        $Mockery = new \Mockery();
+        $listener = $Mockery::mock("SendUserId");
 
         // Assertions
         $listener->shouldReceive("handle")->once();

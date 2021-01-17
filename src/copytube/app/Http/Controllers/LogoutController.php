@@ -17,9 +17,9 @@ use Cookie;
 
 class LogoutController extends Controller
 {
-    public function logout(Request $request)
+    public function logout()
     {
-        $loggingPrefix = "[LogoutController - " . __FUNCTION__ . "] ";
+        //$loggingPrefix = "[LogoutController - " . __FUNCTION__ . "] ";
         // update db
         $user = Auth::user();
         Log::debug($user);

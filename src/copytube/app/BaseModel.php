@@ -45,17 +45,17 @@ class BaseModel extends Model
      * @param bool|object $Model
      * @codeCoverageIgnore
      */
-    private function populate($Model = false)
-    {
-        if ($Model !== false && !empty($Model)) {
-            foreach ($Model as $key => $value) {
-                if (property_exists($this, $key)) {
-                    $this->$key = $value;
-                    //$this[$key] = $value;
-                }
-            }
-        }
-    }
+//    private function populate($Model = false)
+//    {
+//        if ($Model !== false && !empty($Model)) {
+//            foreach ($Model as $key => $value) {
+//                if (property_exists($this, $key)) {
+//                    $this->$key = $value;
+//                    //$this[$key] = $value;
+//                }
+//            }
+//        }
+//    }
 
     /**
      * @method SelectQuery

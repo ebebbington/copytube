@@ -21,7 +21,7 @@ use Cookie;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $loggingPrefix = "[HomeController - " . __FUNCTION__ . "] ";
         Log::info($loggingPrefix);

@@ -21,7 +21,6 @@
         "laravel/dusk": "^5.11",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpmd/phpmd": "^2.9",
         "phpunit/phpunit": "^8.0"
     },
     "config": {
@@ -60,9 +59,6 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ],
-        "lint": [
-            "vendor/bin/phpmd --exclude 'vendor,boostrap,node_modules,storage' . text 'cleancode,naming,unusedcode'\n"
         ]
     }
 }

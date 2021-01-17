@@ -16,10 +16,11 @@ class ProcessNewCommentTest extends TestCase
      */
     public function testProcessNewComment()
     {
-        Queue::fake();
+        $Queue = new Queue();
+        $Queue::fake();
 
         // Assert that no jobs were pushed...
-        Queue::assertNothingPushed();
+        $Queue::assertNothingPushed();
 
         // Get data
         $CommentsModel = new CommentsModel();
@@ -42,6 +43,6 @@ class ProcessNewCommentTest extends TestCase
         dispatch($job);
 
         // Expect it was called
-        Queue::assertPushedOn("comments", ProcessNewComment::class);
+        $Queue::assertPushedOn("comments", ProcessNewComment::class);
     }
 }

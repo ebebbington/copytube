@@ -14,8 +14,8 @@ class HomeTest extends TestCase
 {
     public function testGetWithAuth()
     {
-        $id = TestUtilities::createTestUserInDb();
-        TestUtilities::logUserIn($id);
+        $userId = TestUtilities::createTestUserInDb();
+        TestUtilities::logUserIn($userId);
         $response = $this->json("GET", "/home");
         $response->assertStatus(200);
         $response->assertViewIs("home");

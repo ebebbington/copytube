@@ -28,18 +28,21 @@ class UserTest extends TestCase
         // Copy profile picture
         $userId = TestUtilities::createTestUserInDb();
         $profilePicPath = "img/" . $userId . "/test.jpg";
-        Storage::disk("local_public")->copy("img/sample.jpg", $profilePicPath);
+        $Storage = new Storage();
+        $Storage::disk("local_public")->copy("img/sample.jpg", $profilePicPath);
         // Update user in table
-        DB::table("users")
-            ->where("email_address", "=", TestUtilities::$validEmail)
+        $Database = new DB();
+        $TestUtilities = new TestUtilities();
+        $Database::table("users")
+            ->where("email_address", "=", $TestUtilities::$validEmail)
             ->update(["profile_picture" => $profilePicPath]);
 
         // Auth myself as its an authed route
-        Auth::loginUsingId($userId);
-        $user = Auth::user();
+        $Auth = new Auth();
+        $Auth::loginUsingId($userId);
 
         // Add comments before
-        DB::table("comments")->insert([
+        $Database::table("comments")->insert([
             [
                 "comment" => "Hello",
                 "author" => "hello",
@@ -67,17 +70,17 @@ class UserTest extends TestCase
         //Storage::disk('local_public')->assertMissing($profilePicPath);
 
         // Check row was deleted
-        $row = TestUtilities::getTestUserInDb();
+        $row = $TestUtilities::getTestUserInDb();
         $this->assertEquals(false, $row);
 
         // Check all comments were deleted
-        $comments = DB::table("comments")
+        $comments = $Database::table("comments")
             ->where("user_id", "=", $userId)
             ->get();
         $this->assertEquals(false, sizeof($comments) >= 1);
 
         // Check we are no longer authed
-        $user = Auth::user();
+        $user = $Auth::user();
         $this->assertEquals(false, $user);
 
         // Check we were redirected (302) to register page

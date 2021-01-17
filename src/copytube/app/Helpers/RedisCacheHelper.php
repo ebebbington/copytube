@@ -148,6 +148,8 @@ class RedisCacheHelper
      * RedisCacheHelper::normaliseCacheKey('hello world'); // 'hello+world'
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD)
      */
     private static function normaliseCacheKey($cacheKey): string
     {

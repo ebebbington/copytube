@@ -138,7 +138,7 @@ class VideoController extends Controller
 
     public function postComment(Request $request)
     {
-        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        //$loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
 
         // get data
         $comment = $request->input("comment");
@@ -173,7 +173,7 @@ class VideoController extends Controller
 
         // Create the new comment
         $Comments = new CommentsModel();
-        $cacheKey = "db:comments:videoTitle=" . $videoPostedOn;
+        //$cacheKey = "db:comments:videoTitle=" . $videoPostedOn;
         $newComment = [
             "comment" => $comment,
             "author" => $username,
@@ -201,7 +201,7 @@ class VideoController extends Controller
 
     public function autocomplete(Request $request)
     {
-        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        //$loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
         $title = $request->input("title");
         $titles = [];
         if (!empty($title)) {

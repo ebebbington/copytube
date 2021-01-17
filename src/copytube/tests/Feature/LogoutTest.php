@@ -15,10 +15,10 @@ class LogoutTest extends TestCase
 {
     private function makeDeleteRequest(): ?object
     {
-        $headers = [
-            "HTTP_X-Requested-With" => "XMLHttpRequest",
-            "X-CSRF-TOKEN" => csrf_token(),
-        ];
+//        $headers = [
+//            "HTTP_X-Requested-With" => "XMLHttpRequest",
+//            "X-CSRF-TOKEN" => csrf_token(),
+//        ];
         // Send the request
         $response = $this->json("GET", "/logout");
         return $response;

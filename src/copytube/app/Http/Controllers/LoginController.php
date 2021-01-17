@@ -69,7 +69,7 @@ class LoginController extends Controller
         // Auth
         if (Auth::attempt($credentials)) {
             // Set the user to logged in
-            $updated = $UserModel->updateLoggedIn(0, $email);
+            $UserModel->updateLoggedIn(0, $email);
             //            if ($updated === false) {
             //                Log::debug('Failed to update the model when updating logged_in');
             //                return response([
@@ -77,6 +77,7 @@ class LoginController extends Controller
             //                    'message' => 'Failed to update the model'
             //                ]);
             //            }
+            // TODO :: Check it was updated using return val
 
             return response(
                 [
@@ -102,12 +103,12 @@ class LoginController extends Controller
         }
     }
 
-    public function get(Request $request)
+    public function get()
     {
         if (Auth::user()) {
             return response()->redirectTo("/home");
         }
-        $loggingPrefix = "[LoginController - " . __FUNCTION__ . "] ";
+        //$loggingPrefix = "[LoginController - " . __FUNCTION__ . "] ";
         // session(['hi' => 'hello']);
         // $var = 'hi';
         // echo $var;

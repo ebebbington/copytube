@@ -35,8 +35,7 @@ class HomePage extends Page
     {
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb();
-        $this->browse(function ($browser) use ($user) {
+        $this->browse(function ($browser) {
             $browser
                 ->visit("/home")
                 ->assertPathIs("/home")

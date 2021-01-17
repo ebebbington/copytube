@@ -31,10 +31,10 @@ jobs:
           php-version: '7.4'
           tools: composer
 
-      - name: Lint Check
-        run: |
-          composer install
-          composer lint
+#      - name: Lint Check
+#        run: |
+#          composer install
+#          composer lint used to use phpmd
 
       - name: Format Checks
         run: |
@@ -47,11 +47,6 @@ jobs:
           sleep 400
           docker exec copytube_phpfpm vendor/bin/phpunit
 #          docker exec copytube_phpfpm php artisan dusk
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
 
   realtime-tests:
     runs-on: ubuntu-latest

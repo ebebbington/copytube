@@ -17,7 +17,8 @@ class CommentAddedTest extends TestCase
      */
     public function testEventFired()
     {
-        Event::fake();
+        $Event = new Event();
+        $Event::fake();
         $CommentsModel = new CommentsModel();
         $comment = $CommentsModel->CreateQuery([
             "comment" => "Test",
@@ -27,7 +28,7 @@ class CommentAddedTest extends TestCase
             "video_posted_on" => "test",
         ]);
         // Send event
-        Event::dispatch(new CommentAdded($comment));
-        Event::assertDispatched(CommentAdded::class, 1);
+        $Event::dispatch(new CommentAdded($comment));
+        $Event::assertDispatched(CommentAdded::class, 1);
     }
 }

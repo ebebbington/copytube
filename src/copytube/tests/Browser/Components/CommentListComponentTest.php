@@ -52,7 +52,7 @@ class CommentListComponentTest extends DuskTestCase
             "email_address" => "TestEmail2@hotmail.com",
             "profile_picture" => "img/sample.jpg",
         ]);
-        $this->browse(function (Browser $browser, Browser $browserTwo) {
+        $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -78,10 +78,10 @@ class CommentListComponentTest extends DuskTestCase
 
     public function testDeleteAndEditButtonsDisplayWhenCommentIsUsers()
     {
-        $id = TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb($id);
+        $userId = TestUtilities::createTestUserInDb();
+        $user = TestUtilities::getTestUserInDb($userId);
         TestUtilities::createTestCommentInDb($user);
-        $this->browse(function (Browser $browser, Browser $browserTwo) {
+        $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -105,7 +105,7 @@ class CommentListComponentTest extends DuskTestCase
     public function testDeleteAndEditButtonsDontDisplayOnOtherComments()
     {
         TestUtilities::createTestUserInDb();
-        $this->browse(function (Browser $browser, Browser $browserTwo) {
+        $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -129,10 +129,10 @@ class CommentListComponentTest extends DuskTestCase
     public function testDeletingACommentDisplaysAPromptAndThenRemovesItFromDOM()
     {
         Cache::flush();
-        $id = TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb($id);
+        $userId = TestUtilities::createTestUserInDb();
+        $user = TestUtilities::getTestUserInDb($userId);
         $commentId = TestUtilities::createTestCommentInDb($user);
-        $this->browse(function (Browser $browser, Browser $browserTwo) use (
+        $this->browse(function (Browser $browser) use (
             $commentId
         ) {
             $browser
@@ -164,10 +164,10 @@ class CommentListComponentTest extends DuskTestCase
     public function testClickingEditButtonMakesCommentEditableAndThenCanSaveUpdatedComment()
     {
         Cache::flush();
-        $id = TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb($id);
+        $userId = TestUtilities::createTestUserInDb();
+        $user = TestUtilities::getTestUserInDb($userId);
         $commentId = TestUtilities::createTestCommentInDb($user);
-        $this->browse(function (Browser $browser, Browser $browserTwo) use (
+        $this->browse(function (Browser $browser) use (
             $commentId
         ) {
             $browser

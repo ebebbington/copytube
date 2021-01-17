@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
+use Mockery;
+
 
 class SendCommentTest extends TestCase
 {
@@ -33,11 +35,13 @@ class SendCommentTest extends TestCase
             "user_id" => 2,
             "video_posted_on" => "test",
         ]);
-        $listener = \Mockery::mock("SendComment");
+        $Mockery = new Mockery();
+        $listener = $Mockery::mock("SendComment");
         $job = new ProcessNewComment($comment, "img/test");
 
         // Assertions
-        Redis::shouldReceive("publish");
+        $Redis = new Redis();
+        $Redis::shouldReceive("publish");
         dispatch($job)->onConnection("sync");
         $listener->shouldReceive("handle")->once();
         $this->app->instance(SendComment::class, $listener);

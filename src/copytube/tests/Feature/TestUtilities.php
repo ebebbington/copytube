@@ -20,31 +20,35 @@ class TestUtilities
         "testPas", // must be min len of 8
     ];
 
-    public static function removeTestCommentsInDB(int $id = null)
+    public static function removeTestCommentsInDB(int $userId = null)
     {
-        if ($id) {
-            DB::table("comments")
-                ->where("id", "=", $id)
+        $Database = new DB();
+        if ($userId) {
+            $Database::table("comments")
+                ->where("id", "=", $userId)
                 ->delete();
         } else {
-            DB::table("comments")
-                ->where("author", "=", TestUtilities::$validUsername)
+            $TestUtilities = new TestUtilities();
+            $Database::table("comments")
+                ->where("author", "=", $TestUtilities::$validUsername)
                 ->delete();
         }
     }
 
     public static function createTestUserInDb(array $overrides = [])
     {
+        $TestUtilities = new TestUtilities();
+        $UserModel = new UserModel();
         $data = [
             "username" => isset($overrides["username"])
                 ? $overrides["username"]
-                : TestUtilities::$validUsername,
+                : $TestUtilities::$validUsername,
             "email_address" => isset($overrides["email_address"])
                 ? $overrides["email_address"]
-                : TestUtilities::$validEmail,
+                : $TestUtilities::$validEmail,
             "password" => isset($overrides["password"])
                 ? $overrides["password"]
-                : UserModel::generateHash(TestUtilities::$validPassword),
+                : $UserModel::generateHash($TestUtilities::$validPassword),
             "login_attempts" => isset($overrides["login_attempts"])
                 ? $overrides["login_attempts"]
                 : 3,
@@ -58,8 +62,9 @@ class TestUtilities
                 ? $overrides["profile_picture"]
                 : null,
         ];
-        $id = DB::table("users")->insertGetId($data);
-        return $id;
+        $Database = new DB();
+        $userId = $Database::table("users")->insertGetId($data);
+        return $userId;
     }
 
     public static function createTestCommentInDb($user): int
@@ -71,37 +76,44 @@ class TestUtilities
             "video_posted_on" => "Something More",
             "user_id" => $user->id,
         ];
-        $id = DB::table("comments")->insertGetId($data);
-        return $id;
+        $Database = new DB();
+        $commentId = $Database::table("comments")->insertGetId($data);
+        return $commentId;
     }
 
     public static function removeTestUsersInDb(array $query = [])
     {
+        $Database = new DB();
         if (isset($query) && sizeof($query) >= 1) {
-            DB::table("users")
+            $Database::table("users")
                 ->where($query)
                 ->delete();
         } else {
-            DB::table("users")
-                ->where(["username" => TestUtilities::$validUsername])
+            $TestUtilities = new TestUtilities();
+            $Database::table("users")
+                ->where(["username" => $TestUtilities::$validUsername])
                 ->delete();
         }
     }
 
-    public static function getTestUserInDb(int $id = null)
+    public static function getTestUserInDb(int $userId = null)
     {
-        if ($id) {
-            return DB::table("users")
-                ->where("id", "=", $id)
+        $Database = new DB();
+        $TestUtilities = new TestUtilities();
+        if ($userId) {
+            return $Database
+                ::table("users")
+                ->where("id", "=", $userId)
                 ->first();
         }
-        return DB::table("users")
-            ->where("email_address", "=", TestUtilities::$validEmail)
+        return $Database::table("users")
+            ->where("email_address", "=", $TestUtilities::$validEmail)
             ->first();
     }
 
-    public static function logUserIn(int $id)
+    public static function logUserIn(int $userId)
     {
-        Auth::loginUsingId($id);
+        $Auth = new Auth();
+        $Auth::loginUsingId($userId);
     }
 }

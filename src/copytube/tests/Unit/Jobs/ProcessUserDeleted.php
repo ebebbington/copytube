@@ -8,15 +8,18 @@ use App\UserModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
+use \App\Jobs\ProcessUserDeleted;
 
-class ProcessUserDeleted extends TestCase
+class ProcessUserDeletedTest extends TestCase
 {
     public function testProcessUserDeleted()
     {
-        Queue::fake();
+        $Queue = new Queue();
+
+        $Queue::fake();
 
         // Assert that no jobs were pushed...
-        Queue::assertNothingPushed();
+        $Queue::assertNothingPushed();
 
         // Get data
         $UserModel = new UserModel();
@@ -33,17 +36,19 @@ class ProcessUserDeleted extends TestCase
         //        });
 
         // Run the faked job
-        $user = DB::table("users")
+        $Database  = new DB();
+        $user = $Database::table("users")
             ->whereRaw("username = 'Test'")
             ->first();
         print_r($user->id);
-        $job = (new \App\Jobs\ProcessUserDeleted($user->id))->onQueue("users");
+        $job = (new ProcessUserDeleted($user->id))->onQueue("users");
         dispatch($job);
 
         // Expect it was called
-        Queue::assertPushedOn("users", \App\Jobs\ProcessUserDeleted::class);
 
-        DB::table("users")
+        $Queue::assertPushedOn("users", \App\Jobs\ProcessUserDeleted::class);
+
+        $Database::table("users")
             ->whereRaw("email_address = 'TestEmail@hotmail.com'")
             ->delete();
     }

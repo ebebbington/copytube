@@ -25,7 +25,7 @@ class RegisterController extends Controller
      */
     public function submit(Request $request)
     {
-        $loggingPrefix = "[RegisterController - " . __FUNCTION__ . "] ";
+        //$loggingPrefix = "[RegisterController - " . __FUNCTION__ . "] ";
 
         // get data
         $username = $request->input("username");
@@ -75,7 +75,7 @@ class RegisterController extends Controller
         Log::info("User doesnt exists");
 
         // Save the user
-        $row = $User->CreateQuery([
+        $User->CreateQuery([
             "username" => $username,
             "email_address" => $email,
             "password" => $hash,
@@ -118,7 +118,7 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        $loggingPrefix = "[RegisterController - " . __FUNCTION__ . "] ";
+        //$loggingPrefix = "[RegisterController - " . __FUNCTION__ . "] ";
         return View::make("register")->with("title", "Register");
     }
 }
