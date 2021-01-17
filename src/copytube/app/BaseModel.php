@@ -130,7 +130,7 @@ class BaseModel extends Model
         }
 
         // When asking for 1 record, return a single object as they dont expect an array
-        if ($limit === 1 && empty($result) !== false) {
+        if ($limit === 1 && sizeof($result) >= 1) {
             $result = $result[0];
         }
 

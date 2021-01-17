@@ -35,8 +35,7 @@ class LoginTest extends TestCase
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         // Send the request
-        $response = $this->post("/login", $data, $headers);
-        return $response;
+        return $this->post("/login", $data, $headers);
     }
 
     public function testGetRequestWhenNotAuthed()

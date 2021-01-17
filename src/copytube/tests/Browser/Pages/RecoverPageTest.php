@@ -24,7 +24,7 @@ class RecoverPageTest extends DuskTestCase
                 ->type("email", TestUtilities::$validEmail)
                 ->type("password", TestUtilities::$validPassword)
                 ->press("Submit")
-                ->waitUntil('!$.active');
+                ->waitUntil(TestUtilities::$active);
             $browser->assertSee("Successfully Reset Your Password");
             TestUtilities::removeTestUsersInDb();
         });
@@ -43,7 +43,7 @@ class RecoverPageTest extends DuskTestCase
                 ->type("email", "hello")
                 ->type("password", "hello")
                 ->press("Submit")
-                ->waitUntil('!$.active')
+                ->waitUntil(TestUtilities::$active)
                 ->assertSee("Unable to authenticate");
             TestUtilities::removeTestUsersInDb();
         });
@@ -62,7 +62,7 @@ class RecoverPageTest extends DuskTestCase
                 ->type("email", TestUtilities::$validEmail)
                 ->type("password", TestUtilities::$validPassword)
                 ->press("Submit")
-                ->waitUntil('!$.active')
+                ->waitUntil(TestUtilities::$active)
                 ->assertPathIs("/login");
             TestUtilities::removeTestUsersInDb();
         });
@@ -74,7 +74,7 @@ class RecoverPageTest extends DuskTestCase
         $this->browse(function ($browser) {
             $browser->visit("/register");
             $browser
-                ->waitUntil('!$.active')
+                ->waitUntil(TestUtilities::$active)
                 ->pause(10)
                 ->assertPathIs("/register");
         });

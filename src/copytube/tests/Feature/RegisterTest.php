@@ -41,8 +41,7 @@ class RegisterTest extends TestCase
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         // Send the request
-        $response = $this->post("/register", $data, $headers);
-        return $response;
+        return $this->post("/register", $data, $headers); // response
     }
 
     public function testGetRequest()
