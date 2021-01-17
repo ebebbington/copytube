@@ -15,7 +15,6 @@ use Tests\Feature\TestUtilities;
 // TODO Could expand upon this
 class HomePage extends Page
 {
-
     /**
      * Get the URL for the page.
      *
@@ -23,7 +22,7 @@ class HomePage extends Page
      */
     public function url()
     {
-        return '/';
+        return "/";
     }
 
     /**
@@ -36,10 +35,10 @@ class HomePage extends Page
     {
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb();
-        $this->browse(function ($browser) use ($user) {
-            $browser->visit('/home')
-                ->assertPathIs('/home')
+        $this->browse(function ($browser) {
+            $browser
+                ->visit("/home")
+                ->assertPathIs("/home")
                 ->assertSee("Something More")
                 ->assertSee("Lava Sample")
                 ->assertSee("An Iceland Venture");
@@ -55,7 +54,7 @@ class HomePage extends Page
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            "@element" => "#selector",
         ];
     }
 }

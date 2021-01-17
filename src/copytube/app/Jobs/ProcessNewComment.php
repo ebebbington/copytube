@@ -27,7 +27,10 @@ class ProcessNewComment implements ShouldQueue
      */
     public function __construct(CommentsModel $comment, string $profilePicture)
     {
-        Log::info('[ProcessNewComment - constructor] Received: ' . json_encode($comment));
+        Log::info(
+            "[ProcessNewComment - constructor] Received: " .
+                json_encode($comment)
+        );
         $this->comment = $comment;
         $this->profilePicture = $profilePicture;
     }
@@ -39,8 +42,11 @@ class ProcessNewComment implements ShouldQueue
      */
     public function handle()
     {
-        $this->comment['profile_picture'] = $this->profilePicture;
-        Log::info('[ProcessNewComment - handle] Sending following data to CommentAdded event: ' . json_encode($this->comment));
+        $this->comment["profile_picture"] = $this->profilePicture;
+        Log::info(
+            "[ProcessNewComment - handle] Sending following data to CommentAdded event: " .
+                json_encode($this->comment)
+        );
         event(new CommentAdded($this->comment));
     }
 }

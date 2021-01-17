@@ -8,5 +8,5 @@ namespace App\Models\Interfaces;
 
 interface UserInterface
 {
-  public function insertComment();
+    public function insertComment();
 }

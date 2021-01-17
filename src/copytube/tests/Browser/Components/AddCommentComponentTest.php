@@ -14,15 +14,27 @@ class AddCommentComponentTest extends DuskTestCase
     {
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
-            $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/video?requestedVideo=Something+More')
-                ->assertpathIs('/video')
-                ->type('new-comment', 'hello');
-            $count = $browser->attribute('#comment-character-count', 'innerHTML');
-            $comment = $browser->value('#add-comment-input');
-            $this->assertEquals('5', $count);
-            $this->assertEquals('hello', $comment);
-            $browser->clear('new-comment');
+            $browser
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        TestUtilities::$validEmail
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit("/video?requestedVideo=Something+More")
+                ->assertpathIs("/video")
+                ->type("new-comment", "hello");
+            $count = $browser->attribute(
+                "#comment-character-count",
+                "innerHTML"
+            );
+            $comment = $browser->value("#add-comment-input");
+            $this->assertEquals("5", $count);
+            $this->assertEquals("hello", $comment);
+            $browser->clear("new-comment");
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -31,27 +43,46 @@ class AddCommentComponentTest extends DuskTestCase
     {
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
-            $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/video?requestedVideo=Something+More')
-                ->assertpathIs('/video');
-            $browser->click('#comment > button')
-                ->waitUntil('!$.active');
-            $browser->assertSee('The comment field is required');
+            $browser
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        TestUtilities::$validEmail
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit("/video?requestedVideo=Something+More")
+                ->assertpathIs("/video");
+            $browser->click("#comment > button")->waitUntil('!$.active');
+            $browser->assertSee("The comment field is required");
             TestUtilities::removeTestUsersInDb();
         });
     }
-//
+    //
     public function testSuccessWhenSendingWithComment()
     {
-        TestUtilities::createTestUserInDb(['profile_picture' => 'img/sample.jpg']);
+        TestUtilities::createTestUserInDb([
+            "profile_picture" => "img/sample.jpg",
+        ]);
         $this->browse(function (Browser $browser) {
-            $browser->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->limit(1)->first())
-                ->visit('/video?requestedVideo=Something+More')
-                ->assertpathIs('/video')
-                ->type('new-comment', 'hello')
-                ->click('#comment > button')
+            $browser
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        TestUtilities::$validEmail
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit("/video?requestedVideo=Something+More")
+                ->assertpathIs("/video")
+                ->type("new-comment", "hello")
+                ->click("#comment > button")
                 ->waitUntil('!$.active')
-                ->assertSee('Success');
+                ->assertSee("Success");
             TestUtilities::removeTestUsersInDb();
         });
     }

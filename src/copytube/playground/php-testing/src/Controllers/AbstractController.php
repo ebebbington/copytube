@@ -13,10 +13,7 @@ namespace App\Controllers\Classes;
 
 class AbstractController
 {
-
-  public function render ($view, $data): void
-  {
-
-  }
-
+    public function render($view, $data): void
+    {
+    }
 }

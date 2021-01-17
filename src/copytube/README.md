@@ -8,179 +8,179 @@
 
 This section provides the main application for this project, such as:
 
-* PHP-FPM handling
+-   PHP-FPM handling
 
-* Views
+-   Views
 
-* All client side functionality
+-   All client side functionality
 
-* Routing (MVC Architecture)
+-   Routing (MVC Architecture)
 
 # Directory Structure / Description
 
-* `app/`
+-   `app/`
 
-    * Holds the base code for the application
+    -   Holds the base code for the application
 
-* `bootstrap/`
+-   `bootstrap/`
 
-    * Holds bootstrapping scripts for the application
+    -   Holds bootstrapping scripts for the application
 
-* `config/`
+-   `config/`
 
-    * Holds all project configuration
+    -   Holds all project configuration
 
-* `data/`
+-   `data/`
 
-    * Holds files that arent used but provide some use (like documentation)
+    -   Holds files that arent used but provide some use (like documentation)
 
-* `database/`
+-   `database/`
 
-    * Holds the database files
+    -   Holds the database files
 
-* `node_modules/`
+-   `node_modules/`
 
-    * Holds NPM dependencies
+    -   Holds NPM dependencies
 
-* `playground/`
+-   `playground/`
 
-    * A plyground directory to test PHP-related features
+    -   A plyground directory to test PHP-related features
 
-* `public/`
+-   `public/`
 
-    * Helps in starting the project and holds other scripts (JS & CSS), along with any images
+    -   Helps in starting the project and holds other scripts (JS & CSS), along with any images
 
-* `resources/`
+-   `resources/`
 
-    * Holds all client side CSS/SASS, language and JS files
+    -   Holds all client side CSS/SASS, language and JS files
 
-* `routes/`
+-   `routes/`
 
-    * Holds all definitions files for routes (web, console etc.)
+    -   Holds all definitions files for routes (web, console etc.)
 
-* `storage/`
+-   `storage/`
 
-    * Holds session files, logs and other miscellaneous files
+    -   Holds session files, logs and other miscellaneous files
 
-* `tests/`
+-   `tests/`
 
-    * Holds all tests for the project
+    -   Holds all tests for the project
 
-* `vendor/`
+-   `vendor/`
 
-    * Holds all composer dependencies
+    -   Holds all composer dependencies
 
-* `.editorconfig`
+-   `.editorconfig`
 
-    * Holds configurations for coding styles to suit different IDE's and environments
+    -   Holds configurations for coding styles to suit different IDE's and environments
 
-* `.env`
+-   `.env`
 
-    * Holds all environmental data
+    -   Holds all environmental data
 
-* `.env.example`
+-   `.env.example`
 
-    * Example environment file
+    -   Example environment file
 
-* `.gitattributes`
+-   `.gitattributes`
 
-    * ?
+    -   ?
 
-* `phpunit.result.cache`
+-   `phpunit.result.cache`
 
-    * ?
+    -   ?
 
-* `.styleci.yml`
+-   `.styleci.yml`
 
-    * ?
+    -   ?
 
-* `artisan`
+-   `artisan`
 
-    * ?
+    -   ?
 
-* `composer.json`
+-   `composer.json`
 
-    * Defines dependencies for composer
+    -   Defines dependencies for composer
 
-* `composer.lock`
+-   `composer.lock`
 
-    * Defined dependencies for the composer dependencies
+    -   Defined dependencies for the composer dependencies
 
-* `package-lock.json`
+-   `package-lock.json`
 
-    * Defines dependencies for package.json dependencies
+    -   Defines dependencies for package.json dependencies
 
-* `package.json`
+-   `package.json`
 
-    * Defines dependencies for NPM
+    -   Defines dependencies for NPM
 
-* `phpunit.xml`
+-   `phpunit.xml`
 
-    * Configuration file for PHPUnit
+    -   Configuration file for PHPUnit
 
-* `server.php`
+-   `server.php`
 
-    * ?
+    -   ?
 
-* `tsconfig.json`
+-   `tsconfig.json`
 
-    * Configuration file for TypeScript
+    -   Configuration file for TypeScript
 
-* `webpack.mix.js`
+-   `webpack.mix.js`
 
-    * ?
+    -   ?
 
-* `yarn.lock`
+-   `yarn.lock`
 
-    * ?
+    -   ?
 
-* `.gitignore`
+-   `.gitignore`
 
-    * List of files and directories for Git to ignore
+    -   List of files and directories for Git to ignore
 
 # Tools Used
 
 This is the list of all tools used here, which also act as the tools learnt, or tools implemented to learn:
 
-* HTML
+-   HTML
 
-    * General mark-up
-    * Blade
+    -   General mark-up
+    -   Blade
 
-* CSS
+-   CSS
 
-    * General CSS
+    -   General CSS
 
-* JS
+-   JS
 
-    * jQuery
-    * General JS
+    -   jQuery
+    -   General JS
 
-* PHP
+-   PHP
 
-    * OO
-    * MVC
-    * PHP-FPM
-    * Data Modelling
-    * Laravel
-        * Components
-    * Routing
-    * PHPUnit
-    * SQL Queries
+    -   OO
+    -   MVC
+    -   PHP-FPM
+    -   Data Modelling
+    -   Laravel
+        -   Components
+    -   Routing
+    -   PHPUnit
+    -   SQL Queries
 
-* Other
+-   Other
 
-    * Sessions
-    * Handling auth (User logging in)
-    
+    -   Sessions
+    -   Handling auth (User logging in)
+
 # Building
 
 We use the `package.json` file to build the JS and CSS.
 
 It boils down to using webpack to compile and minify the `app.scss|js` files, where each file imports all the other stylesheets or javascripts. The process is:
 
-* By current architecture, we import all our javascripts and stylesheets into the `app.js` and `app.scss` files, respectively.
-* Then our run command will compile and those files
+-   By current architecture, we import all our javascripts and stylesheets into the `app.js` and `app.scss` files, respectively.
+-   Then our run command will compile and those files
 
 To do so, run: `npm run dev`. To understand a bit more, see the `webpack.mix.js` file. This also uses the `tsconfig.json` for when we write TS javascript files
 
@@ -196,15 +196,15 @@ See https://laravel.com/docs/5.4/dusk for information on browser testing.
 
 Mimic existing file structure, and try to writ tests for each case
 
-* Make a unit test
+-   Make a unit test
 
     `php artisan make:test --unit SomeModelTest`
-    
-* Make a feature test
+
+-   Make a feature test
 
     `php artisan make:test SomeController Test`
-    
-* Make a browser test using Dusk
+
+-   Make a browser test using Dusk
 
     `php artisan dusk:make LoginTest`
 
@@ -221,8 +221,8 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 
 ## Setup
 
-* 1. Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
-* 2. The configuration file for VSCode has already been setup (`./.vscode/*`)
+-   1. Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
+-   2. The configuration file for VSCode has already been setup (`./.vscode/*`)
 
 # Information
 
@@ -261,6 +261,7 @@ public function handle(CommentAdded $event)
 ```
 
 This is all called by simply doing:
+
 ```php
 event(new \App\Events\CommentAdded($comment));
 ```
@@ -279,55 +280,60 @@ See Laravels Events for more information
 
 ## Cheatsheet
 
-* Auth
+-   Auth
 
 Uses the users table, and will check if the user exists and creds match. But
 wont check login attempts or lock an account - this needs to be done in the login controller
+
 ```php
 $credentials = [
-  'email_address' => 'Edward.idontexist@hotmail.com',
-  'password' => 'Some password'
+    "email_address" => "Edward.idontexist@hotmail.com",
+    "password" => "Some password",
 ];
 // Check if user is logged in - manual way, the automatic way is using ->middleware('auth')
-Log::debug('Is user logged in: ' . Auth::check());
+Log::debug("Is user logged in: " . Auth::check());
 // Log user in
-Log::debug('Logging user in:');
+Log::debug("Logging user in:");
 Log::debug(Auth::attempt($credentials));
 // Get authed/logged in user
-Log::debug('The authed user');
+Log::debug("The authed user");
 Log::debug(Auth::user());
 // Log user out
-Log::debug('Gonna log user out: ' . Auth::logout());
+Log::debug("Gonna log user out: " . Auth::logout());
 
 // Then in the routes, only allow access if they are authed:
-Route::get('/home', ['middleware' => 'auth', 'as' => 'home', 'uses' => 'HomeController@index']);
+Route::get("/home", [
+    "middleware" => "auth",
+    "as" => "home",
+    "uses" => "HomeController@index",
+]);
 // or
-Route::get('...')->middleware('auth');
+Route::get("...")->middleware("auth");
 
 // Get the user (if authed)
 $user = Auth::user();
 ```
 
-* Cache
+-   Cache
 
 ```php
 // TEST cache using redis container. Works but how?
-if ($value = Redis::get('rediscontainerkey')) {
-    Log::debug('Redis key already exists: ' . $value);
+if ($value = Redis::get("rediscontainerkey")) {
+    Log::debug("Redis key already exists: " . $value);
 } else {
-    Log::debug('Going to create redis container key as it doesnt exist');
-    Redis::set('rediscontainerkey', 'rediscontainervalue');
+    Log::debug("Going to create redis container key as it doesnt exist");
+    Redis::set("rediscontainerkey", "rediscontainervalue");
 }
 // TEST cache using default file driver. If driver is set to file, the data is stored in /storage/framework/cache/data/...
 //      This is the default cache implementation for laravel, using either file or redis as the driver
-Cache::put('thekey', 'the redis cache value', 5000);
-Log::debug('Cache value for thekey: ' . Cache::get('thekey'));
+Cache::put("thekey", "the redis cache value", 5000);
+Log::debug("Cache value for thekey: " . Cache::get("thekey"));
 ```
 
 To convert this into pointing to Redis i just needed to define the DRIVER as redis as CACHE_PREFIX as "".
 Cache is preferred over Redis
 
-* Redis
+-   Redis
 
 To get Redis working, you obviously need to define the environmental variables required for `config/database.php`.
 
@@ -365,11 +371,12 @@ Then remove the following block from `config/database.php` for the redis context
 Boom all done, now we can write the following and query the redis container:
 
 ```php
-Redis::set('thekey', 'thevalue');
+Redis::set("thekey", "thevalue");
 // or
 $redis = Redis::connection();
-$redis->set('thekey', 'thevalue');
-if ($value = $redis->get('thekey')) { // also same to `Redis::has('thekey')`
+$redis->set("thekey", "thevalue");
+if ($value = $redis->get("thekey")) {
+    // also same to `Redis::has('thekey')`
     // is set
 } else {
     // not set
@@ -385,4 +392,3 @@ $ docker exec -it copytube_redis bash
 ```
 
 # Help
-

@@ -28,10 +28,10 @@ class CommentAdded
      */
     public function __construct($comment)
     {
-        Log::info('[CommentAdded Event - Constructor] Been called.');
+        Log::info("[CommentAdded Event - Constructor] Been called.");
         $this->comment = $comment;
-        $this->type = 'new';
-        $this->channel = 'realtime.comments.new';
+        $this->type = "new";
+        $this->channel = "realtime.comments.new";
     }
 
     /**
@@ -43,6 +43,6 @@ class CommentAdded
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel("channel-name");
     }
 }

@@ -15,232 +15,295 @@ use App\UserModel;
 
 class RegisterTest extends TestCase
 {
-    private function makePostRequest ($username, $email, $password, $profilePicture, $noCsrf = null): ?Object
-    {
+    private function makePostRequest(
+        $username,
+        $email,
+        $password,
+        $profilePicture,
+        $noCsrf = null
+    ): ?object {
         $data = [];
-        if (isset($username)) $data['username'] = $username;
-        if (isset($email)) $data['email'] = $email;
-        if (isset($password)) $data['password'] = $password;
-        if (isset($profilePicture)) $data['profile-picture'] = $profilePicture;
+        if (isset($username)) {
+            $data["username"] = $username;
+        }
+        if (isset($email)) {
+            $data["email"] = $email;
+        }
+        if (isset($password)) {
+            $data["password"] = $password;
+        }
+        if (isset($profilePicture)) {
+            $data["profile-picture"] = $profilePicture;
+        }
 
         $headers = [
-            'HTTP_X-Requested-With' => isset($noCsrf) ? '' : 'XMLHttpRequest',
-            'X-CSRF-TOKEN' => csrf_token()
+            "HTTP_X-Requested-With" => isset($noCsrf) ? "" : "XMLHttpRequest",
+            "X-CSRF-TOKEN" => csrf_token(),
         ];
         // Send the request
-        $response = $this->post('/register', $data, $headers);
+        $response = $this->post("/register", $data, $headers);
         return $response;
     }
 
     public function testGetRequest()
     {
-        $response = $this->json('GET', '/register');
+        $response = $this->json("GET", "/register");
         $response->assertStatus(200);
-        $response->assertViewIs('register');
+        $response->assertViewIs("register");
     }
 
-     public function testFailedPostValidation ()
-     {
-         //
-         // USERNAME
-         //
-
-         // Empty
-         $response = $this->makePostRequest(
-            '',
-             TestUtilities::$validEmail,
-             TestUtilities::$validPassword,
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The username field is required.']);
-         $response->assertStatus(401);
-
-         //
-         // EMAIL
-         //
-
-         // Empty
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             '',
-             TestUtilities::$validPassword,
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The email field is required.']);
-         $response->assertStatus(401);
-         // Not an email
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             'edward',
-             TestUtilities::$validPassword,
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The email must be a valid email address.']);
-         $response->assertStatus(401);
-
-         //
-         // PASSWORD
-         //
-
-         // Empty
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             '',
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The password field is required.']);
-         $response->assertStatus(401);
-         // No number
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             'HelloWorld',
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The password format is invalid.']);
-         $response->assertStatus(401);
-         // Not correct length
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             '7charss',
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The password format is invalid.']);
-         $response->assertStatus(401);
-         // No letters
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             '11111111',
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The password format is invalid.']);
-         $response->assertStatus(401);
-         // No uppercase character
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             'welcome1',
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The password format is invalid.']);
-         $response->assertStatus(401);
-         // No lowercase character
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             'WELCOME1',
-             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
-         );
-         $response->assertJson(['success' => false, 'message' => 'The password format is invalid.']);
-         $response->assertStatus(401);
-
-         //
-         // PROFILE PICTURE
-         //
-
-         // xlsx
-         $file = UploadedFile::fake()->create('test.xlsx');
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             TestUtilities::$validPassword,
-             $file
-         );
-         $response->assertJson(['success' => false, 'message' => 'The profile picture format is invalid.']);
-         $response->assertStatus(401);
-         // docx
-         $file = UploadedFile::fake()->create('test.docx');
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             TestUtilities::$validPassword,
-             $file
-         );
-         $response->assertJson(['success' => false, 'message' => 'The profile picture format is invalid.']);
-         $response->assertStatus(401);
-         // pdf
-         $file = UploadedFile::fake()->create('test.pdf');
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             TestUtilities::$validPassword,
-             $file
-         );
-         $response->assertJson(['success' => false, 'message' => 'The profile picture format is invalid.']);
-         $response->assertStatus(401);
-         // gif
-         $file = UploadedFile::fake()->create('test.gif');
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             TestUtilities::$validPassword,
-             $file
-         );
-         $response->assertJson(['success' => false, 'message' => 'The profile picture format is invalid.']);
-         $response->assertStatus(401);
-     }
-
-     public function testPostWhenUserExists ()
-     {
-         TestUtilities::removeTestUsersInDb();
-         TestUtilities::createTestUserInDb();
-         $response = $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             TestUtilities::$validPassword,
-             '');
-         $response->assertJson(['success' => false, 'message' => 'user already exists']);
-         $response->assertStatus(403);
-         TestUtilities::removeTestUsersInDb();
-     }
-
-     public function testProfilePictureIsSavedOnPost ()
-     {
-         TestUtilities::removeTestUsersInDb();
-
-         Storage::fake('local');
-         $this->makePostRequest(
-             TestUtilities::$validUsername,
-             TestUtilities::$validEmail,
-             TestUtilities::$validPassword,
-             UploadedFile::fake()->image('img/something_more.jpg')
-         );
-         // Assert the file was stored...
-         $user = TestUtilities::getTestUserInDb();
-         $picPath = str_replace('img/', '', $user->profile_picture);
-         Storage::disk('local')->assertExists($picPath);
-
-         TestUtilities::removeTestUsersInDb();
-     }
-
-    public function testSuccessfulPostRequest()
+    public function testFailedPostValidation()
     {
-        // First remove the test user if there is one
-        TestUtilities::removeTestUsersInDb();
+        //
+        // USERNAME
+        //
 
-        // Test adding a user and that table has that column
+        // Empty
         $response = $this->makePostRequest(
-            TestUtilities::$validUsername,
+            "",
             TestUtilities::$validEmail,
             TestUtilities::$validPassword,
             UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
         );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The username field is required.",
+        ]);
+        $response->assertStatus(401);
+
+        //
+        // EMAIL
+        //
+
+        // Empty
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            "",
+            TestUtilities::$validPassword,
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The email field is required.",
+        ]);
+        $response->assertStatus(401);
+        // Not an email
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            "edward",
+            TestUtilities::$validPassword,
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The email must be a valid email address.",
+        ]);
+        $response->assertStatus(401);
+
+        //
+        // PASSWORD
+        //
+
+        // Empty
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            "",
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The password field is required.",
+        ]);
+        $response->assertStatus(401);
+        // No number
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            "HelloWorld",
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The password format is invalid.",
+        ]);
+        $response->assertStatus(401);
+        // Not correct length
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            "7charss",
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The password format is invalid.",
+        ]);
+        $response->assertStatus(401);
+        // No letters
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            "11111111",
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The password format is invalid.",
+        ]);
+        $response->assertStatus(401);
+        // No uppercase character
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            "welcome1",
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The password format is invalid.",
+        ]);
+        $response->assertStatus(401);
+        // No lowercase character
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            "WELCOME1",
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The password format is invalid.",
+        ]);
+        $response->assertStatus(401);
+
+        //
+        // PROFILE PICTURE
+        //
+
+        // xlsx
+        $file = UploadedFile::fake()->create("test.xlsx");
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword,
+            $file
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The profile picture format is invalid.",
+        ]);
+        $response->assertStatus(401);
+        // docx
+        $file = UploadedFile::fake()->create("test.docx");
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword,
+            $file
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The profile picture format is invalid.",
+        ]);
+        $response->assertStatus(401);
+        // pdf
+        $file = UploadedFile::fake()->create("test.pdf");
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword,
+            $file
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The profile picture format is invalid.",
+        ]);
+        $response->assertStatus(401);
+        // gif
+        $file = UploadedFile::fake()->create("test.gif");
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword,
+            $file
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "The profile picture format is invalid.",
+        ]);
+        $response->assertStatus(401);
+    }
+
+    public function testPostWhenUserExists()
+    {
+        TestUtilities::removeTestUsersInDb();
+        TestUtilities::createTestUserInDb();
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword,
+            ""
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "user already exists",
+        ]);
+        $response->assertStatus(403);
+        TestUtilities::removeTestUsersInDb();
+    }
+
+    public function testProfilePictureIsSavedOnPost()
+    {
+        $TestUtilities = new TestUtilities();
+        $TestUtilities::removeTestUsersInDb();
+
+        $Storage = new Storage();
+        $Storage::fake("local");
+        $this->makePostRequest(
+            $TestUtilities::$validUsername,
+            $TestUtilities::$validEmail,
+            $TestUtilities::$validPassword,
+            UploadedFile::fake()->image("img/something_more.jpg")
+        );
+        // Assert the file was stored...
+        $user = $TestUtilities::getTestUserInDb();
+        $picPath = str_replace("img/", "", $user->profile_picture);
+        $Storage::disk("local")->assertExists($picPath);
+
+        $TestUtilities::removeTestUsersInDb();
+    }
+
+    public function testSuccessfulPostRequest()
+    {
+        $TestUtilities = new TestUtilities();
+        // First remove the test user if there is one
+        $TestUtilities::removeTestUsersInDb();
+
+        // Test adding a user and that table has that column
+        $response = $this->makePostRequest(
+            $TestUtilities::$validUsername,
+            $TestUtilities::$validEmail,
+            $TestUtilities::$validPassword,
+            UploadedFile::fake()->image($TestUtilities::$validProfilePicture)
+        );
 
         // Get user from DB and assert the data
-        $user = TestUtilities::getTestUserInDb();
-        $this->assertEquals(TestUtilities::$validUsername, $user->username);
-        $this->assertEquals(TestUtilities::$validEmail, $user->email_address);
-        $this->assertEquals(true, Hash::check(TestUtilities::$validPassword, $user->password));
+        $user = $TestUtilities::getTestUserInDb();
+        $this->assertEquals($TestUtilities::$validUsername, $user->username);
+        $this->assertEquals($TestUtilities::$validEmail, $user->email_address);
+        $Hash = new Hash();
+        $this->assertEquals(
+            true,
+            $Hash::check($TestUtilities::$validPassword, $user->password)
+        );
         $this->assertEquals(true, isset($user->profile_picture));
 
         // Remove the data
-        TestUtilities::removeTestUsersInDb();
+        $TestUtilities::removeTestUsersInDb();
 
         // Assert the response
-        $response->assertJson(['success' => true]);
+        $response->assertJson(["success" => true]);
         $response->assertStatus(200);
     }
 }

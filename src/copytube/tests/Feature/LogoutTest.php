@@ -13,19 +13,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LogoutTest extends TestCase
 {
-
-    private function makeDeleteRequest (): ?Object
+    private function makeDeleteRequest(): ?object
     {
-        $headers = [
-            'HTTP_X-Requested-With' => 'XMLHttpRequest',
-            'X-CSRF-TOKEN' => csrf_token()
-        ];
+        //        $headers = [
+        //            "HTTP_X-Requested-With" => "XMLHttpRequest",
+        //            "X-CSRF-TOKEN" => csrf_token(),
+        //        ];
         // Send the request
-        $response = $this->json('GET', '/logout');
+        $response = $this->json("GET", "/logout");
         return $response;
     }
 
-    public function testDeleteUserWithAuth ()
+    public function testDeleteUserWithAuth()
     {
         // create user
         TestUtilities::createTestUserInDb();
@@ -45,11 +44,10 @@ class LogoutTest extends TestCase
         Auth::logout();
     }
 
-    public function testDeleteUserWithoutAuth ()
+    public function testDeleteUserWithoutAuth()
     {
         // run request without logging in
         $response = $this->makeDeleteRequest();
         $response->assertStatus(401);
     }
-
 }

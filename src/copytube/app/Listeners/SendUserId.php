@@ -28,10 +28,13 @@ class SendUserId
      */
     public function handle(UserDeleted $event)
     {
-        Redis::publish($event->channel, json_encode([
-                'channel' => $event->channel,
-                'type' => $event->type,
-                'userId' => $event->userId]
-        ));
+        Redis::publish(
+            $event->channel,
+            json_encode([
+                "channel" => $event->channel,
+                "type" => $event->type,
+                "userId" => $event->userId,
+            ])
+        );
     }
 }

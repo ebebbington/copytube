@@ -15,14 +15,14 @@ class SessionModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'sessions';
+    protected $table = "sessions";
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = "id";
 
     /**
      * Username of the user
@@ -43,7 +43,7 @@ class SessionModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['session_id', 'user_id'];
+    protected $fillable = ["session_id", "user_id"];
 
     public $timestamps = false;
 
@@ -53,7 +53,7 @@ class SessionModel extends BaseModel
      * @var array
      */
     protected $rules = [
-      'session_id' => 'required',
-      'user_id' => 'required',
+        "session_id" => "required",
+        "user_id" => "required",
     ];
-  }
+}

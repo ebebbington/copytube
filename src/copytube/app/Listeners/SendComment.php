@@ -28,12 +28,23 @@ class SendComment
      */
     public function handle(CommentAdded $event)
     {
-        Log::info('[SendComment Listener - handle] Sending the comment to realtime.comments.new. Below is the event:');
-        Log::info(json_encode(['channel' => $event->channel, 'type' => $event->type, 'comment' => $event->comment]));
-        Redis::publish($event->channel, json_encode([
-            'channel' => $event->channel,
-            'type' => $event->type,
-            'comment' => $event->comment]
-        ));
+        Log::info(
+            "[SendComment Listener - handle] Sending the comment to realtime.comments.new. Below is the event:"
+        );
+        Log::info(
+            json_encode([
+                "channel" => $event->channel,
+                "type" => $event->type,
+                "comment" => $event->comment,
+            ])
+        );
+        Redis::publish(
+            $event->channel,
+            json_encode([
+                "channel" => $event->channel,
+                "type" => $event->type,
+                "comment" => $event->comment,
+            ])
+        );
     }
 }

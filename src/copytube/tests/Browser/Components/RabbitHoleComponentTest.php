@@ -23,63 +23,85 @@ class RabbitHoleComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         //TestUtilities::logUserIn($id);
         $this->browse(function (Browser $browser) {
-            $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/video?requestedVideo=Something+More')
-                ->assertPathIs('/video');
-                //->assertSee('Lava Sample')
-                //->assertSee('An Iceland Venture')
-                //->assertPresent('.rabbit-hole-video-holder > video[src="videos/lava_sample.mp4"]')
-                //->assertPresent('.rabbit-hole-video-holder > video[src="videos/an_iceland_venture.mp4"]');
+            $browser
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        "TestEmail@hotmail.com"
+                    )->first()
+                )
+                ->visit("/video?requestedVideo=Something+More")
+                ->assertPathIs("/video");
+            //->assertSee('Lava Sample')
+            //->assertSee('An Iceland Venture')
+            //->assertPresent('.rabbit-hole-video-holder > video[src="videos/lava_sample.mp4"]')
+            //->assertPresent('.rabbit-hole-video-holder > video[src="videos/an_iceland_venture.mp4"]');
             $value = $browser->attribute(
                 '.rabbit-hole-video-holder > video[src="videos/lava_sample.mp4"] + p',
-                'innerHTML'
+                "innerHTML"
             );
-            $this->assertEquals('Lava Sample', $value);
+            $this->assertEquals("Lava Sample", $value);
             $value = $browser->attribute(
                 '.rabbit-hole-video-holder > video[src="videos/an_iceland_venture.mp4"] + p',
-                'innerHTML'
+                "innerHTML"
             );
-            $this->assertEquals('An Iceland Venture', $value);
+            $this->assertEquals("An Iceland Venture", $value);
             TestUtilities::removeTestUsersInDb();
         });
     }
 
-    public function testVideoClick ()
+    public function testVideoClick()
     {
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             // login
-            $browser->loginAs(UserModel::where('email_address', '=', 'TestEmail@hotmail.com')->first())
-                ->visit('/video?requestedVideo=Something+More')
-                ->assertPathIs('/video');
+            $browser
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        "TestEmail@hotmail.com"
+                    )->first()
+                )
+                ->visit("/video?requestedVideo=Something+More")
+                ->assertPathIs("/video");
             // change path
-            $browser->click('.rabbit-hole-video-holder > video[src="videos/lava_sample.mp4"]')
+            $browser
+                ->click(
+                    '.rabbit-hole-video-holder > video[src="videos/lava_sample.mp4"]'
+                )
                 ->waitUntil('!$.active');
             // check rabbit hole videos
             $this->assertEquals(
-                'http://copytube_nginx:9002/videos/lava_sample.mp4',
-                $browser->attribute('#main-video-holder > video', 'src'));
-            $this->assertEquals(
-                'Lava Sample',
-                $browser->attribute('#main-video-holder > h2', 'innerHTML')
+                "http://copytube_nginx:9002/videos/lava_sample.mp4",
+                $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(
-                'Watch this lava flow through the earth, burning and sizzling as it progresses',
-                $browser->attribute('#main-video-holder > p', 'innerHTML')
+                "Lava Sample",
+                $browser->attribute("#main-video-holder > h2", "innerHTML")
+            );
+            $this->assertEquals(
+                "Watch this lava flow through the earth, burning and sizzling as it progresses",
+                $browser->attribute("#main-video-holder > p", "innerHTML")
             );
             $browser
-                ->assertPresent('.rabbit-hole-video-holder > video[src="videos/something_more.mp4"]')
-                ->assertPresent('.rabbit-hole-video-holder > video[src="videos/an_iceland_venture.mp4"]');
+                ->assertPresent(
+                    '.rabbit-hole-video-holder > video[src="videos/something_more.mp4"]'
+                )
+                ->assertPresent(
+                    '.rabbit-hole-video-holder > video[src="videos/an_iceland_venture.mp4"]'
+                );
             $value = $browser->attribute(
                 '.rabbit-hole-video-holder > video[src="videos/something_more.mp4"] + p',
-                'innerHTML'
+                "innerHTML"
             );
-            $this->assertEquals('Something More', $value);
+            $this->assertEquals("Something More", $value);
             $value = $browser->attribute(
                 '.rabbit-hole-video-holder > video[src="videos/an_iceland_venture.mp4"] + p',
-                'innerHTML'
+                "innerHTML"
             );
-            $this->assertEquals('An Iceland Venture', $value);
+            $this->assertEquals("An Iceland Venture", $value);
             TestUtilities::removeTestUsersInDb();
         });
     }

@@ -12,7 +12,6 @@ src/copytube/yarn-error.log
 .git
 .idea
 src/copytube/data/*
-src/copytube/package-lock.json
 src/copytube/public/css/app.css
 src/copytube/public/js/app.js
 src/copytube/public/js/js.js
