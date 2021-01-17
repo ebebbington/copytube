@@ -26,7 +26,6 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.idekey=PHPSTORM" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && docker-php-ext-enable xdebug
 
 # Configure php.ini
 COPY ./.docker/config/php.ini /etc/php.ini

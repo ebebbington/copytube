@@ -61,7 +61,7 @@ jobs:
       - name: Realtime Format Check
         run: |
           cd src/realtime
-          deno format --check
+          deno fmt --check
 
       - name: Realtime Tests
         run: |
