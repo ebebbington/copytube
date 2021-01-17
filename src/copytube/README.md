@@ -224,6 +224,29 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 -   1. Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
 -   2. The configuration file for VSCode has already been setup (`./.vscode/*`)
 
+Locate Preferences > Languages and Frameworks > PHP
+
+
+Click the ellipses “…” on the right of “CLI Interpreter:”
+
+
+Click the “+” button in the new window that opens
+
+
+On the dropdown list, select “From docker, Vagrant, VM, Remote…”
+
+
+Select the “Docker” radio button
+
+
+Select “New...” then in the new window, click “OK”.  If the image name if it isn’t already selected then select “tt_environment:latest” phpfpm image and click “OK”. That is the configuration for the Docker server done.
+
+
+Click “OK” and you should be presented with the following
+
+
+Find Preferences > Languages and Frameworks > PHP > Debug and in the “Xdebug” block, set the port to “9001”, then in the “Advanced Settings” block, untick “Notify if debug session was finished without being paused”, to avoid conflicting with PHP-FPM as PHP-FPM already uses port 9000, and to remove a set of warnings to reduce obscuring the interface. Note: the warnings do not affect anything, and are due to how PHP works with the smarty templating engine
+
 # Information
 
 ## 4xx|5xx Status
