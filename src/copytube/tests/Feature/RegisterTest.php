@@ -260,12 +260,11 @@ class RegisterTest extends TestCase
 
         $Storage = new Storage();
         $Storage::fake("local");
-        $UploadedFile = new UploadedFile();
         $this->makePostRequest(
             $TestUtilities::$validUsername,
             $TestUtilities::$validEmail,
             $TestUtilities::$validPassword,
-            $UploadedFile::fake()->image("img/something_more.jpg")
+            UploadedFile::fake()->image("img/something_more.jpg")
         );
         // Assert the file was stored...
         $user = $TestUtilities::getTestUserInDb();
@@ -282,12 +281,11 @@ class RegisterTest extends TestCase
         $TestUtilities::removeTestUsersInDb();
 
         // Test adding a user and that table has that column
-        $UploadedFile = new UploadedFile();
         $response = $this->makePostRequest(
             $TestUtilities::$validUsername,
             $TestUtilities::$validEmail,
             $TestUtilities::$validPassword,
-            $UploadedFile::fake()->image($TestUtilities::$validProfilePicture)
+            UploadedFile::fake()->image($TestUtilities::$validProfilePicture)
         );
 
         // Get user from DB and assert the data
