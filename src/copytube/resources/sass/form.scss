@@ -19,7 +19,8 @@ form {
         input.form-submit {
             color: var(--custom-white);
             background-color: var(--custom-pink);
-            font: 1em Arial Serif;
+            font-size: 1em;
+            font-family: Arial, serif;
             text-decoration: none;
             transition-duration: 0.5s;
             border: 0;

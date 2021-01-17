@@ -260,7 +260,7 @@ class BaseModelTest extends TestCase
             $exampleKey
         );
         $redisData = $Cache::get($replacedKey);
-        $this->assertEquals(true, (bool)$redisData);
+        $this->assertEquals(true, (bool) $redisData);
     }
 
     public function testValidateMethod()

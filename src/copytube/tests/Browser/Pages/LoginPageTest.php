@@ -10,7 +10,6 @@ use Tests\Feature\TestUtilities;
 
 class LoginPageTest extends DuskTestCase
 {
-
     private $uri = "/login";
 
     /**

@@ -10,7 +10,6 @@ use Tests\Feature\TestUtilities;
 
 class VideoSearchComponentTest extends DuskTestCase
 {
-
     private $active = "!$.active";
 
     private $video_search_uri = "/video?requestedVideo=Something+More";

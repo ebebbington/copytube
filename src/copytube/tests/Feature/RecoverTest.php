@@ -13,9 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RecoverTest extends TestCase
 {
-
-    private $uri =  "/recover";
-
+    private $uri = "/recover";
 
     private function sendPostRequest($email, $password)
     {
@@ -28,8 +26,7 @@ class RecoverTest extends TestCase
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         // Send the request
-        $response = $this->post($this->uri, $data, $headers);
-        return $response;
+        return $this->post($this->uri, $data, $headers); // the response
     }
 
     public function testGetWithIncorrectToken()
