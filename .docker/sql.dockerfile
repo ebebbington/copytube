@@ -2,7 +2,6 @@ FROM mysql:5.6
 
 # Update and install required packages
 RUN apt-get update -y
-RUN apt-get install vim -y
 
 #RUN apt-get install php7.0-mysql -y
 #RUN apt upgrade -y
