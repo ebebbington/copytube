@@ -3,7 +3,6 @@
  *
  * socket.onmessage = function (event) { const message = JSON.parse(event.data) }
  */
-import { acceptWebSocket, config, connect, serve, WebSocket } from "./deps.ts";
 import { Redis } from "./redis.ts";
 import { SocketServer } from "./socket.ts";
 
