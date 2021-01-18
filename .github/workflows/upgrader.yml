@@ -11,22 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # php
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
-      - name: Composer -> Upgrade Dependencies
-        run: |
-          cd src/copytube
-          php ../../composer.phar update
-          npm update
+          tools: composer
 
-      # deno
       - name: Install Deno
         uses: denolib/setup-deno@v2
-      - name: Realtime Deno -> Upgrade Dependencies
+
+      - name: Update all dependencies
         run: |
-          cd src/realtime
+          cd src/copytube
+          composer update
+          npm update
+          cd ../realtime
           deno run --allow-all https://deno.land/x/dmm/mod.ts update
 
       - name: Create Pull Request
