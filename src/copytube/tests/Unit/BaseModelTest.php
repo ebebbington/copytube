@@ -83,14 +83,15 @@ class BaseModelTest extends TestCase
     {
         // Joining
         $TestModel = new TestModel();
-        $TestModel->CreateQuery(["test" => "Something More"]);
+        $testFieldValue = "Something More";
+        $TestModel->CreateQuery(["test" => $testFieldValue]);
         $selectedRow = $TestModel->SelectQuery([
             "select" => ["test.*", "videos.title"],
             "join" => ["videos", "test.test", "=", "videos.title"],
             "limit" => 1,
         ]);
-        $this->assertEquals("Something More", $selectedRow->test);
-        $this->assertEquals("Something More", $selectedRow->title);
+        $this->assertEquals($testFieldValue, $selectedRow->test);
+        $this->assertEquals($testFieldValue, $selectedRow->title);
         $this->deleteAllRows();
     }
 
@@ -152,9 +153,10 @@ class BaseModelTest extends TestCase
     {
         // Expect correct result
         $TestModel = new TestModel();
-        $TestModel->CreateQuery(["test" => "Hello world"]);
+        $testField = "Hello world";
+        $TestModel->CreateQuery(["test" => $testField]);
         $success = $TestModel->UpdateQuery(
-            ["test" => "Hello world"],
+            ["test" => $testField],
             ["test" => "Goodbye world"]
         );
         $this->assertEquals(true, $success);
@@ -170,21 +172,26 @@ class BaseModelTest extends TestCase
     {
         // iF CACHE key passed in expect the key value pair to not exist anymore
         $Cache = new Cache();
-        $Cache::put("db:test:helloworld", "hello", 3600);
+        $cacheKey  = "db:test:helloworld";
+        $Cache::put($cacheKey, "hello", 3600);
         $TestModel = new TestModel();
-        $TestModel->CreateQuery(["test" => "Hello world"]);
+        $testFieldValue = "Hello world 2";
+        $TestModel->CreateQuery(["test" => $testFieldValue]);
         $TestModel->UpdateQuery(
-            ["test" => "Hello world"],
-            ["test" => "Goodbye world"],
-            "db:test:helloworld"
+            ["test" => $testFieldValue],
+            ["test" => "Goodbye world 2"],
+            $cacheKey
         );
-        $redisData = $Cache::get("db:test:helloworld");
-        // TODO :: Assert above var
+        $redisData = $Cache::get($cacheKey);
+        $expectedRedisData  = new \stdClass();
+        $expectedRedisData->id = 1;
+        $expectedRedisData->test = "Goodbye world 2";
+        $this->assertEquals($expectedRedisData, $redisData);
         $row = $TestModel->SelectQuery([
-            "where" => "test = 'Goodbye world'",
+            "where" => "test = 'Goodbye world 2'",
             "limit" => 1,
         ]);
-        $redisData = $Cache::get("db:test:helloworld");
+        $redisData = $Cache::get($cacheKey);
         $this->assertEquals($redisData, $row);
         $this->deleteAllRows();
     }
@@ -195,7 +202,7 @@ class BaseModelTest extends TestCase
         $TestModel = new TestModel();
         $success = $TestModel->UpdateQuery(
             ["test" => "I dont exist"],
-            ["test" => "Hello world"]
+            ["test" => "Hello world 99"]
         );
         $this->assertEquals(false, $success);
     }
@@ -207,9 +214,10 @@ class BaseModelTest extends TestCase
         $cacheKey = "db:test:deleteQuery";
         $Cache::put($cacheKey, "hi", 3600);
         $TestModel = new TestModel();
-        $TestModel->CreateQuery(["test" => "Hello world"]);
+        $testFieldValue = "Hello world 3";
+        $TestModel->CreateQuery(["test" => $testFieldValue]);
         $success = $TestModel->DeleteQuery(
-            ["test" => "Hello world"],
+            ["test" => $testFieldValue],
             $cacheKey
         );
         $redisData = $Cache::get($cacheKey);
@@ -230,12 +238,13 @@ class BaseModelTest extends TestCase
         // Test it creates a row
         $this->deleteAllRows();
         $TestModel = new TestModel();
-        $TestModel->CreateQuery(["test" => "Hello World"]);
+        $testFieldValue = "Hello world 4";
+        $TestModel->CreateQuery(["test" => $testFieldValue]);
         $row = $TestModel->SelectQuery([
-            "where" => "test = 'Hello World'",
+            "where" => "test = '$testFieldValue'",
             "limit" => 1,
         ]);
-        $this->assertEquals("Hello World", $row->test);
+        $this->assertEquals($testFieldValue, $row->test);
         $this->deleteAllRows();
 
         // Test it forgets the cache key if passed in

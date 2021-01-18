@@ -177,7 +177,6 @@ class UserModel extends BaseModel
             ["recover_token" => $recoverToken],
             self::USER_BY_EMAIL_CACHE_KEY . $email
         );
-        // TODO :: Check return val of query
         return $recoverToken;
     }
 

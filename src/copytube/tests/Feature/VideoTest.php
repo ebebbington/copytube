@@ -15,6 +15,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideoTest extends TestCase
 {
+    private string $something_more_title = "Something More";
+
+    private string $lava_sample_title = "Lava Sample";
+
+
     public function testPostCommentWithoutAuth()
     {
         $TestUtilities = new TestUtilities();
@@ -107,10 +112,6 @@ class VideoTest extends TestCase
         ]);
         $user2 = $TestUtilities::getTestUserInDb($userId2);
         $user1 = $Auth::user();
-        //        $headers = [
-        //            "HTTP_X-Requested-With" => "XMLHttpRequest",
-        //            "X-CSRF-TOKEN" => csrf_token(),
-        //        ];
         $commentId1 = $TestUtilities::createTestCommentInDb($user1);
         $commentId2 = $TestUtilities::createTestCommentInDb($user2);
         $res = $this->delete("/video/comment?id=" . $commentId2);
@@ -153,7 +154,7 @@ class VideoTest extends TestCase
         ];
         $res = $this->post(
             $TestUtilities::$video_comment_path,
-            ["videoPostedOn" => "Something More"],
+            ["videoPostedOn" => $this->something_more_title],
             $headers
         );
         $res->assertStatus(406);
@@ -164,7 +165,8 @@ class VideoTest extends TestCase
 
         // No date posted but with video title to test validation
         $data = ["comment" => "hello"];
-        $data["videoPostedOn"] = "Something More";
+        $data["videoPostedOn"] = $this->something_more_title
+        ;
         $res = $this->post(
             $TestUtilities::$video_comment_path,
             $data,
@@ -208,7 +210,7 @@ class VideoTest extends TestCase
         //
 
         // Run request with correct data
-        $data["videoPostedOn"] = "Something More";
+        $data["videoPostedOn"] = $this->something_more_title;
         $res = $this->post(
             $TestUtilities::$video_comment_path,
             $data,
@@ -251,7 +253,7 @@ class VideoTest extends TestCase
         $res->assertStatus(200);
         $res->assertJson([
             "success" => true,
-            "data" => ["Something More", "Lava Sample"],
+            "data" => [$this->something_more_title, $this->lava_sample_title],
         ]);
 
         // make request with an incorrect title that will respond with no data
@@ -333,19 +335,19 @@ class VideoTest extends TestCase
         // assert the data sent back to view
         $content = $response->getOriginalContent();
         $data = $content->getData();
-        $this->assertEquals("Lava Sample", $data["title"]); // defaults to something more
+        $this->assertEquals($this->lava_sample_title, $data["title"]); // defaults to something more
         $this->assertEquals("TestUsername", $data["username"]);
-        $this->assertEquals("Lava Sample", $data["mainVideo"]->title);
+        $this->assertEquals($this->lava_sample_title, $data["mainVideo"]->title);
         $this->assertEquals("2", sizeof($data["rabbitHoleVideos"]));
         // Shouldn't be the main video
         foreach ($data["rabbitHoleVideos"] as $vid) {
-            $this->assertEquals(true, $vid->title !== "Lava Sample");
+            $this->assertEquals(true, $vid->title !== $this->lava_sample_title);
         }
         $this->assertEquals(3, sizeof($data["comments"]));
         foreach ($data["comments"] as $comment) {
             $this->assertEquals(
                 true,
-                $comment->video_posted_on === "Lava Sample"
+                $comment->video_posted_on === $this->lava_sample_title
             );
         }
         $this->assertEquals(true, $data["email"] === "TestEmail@hotmail.com");
@@ -421,16 +423,17 @@ class VideoTest extends TestCase
             ->first();
         $TestUtilities::logUserIn($userId);
         // make request with correct title
+        $newComment = "Hello world :)";
         $response = $this->put($TestUtilities::$video_comment_path, [
             "id" => $commentId,
-            "newComment" => "Hello world :)",
+            "newComment" => $newComment,
         ]);
         $response->assertSee("Successfully updated");
         $updatedComment = $Database
             ::table("comments")
             ->where("id", "=", $commentId)
             ->first();
-        $this->assertEquals($updatedComment->comment, "Hello world :)");
+        $this->assertEquals($updatedComment->comment, $newComment);
         $TestUtilities::removeTestUsersInDb();
         $TestUtilities::removeTestCommentsInDB($commentId);
     }
