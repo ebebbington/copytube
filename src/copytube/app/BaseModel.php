@@ -92,6 +92,8 @@ class BaseModel extends Model
      */
     public function SelectQuery(array $query, string $cacheKey = "")
     {
+        var_dump("Query, here is data:");
+        var_dump($query);
         $cacheKey = $this->normaliseCacheKey($cacheKey);
         // If the cached data already exists with the given key then return that instead
         if ($cacheKey && !empty($cacheKey) && Cache::has($cacheKey)) {
@@ -129,14 +131,16 @@ class BaseModel extends Model
             return false;
         }
 
+        // When asking for 1 record, return a single object as they dont expect an array
+        var_dump("at the limit:");
+        var_dump(count($result));
+        if ($limit === 1 && count($result) >= 1) {
+            $result = $result[0];
+        }
+
         // Cache the result
         if ($cacheKey && !empty($cacheKey) && isset($cacheKey)) {
             Cache::put($cacheKey, $result, 3600);
-        }
-
-        // When asking for 1 record, return a single object as they dont expect an array
-        if ($limit === 1 && count($result) >= 1) {
-            return $result[0];
         }
 
         return $result;
