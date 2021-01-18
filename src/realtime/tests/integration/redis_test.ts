@@ -38,4 +38,4 @@ Rhum.testPlan("tests/integration/redis_test.ts", () => {
   });
 });
 
-Rhum.run()
+Rhum.run();
