@@ -5,7 +5,7 @@ const Loading = function (isLoading: boolean, elemToHalt?: any) {
         overlayElement.style.visibility = "visible";
         loadingElement.style.visibility = "visible";
         if (elemToHalt) elemToHalt.disabled = true;
-        $("#loading-circle").css("animation", "pulse 1.5s infinite")
+        $("#loading-circle").css("animation", "pulse 1.5s infinite");
         // $(".loading-circles#loading-circle-one").css(
         //     "animation",
         //     "pulse 1.5s infinite"

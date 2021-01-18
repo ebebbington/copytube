@@ -20,7 +20,8 @@ use App\VideosModel;
 
 class VideoController extends Controller
 {
-    private function getLoggingPrefix (string $functionName): string {
+    private function getLoggingPrefix(string $functionName): string
+    {
         return "[VideoController - " . $functionName . "] ";
     }
 
