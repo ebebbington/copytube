@@ -24,7 +24,11 @@ class VideoTest extends TestCase
             "HTTP_X-Requested-With" => "XMLHttpRequest",
             "X-CSRF-TOKEN" => csrf_token(),
         ];
-        $res = $this->post($TestUtilities::$video_comment_path, ["comment" => "test"], $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            ["comment" => "test"],
+            $headers
+        );
         $res->assertStatus(302);
         $res->assertRedirect($TestUtilities::$login_path);
     }
@@ -161,7 +165,11 @@ class VideoTest extends TestCase
         // No date posted but with video title to test validation
         $data = ["comment" => "hello"];
         $data["videoPostedOn"] = "Something More";
-        $res = $this->post($TestUtilities::$video_comment_path, $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(406);
         $res->assertJson([
             "success" => false,
@@ -171,7 +179,11 @@ class VideoTest extends TestCase
         // No video posted on
         $data["datePosted"] = "2020-03-02";
         $data["videoPostedOn"] = null;
-        $res = $this->post($TestUtilities::$video_comment_path, $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(403);
         $res->assertJson([
             "success" => false,
@@ -180,7 +192,11 @@ class VideoTest extends TestCase
 
         // No video found with that title
         $data["videoPostedOn"] = "I Dont Exist";
-        $res = $this->post($TestUtilities::$video_comment_path, $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(404);
         $res->assertJson([
             "success" => false,
@@ -193,7 +209,11 @@ class VideoTest extends TestCase
 
         // Run request with correct data
         $data["videoPostedOn"] = "Something More";
-        $res = $this->post($TestUtilities::$video_comment_path, $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(200);
         $res->assertJson(["success" => true]);
 

@@ -127,9 +127,9 @@ const Commentslist = (function () {
                             url: "/video/comment",
                             method: "PUT",
                             headers: {
-                                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                                    "content"
-                                ),
+                                "X-CSRF-TOKEN": $(
+                                    'meta[name="csrf-token"]'
+                                ).attr("content"),
                             },
                             dataType: "json",
                             data: {

@@ -153,7 +153,10 @@ class HeaderComponentTest extends DuskTestCase
             $browser->press($this->account_options_selector);
             $this->assertEquals(
                 "gear-dropdown",
-                $browser->attribute($this->account_options_dropdown_selector, "class")
+                $browser->attribute(
+                    $this->account_options_dropdown_selector,
+                    "class"
+                )
             );
             $browser->click("#delete-account-trigger");
             $browser->acceptDialog();
@@ -183,12 +186,18 @@ class HeaderComponentTest extends DuskTestCase
                 ->assertpathIs(TestUtilities::$video_path);
             $this->assertEquals(
                 "hide gear-dropdown",
-                $browser->attribute($this->account_options_dropdown_selector, "class")
+                $browser->attribute(
+                    $this->account_options_dropdown_selector,
+                    "class"
+                )
             );
             $browser->press($this->account_options_selector);
             $this->assertEquals(
                 "gear-dropdown",
-                $browser->attribute($this->account_options_dropdown_selector, "class")
+                $browser->attribute(
+                    $this->account_options_dropdown_selector,
+                    "class"
+                )
             );
             $browser
                 ->assertSee(TestUtilities::$validEmail)
