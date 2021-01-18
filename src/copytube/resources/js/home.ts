@@ -1,7 +1,7 @@
 const Home = (function () {
     const Methods = (function () {})();
 
-    const Handlers = (function () {
+    (function () {
         $(document).ready(function () {});
     })();
 

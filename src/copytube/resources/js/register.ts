@@ -59,7 +59,7 @@ const Register = (function () {
                     if (data.success === true) {
                         $("form").trigger("reset");
                         Notifier.success("Register", "Created an account");
-                        return false;
+                        return true;
                     }
                     // else theres a problem
                     Notifier.error("Error", data.message);
@@ -67,7 +67,6 @@ const Register = (function () {
                 },
                 error: function (error) {
                     try {
-                        const errors = error.responseJSON.errors;
                         const errMsg = error.responseJSON.message;
                         //$('#register-form').trigger('reset')
                         Notifier.error("Error", errMsg);
@@ -88,7 +87,7 @@ const Register = (function () {
         };
     })();
 
-    const Handlers = (function () {
+    (function () {
         $(document).ready(() => {
             $("#register-button").on("click", function (e) {
                 e.preventDefault();

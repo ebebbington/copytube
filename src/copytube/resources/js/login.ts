@@ -40,7 +40,7 @@ const Login = (function () {
         };
     })();
 
-    const Handlers = (function () {
+    (function () {
         $(document).ready(() => {
             $("#login-button").on("click", function (event) {
                 event.preventDefault();

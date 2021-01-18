@@ -20,6 +20,11 @@ use App\VideosModel;
 
 class VideoController extends Controller
 {
+    private function getLoggingPrefix(string $functionName): string
+    {
+        return "[VideoController - " . $functionName . "] ";
+    }
+
     /**
      * Ex: AJAX GET /video?title=dhddhh
      * Gets a video to watch and it's comments, and extra rabbit hold vids
@@ -27,11 +32,7 @@ class VideoController extends Controller
      */
     public function index(Request $request)
     {
-        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
-
-        //        if (!$request->ajax()) {
-        //            abort (403);
-        //        }
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
 
         $videoNameRequested = $request->input("requestedVideo");
         if (
@@ -84,11 +85,6 @@ class VideoController extends Controller
                 $loggingPrefix .
                     "Requested main video of $videoNameRequested was not found"
             );
-            //            $errorCode = 404;
-            //            $errorData = ['title' => $errorCode, 'errorCode' => $errorCode,
-            //                'errorMessage' => 'No video was found matching `'.$videoRequested . '`'
-            //            ];
-            //            return response()->view('errors.404', $errorData)->setStatusCode($errorCode);
             abort(404);
         }
 
@@ -138,7 +134,9 @@ class VideoController extends Controller
 
     public function postComment(Request $request)
     {
-        //$loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
+
+        Log::info($loggingPrefix . "Start");
 
         // get data
         $comment = $request->input("comment");
@@ -173,7 +171,6 @@ class VideoController extends Controller
 
         // Create the new comment
         $Comments = new CommentsModel();
-        //$cacheKey = "db:comments:videoTitle=" . $videoPostedOn;
         $newComment = [
             "comment" => $comment,
             "author" => $username,
@@ -201,7 +198,8 @@ class VideoController extends Controller
 
     public function autocomplete(Request $request)
     {
-        //$loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
+        Log::info($loggingPrefix . "Start");
         $title = $request->input("title");
         $titles = [];
         if (!empty($title)) {

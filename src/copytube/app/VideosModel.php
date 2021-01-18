@@ -68,6 +68,11 @@ class VideosModel extends BaseModel
      */
     protected $rules = [];
 
+    private function getLoggingPrefix(string $functionName): string
+    {
+        return "[VideosModel - " . $functionName . "] ";
+    }
+
     /**
      * @method getVideoByTitle
      *
@@ -80,15 +85,14 @@ class VideosModel extends BaseModel
      */
     public function getVideoByTitle(string $videoTitle)
     {
-        $loggingPrefix = "[VideosModel -" . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
         Log::info($loggingPrefix . "Getting video by " . $videoTitle);
         $query = [
             "where" => "title = '$videoTitle'",
             "limit" => 1,
         ];
         $cacheKey = "db:videos:title=" . $videoTitle;
-        $video = $this->SelectQuery($query, $cacheKey);
-        return $video;
+        return $this->SelectQuery($query, $cacheKey); // $video
     }
 
     /**
@@ -106,7 +110,7 @@ class VideosModel extends BaseModel
      */
     public function getRabbitHoleVideos(string $videoToIgnore)
     {
-        $loggingPrefix = "[VideosModel -" . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
         Log::info(
             $loggingPrefix . "Getting videos by title !== " . $videoToIgnore
         );
@@ -115,19 +119,17 @@ class VideosModel extends BaseModel
             "limit" => 2,
         ];
         $cacheKey = "db:videos:title!=" . $videoToIgnore . "&limit=2";
-        $rabbitHoleVideos = $this->SelectQuery($query, $cacheKey);
-        return $rabbitHoleVideos;
+        return $this->SelectQuery($query, $cacheKey); // $rabbitHoleVideos
     }
 
     public function getVideosForHomePage()
     {
-        $loggingPrefix = "[VideosModel -" . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
         Log::info($loggingPrefix . "Getting all videos for home page");
         $query = [
             "limit" => 3,
         ];
         $cacheKey = "db:videos:limit=3";
-        $videos = $this->SelectQuery($query, $cacheKey);
-        return $videos;
+        return $this->SelectQuery($query, $cacheKey); // $videeos
     }
 }

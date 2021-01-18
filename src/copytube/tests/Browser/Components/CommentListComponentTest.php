@@ -12,11 +12,17 @@ use Tests\Feature\TestUtilities;
 
 class CommentListComponentTest extends DuskTestCase
 {
+    private string $profile_picture_path = "img/sample.jpg";
+
+    private string $test_uri = "/video?requestedVideo=Something+More";
+
+    private string $path = "/video";
+
     public function testANewCommentShowsWhenAddedByCurrentUser()
     {
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => $this->profile_picture_path,
         ]);
         $this->browse(function (Browser $browser) {
             $browser
@@ -29,11 +35,11 @@ class CommentListComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video")
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path)
                 ->type("new-comment", "TEST COMMENT FROM DUSK")
                 ->click("#comment > button")
-                ->waitUntil('!$.active')
+                ->waitUntil(TestUtilities::$active)
                 ->pause(9000)
                 ->assertSee("TEST COMMENT FROM DUSK");
             TestUtilities::removeTestUsersInDb();
@@ -46,11 +52,11 @@ class CommentListComponentTest extends DuskTestCase
     {
         TestUtilities::createTestUserInDb([
             "email_address" => "TestEmail1@hotmail.com",
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => $this->profile_picture_path,
         ]);
         TestUtilities::createTestUserInDb([
             "email_address" => "TestEmail2@hotmail.com",
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => $this->profile_picture_path,
         ]);
         $this->browse(function (Browser $browser) {
             $browser
@@ -61,15 +67,17 @@ class CommentListComponentTest extends DuskTestCase
                         "TestEmail1@hotmail.com"
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More");
+                ->visit($this->test_uri);
             //$browserTwo->loginAs(UserModel::where('email_address', '=', 'TestEmail2@hotmail.com')->first())
             ///->visit('/home');
             $browser
-                ->assertpathIs("/video")
-                ->waitUntil('!$.active')
+                ->assertpathIs($this->path)
+                ->waitUntil(TestUtilities::$active)
                 ->type("new-comment", "TEST COMMENT FROM DUSK TWO");
             //$browserTwo->assertPathIs('/home');
-            $browser->click("#comment > button")->waitUntil('!$.active');
+            $browser
+                ->click("#comment > button")
+                ->waitUntil(TestUtilities::$active);
             //$browserTwo->waitForText('TEST COMMENT FROM DUSK TWO');
             TestUtilities::removeTestUsersInDb();
             TestUtilities::removeTestCommentsInDB();
@@ -90,9 +98,9 @@ class CommentListComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video")
-                ->waitUntil('!$.active');
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path)
+                ->waitUntil(TestUtilities::$active);
             $elem1 = $browser->elements("i.delete-comment");
             $elem2 = $browser->elements("i.edit-comment");
             $this->assertEquals(2, sizeof($elem1));
@@ -114,9 +122,9 @@ class CommentListComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video")
-                ->waitUntil('!$.active');
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path)
+                ->waitUntil(TestUtilities::$active);
             $elem1 = $browser->elements("i.delete-comment");
             $elem2 = $browser->elements("i.edit-comment");
             $this->assertEquals(1, sizeof($elem1));
@@ -141,9 +149,9 @@ class CommentListComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video")
-                ->waitUntil('!$.active');
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path)
+                ->waitUntil(TestUtilities::$active);
             $browser
                 ->click(
                     'i.delete-comment[data-comment-id="' . $commentId . '"]'
@@ -151,7 +159,7 @@ class CommentListComponentTest extends DuskTestCase
                 ->assertDialogOpened(
                     "Are you sure you want to delete this comment?"
                 );
-            $browser->acceptDialog()->waitUntil('!$.active');
+            $browser->acceptDialog()->waitUntil(TestUtilities::$active);
             $elems = $browser->elements("i.delete-comment");
             $this->assertEquals(1, sizeof($elems));
             TestUtilities::removeTestCommentsInDB();
@@ -174,9 +182,9 @@ class CommentListComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video")
-                ->waitUntil('!$.active');
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path)
+                ->waitUntil(TestUtilities::$active);
             $browser->click(
                 'i.edit-comment[data-comment-id="' . $commentId . '"]'
             );
@@ -186,7 +194,7 @@ class CommentListComponentTest extends DuskTestCase
             $this->assertEquals(true, $element !== null);
             $browser
                 ->click('i.edit-comment[data-comment-id="' . $commentId . '"]')
-                ->waitUntil('!$.active');
+                ->waitUntil(TestUtilities::$active);
             $element = $browser->element(
                 '.media > .media-body > p[contenteditable="false"]'
             );

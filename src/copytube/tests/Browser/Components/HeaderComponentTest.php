@@ -25,10 +25,10 @@ class HeaderComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
+                ->visit(TestUtilities::$video_path_with_query)
                 ->waitForText("Something More")
                 ->clickLink("Home")
-                ->assertPathIs("/home");
+                ->assertPathIs(TestUtilities::$home_path);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -47,12 +47,12 @@ class HeaderComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
+                ->visit(TestUtilities::$video_path_with_query)
                 ->waitForText("Chat")
-                ->assertPathIs("/video")
+                ->assertPathIs(TestUtilities::$video_path)
                 ->clickLink("Login")
                 ->pause(5)
-                ->assertPathIs("/home");
+                ->assertPathIs(TestUtilities::$home_path);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -62,11 +62,11 @@ class HeaderComponentTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function ($browser) {
             $browser
-                ->visit("/register")
-                ->assertPathIs("/register")
+                ->visit(TestUtilities::$register_path)
+                ->assertPathIs(TestUtilities::$register_path)
                 ->clickLink("Login")
                 ->pause(5)
-                ->assertPathIs("/login");
+                ->assertPathIs(TestUtilities::$login_path);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -85,11 +85,11 @@ class HeaderComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
+                ->visit(TestUtilities::$video_path_with_query)
                 ->waitForText("Something More")
-                ->assertPathIs("/video")
+                ->assertPathIs(TestUtilities::$video_path)
                 ->clickLink("Chat")
-                ->assertPathIs("/chat");
+                ->assertPathIs(TestUtilities::$chat_path);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -98,10 +98,10 @@ class HeaderComponentTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser
-                ->visit("/register")
+                ->visit(TestUtilities::$register_path)
                 ->waitForText("Login")
                 ->clickLink("Login")
-                ->assertPathIs("/login");
+                ->assertPathIs(TestUtilities::$login_path);
         });
     }
 
@@ -119,13 +119,13 @@ class HeaderComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertPathIs("/video");
+                ->visit(TestUtilities::$video_path_with_query)
+                ->assertPathIs(TestUtilities::$video_path);
             $browser
                 ->press("#account-options")
                 ->clickLink("Logout")
                 ->pause(5)
-                ->assertPathIs("/login");
+                ->assertPathIs(TestUtilities::$login_path);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -133,9 +133,7 @@ class HeaderComponentTest extends DuskTestCase
     public function testUserOptionsDeleteButtonCanBeClicked()
     {
         TestUtilities::createTestUserInDb();
-        //$user = User::find(1);
         $this->browse(function ($browser) {
-            // ) user ($user)
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -146,8 +144,8 @@ class HeaderComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertPathIs("/video");
+                ->visit(TestUtilities::$video_path_with_query)
+                ->assertPathIs(TestUtilities::$video_path);
             $browser->press("#account-options");
             $this->assertEquals(
                 "gear-dropdown",
@@ -156,9 +154,9 @@ class HeaderComponentTest extends DuskTestCase
             $browser->click("#delete-account-trigger");
             $browser->acceptDialog();
             $browser
-                ->waitUntil('!$.active')
+                ->waitUntil(TestUtilities::$active)
                 ->pause(10)
-                ->assertPathIs("/register");
+                ->assertPathIs(TestUtilities::$register_path);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -177,8 +175,8 @@ class HeaderComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video");
+                ->visit(TestUtilities::$video_path_with_query)
+                ->assertpathIs(TestUtilities::$video_path);
             $this->assertEquals(
                 "hide gear-dropdown",
                 $browser->attribute(".gear-dropdown", "class")

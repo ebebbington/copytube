@@ -11,10 +11,12 @@
 |
 */
 
+/**
 // Route::get('/', function () {
 //     return view('home')->with('title', 'Home');
 // });
 //return Cache::remember('home.index', 60 * 60 * 24, fn() => (new App\Http\Controllers\HomeController)->index($request));
+*/
 
 Route::get("/", function () {
     return redirect("home");
@@ -62,6 +64,6 @@ Route::get("/chat", "ChatController@index");
 
 Route::delete("/user", "UserController@Delete")->middleware("auth");
 
-Route::get("/{any}", function ($any) {
+Route::get("/{any}", function () {
     abort(404);
 })->where("any", ".*");

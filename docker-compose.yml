@@ -51,9 +51,10 @@ services:
 
   redis:
     container_name: copytube_redis
-    build:
-      context: .
-      dockerfile: .docker/redis.dockerfile
+#build:
+    ##      context: .
+    ##      dockerfile: .docker/redis.dockerfile
+    image: redis:5
     ports:
       - "6379:6379"
     networks:

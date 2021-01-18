@@ -109,7 +109,7 @@ class BaseModel extends Model
         if (isset($select)) {
             $result = $result->select($select);
         }
-        if (isset($join) && sizeof($join) === 4) {
+        if (isset($join) && count($join) === 4) {
             $result = $result->join($join[0], $join[1], $join[2], $join[3]);
         }
         if (isset($where)) {
@@ -130,7 +130,7 @@ class BaseModel extends Model
         }
 
         // When asking for 1 record, return a single object as they dont expect an array
-        if ($limit === 1 && sizeof($result) >= 1) {
+        if ($limit === 1 && count($result) >= 1) {
             $result = $result[0];
         }
 

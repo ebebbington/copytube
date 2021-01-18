@@ -27,7 +27,7 @@ const Register = (function () {
                             "Recover",
                             "Successfully Reset Your Password"
                         );
-                        return false;
+                        return true;
                     }
                     // else theres a problem
                     Notifier.error("Error", data.message);
@@ -36,7 +36,6 @@ const Register = (function () {
                 error: function (error) {
                     console.error(error);
                     try {
-                        const errors = error.responseJSON.errors;
                         const errMsg = error.responseJSON.message;
                         //$('#register-form').trigger('reset')
                         Notifier.error("Error", errMsg);
@@ -54,7 +53,7 @@ const Register = (function () {
         };
     })();
 
-    const Handlers = (function () {
+    (function () {
         $(document).ready(function () {
             $("body").on("click", "#recover-button", function () {
                 const email = $("#email").val();

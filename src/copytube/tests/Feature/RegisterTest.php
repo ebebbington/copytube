@@ -15,6 +15,9 @@ use App\UserModel;
 
 class RegisterTest extends TestCase
 {
+    private string $password_invalid_error_msg = "The password format is invalid.";
+    private string $profile_picture_invalid_error_msg = "The profile picture format is invalid.";
+
     private function makePostRequest(
         $username,
         $email,
@@ -124,7 +127,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The password format is invalid.",
+            "message" => $this->password_invalid_error_msg,
         ]);
         $response->assertStatus(401);
         // Not correct length
@@ -136,7 +139,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The password format is invalid.",
+            "message" => $this->password_invalid_error_msg,
         ]);
         $response->assertStatus(401);
         // No letters
@@ -148,7 +151,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The password format is invalid.",
+            "message" => $this->password_invalid_error_msg,
         ]);
         $response->assertStatus(401);
         // No uppercase character
@@ -160,7 +163,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The password format is invalid.",
+            "message" => $this->password_invalid_error_msg,
         ]);
         $response->assertStatus(401);
         // No lowercase character
@@ -172,7 +175,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The password format is invalid.",
+            "message" => $this->password_invalid_error_msg,
         ]);
         $response->assertStatus(401);
 
@@ -190,7 +193,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The profile picture format is invalid.",
+            "message" => $this->profile_picture_invalid_error_msg,
         ]);
         $response->assertStatus(401);
         // docx
@@ -203,7 +206,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The profile picture format is invalid.",
+            "message" => $this->profile_picture_invalid_error_msg,
         ]);
         $response->assertStatus(401);
         // pdf
@@ -216,7 +219,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The profile picture format is invalid.",
+            "message" => $this->profile_picture_invalid_error_msg,
         ]);
         $response->assertStatus(401);
         // gif
@@ -229,7 +232,7 @@ class RegisterTest extends TestCase
         );
         $response->assertJson([
             "success" => false,
-            "message" => "The profile picture format is invalid.",
+            "message" => $this->profile_picture_invalid_error_msg,
         ]);
         $response->assertStatus(401);
     }

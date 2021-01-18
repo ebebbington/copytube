@@ -8,6 +8,8 @@ use Tests\DuskTestCase;
 
 class NotifierComponentTest extends DuskTestCase
 {
+    private string $notifier_container = "#notifier-container";
+    private string $notifier_title = "#notifier-title";
     public function testItsHiddenThenShowsWhenRequested()
     {
         // going to use login page as an example
@@ -15,15 +17,15 @@ class NotifierComponentTest extends DuskTestCase
             $browser->visit("/login")->assertPathIs("/login");
             $this->assertEquals(
                 "",
-                $browser->attribute("#notifier-container", "style")
+                $browser->attribute($this->notifier_container, "style")
             );
             $this->assertEquals(
                 "",
-                $browser->attribute("#notifier-title", "class")
+                $browser->attribute($this->notifier_title, "class")
             );
             $this->assertEquals(
                 "",
-                $browser->attribute("#notifier-title", "innerHTML")
+                $browser->attribute($this->notifier_title, "innerHTML")
             );
             $this->assertEquals(
                 "",
@@ -32,7 +34,7 @@ class NotifierComponentTest extends DuskTestCase
             $browser->press("Submit")->waitUntil('!$.active');
             $this->assertEquals(
                 "Login",
-                $browser->attribute("#notifier-title", "innerHTML")
+                $browser->attribute($this->notifier_title, "innerHTML")
             );
             $this->assertEquals(
                 "Server Error",
@@ -40,16 +42,16 @@ class NotifierComponentTest extends DuskTestCase
             );
             $this->assertEquals(
                 "visibility: visible;",
-                $browser->attribute("#notifier-container", "style")
+                $browser->attribute($this->notifier_container, "style")
             );
             $this->assertEquals(
                 "error",
-                $browser->attribute("#notifier-container", "class")
+                $browser->attribute($this->notifier_container, "class")
             );
             sleep(5);
             $this->assertEquals(
                 "visibility: hidden;",
-                $browser->attribute("#notifier-container", "style")
+                $browser->attribute($this->notifier_container, "style")
             );
         });
     }

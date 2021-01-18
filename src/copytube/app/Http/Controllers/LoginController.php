@@ -46,6 +46,7 @@ class LoginController extends Controller
                 403
             );
         }
+
         // Disable their account if no login attempts are left
         if ($user->login_attempts === 0) {
             $token = $UserModel->lockAccount($user->id, $email);

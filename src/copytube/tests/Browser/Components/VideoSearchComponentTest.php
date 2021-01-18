@@ -10,9 +10,13 @@ use Tests\Feature\TestUtilities;
 
 class VideoSearchComponentTest extends DuskTestCase
 {
-    private $active = "!$.active";
+    private string $something_more_title = "Something More";
 
-    private $video_search_uri = "/video?requestedVideo=Something+More";
+    private string $search_bar_id = "#search-bar";
+
+    private string $lava_sample_title = "Lava Sample";
+
+    private string $search_bar_results_selector = "#search-bar-matching-dropdown > li";
 
     /**
      * A Dusk test example.
@@ -31,10 +35,10 @@ class VideoSearchComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit($this->video_search_uri)
-                ->type("#search-bar", "Something More");
-            $value = $browser->attribute("#search-bar", "value");
-            $this->assertEquals("Something More", $value);
+                ->visit(TestUtilities::$video_path_with_query)
+                ->type($this->search_bar_id, $this->something_more_title);
+            $value = $browser->attribute($this->search_bar_id, "value");
+            $this->assertEquals($this->something_more_title, $value);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -51,19 +55,19 @@ class VideoSearchComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit($this->video_search_uri)
-                ->type("#search-bar", "Something More");
+                ->visit(TestUtilities::$video_path_with_query)
+                ->type($this->search_bar_id, $this->something_more_title);
             $value = $browser->attribute(
-                "#search-bar-matching-dropdown > li",
+                $this->search_bar_results_selector,
                 "innerHTML"
             );
             $this->assertEquals("Loading...", $value);
-            $browser->waitUntil($this->active);
+            $browser->waitUntil(TestUtilities::$active);
             $value = $browser->attribute(
-                "#search-bar-matching-dropdown > li",
+                $this->search_bar_results_selector,
                 "innerHTML"
             );
-            $this->assertEquals("Something More", $value);
+            $this->assertEquals($this->something_more_title, $value);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -80,16 +84,16 @@ class VideoSearchComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit($this->video_search_uri)
-                ->type("#search-bar", "Lava Sample")
+                ->visit(TestUtilities::$video_path_with_query)
+                ->type($this->search_bar_id, $this->lava_sample_title)
                 ->click("#search-button")
-                ->waitUntil($this->active);
+                ->waitUntil(TestUtilities::$active);
             $this->assertEquals(
                 "http://copytube_nginx:9002/videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(
-                "Lava Sample",
+                $this->lava_sample_title,
                 $browser->attribute("#main-video-holder > h2", "innerHTML")
             );
             $this->assertEquals(
@@ -112,18 +116,18 @@ class VideoSearchComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit($this->video_search_uri)
-                ->type("#search-bar", "Lava Sample")
-                ->waitUntil($this->active);
+                ->visit(TestUtilities::$video_path_with_query)
+                ->type($this->search_bar_id, $this->lava_sample_title)
+                ->waitUntil(TestUtilities::$active);
             $browser
-                ->click("#search-bar-matching-dropdown > li")
-                ->waitUntil($this->active);
+                ->click($this->search_bar_results_selector)
+                ->waitUntil(TestUtilities::$active);
             $this->assertEquals(
                 "http://copytube_nginx:9002/videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(
-                "Lava Sample",
+                $this->lava_sample_title,
                 $browser->attribute("#main-video-holder > h2", "innerHTML")
             );
             $this->assertEquals(
@@ -146,7 +150,7 @@ class VideoSearchComponentTest extends DuskTestCase
                         TestUtilities::$validEmail
                     )->first()
                 )
-                ->visit($this->video_search_uri);
+                ->visit(TestUtilities::$video_path_with_query);
             $this->assertEquals(
                 "input-group",
                 $browser->attribute("#search", "class")

@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\DB;
 class TestUtilities
 {
     public static string $active = "!$.active";
+    public static string $login_path = "/login";
+    public static string $register_path = "/register";
+    public static string $chat_path = "/chat";
+    public static string $home_path = "/home";
+    public static string $video_path_with_query = "/video?requestedVideo=Something+More";
+    public static string $video_path = "/video";
     public static string $validUsername = "TestUsername";
     public static string $validEmail = "TestEmail@hotmail.com";
     public static string $validPassword = "Welcome1";
@@ -85,7 +91,7 @@ class TestUtilities
     public static function removeTestUsersInDb(array $query = [])
     {
         $Database = new DB();
-        if (isset($query) && sizeof($query) >= 1) {
+        if (isset($query) && count($query) >= 1) {
             $Database
                 ::table("users")
                 ->where($query)
