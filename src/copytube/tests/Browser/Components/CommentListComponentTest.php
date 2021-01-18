@@ -41,15 +41,12 @@ class CommentListComponentTest extends DuskTestCase
                 ->assertpathIs($this->path)
                 ->type("new-comment", "TEST COMMENT FROM DUSK")
                 ->click("#comment > button")
-                ->waitUntil(TestUtilities::$active)
-                ->pause(9000)
-                ->assertSee("TEST COMMENT FROM DUSK");
+                ->waitForText("TEST COMMENT FROM DUSK", 10);
             TestUtilities::removeTestUsersInDb();
             TestUtilities::removeTestCommentsInDB();
         });
     }
 
-    // TODO it doesn't actually check, because wee get invalid session id
     public function testANewCommentShowsWhenAddedByAnotherUser()
     {
         TestUtilities::createTestUserInDb([
@@ -60,27 +57,39 @@ class CommentListComponentTest extends DuskTestCase
             "email_address" => "TestEmail2@hotmail.com",
             "profile_picture" => $this->profile_picture_path,
         ]);
-        $this->browse(function (Browser $browser) {
-            $browser
+        $this->browse(function (Browser $browserOne, Browser $browserTwo) {
+            $browserOne
                 ->loginAs(
                     UserModel::where(
                         "email_address",
                         "=",
                         "TestEmail1@hotmail.com"
-                    )->first()
+                    )
+                        ->limit(1)
+                        ->first()
                 )
-                ->visit($this->test_uri);
-            //$browserTwo->loginAs(UserModel::where('email_address', '=', 'TestEmail2@hotmail.com')->first())
-            ///->visit('/home');
-            $browser
-                ->assertpathIs($this->path)
-                ->waitUntil(TestUtilities::$active)
-                ->type("new-comment", "TEST COMMENT FROM DUSK TWO");
-            //$browserTwo->assertPathIs('/home');
-            $browser
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+            $browserTwo
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        "TestEmail2@hotmail.com"
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+            $numberOfComments = $browserTwo->elements("#comment-list media");
+            $this->assertEquals(10, count($numberOfComments));
+            $browserOne
+                ->type("new-comment", "TEST COMMENT FROM DUSK TWO")
                 ->click("#comment > button")
-                ->waitUntil(TestUtilities::$active);
-            //$browserTwo->waitForText('TEST COMMENT FROM DUSK TWO');
+                ->waitForText("Success", 10);
+            $numberOfComments = $browserTwo->elements("#comment-list media");
+            $this->assertEquals(11, count($numberOfComments));
             TestUtilities::removeTestUsersInDb();
             TestUtilities::removeTestCommentsInDB();
         });
@@ -218,34 +227,75 @@ class CommentListComponentTest extends DuskTestCase
     }
 
     // TODO :: fails, fix it
-    //    public function testClickingDeleteButtonRemovesCommentFromDOM ()
-    //    {
-    //        Cache::flush();
-    //        $id = TestUtilities::createTestUserInDb();
-    //        $user = TestUtilities::getTestUserInDb($id);
-    //        $commentId = TestUtilities::createTestCommentInDb($user);
-    //        $this->browse(function (Browser $browser, Browser $browserTwo) use ($commentId) {
-    //            $browser
-    //                ->loginAs(UserModel::where('email_address', '=', TestUtilities::$validEmail)->first())
-    //                ->visit('/video?requestedVideo=Something+More')
-    //                ->assertpathIs('/video')
-    //                ->waitUntil('!$.active');
-    //            $browser->click('i.delete-comment[data-comment-id="'.$commentId.'"]')->waitUntil("!$.active");
-    //            $element = $browser->element('i.delete-comment[data-comment-id="'.$commentId.'"]');
-    //            $this->assertEquals(true, $element === NULL);
-    //            TestUtilities::removeTestCommentsInDB();
-    //            TestUtilities::removeTestUsersInDb();
-    //        });
-    //    }
+    public function testClickingDeleteButtonRemovesCommentFromDOM()
+    {
+        Cache::flush();
+        $user1Id = TestUtilities::createTestUserInDb([
+            "email_address" => "TestEmail9@hotmail.com",
+        ]);
+        $user2Id = TestUtilities::createTestUserInDb([
+            "email_address" => "TestEmail10@hotmail.com",
+        ]);
+        $user1 = TestUtilities::getTestUserInDb($user1Id);
+        $commentId1 = TestUtilities::createTestCommentInDb($user1);
+        $this->browse(function (Browser $browserOne, Browser $browserTwo) use (
+            $commentId1,
+            $user1Id
+        ) {
+            $browserTwo
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        "TestEmail9@hotmail.com"
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+            $browserTwo
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        "TestEmail10@hotmail.com"
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+
+            // Make sure we can see the comment first
+            $this->assertEquals(
+                10,
+                count($browserTwo->elements("#comment-list media"))
+            );
+
+            $browserOne
+                ->click(
+                    'span.delete-comment[data-comment-id="' . $commentId1 . '"]'
+                )
+                ->waitForText("Successfully deleted");
+            $this->assertEquals(
+                9,
+                count($browserTwo->elements("#comment-list media"))
+            );
+
+            TestUtilities::removeTestCommentsInDB();
+            TestUtilities::removeTestUsersInDb();
+        });
+    }
 
     /**
-     * TODO
      *  Relies on fixing the above. We need to test that when browser one
      *  deletes its account after adding comments, that browser two will not see
      *  those comments in the dom (both browsers need to be logged in to home page
      */
     public function testCommentsAreRemovedWhenAnAccountIsDeleted()
     {
-        $this->assertEquals(1, 1);
+        // These needs to be finished (or started)
+        $this->assertEquals(1, 2);
     }
 }

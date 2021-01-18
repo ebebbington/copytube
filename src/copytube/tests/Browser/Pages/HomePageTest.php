@@ -35,13 +35,14 @@ class HomePageTest extends DuskTestCase
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
-            $browser->loginAs(UserModel::where(
-                "email_address",
-                "=",
-                TestUtilities::$validEmail
-            )
-                ->limit(1)
-                ->first()
+            $browser->loginAs(
+                UserModel::where(
+                    "email_address",
+                    "=",
+                    TestUtilities::$validEmail
+                )
+                    ->limit(1)
+                    ->first()
             );
             $browser
                 ->visit("/home")
@@ -49,7 +50,7 @@ class HomePageTest extends DuskTestCase
                 ->assertSee("Something More")
                 ->assertSee("Lava Sample")
                 ->assertSee("An Iceland Venture");
-            $browser->assertPresent('#account-options');
+            $browser->assertPresent("#account-options");
             $rabbitHole = $browser->elements(".rabbit-hole-video-holder");
             $this->assertEquals(3, count($rabbitHole));
             TestUtilities::removeTestUsersInDb();

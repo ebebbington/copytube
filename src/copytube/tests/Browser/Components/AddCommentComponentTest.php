@@ -90,15 +90,16 @@ class AddCommentComponentTest extends DuskTestCase
             "profile_picture" => "img/sample.jpg",
         ]);
         $this->browse(function (Browser $browser) use ($userId) {
-
-            $browser->loginAs(UserModel::where(
-                "email_address",
-                "=",
-                TestUtilities::$validEmail
-            )
-                ->limit(1)
-                ->first()
-            )
+            $browser
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        TestUtilities::$validEmail
+                    )
+                        ->limit(1)
+                        ->first()
+                )
                 ->visit($this->uri)
                 ->assertpathIs($this->path)
                 ->type("new-comment", "hello")
@@ -106,7 +107,7 @@ class AddCommentComponentTest extends DuskTestCase
             $browser->waitForText("Success", 10);
             $browser->pause(2000);
             $selector = ".media[data-user-id=\"" . $userId . "\"]";
-            $commentContainer =  $browser->element($selector);
+            $commentContainer = $browser->element($selector);
             $this->assertTrue($commentContainer !== null);
             $comment = $browser->element($selector . " p");
             $commentValue = $comment->getText();

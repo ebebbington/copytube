@@ -203,9 +203,10 @@ class HeaderComponentTest extends DuskTestCase
         });
     }
 
-    public function testUserOptionsShowsProfilePicture () {
+    public function testUserOptionsShowsProfilePicture()
+    {
         TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/something_more.jpg"
+            "profile_picture" => "img/something_more.jpg",
         ]);
         $this->browse(function (Browser $browser) {
             $browser
@@ -220,8 +221,16 @@ class HeaderComponentTest extends DuskTestCase
                 )
                 ->visit(TestUtilities::$home_path)
                 ->assertpathIs(TestUtilities::$home_path);
-            $accountOptions = $browser->element($this->account_options_selector);
-            $this->assertEquals(true, strpos($accountOptions->getAttribute("src"), "img/something_more.jpg"));
+            $accountOptions = $browser->element(
+                $this->account_options_selector
+            );
+            $this->assertEquals(
+                true,
+                strpos(
+                    $accountOptions->getAttribute("src"),
+                    "img/something_more.jpg"
+                )
+            );
             TestUtilities::removeTestUsersInDb();
         });
     }
