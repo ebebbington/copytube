@@ -59,18 +59,37 @@ class AddCommentComponentTest extends DuskTestCase
                 )
                 ->visit($this->uri)
                 ->assertpathIs($this->path);
-            $browser->click("#comment > button")->waitUntil('!$.active');
-            $browser->assertSee("The comment field is required");
+
+            $loadingContainer = $browser->element("#loading-container");
+            $loadingVisibility = $loadingContainer->getCSSValue("visibility");
+            $this->assertEquals("hidden", $loadingVisibility);
+            $notifyContainer = $browser->element("#notifier-container");
+            $notifyVisibility = $notifyContainer->getCSSValue("visibility");
+            $this->assertEquals("hidden", $notifyVisibility);
+
+            $browser->click("#comment > button");
+
+            $loadingContainer = $browser->element("#loading-container");
+            $loadingVisibility = $loadingContainer->getCSSValue("visibility");
+            $this->assertEquals("visible", $loadingVisibility);
+
+            $browser->waitForText("The comment field is required", 10);
+
+            $notifyContainer = $browser->element("#notifier-container");
+            $notifyVisibility = $notifyContainer->getCSSValue("visibility");
+            $this->assertEquals("visible", $notifyVisibility);
+
+            $browser->assertPathIs($this->path);
             TestUtilities::removeTestUsersInDb();
         });
     }
     //
     public function testSuccessWhenSendingWithComment()
     {
-        TestUtilities::createTestUserInDb([
+        $userId = TestUtilities::createTestUserInDb([
             "profile_picture" => "img/sample.jpg",
         ]);
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser) use ($userId) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -84,9 +103,15 @@ class AddCommentComponentTest extends DuskTestCase
                 ->visit($this->uri)
                 ->assertpathIs($this->path)
                 ->type("new-comment", "hello")
-                ->click("#comment > button")
-                ->waitUntil('!$.active')
-                ->assertSee("Success");
+                ->click("#comment > button");
+            $browser->waitForText("Success", 10);
+            $browser->pause(2000);
+            $selector = ".media[data-user-id=\"" . $userId . "\"]";
+            $commentContainer = $browser->element($selector);
+            $this->assertTrue($commentContainer !== null);
+            $comment = $browser->element($selector . " p");
+            $commentValue = $comment->getText();
+            $this->assertEquals("hello", $commentValue);
             TestUtilities::removeTestUsersInDb();
         });
     }

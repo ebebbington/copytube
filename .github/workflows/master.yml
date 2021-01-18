@@ -27,10 +27,9 @@ jobs:
 
       - name: Format Checks
         run: |
-          npm ci
           npm run fmt:check
 
-  laravel-tests:
+  laravel-backend-tests:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -44,7 +43,7 @@ jobs:
           php-version: '7.4'
           tools: composer
 
-      - name: Laravel Tests
+      - name: Laravel Backend Tests
         run: |
           npm ci
           composer install
@@ -52,7 +51,29 @@ jobs:
           docker-compose up -d > /dev/null
           sleep 15
           docker exec copytube_phpfpm vendor/bin/phpunit
-#          docker exec copytube_phpfpm php artisan dusk
+
+#  laravel-frontend-tests:
+#    runs-on: ubuntu-latest
+#      defaults:
+#        run:
+#          working-directory: src/copytube
+#      steps:
+#        - uses: actions/checkout@v2
+#
+#        - name: Setup PHP and Composer
+#          uses: shivammathur/setup-php@v2
+#          with:
+#            php-version: '7.4'
+#            tools: composer
+#
+#        - name: Laravel Frontend Tests
+#          run: |
+#            npm ci
+#            composer install
+#            npm run dev
+#            docker-compose up -d > /dev/null
+#            sleep 15
+#            docker exec copytube_phpfpm php artisan dusk
 
   realtime-checks:
     runs-on: ubuntu-latest

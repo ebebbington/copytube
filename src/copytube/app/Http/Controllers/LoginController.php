@@ -69,15 +69,6 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             // Set the user to logged in
             $UserModel->updateLoggedIn(0, $email);
-            //            if ($updated === false) {
-            //                Log::debug('Failed to update the model when updating logged_in');
-            //                return response([
-            //                    'success' => false,
-            //                    'message' => 'Failed to update the model'
-            //                ]);
-            //            }
-            // TODO :: Check it was updated using return val
-
             return response(
                 [
                     "success" => true,

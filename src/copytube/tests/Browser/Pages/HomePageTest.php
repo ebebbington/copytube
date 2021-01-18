@@ -2,18 +2,17 @@
 
 namespace Tests\Browser\Pages;
 
+use App\UserModel;
 use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 use Tests\Feature\TestUtilities;
 
 /***
  * Class HomePage
  *
  * @package Tests\Browser\Pages
- *
- * Not needed as our component tests cover this page
  */
-// TODO Could expand upon this
-class HomePage extends Page
+class HomePageTest extends DuskTestCase
 {
     /**
      * Get the URL for the page.
@@ -31,17 +30,29 @@ class HomePage extends Page
      * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      */
-    public function assertVideosDisplay(Browser $browser)
+    public function testVideosDisplay()
     {
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
-        $this->browse(function ($browser) {
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs(
+                UserModel::where(
+                    "email_address",
+                    "=",
+                    TestUtilities::$validEmail
+                )
+                    ->limit(1)
+                    ->first()
+            );
             $browser
                 ->visit("/home")
                 ->assertPathIs("/home")
                 ->assertSee("Something More")
                 ->assertSee("Lava Sample")
                 ->assertSee("An Iceland Venture");
+            $browser->assertPresent("#account-options");
+            $rabbitHole = $browser->elements(".rabbit-hole-video-holder");
+            $this->assertEquals(3, count($rabbitHole));
             TestUtilities::removeTestUsersInDb();
         });
     }

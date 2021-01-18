@@ -46,6 +46,5 @@ class SendUserId extends TestCase
         $this->app->instance(\App\Listeners\SendUserId::class, $listener);
         dispatch(new ProcessUserDeleted($user->id));
         app("queue")->setDefaultDriver($defaultDriver);
-        // TODO :: Assert redis got message
     }
 }
