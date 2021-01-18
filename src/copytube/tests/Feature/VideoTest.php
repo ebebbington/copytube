@@ -19,7 +19,6 @@ class VideoTest extends TestCase
 
     private string $lava_sample_title = "Lava Sample";
 
-
     public function testPostCommentWithoutAuth()
     {
         $TestUtilities = new TestUtilities();
@@ -165,8 +164,7 @@ class VideoTest extends TestCase
 
         // No date posted but with video title to test validation
         $data = ["comment" => "hello"];
-        $data["videoPostedOn"] = $this->something_more_title
-        ;
+        $data["videoPostedOn"] = $this->something_more_title;
         $res = $this->post(
             $TestUtilities::$video_comment_path,
             $data,
@@ -337,7 +335,10 @@ class VideoTest extends TestCase
         $data = $content->getData();
         $this->assertEquals($this->lava_sample_title, $data["title"]); // defaults to something more
         $this->assertEquals("TestUsername", $data["username"]);
-        $this->assertEquals($this->lava_sample_title, $data["mainVideo"]->title);
+        $this->assertEquals(
+            $this->lava_sample_title,
+            $data["mainVideo"]->title
+        );
         $this->assertEquals("2", sizeof($data["rabbitHoleVideos"]));
         // Shouldn't be the main video
         foreach ($data["rabbitHoleVideos"] as $vid) {

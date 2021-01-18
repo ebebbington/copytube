@@ -172,7 +172,7 @@ class BaseModelTest extends TestCase
     {
         // iF CACHE key passed in expect the key value pair to not exist anymore
         $Cache = new Cache();
-        $cacheKey  = "db:test:helloworld";
+        $cacheKey = "db:test:helloworld";
         $Cache::put($cacheKey, "hello", 3600);
         $TestModel = new TestModel();
         $testFieldValue = "Hello world 2";
@@ -183,8 +183,8 @@ class BaseModelTest extends TestCase
             $cacheKey
         );
         $redisData = $Cache::get($cacheKey);
-        $expectedRedisData  = new \stdClass();
-        $expectedRedisData->id = 1;
+        $expectedRedisData = new \stdClass();
+        $expectedRedisData->id = 12;
         $expectedRedisData->test = "Goodbye world 2";
         $this->assertEquals($expectedRedisData, $redisData);
         $row = $TestModel->SelectQuery([
