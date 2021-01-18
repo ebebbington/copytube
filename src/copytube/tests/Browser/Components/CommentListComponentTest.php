@@ -12,6 +12,8 @@ use Tests\Feature\TestUtilities;
 
 class CommentListComponentTest extends DuskTestCase
 {
+    private string $delete_comment_button_class_name = "span.delete-comment";
+
     private string $profile_picture_path = "img/sample.jpg";
 
     private string $test_uri = "/video?requestedVideo=Something+More";
@@ -101,8 +103,8 @@ class CommentListComponentTest extends DuskTestCase
                 ->visit($this->test_uri)
                 ->assertpathIs($this->path)
                 ->waitUntil(TestUtilities::$active);
-            $elem1 = $browser->elements("i.delete-comment");
-            $elem2 = $browser->elements("i.edit-comment");
+            $elem1 = $browser->elements($this->delete_comment_button_class_name);
+            $elem2 = $browser->elements("span.edit-comment");
             $this->assertEquals(2, sizeof($elem1));
             $this->assertEquals(2, sizeof($elem2));
             TestUtilities::removeTestCommentsInDB();
@@ -125,8 +127,8 @@ class CommentListComponentTest extends DuskTestCase
                 ->visit($this->test_uri)
                 ->assertpathIs($this->path)
                 ->waitUntil(TestUtilities::$active);
-            $elem1 = $browser->elements("i.delete-comment");
-            $elem2 = $browser->elements("i.edit-comment");
+            $elem1 = $browser->elements($this->delete_comment_button_class_name);
+            $elem2 = $browser->elements("span.edit-comment");
             $this->assertEquals(1, sizeof($elem1));
             $this->assertEquals(1, sizeof($elem2));
             TestUtilities::removeTestCommentsInDB();
@@ -154,13 +156,13 @@ class CommentListComponentTest extends DuskTestCase
                 ->waitUntil(TestUtilities::$active);
             $browser
                 ->click(
-                    'i.delete-comment[data-comment-id="' . $commentId . '"]'
+                    $this->delete_comment_button_class_name . '[data-comment-id="' . $commentId . '"]'
                 )
                 ->assertDialogOpened(
                     "Are you sure you want to delete this comment?"
                 );
             $browser->acceptDialog()->waitUntil(TestUtilities::$active);
-            $elems = $browser->elements("i.delete-comment");
+            $elems = $browser->elements($this->delete_comment_button_class_name);
             $this->assertEquals(1, sizeof($elems));
             TestUtilities::removeTestCommentsInDB();
             TestUtilities::removeTestUsersInDb();
@@ -186,14 +188,14 @@ class CommentListComponentTest extends DuskTestCase
                 ->assertpathIs($this->path)
                 ->waitUntil(TestUtilities::$active);
             $browser->click(
-                'i.edit-comment[data-comment-id="' . $commentId . '"]'
+                'span.edit-comment[data-comment-id="' . $commentId . '"]'
             );
             $element = $browser->element(
                 '.media > .media-body > p[contenteditable="true"]'
             );
             $this->assertEquals(true, $element !== null);
             $browser
-                ->click('i.edit-comment[data-comment-id="' . $commentId . '"]')
+                ->click('span.edit-comment[data-comment-id="' . $commentId . '"]')
                 ->waitUntil(TestUtilities::$active);
             $element = $browser->element(
                 '.media > .media-body > p[contenteditable="false"]'

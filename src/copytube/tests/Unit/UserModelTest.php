@@ -9,10 +9,12 @@ use Tests\TestCase;
 
 class UserModelTest extends TestCase
 {
+    private string $test_username = "Test User";
+
     private function createTestUser($recoverToken = null)
     {
         DB::table("users")->insert([
-            "username" => "Test User",
+            "username" => $this->test_username,
             "password" => "Test",
             "logged_in" => 1,
             "login_attempts" => 3,
@@ -24,14 +26,14 @@ class UserModelTest extends TestCase
     private function deleteTestUser()
     {
         DB::table("users")
-            ->where("username", "=", "Test User")
+            ->where("username", "=", $this->test_username)
             ->delete();
     }
 
     public function testExistsMethod()
     {
         $UserModel = new UserModel();
-        $exists = $UserModel::exists("edward.bebbington@intercity.technology");
+        $exists = $UserModel::exists("EdwardSBebbington@hotmail.com");
         $this->assertEquals(true, $exists);
         $exists = $UserModel::exists("idontexist");
         $this->assertEquals(false, $exists);
@@ -51,7 +53,7 @@ class UserModelTest extends TestCase
         $UserModel = new UserModel();
         $this->createTestUser();
         $user = DB::table("users")
-            ->whereRaw("username = 'Test User'")
+            ->whereRaw("username = '$this->test_username'")
             ->first();
         $success = $UserModel->lockAccount($user->id, $user->email_address);
         $this->assertEquals(true, isset($success));
@@ -66,7 +68,7 @@ class UserModelTest extends TestCase
         $UserModel = new UserModel();
         $UserModel->updateLoginAttempts("testemail", 2);
         $user = DB::table("users")
-            ->where("username", "=", "Test User")
+            ->where("username", "=", $this->test_username)
             ->first();
         $this->assertEquals(2, $user->login_attempts);
         $this->deleteTestUser();

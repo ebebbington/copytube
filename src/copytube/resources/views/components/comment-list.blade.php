@@ -14,8 +14,8 @@
             <p>{{ $comment->comment }}</p>
         </div>
         @if ($loggedInUserId === $comment->user_id)
-        <em class="ml-4 delete-comment" data-comment-id="{{ $comment->id }}">&#2716;</em>
-        <em class="ml-4 edit-comment" data-comment-id="{{ $comment->id }}">&#x270E;</em>
+        <span class="ml-4 delete-comment" data-comment-id="{{ $comment->id }}">&#2716;</span>
+        <span class="ml-4 edit-comment" data-comment-id="{{ $comment->id }}">&#x270E;</span>
         @endif
     </div>
     @endforeach

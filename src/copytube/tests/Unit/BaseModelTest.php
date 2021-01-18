@@ -36,20 +36,21 @@ class BaseModelTest extends TestCase
         $this->insertOne($value);
         $TestModel = new TestModel();
         $TestModel->CreateQuery(["test" => $value]);
+        $cacheKey = "db:test:testkey";
         // Select the row passing in the key so its ready for next time
         $row = $TestModel->SelectQuery(
             ["where" => "test = '$value'", "limit" => 1],
-            "db:test:testkey"
+            $cacheKey
         );
         // Select again and it should be the same
         $cachedRow = $TestModel->SelectQuery(
             ["where" => "test = '$value'", "limit" => 1],
-            'db:test"testkey'
+            $cacheKey
         );
         $this->assertEquals($row, $cachedRow);
-        $redisData = $Cache::get("db:test:testkey");
+        $redisData = $Cache::get($cacheKey);
         $this->assertEquals($row, $redisData);
-        $Cache::forget("db:test:testkey");
+        $Cache::forget($cacheKey);
         $this->deleteAllRows();
 
         //
@@ -203,14 +204,15 @@ class BaseModelTest extends TestCase
     {
         // Expect redis to forget the cache key if passed in on success
         $Cache = new Cache();
-        $Cache::put("db:test:deleteQuery", "hi", 3600);
+        $cacheKey = "db:test:deleteQuery";
+        $Cache::put($cacheKey, "hi", 3600);
         $TestModel = new TestModel();
         $TestModel->CreateQuery(["test" => "Hello world"]);
         $success = $TestModel->DeleteQuery(
             ["test" => "Hello world"],
-            "db:test:deleteQuery"
+            $cacheKey
         );
-        $redisData = $Cache::get("db:test:deleteQuery");
+        $redisData = $Cache::get($cacheKey);
         $this->assertEquals(null, $redisData);
         $this->assertEquals(true, $success);
     }
@@ -238,9 +240,10 @@ class BaseModelTest extends TestCase
 
         // Test it forgets the cache key if passed in
         $Cache = new Cache();
-        $Cache::put("db:test:createQuery", "hi", 3600);
-        $TestModel->CreateQuery(["test" => "Hi"], "db:test:createQuery");
-        $redisData = $Cache::get("db:test:createQuery");
+        $cacheKey = "db:test:createQuery";
+        $Cache::put($cacheKey, "hi", 3600);
+        $TestModel->CreateQuery(["test" => "Hi"], $cacheKey);
+        $redisData = $Cache::get($cacheKey);
         $this->assertEquals(null, $redisData);
         $this->deleteAllRows();
     }
