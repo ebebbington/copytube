@@ -7,10 +7,10 @@ RUN apt-get update -y
 #RUN apt-get install -y --no-install-recommends libxslt-dev
 
 RUN apt-get install -y \
-  apt-transport-https apt-utils libzip-dev libldb-dev libpng-dev libonig-dev unzip curl
-# or libc-client-dev also
+  apt-transport-https apt-utils libzip-dev libldb-dev libpng-dev unzip curl libjpeg-dev
+# or libc-client-dev, libonig-dev also
 
-RUN apt-get install -y libjpeg62-turbo-dev libfreetype6-dev libmcrypt-dev libjpeg-dev
+#RUN apt-get install -y libjpeg62-turbo-dev libfreetype6-dev libmcrypt-dev
 
 
 # Avilable extensions by default when using docker-php-ext-install
@@ -18,7 +18,6 @@ RUN apt-get install -y libjpeg62-turbo-dev libfreetype6-dev libmcrypt-dev libjpe
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
-# Can add mysqli
 
 # Install Xdebug
 #RUN yes | pecl install xdebug \
@@ -35,6 +34,3 @@ COPY ./.docker/config/php.ini /etc/php.ini
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Install PHPMailer
-# RUN php /usr/lib/composer.phar require phpmailer/phpmailer @stable
