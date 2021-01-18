@@ -27,8 +27,6 @@ jobs:
 
       - name: Format Checks
         run: |
-          npm ci
-          npm i prettier @prettier/plugin-php
           npm run fmt:check
 
   laravel-backend-tests:
