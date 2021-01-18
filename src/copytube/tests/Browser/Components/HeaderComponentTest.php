@@ -52,7 +52,6 @@ class HeaderComponentTest extends DuskTestCase
                         ->first()
                 )
                 ->visit(TestUtilities::$video_path_with_query)
-                ->waitForText("Chat")
                 ->assertPathIs(TestUtilities::$video_path)
                 ->clickLink("Login")
                 ->pause(5)
@@ -102,10 +101,10 @@ class HeaderComponentTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser
-                ->visit(TestUtilities::$register_path)
+                ->visit(TestUtilities::$login_path)
                 ->waitForText("Login")
-                ->clickLink("Login")
-                ->assertPathIs(TestUtilities::$login_path);
+                ->clickLink("Register")
+                ->assertPathIs(TestUtilities::$register_path);
         });
     }
 
@@ -137,7 +136,7 @@ class HeaderComponentTest extends DuskTestCase
     public function testUserOptionsDeleteButtonCanBeClicked()
     {
         TestUtilities::createTestUserInDb();
-        $this->browse(function ($browser) {
+        $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -160,10 +159,8 @@ class HeaderComponentTest extends DuskTestCase
             );
             $browser->click("#delete-account-trigger");
             $browser->acceptDialog();
-            $browser
-                ->waitUntil(TestUtilities::$active)
-                ->pause(10)
-                ->assertPathIs(TestUtilities::$register_path);
+            $browser->waitForLocation("/register", 10);
+            $browser->assertPathIs(TestUtilities::$register_path);
             TestUtilities::removeTestUsersInDb();
         });
     }
@@ -206,7 +203,28 @@ class HeaderComponentTest extends DuskTestCase
         });
     }
 
-    // TODO :: Test img src for img for contact options is correct
+    public function testUserOptionsShowsProfilePicture () {
+        TestUtilities::createTestUserInDb([
+            "profile_picture" => "img/something_more.jpg"
+        ]);
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        TestUtilities::$validEmail
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit(TestUtilities::$home_path)
+                ->assertpathIs(TestUtilities::$home_path);
+            $accountOptions = $browser->element($this->account_options_selector);
+            $this->assertEquals(true, strpos($accountOptions->getAttribute("src"), "img/something_more.jpg"));
+            TestUtilities::removeTestUsersInDb();
+        });
+    }
 
     public function elements()
     {
