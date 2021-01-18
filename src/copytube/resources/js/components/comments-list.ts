@@ -39,6 +39,7 @@ const Commentslist = (function () {
                     "-"
                 );
                 const formattedDate = day + "/" + month + "/" + year;
+                newCommentHtml.attr("data-user-id", message.comment.user_id)
                 newCommentHtml[0].children[1].children[1].textContent = formattedDate;
                 newCommentHtml[0].children[1].children[2].textContent =
                     message.comment.comment;
