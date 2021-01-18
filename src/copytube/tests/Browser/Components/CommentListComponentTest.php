@@ -20,6 +20,8 @@ class CommentListComponentTest extends DuskTestCase
 
     private string $path = "/video";
 
+    private string $comment_list_items_selector = "#comment-list media";
+
     public function testANewCommentShowsWhenAddedByCurrentUser()
     {
         TestUtilities::removeTestUsersInDb();
@@ -82,13 +84,13 @@ class CommentListComponentTest extends DuskTestCase
                 )
                 ->visit($this->test_uri)
                 ->assertpathIs($this->path);
-            $numberOfComments = $browserTwo->elements("#comment-list media");
+            $numberOfComments = $browserTwo->elements($this->comment_list_items_selector);
             $this->assertEquals(10, count($numberOfComments));
             $browserOne
                 ->type("new-comment", "TEST COMMENT FROM DUSK TWO")
                 ->click("#comment > button")
                 ->waitForText("Success", 10);
-            $numberOfComments = $browserTwo->elements("#comment-list media");
+            $numberOfComments = $browserTwo->elements($this->comment_list_items_selector);
             $this->assertEquals(11, count($numberOfComments));
             TestUtilities::removeTestUsersInDb();
             TestUtilities::removeTestCommentsInDB();
@@ -233,15 +235,13 @@ class CommentListComponentTest extends DuskTestCase
         $user1Id = TestUtilities::createTestUserInDb([
             "email_address" => "TestEmail9@hotmail.com",
         ]);
-        $user2Id = TestUtilities::createTestUserInDb([
+        TestUtilities::createTestUserInDb([
             "email_address" => "TestEmail10@hotmail.com",
         ]);
         $user1 = TestUtilities::getTestUserInDb($user1Id);
         $commentId1 = TestUtilities::createTestCommentInDb($user1);
         $this->browse(function (Browser $browserOne, Browser $browserTwo) use (
-            $commentId1,
-            $user1Id
-        ) {
+            $commentId1) {
             $browserTwo
                 ->loginAs(
                     UserModel::where(
@@ -270,7 +270,7 @@ class CommentListComponentTest extends DuskTestCase
             // Make sure we can see the comment first
             $this->assertEquals(
                 10,
-                count($browserTwo->elements("#comment-list media"))
+                count($browserTwo->elements($this->comment_list_items_selector))
             );
 
             $browserOne
@@ -280,7 +280,7 @@ class CommentListComponentTest extends DuskTestCase
                 ->waitForText("Successfully deleted");
             $this->assertEquals(
                 9,
-                count($browserTwo->elements("#comment-list media"))
+                count($browserTwo->elements($this->comment_list_items_selector))
             );
 
             TestUtilities::removeTestCommentsInDB();

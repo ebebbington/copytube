@@ -14,6 +14,7 @@ use Tests\Feature\TestUtilities;
  */
 class VideoPage extends DuskTestCase
 {
+    private string $something_more_title = "Something More";
     /**
      * Get the URL for the page.
      *
@@ -43,7 +44,7 @@ class VideoPage extends DuskTestCase
                 )
                 ->visit($this->url() . "?requestedVideo=Something+More")
                 ->assertpathIs($this->url());
-            $browser->assertSee("Something More");
+            $browser->assertSee($this->something_more_title);
             $browser->assertSee(
                 "Watch this inspirational video as we look at all of the beautiful things inside this world"
             );
@@ -51,7 +52,7 @@ class VideoPage extends DuskTestCase
             $browser->assertSee("An Iceland Venture");
             $video = $browser->element("#main-video-holder > video");
             $this->assertEquals(
-                "Something More",
+                $this->something_more_title,
                 $video->getAttribute("title")
             );
             $this->assertEquals(
@@ -63,7 +64,7 @@ class VideoPage extends DuskTestCase
                 strpos($video->getAttribute("src"), "videos/something_more.mp4")
             );
             $title = $browser->element("#main-video-holder h2");
-            $this->assertEquals("Something More", $title->getText());
+            $this->assertEquals($this->something_more_title, $title->getText());
             $rabbitHole = $browser->elements(".rabbit-hole-video-holder");
             $this->assertEquals(2, count($rabbitHole));
             $browser->assertPresent("#add-comment-input");
