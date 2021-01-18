@@ -20,6 +20,10 @@ use App\VideosModel;
 
 class VideoController extends Controller
 {
+    private function getLoggingPrefix (string $functionName): string {
+        return "[VideoController - " . $functionName . "] ";
+    }
+
     /**
      * Ex: AJAX GET /video?title=dhddhh
      * Gets a video to watch and it's comments, and extra rabbit hold vids
@@ -27,7 +31,7 @@ class VideoController extends Controller
      */
     public function index(Request $request)
     {
-        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix();
 
         $videoNameRequested = $request->input("requestedVideo");
         if (
@@ -129,7 +133,7 @@ class VideoController extends Controller
 
     public function postComment(Request $request)
     {
-        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix();
 
         Log::info($loggingPrefix . "Start");
 
@@ -193,7 +197,7 @@ class VideoController extends Controller
 
     public function autocomplete(Request $request)
     {
-        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        $loggingPrefix = $this->getLoggingPrefix();
         Log::info($loggingPrefix . "Start");
         $title = $request->input("title");
         $titles = [];
