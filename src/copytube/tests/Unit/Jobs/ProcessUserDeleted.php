@@ -23,7 +23,7 @@ class ProcessUserDeletedTest extends TestCase
 
         // Get data
         $UserModel = new UserModel();
-        $user = $UserModel->CreateQuery([
+        $UserModel->CreateQuery([
             "username" => "Test",
             "email_address" => "TestEmail@hotmail.com",
             "password" => UserModel::generateHash("ValidPassword1"),

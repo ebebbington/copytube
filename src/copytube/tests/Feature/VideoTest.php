@@ -24,16 +24,20 @@ class VideoTest extends TestCase
             "HTTP_X-Requested-With" => "XMLHttpRequest",
             "X-CSRF-TOKEN" => csrf_token(),
         ];
-        $res = $this->post("/video/comment", ["comment" => "test"], $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            ["comment" => "test"],
+            $headers
+        );
         $res->assertStatus(302);
-        $res->assertRedirect("/login");
+        $res->assertRedirect($TestUtilities::$login_path);
     }
 
     public function testDeleteCommentWithoutAuth()
     {
         $res = $this->delete("/video/comment?id=12345");
         $res->assertStatus(302);
-        $res->assertRedirect("/login");
+        $res->assertRedirect(TestUtilities::$login_path);
     }
 
     public function testDeleteCommentWithAllValidData()
@@ -43,7 +47,7 @@ class VideoTest extends TestCase
         $TestUtilities = new TestUtilities();
         $TestUtilities::removeTestUsersInDb();
         $userId = $TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => $TestUtilities::$validProfilePicture,
         ]);
         $Auth::loginUsingId($userId);
         // $user = Auth::user();
@@ -74,7 +78,7 @@ class VideoTest extends TestCase
         $TestUtilities = new TestUtilities();
         $TestUtilities::removeTestUsersInDb();
         $userId = $TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => TestUtilities::$validProfilePicture,
         ]);
         $Auth::loginUsingId($userId);
         //        $user = Auth::user();
@@ -84,7 +88,7 @@ class VideoTest extends TestCase
         //        ];
         $user = $Auth::user();
         $TestUtilities::createTestCommentInDb($user);
-        $res = $this->delete("/video/comment");
+        $res = $this->delete($TestUtilities::$video_comment_path);
         $res->assertSee("Failed to delete. Id must be provided");
     }
 
@@ -95,11 +99,11 @@ class VideoTest extends TestCase
         $TestUtilities = new TestUtilities();
         $TestUtilities::removeTestUsersInDb();
         $userId1 = $TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => $TestUtilities::$validProfilePicture,
         ]);
         $Auth::loginUsingId($userId1);
         $userId2 = $TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => $TestUtilities::$validProfilePicture,
         ]);
         $user2 = $TestUtilities::getTestUserInDb($userId2);
         $user1 = $Auth::user();
@@ -134,7 +138,7 @@ class VideoTest extends TestCase
         // Auth myself
         $TestUtilities = new TestUtilities();
         $userId = $TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/sample.jpg",
+            "profile_picture" => $TestUtilities::$validProfilePicture,
         ]);
         $Auth::loginUsingId($userId);
 
@@ -148,7 +152,7 @@ class VideoTest extends TestCase
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         $res = $this->post(
-            "/video/comment",
+            $TestUtilities::$video_comment_path,
             ["videoPostedOn" => "Something More"],
             $headers
         );
@@ -161,7 +165,11 @@ class VideoTest extends TestCase
         // No date posted but with video title to test validation
         $data = ["comment" => "hello"];
         $data["videoPostedOn"] = "Something More";
-        $res = $this->post("/video/comment", $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(406);
         $res->assertJson([
             "success" => false,
@@ -171,7 +179,11 @@ class VideoTest extends TestCase
         // No video posted on
         $data["datePosted"] = "2020-03-02";
         $data["videoPostedOn"] = null;
-        $res = $this->post("/video/comment", $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(403);
         $res->assertJson([
             "success" => false,
@@ -180,7 +192,11 @@ class VideoTest extends TestCase
 
         // No video found with that title
         $data["videoPostedOn"] = "I Dont Exist";
-        $res = $this->post("/video/comment", $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(404);
         $res->assertJson([
             "success" => false,
@@ -193,7 +209,11 @@ class VideoTest extends TestCase
 
         // Run request with correct data
         $data["videoPostedOn"] = "Something More";
-        $res = $this->post("/video/comment", $data, $headers);
+        $res = $this->post(
+            $TestUtilities::$video_comment_path,
+            $data,
+            $headers
+        );
         $res->assertStatus(200);
         $res->assertJson(["success" => true]);
 
@@ -246,7 +266,7 @@ class VideoTest extends TestCase
     {
         $Auth = new Auth();
         $Auth::logout();
-        $response = $this->get("/video");
+        $response = $this->get(TestUtilities::$video_path);
         $response->assertStatus(302);
         $response = $this->get("/");
         $response->assertStatus(302);
@@ -273,7 +293,7 @@ class VideoTest extends TestCase
         // Auth user
         $TestUtilities::logUserIn($userId);
         // Make request with no video request
-        $response = $this->get("/video");
+        $response = $this->get($TestUtilities::$video_path);
         // Assert the view
         //$response->assertViewIs('Home');
         // Assert the status
@@ -337,8 +357,8 @@ class VideoTest extends TestCase
         $Cache = new Cache();
         $Cache::flush();
         // make request with correct title
-        $response = $this->put("/video/comment");
-        $response->assertRedirect("/login");
+        $response = $this->put(TestUtilities::$video_comment_path);
+        $response->assertRedirect(TestUtilities::$login_path);
     }
 
     public function testUpdateCommentWithInvalidBody()
@@ -351,7 +371,7 @@ class VideoTest extends TestCase
         $commentId = $TestUtilities::createTestCommentInDb($user);
         $TestUtilities::logUserIn($userId);
         // make request with correct title
-        $response = $this->put("/video/comment");
+        $response = $this->put(TestUtilities::$video_comment_path);
         $response->assertSee(
             "Failed to delete. The id and text must be provided"
         );
@@ -375,7 +395,7 @@ class VideoTest extends TestCase
             ->first();
         $TestUtilities::logUserIn($userId2);
         // make request with correct title
-        $response = $this->put("/video/comment", [
+        $response = $this->put($TestUtilities::$video_comment_path, [
             "id" => $commentId,
             "newComment" => "Hello world :)",
         ]);
@@ -401,7 +421,7 @@ class VideoTest extends TestCase
             ->first();
         $TestUtilities::logUserIn($userId);
         // make request with correct title
-        $response = $this->put("/video/comment", [
+        $response = $this->put($TestUtilities::$video_comment_path, [
             "id" => $commentId,
             "newComment" => "Hello world :)",
         ]);

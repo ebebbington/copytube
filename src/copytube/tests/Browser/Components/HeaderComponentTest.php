@@ -11,6 +11,10 @@ use Tests\Feature\TestUtilities;
 
 class HeaderComponentTest extends DuskTestCase
 {
+    private string $account_options_selector = "#account-options";
+
+    private string $account_options_dropdown_selector = ".gear-dropdown";
+
     public function testHomeLinkCanBeClicked()
     {
         TestUtilities::createTestUserInDb();
@@ -122,7 +126,7 @@ class HeaderComponentTest extends DuskTestCase
                 ->visit(TestUtilities::$video_path_with_query)
                 ->assertPathIs(TestUtilities::$video_path);
             $browser
-                ->press("#account-options")
+                ->press($this->account_options_selector)
                 ->clickLink("Logout")
                 ->pause(5)
                 ->assertPathIs(TestUtilities::$login_path);
@@ -146,10 +150,13 @@ class HeaderComponentTest extends DuskTestCase
                 )
                 ->visit(TestUtilities::$video_path_with_query)
                 ->assertPathIs(TestUtilities::$video_path);
-            $browser->press("#account-options");
+            $browser->press($this->account_options_selector);
             $this->assertEquals(
                 "gear-dropdown",
-                $browser->attribute(".gear-dropdown", "class")
+                $browser->attribute(
+                    $this->account_options_dropdown_selector,
+                    "class"
+                )
             );
             $browser->click("#delete-account-trigger");
             $browser->acceptDialog();
@@ -179,12 +186,18 @@ class HeaderComponentTest extends DuskTestCase
                 ->assertpathIs(TestUtilities::$video_path);
             $this->assertEquals(
                 "hide gear-dropdown",
-                $browser->attribute(".gear-dropdown", "class")
+                $browser->attribute(
+                    $this->account_options_dropdown_selector,
+                    "class"
+                )
             );
-            $browser->press("#account-options");
+            $browser->press($this->account_options_selector);
             $this->assertEquals(
                 "gear-dropdown",
-                $browser->attribute(".gear-dropdown", "class")
+                $browser->attribute(
+                    $this->account_options_dropdown_selector,
+                    "class"
+                )
             );
             $browser
                 ->assertSee(TestUtilities::$validEmail)

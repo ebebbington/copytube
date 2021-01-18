@@ -47,10 +47,10 @@ const Commentslist = (function () {
                 newCommentHtml[0].children[1].children[0].textContent =
                     message.comment.author;
                 newCommentHtml
-                    .find("i.ml-4.delete-comment")
+                    .find("span.ml-4.delete-comment")
                     .attr("data-comment-id", message.comment.id);
                 newCommentHtml
-                    .find("i.ml-4.edit-comment")
+                    .find("span.ml-4.edit-comment")
                     .attr("data-comment-id", message.comment.id);
                 // TODO set comment id for edit and delete icon
 
@@ -59,7 +59,7 @@ const Commentslist = (function () {
 
             $("body").on(
                 "click",
-                "#comment-list .media > i.delete-comment",
+                "#comment-list .media > span.delete-comment",
                 function () {
                     const wantsToDelete = confirm(
                         "Are you sure you want to delete this comment?"
@@ -113,19 +113,24 @@ const Commentslist = (function () {
 
             $("body").on(
                 "click",
-                "#comment-list .media > i.edit-comment",
+                "#comment-list .media > span.edit-comment",
                 function () {
                     const $container = $(this).closest(".media");
                     const $comment = $container.find("p");
                     if ($comment.attr("contenteditable")) {
                         $comment.attr("contenteditable", "false");
-                        const id = $(this).data("cdata-comment-id");
+                        const id = $(this).data("data-comment-id");
                         const newComment = $comment.text();
                         // send post
                         Loading(true);
                         $.ajax({
                             url: "/video/comment",
                             method: "PUT",
+                            headers: {
+                                "X-CSRF-TOKEN": $(
+                                    'meta[name="csrf-token"]'
+                                ).attr("content"),
+                            },
                             dataType: "json",
                             data: {
                                 id: id,
