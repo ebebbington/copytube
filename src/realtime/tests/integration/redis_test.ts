@@ -17,6 +17,7 @@ Rhum.testPlan("tests/integration/redis_test.ts", () => {
         })();
         await pub.publish("realtime.comments.new", "wayway");
         const message = await p;
+
         assertEquals(message, {
           channel: "realtime.comments.new",
           message: "wayway",
@@ -36,3 +37,5 @@ Rhum.testPlan("tests/integration/redis_test.ts", () => {
     });
   });
 });
+
+Rhum.run();

@@ -12,10 +12,6 @@ It contains and uses the following:
 
 # Directory Structure / Description
 
-* `.denonrc`
-
-    * A server runner and file watcher [Not currently used]
-
 * `.env`
 
     * Environmental variables
