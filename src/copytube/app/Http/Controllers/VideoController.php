@@ -32,7 +32,7 @@ class VideoController extends Controller
      */
     public function index(Request $request)
     {
-        $loggingPrefix = $this->getLoggingPrefix();
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
 
         $videoNameRequested = $request->input("requestedVideo");
         if (
@@ -134,7 +134,7 @@ class VideoController extends Controller
 
     public function postComment(Request $request)
     {
-        $loggingPrefix = $this->getLoggingPrefix();
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
 
         Log::info($loggingPrefix . "Start");
 
@@ -198,7 +198,7 @@ class VideoController extends Controller
 
     public function autocomplete(Request $request)
     {
-        $loggingPrefix = $this->getLoggingPrefix();
+        $loggingPrefix = $this->getLoggingPrefix(__FUNCTION__);
         Log::info($loggingPrefix . "Start");
         $title = $request->input("title");
         $titles = [];
