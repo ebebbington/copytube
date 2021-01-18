@@ -1,8 +1,8 @@
 <div id="overlay-container"></div>
 <div id="loading-container">
-    <em id="loading-circle-one" class="circle loading-circles"></em>
-    <em id="loading-circle-two" class="circle loading-circles"></em>
-    <em id="loading-circle-three" class="circle loading-circles"></em>
-    <em id="loading-circle-four" class="circle loading-circles"></em>
-    <em id="loading-circle-five" class="circle loading-circles"></em>
+    <i id="loading-circle-one not-flex" class="circle loading-circles"></i>
+    <i id="loading-circle-two not-flex" class="circle loading-circles"></i>
+    <i id="loading-circle-three not-flex" class="circle loading-circles"></i>
+    <i id="loading-circle-four not-flex" class="circle loading-circles"></i>
+    <i id="loading-circle-five not-flex" class="circle loading-circles"></i>
 </div>

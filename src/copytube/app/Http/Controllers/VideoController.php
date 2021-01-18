@@ -29,10 +29,6 @@ class VideoController extends Controller
     {
         $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
 
-        //        if (!$request->ajax()) {
-        //            abort (403);
-        //        }
-
         $videoNameRequested = $request->input("requestedVideo");
         if (
             !$videoNameRequested ||
@@ -84,11 +80,6 @@ class VideoController extends Controller
                 $loggingPrefix .
                     "Requested main video of $videoNameRequested was not found"
             );
-            //            $errorCode = 404;
-            //            $errorData = ['title' => $errorCode, 'errorCode' => $errorCode,
-            //                'errorMessage' => 'No video was found matching `'.$videoRequested . '`'
-            //            ];
-            //            return response()->view('errors.404', $errorData)->setStatusCode($errorCode);
             abort(404);
         }
 
@@ -138,7 +129,9 @@ class VideoController extends Controller
 
     public function postComment(Request $request)
     {
-        //$loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+
+        Log::info($loggingPrefix . "Start");
 
         // get data
         $comment = $request->input("comment");
@@ -173,7 +166,6 @@ class VideoController extends Controller
 
         // Create the new comment
         $Comments = new CommentsModel();
-        //$cacheKey = "db:comments:videoTitle=" . $videoPostedOn;
         $newComment = [
             "comment" => $comment,
             "author" => $username,
@@ -201,7 +193,8 @@ class VideoController extends Controller
 
     public function autocomplete(Request $request)
     {
-        //$loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        $loggingPrefix = "[VideoController - " . __FUNCTION__ . "] ";
+        Log::info($loggingPrefix . "Start");
         $title = $request->input("title");
         $titles = [];
         if (!empty($title)) {

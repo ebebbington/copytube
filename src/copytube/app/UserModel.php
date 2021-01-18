@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
 
 class UserModel extends BaseModel
 {
+    const USER_BY_EMAIL_CACHE_KEY = "db:users:email_address=";
+
     /**
      * The table associated with the model.
      *
@@ -131,15 +133,6 @@ class UserModel extends BaseModel
         return $result ? true : false;
     }
 
-    //    public function logout (int $id): void
-    //    {
-    //        $loggingPrefix = "[UserModel - ".__FUNCTION__.'] ';
-    //        session(['user' => null]);
-    //        $this->UpdateQuery(['id' => $id], ['logged_in' => 1]);
-    //        $SessionModel = new SessionModel;
-    //        $SessionModel->DeleteQuery(['user_id' => $id]);
-    //    }
-
     /**
      * @method getByEmail
      *
@@ -159,9 +152,7 @@ class UserModel extends BaseModel
             "where" => "email_address = '$email'",
             "limit" => 1,
         ];
-        //$cacheKey = 'db:users:email_address='.$email;
-        $user = $this->SelectQuery($query);
-        return $user;
+        return $this->SelectQuery($query); // the $user
     }
 
     /**
@@ -184,7 +175,7 @@ class UserModel extends BaseModel
         $this->UpdateQuery(
             ["id" => $userId],
             ["recover_token" => $recoverToken],
-            "db:users:email_address=" . $email
+            self::USER_BY_EMAIL_CACHE_KEY . $email
         );
         // TODO :: Check return val of query
         return $recoverToken;
@@ -213,9 +204,8 @@ class UserModel extends BaseModel
         $updateData = [
             "logged_in" => $loggedInValue,
         ];
-        $cacheKey = "db:users:email_address=" . $email;
-        $updated = $this->UpdateQuery($query, $updateData, $cacheKey);
-        return $updated;
+        $cacheKey = self::USER_BY_EMAIL_CACHE_KEY . $email;
+        return $this->UpdateQuery($query, $updateData, $cacheKey); // $updated
     }
 
     /**
@@ -235,7 +225,7 @@ class UserModel extends BaseModel
         $updateData = [
             "login_attempts" => $loginAttempts,
         ];
-        $cacheKey = "db:users:email_address=" . $email;
+        $cacheKey = self::USER_BY_EMAIL_CACHE_KEY . $email;
         $this->UpdateQuery($query, $updateData, $cacheKey);
     }
 
@@ -246,8 +236,7 @@ class UserModel extends BaseModel
             "limit" => 1,
         ];
         $cacheKey = "db:users:recover_token=$token'";
-        $user = $this->SelectQuery($query, $cacheKey);
-        return $user;
+        return $this->SelectQuery($query, $cacheKey); // ¢user
     }
 
     /**
@@ -279,9 +268,8 @@ class UserModel extends BaseModel
      */
     public static function generateHash($rawPassword)
     {
-        $hash = Hash::make($rawPassword, [
+        return Hash::make($rawPassword, [
             "rounds" => 12,
-        ]);
-        return $hash;
+        ]); // $hash
     }
 }

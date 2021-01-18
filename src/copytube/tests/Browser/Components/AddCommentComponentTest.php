@@ -10,6 +10,10 @@ use Tests\Feature\TestUtilities;
 
 class AddCommentComponentTest extends DuskTestCase
 {
+    private string $uri = "/video?requestedVideo=Something+More";
+
+    private string $path = "/video";
+
     public function testCharacterCountWorksAndTextCanBeWritten()
     {
         TestUtilities::createTestUserInDb();
@@ -24,8 +28,8 @@ class AddCommentComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video")
+                ->visit($this->uri)
+                ->assertpathIs($this->path)
                 ->type("new-comment", "hello");
             $count = $browser->attribute(
                 "#comment-character-count",
@@ -53,8 +57,8 @@ class AddCommentComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video");
+                ->visit($this->uri)
+                ->assertpathIs($this->path);
             $browser->click("#comment > button")->waitUntil('!$.active');
             $browser->assertSee("The comment field is required");
             TestUtilities::removeTestUsersInDb();
@@ -77,8 +81,8 @@ class AddCommentComponentTest extends DuskTestCase
                         ->limit(1)
                         ->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertpathIs("/video")
+                ->visit($this->uri)
+                ->assertpathIs($this->path)
                 ->type("new-comment", "hello")
                 ->click("#comment > button")
                 ->waitUntil('!$.active')

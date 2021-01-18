@@ -71,19 +71,11 @@ class RecoverTest extends TestCase
         // Test it updates the row correctly
         TestUtilities::removeTestUsersInDb();
         $this->disableCookieEncryption();
-        //$cookie = ['recoverToken' => Crypt::encrypt('test_token')];
         TestUtilities::createTestUserInDb([
             "recover_token" => "test_token",
             "profile_picture" => "Test.png",
             "login_attempts" => 0,
         ]);
-        //        $response = $this->call('post', '/recover',
-        //            [
-        //                'email' => TestUtilities::$validEmail,
-        //                'password' => TestUtilities::$validPassword
-        //            ],
-        //            $cookie
-        //        );
         $response = $this->withCookie("recoverToken", "test_token")->post(
             $this->uri,
             [

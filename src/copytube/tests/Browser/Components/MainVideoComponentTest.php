@@ -24,8 +24,8 @@ class MainVideoComponentTest extends DuskTestCase
                         "TestEmail@hotmail.com"
                     )->first()
                 )
-                ->visit("/video?requestedVideo=Something+More")
-                ->assertPathIs("/video");
+                ->visit(TestUtilities::$video_path_with_query)
+                ->assertPathIs(TestUtilities::$video_path);
             $this->assertEquals(
                 "http://copytube_nginx:9002/videos/something_more.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
@@ -57,9 +57,9 @@ class MainVideoComponentTest extends DuskTestCase
                     )->first()
                 )
                 ->visit("/video?requestedVideo=Something+More")
-                ->assertPathIs("/video")
+                ->assertPathIs(TestUtilities::$video_path)
                 ->visit("/video?requestedVideo=Lava+Sample")
-                ->assertPathIs("/video");
+                ->assertPathIs(TestUtilities::$video_path);
             $this->assertEquals(
                 "http://copytube_nginx:9002/videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")

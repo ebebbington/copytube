@@ -21,7 +21,6 @@ class RabbitHoleComponentTest extends DuskTestCase
         Cache::flush();
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
-        //TestUtilities::logUserIn($id);
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(

@@ -20,8 +20,7 @@ class LogoutTest extends TestCase
         //            "X-CSRF-TOKEN" => csrf_token(),
         //        ];
         // Send the request
-        $response = $this->json("GET", "/logout");
-        return $response;
+        return $this->json("GET", "/logout"); // $response
     }
 
     public function testDeleteUserWithAuth()
