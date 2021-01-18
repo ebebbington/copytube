@@ -7,8 +7,8 @@ RUN apt-get update -y
 #RUN apt-get install -y --no-install-recommends libxslt-dev
 
 RUN apt-get install -y \
-  apt-transport-https apt-utils libzip-dev libldb-dev libpng-dev unzip curl libjpeg-dev
-# or libc-client-dev, libonig-dev also
+  apt-transport-https apt-utils libzip-dev libldb-dev libpng-dev unzip curl libjpeg-dev libonig-dev
+# or libc-client-dev
 
 #RUN apt-get install -y libjpeg62-turbo-dev libfreetype6-dev libmcrypt-dev
 
