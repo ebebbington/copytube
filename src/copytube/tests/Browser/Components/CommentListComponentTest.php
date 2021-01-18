@@ -84,13 +84,17 @@ class CommentListComponentTest extends DuskTestCase
                 )
                 ->visit($this->test_uri)
                 ->assertpathIs($this->path);
-            $numberOfComments = $browserTwo->elements($this->comment_list_items_selector);
+            $numberOfComments = $browserTwo->elements(
+                $this->comment_list_items_selector
+            );
             $this->assertEquals(10, count($numberOfComments));
             $browserOne
                 ->type("new-comment", "TEST COMMENT FROM DUSK TWO")
                 ->click("#comment > button")
                 ->waitForText("Success", 10);
-            $numberOfComments = $browserTwo->elements($this->comment_list_items_selector);
+            $numberOfComments = $browserTwo->elements(
+                $this->comment_list_items_selector
+            );
             $this->assertEquals(11, count($numberOfComments));
             TestUtilities::removeTestUsersInDb();
             TestUtilities::removeTestCommentsInDB();
@@ -241,7 +245,8 @@ class CommentListComponentTest extends DuskTestCase
         $user1 = TestUtilities::getTestUserInDb($user1Id);
         $commentId1 = TestUtilities::createTestCommentInDb($user1);
         $this->browse(function (Browser $browserOne, Browser $browserTwo) use (
-            $commentId1) {
+            $commentId1
+        ) {
             $browserTwo
                 ->loginAs(
                     UserModel::where(
