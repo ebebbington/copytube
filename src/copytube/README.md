@@ -130,14 +130,6 @@ This section provides the main application for this project, such as:
 
     -   ?
 
--   `yarn.lock`
-
-    -   ?
-
--   `.gitignore`
-
-    -   List of files and directories for Git to ignore
-
 # Tools Used
 
 This is the list of all tools used here, which also act as the tools learnt, or tools implemented to learn:
@@ -150,6 +142,7 @@ This is the list of all tools used here, which also act as the tools learnt, or 
 -   CSS
 
     -   General CSS
+    -   SASS
 
 -   JS
 

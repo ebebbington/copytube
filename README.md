@@ -142,7 +142,9 @@ cd copytube
 Build and start Docker
 
 ```
-docker-compose build && docker-compose up
+$ docker-compose build && docker-compose up -d
+$ cd src/copytube
+$ npm ci && composer install && npm run dev
 ```
 
 Check the Docker containers are running
