@@ -89,7 +89,7 @@ class RecoverTest extends TestCase
             $this->uri,
             [
                 "email" => TestUtilities::$validEmail,
-                "password" => 'a',
+                "password" => "a",
             ],
             [
                 "HTTP_X-Requested-With" => "XMLHttpRequest",

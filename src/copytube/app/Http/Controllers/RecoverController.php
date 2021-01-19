@@ -54,10 +54,13 @@ class RecoverController extends Controller
 
         // validate
         if ($user->recover_token !== $token) {
-            return response([
-                "success" => false,
-                "message" => "Token does not match",
-            ], 403);
+            return response(
+                [
+                    "success" => false,
+                    "message" => "Token does not match",
+                ],
+                403
+            );
         }
         $validated = $User->validate([
             "username" => $user->username,
@@ -66,10 +69,13 @@ class RecoverController extends Controller
             "profile_picture" => $user->profile_picture,
         ]);
         if ($validated !== true) {
-            return response([
-                "success" => false,
-                "message" => $validated,
-            ], 403);
+            return response(
+                [
+                    "success" => false,
+                    "message" => $validated,
+                ],
+                403
+            );
         }
 
         // update the new hashed password, login_attempts and recover_token
