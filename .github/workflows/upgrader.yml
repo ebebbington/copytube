@@ -13,7 +13,7 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8'
           tools: composer
 
       - name: Install Deno
@@ -26,6 +26,11 @@ jobs:
           npm update
           cd ../realtime
           deno run --allow-all https://deno.land/x/dmm/mod.ts update
+
+      - name: Update Other Version Strings
+        run: |
+          deno run -A console/update_php_versions.ts
+          deno run -A console/update_deno_versions.ts
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
