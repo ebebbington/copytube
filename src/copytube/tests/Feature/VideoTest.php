@@ -272,7 +272,7 @@ class VideoTest extends TestCase
         $response->assertStatus(302);
     }
 
-    public function tesWatchSingleVideoWithAuthWithInvalidQuery()
+    public function testWatchSingleVideoWithAuthWithInvalidQuery()
     {
         $TestUtilities = new TestUtilities();
         $userId = $TestUtilities::createTestUserInDb(["logged_in" => 0]);

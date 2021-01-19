@@ -211,7 +211,7 @@ Mimic existing file structure, and try to writ tests for each case
 ## Running the Tests
 
 `vendor/bin/phpunit` - All
-`vendor/bin/phpunit --coverage-html reports/` - All with coverage
+`export XDEBUG_MODE=coverage && vendor/bin/phpunit --coverage-html reports/` - All with coverage
 `vendor/bin/phpunit theTestMethod theTestFile` - Specific method in specific test
 `php artisan dusk` - Browser tests
 

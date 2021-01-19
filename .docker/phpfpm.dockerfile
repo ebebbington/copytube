@@ -18,14 +18,14 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 
 # Install Xdebug
-#RUN yes | pecl install xdebug \
-#    && echo "[Xdebug]" > /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_autostart=1" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.idekey=VSCode" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN yes | pecl install xdebug \
+    && echo "[Xdebug]" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.idekey=VSCode" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.client_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Configure php.ini
 COPY ./.docker/config/php.ini /etc/php.ini

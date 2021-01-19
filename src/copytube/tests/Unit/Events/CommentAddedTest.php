@@ -6,6 +6,7 @@ use App\CommentsModel;
 use App\Events\CommentAdded;
 use App\Jobs\ProcessNewComment;
 use Illuminate\Support\Facades\Event;
+use Tests\Feature\TestUtilities;
 use Tests\TestCase;
 
 class CommentAddedTest extends TestCase
@@ -17,6 +18,7 @@ class CommentAddedTest extends TestCase
      */
     public function testEventFired()
     {
+        TestUtilities::removeTestUsersInDb();
         $Event = new Event();
         $Event::fake();
         $CommentsModel = new CommentsModel();

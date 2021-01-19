@@ -14,9 +14,10 @@ use Illuminate\Queue\Listener;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
+use Tests\Feature\TestUtilities;
 use Tests\TestCase;
 
-class SendUserId extends TestCase
+class SendUserIdTest extends TestCase
 {
     public function testHandle()
     {
@@ -25,26 +26,15 @@ class SendUserId extends TestCase
         app("queue")->setDefaultDriver("sync");
 
         // Setup data
-        $UserModel = new UserModel();
-        $UserModel->CreateQuery([
-            "username" => "Test",
-            "email_address" => "TestEmail@hotmail.com",
-            "password" => $UserModel::generateHash("ValidPassword1"),
-            "login_attempts" => 3,
-            "logged_in" => 0,
-        ]);
-        $Database = new DB();
-        $user = $Database
-            ::table("users")
-            ->whereRaw("username = 'Test'")
-            ->first();
+        $userId = TestUtilities::createTestUserInDb();
         $Mockery = new \Mockery();
         $listener = $Mockery::mock("SendUserId");
 
         // Assertions
         $listener->shouldReceive("handle")->once();
         $this->app->instance(\App\Listeners\SendUserId::class, $listener);
-        dispatch(new ProcessUserDeleted($user->id));
+        dispatch(new ProcessUserDeleted($userId));
         app("queue")->setDefaultDriver($defaultDriver);
+        TestUtilities::removeTestUsersInDb();
     }
 }

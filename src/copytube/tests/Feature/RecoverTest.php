@@ -58,6 +58,52 @@ class RecoverTest extends TestCase
         TestUtilities::removeTestUsersInDb();
     }
 
+    public function testPostWhenTokenDoesntMatch()
+    {
+        TestUtilities::createTestUserInDb(["recover_token" => "test_token"]);
+        $response = $this->withCookie("recoverToken", "goody")->post(
+            $this->uri,
+            [
+                "email" => TestUtilities::$validEmail,
+                "password" => TestUtilities::$validPassword,
+            ],
+            [
+                "HTTP_X-Requested-With" => "XMLHttpRequest",
+                "X-CSRF-TOKEN" => csrf_token(),
+            ]
+        );
+        TestUtilities::removeTestUsersInDb();
+        $response->assertJson([
+            "success" => false,
+            "message" => "Token does not match",
+        ]);
+        $response->assertStatus(403);
+    }
+
+    public function testPostWhenCredsFailValidation()
+    {
+        $tokenValue = "test_token";
+        $this->disableCookieEncryption();
+        TestUtilities::createTestUserInDb(["recover_token" => $tokenValue]);
+        $response = $this->withCookie("recoverToken", $tokenValue)->post(
+            $this->uri,
+            [
+                "email" => TestUtilities::$validEmail,
+                "password" => 'a',
+            ],
+            [
+                "HTTP_X-Requested-With" => "XMLHttpRequest",
+                "X-CSRF-TOKEN" => csrf_token(),
+            ]
+        );
+        TestUtilities::removeTestUsersInDb();
+        $response->assertJson([
+            "success" => false,
+            "message" => "The password format is invalid.",
+        ]);
+        $response->assertStatus(403);
+    }
+
     public function testPost()
     {
         // Test when getting user that doesnt exist
