@@ -37,12 +37,12 @@ class LoginTest extends TestCase
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         // Send the request
-        return $this->post("/login", $data, $headers);
+        return $this->post(TestUtilities::$login_path, $data, $headers);
     }
 
     public function testGetRequestWhenNotAuthed()
     {
-        $response = $this->json("GET", "/login");
+        $response = $this->json("GET", TestUtilities::$login_path);
         $response->assertStatus(200);
         $response->assertViewIs("login");
     }
@@ -51,7 +51,7 @@ class LoginTest extends TestCase
     {
         $userId = TestUtilities::createTestUserInDb();
         Auth::loginUsingId($userId);
-        $response = $this->json("GET", "/login");
+        $response = $this->json("GET", TestUtilities::$login_path);
         TestUtilities::removeTestUsersInDb();
         $response->assertRedirect("/home");
     }
