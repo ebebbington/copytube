@@ -30,7 +30,6 @@ jobs:
       - name: Update Other Version Strings
         run: |
           deno run -A console/update_php_versions.ts
-          deno run -A console/update_deno_versions.ts
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
