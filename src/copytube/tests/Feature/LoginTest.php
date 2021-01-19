@@ -5,11 +5,13 @@ namespace Tests\Feature;
 use App\BaseModel;
 use App\User;
 use App\UserModel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 
 class LoginTest extends TestCase
 {
@@ -20,7 +22,7 @@ class LoginTest extends TestCase
         Cache::flush();
     }
 
-    private function makePostRequest($email, $password): ?object
+    private function makePostRequest($email, $password): TestResponse
     {
         $data = [];
         if (isset($email)) {
@@ -35,14 +37,23 @@ class LoginTest extends TestCase
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         // Send the request
-        return $this->post("/login", $data, $headers);
+        return $this->post(TestUtilities::$login_path, $data, $headers);
     }
 
     public function testGetRequestWhenNotAuthed()
     {
-        $response = $this->json("GET", "/login");
+        $response = $this->json("GET", TestUtilities::$login_path);
         $response->assertStatus(200);
         $response->assertViewIs("login");
+    }
+
+    public function testGetWhenAlreadyLoggedIn()
+    {
+        $userId = TestUtilities::createTestUserInDb();
+        Auth::loginUsingId($userId);
+        $response = $this->json("GET", TestUtilities::$login_path);
+        TestUtilities::removeTestUsersInDb();
+        $response->assertRedirect("/home");
     }
 
     public function testPostLockedAccount()
@@ -90,6 +101,18 @@ class LoginTest extends TestCase
             "message" => "This account does not exist with that email",
         ]);
         $response->assertStatus(403);
+    }
+
+    public function testPostWhenAlreadyLoggedIn()
+    {
+        $userId = TestUtilities::createTestUserInDb();
+        Auth::loginUsingId($userId);
+        $response = $this->makePostRequest(
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword
+        );
+        TestUtilities::removeTestUsersInDb();
+        $response->assertRedirect("/home");
     }
 
     public function testPostSuccessfulLogin()

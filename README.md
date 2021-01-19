@@ -11,6 +11,9 @@
   <a href="https://sonarcloud.io/dashboard?id=ebebbington_copytube">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=ebebbington_copytube&metric=alert_status">
   </a>
+  <a href="https://img.shields.io/badge/Backend%20coverage-100%25-green">
+    <img src="https://img.shields.io/badge/Backend%20coverage-100%25-green">
+  </a>  
 </p>
 
 ---

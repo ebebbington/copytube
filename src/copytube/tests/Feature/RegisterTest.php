@@ -22,7 +22,7 @@ class RegisterTest extends TestCase
         $username,
         $email,
         $password,
-        $profilePicture,
+        $profilePicture = null,
         $noCsrf = null
     ): ?object {
         $data = [];
@@ -52,6 +52,27 @@ class RegisterTest extends TestCase
         $response = $this->json("GET", "/register");
         $response->assertStatus(200);
         $response->assertViewIs("register");
+    }
+
+    public function testPostRequestWhenNotSelectingProfileImage()
+    {
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword
+        );
+        $response->assertJson([
+            "success" => true,
+        ]);
+        $response->assertStatus(200);
+        $user = TestUtilities::getTestUserInDb();
+        TestUtilities::removeTestUsersInDb();
+        $username = $user->username;
+        $path = $user->profile_picture;
+        $email = $user->email_address;
+        $this->assertEquals(TestUtilities::$validUsername, $username);
+        $this->assertEquals(TestUtilities::$validEmail, $email);
+        $this->assertEquals("img/sample.jpg", $path);
     }
 
     public function testFailedPostValidation()
