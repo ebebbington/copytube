@@ -19,15 +19,15 @@ services:
       - copytube-network
 
 # Something we can use in place of execing into the phpfpm container, eg `docker-compose up --config docker-compose.yml -d && docker-compose up --config docker-compose.dusk.yml
-#  dusk:
-#    container_name: copytube_dusk
-#    image: chilio/laravel-dusk-ci:php-8.0
-#    volumes:
-#    - ./src/copytube:/var/www/copytube
-#    working_dir: /var/www/copytube
-#    command: bash -c "php artisan dusk"
-#    networks:
-#      - copytube-network
+  dusk:
+    container_name: copytube_dusk
+    image: chilio/laravel-dusk-ci:php-8.0
+    volumes:
+    - ./src/copytube:/var/www/copytube
+    working_dir: /var/www/copytube
+    command: bash -c "php artisan dusk"
+    networks:
+      - copytube-network
 
   phpfpm:
     container_name: copytube_phpfpm
