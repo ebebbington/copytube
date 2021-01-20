@@ -92,6 +92,14 @@ jobs:
           cd src/realtime
           deno fmt --check
 
+  realtime-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@v2
+
       - name: Realtime Tests
         run: |
           docker-compose up -d > /dev/null
