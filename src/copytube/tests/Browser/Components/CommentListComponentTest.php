@@ -300,7 +300,57 @@ class CommentListComponentTest extends DuskTestCase
      */
     public function testCommentsAreRemovedWhenAnAccountIsDeleted()
     {
-        // These needs to be finished (or started)
-        $this->assertEquals(1, 2);
+        Cache::flush();
+        $user1Id = TestUtilities::createTestUserInDb([
+            "email_address" => "TestEmail9@hotmail.com",
+        ]);
+        TestUtilities::createTestUserInDb([
+            "email_address" => "TestEmail10@hotmail.com",
+        ]);
+        $user1 = TestUtilities::getTestUserInDb($user1Id);
+        $commentId1 = TestUtilities::createTestCommentInDb($user1);
+        $this->browse(function (Browser $browserOne, Browser $browserTwo) use (
+            $commentId1
+        ) {
+            $browserTwo
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        "TestEmail9@hotmail.com"
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+            $browserTwo
+                ->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        "TestEmail10@hotmail.com"
+                    )
+                        ->limit(1)
+                        ->first()
+                )
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+
+            // Make sure we can see the comment first
+            $this->assertEquals(
+                10,
+                count($browserTwo->elements($this->comment_list_items_selector))
+            );
+            // delete user1 acc
+            $browserOne->click("#delete-account-trigger");
+            $browserOne->acceptDialog();
+            $browserOne->waitForLocation("/register", 10);
+            // assert comments removed
+            $this->assertEquals(
+                9,
+                count($browserTwo->elements($this->comment_list_items_selector))
+            );
+        });
     }
 }

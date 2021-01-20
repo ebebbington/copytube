@@ -23,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: .docker/phpfpm.dockerfile
+      shm_size: '126mb'
     depends_on:
       - sql
     env_file:
@@ -33,6 +34,7 @@ services:
       - ./src/copytube:/var/www/copytube
     # Run commands after volumes are mounted. The php-fpm cmd is here so the container doesnt exit after running the composer command
     command: bash -c "php-fpm -F"
+    shm_size: '126mb'
     working_dir: /var/www/copytube
     networks:
       - copytube-network

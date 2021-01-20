@@ -52,28 +52,28 @@ jobs:
           sleep 15
           docker exec copytube_phpfpm vendor/bin/phpunit
 
-#  laravel-frontend-tests:
-#    runs-on: ubuntu-latest
-#      defaults:
-#        run:
-#          working-directory: src/copytube
-#      steps:
-#        - uses: actions/checkout@v2
-#
-#        - name: Setup PHP and Composer
-#          uses: shivammathur/setup-php@v2
-#          with:
-#            php-version: '8'
-#            tools: composer
-#
-#        - name: Laravel Frontend Tests
-#          run: |
-#            npm ci
-#            composer install
-#            npm run dev
-#            docker-compose up -d > /dev/null
-#            sleep 15
-#            docker exec copytube_phpfpm php artisan dusk
+  laravel-frontend-tests:
+    runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: src/copytube
+      steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup PHP and Composer
+          uses: shivammathur/setup-php@v2
+          with:
+            php-version: '8'
+            tools: composer
+
+        - name: Laravel Frontend Tests
+          run: |
+            npm ci
+            composer install
+            npm run dev
+            docker-compose up -d > /dev/null
+            sleep 15
+            docker exec copytube_phpfpm php artisan dusk
 
   realtime-checks:
     runs-on: ubuntu-latest
