@@ -49,7 +49,7 @@ jobs:
           composer install
           npm run dev
           docker-compose up -d > /dev/null
-          sleep 15
+          sleep 8
           docker exec copytube_phpfpm vendor/bin/phpunit
 
   laravel-frontend-tests:
@@ -72,7 +72,7 @@ jobs:
           composer install
           npm run dev
           docker-compose up -d > /dev/null
-          sleep 15
+          sleep 8
           docker exec copytube_phpfpm php artisan dusk
 
   realtime-checks:

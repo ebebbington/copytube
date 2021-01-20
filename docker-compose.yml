@@ -18,12 +18,23 @@ services:
     networks:
       - copytube-network
 
+# Something we can use in place of execing into the phpfpm container, eg `docker-compose up --config docker-compose.yml -d && docker-compose up --config docker-compose.dusk.yml
+#  dusk:
+#    container_name: copytube_dusk
+#    image: chilio/laravel-dusk-ci:php-8.0
+#    volumes:
+#    - ./src/copytube:/var/www/copytube
+#    working_dir: /var/www/copytube
+#    command: bash -c "php artisan dusk"
+#    networks:
+#      - copytube-network
+
   phpfpm:
     container_name: copytube_phpfpm
     build:
       context: .
       dockerfile: .docker/phpfpm.dockerfile
-      shm_size: '126mb'
+      shm_size: 536870912
     depends_on:
       - sql
     env_file:
@@ -34,7 +45,7 @@ services:
       - ./src/copytube:/var/www/copytube
     # Run commands after volumes are mounted. The php-fpm cmd is here so the container doesnt exit after running the composer command
     command: bash -c "php-fpm -F"
-    shm_size: '126mb'
+    shm_size: 536870912
     working_dir: /var/www/copytube
     networks:
       - copytube-network

@@ -62,7 +62,7 @@ class RecoverPageTest extends DuskTestCase
                 ->type("email", TestUtilities::$validEmail)
                 ->type("password", TestUtilities::$validPassword)
                 ->press("Submit")
-                ->waitUntil(TestUtilities::$active)
+                ->waitUntil(TestUtilities::$active, 20)
                 ->assertPathIs("/login");
             TestUtilities::removeTestUsersInDb();
         });

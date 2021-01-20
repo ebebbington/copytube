@@ -302,22 +302,20 @@ class CommentListComponentTest extends DuskTestCase
     {
         Cache::flush();
         $user1Id = TestUtilities::createTestUserInDb([
-            "email_address" => "TestEmail9@hotmail.com",
+            "email_address" => "TestEmail11@hotmail.com",
         ]);
         TestUtilities::createTestUserInDb([
-            "email_address" => "TestEmail10@hotmail.com",
+            "email_address" => "TestEmail12@hotmail.com",
         ]);
         $user1 = TestUtilities::getTestUserInDb($user1Id);
-        $commentId1 = TestUtilities::createTestCommentInDb($user1);
-        $this->browse(function (Browser $browserOne, Browser $browserTwo) use (
-            $commentId1
-        ) {
+        TestUtilities::createTestCommentInDb($user1);
+        $this->browse(function (Browser $browserOne, Browser $browserTwo) {
             $browserTwo
                 ->loginAs(
                     UserModel::where(
                         "email_address",
                         "=",
-                        "TestEmail9@hotmail.com"
+                        "TestEmail11@hotmail.com"
                     )
                         ->limit(1)
                         ->first()
@@ -329,7 +327,7 @@ class CommentListComponentTest extends DuskTestCase
                     UserModel::where(
                         "email_address",
                         "=",
-                        "TestEmail10@hotmail.com"
+                        "TestEmail12@hotmail.com"
                     )
                         ->limit(1)
                         ->first()
