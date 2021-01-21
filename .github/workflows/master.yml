@@ -73,9 +73,8 @@ jobs:
           npm run dev > /dev/null
           docker-compose up -d > /dev/null
           sleep 8
-          docker exec copytube_phpfpm curl http://copytube_nginx:9002
-          docker exec copytube_phpfpm php artisan dusk:install
           docker exec copytube_phpfpm php artisan dusk tests/Browser/Components/AddCommentComponentTest.php
+#         docker exec copytube_phpfpm php artisan dusk:install
 
   realtime-checks:
     runs-on: ubuntu-latest

@@ -43,6 +43,7 @@ abstract class DuskTestCase extends BaseTestCase
             // TODO :: Try use ::firefox() instead too
             // todo :: then try https://github.com/derekmd/laravel-dusk-firefox
             // todo :: then try https://laravel.com/docs/8.x/dusk#running-tests-on-github-actions
+            // TODO :: Then try set os in workflow to macos-latest, and install docker by: brew install docker-machine docker (if errors, maybe https://github.community/t/is-it-possible-to-install-and-configure-docker-on-macos-runner/16981/8 will help)
             DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options)
                 ->setCapability(WebDriverCapabilityType::ACCEPT_SSL_CERTS, true)
                 ->setCapability('acceptInsecureCerts', true)

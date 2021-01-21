@@ -18,6 +18,7 @@ class AddCommentComponentTest extends DuskTestCase
     {
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
+            $browser->pause(10);
             $browser
                 ->loginAs(
                     UserModel::where(
@@ -27,7 +28,8 @@ class AddCommentComponentTest extends DuskTestCase
                     )
                         ->limit(1)
                         ->first()
-                )
+                );
+            $browser->pause(10)
                 ->visit("http://copytube_nginx:9002$this->uri")
                 ->assertpathIs($this->path)
                 ->type("new-comment", "hello");
