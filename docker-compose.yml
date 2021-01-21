@@ -74,7 +74,6 @@ services:
       - copytube-network
 
   selenium:
-    container_name: copytube_selenium
     image: selenium/standalone-chrome
     networks:
       - copytube-network
