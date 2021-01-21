@@ -53,7 +53,7 @@ jobs:
           docker exec copytube_phpfpm vendor/bin/phpunit
 
   laravel-frontend-tests:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     defaults:
       run:
         working-directory: src/copytube
@@ -73,7 +73,8 @@ jobs:
           npm run dev > /dev/null
           docker-compose up -d
           sleep 8
-          docker exec copytube_phpfpm php artisan dusk:chrome-driver 76 && php artisan dusk
+#          php artisan dusk:chrome-driver --all
+          docker exec copytube_phpfpm php artisan dusk
 
   realtime-checks:
     runs-on: ubuntu-latest
