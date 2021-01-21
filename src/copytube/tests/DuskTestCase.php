@@ -19,9 +19,9 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public static function prepare()
     {
-        //        if (! static::runningInSail()) {
-        //            static::startChromeDriver();
-        //        }
+        if (! static::runningInSail()) {
+            static::startChromeDriver();
+        }
     }
 
     /**
@@ -35,6 +35,7 @@ abstract class DuskTestCase extends BaseTestCase
             "--disable-gpu",
             "--headless",
             "--window-size=1920,1080",
+            "--no-sandbox",
         ]);
 
         return RemoteWebDriver::create(

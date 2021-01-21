@@ -206,7 +206,7 @@ Mimic existing file structure, and try to writ tests for each case
 `vendor/bin/phpunit` - All
 `export XDEBUG_MODE=coverage && vendor/bin/phpunit --coverage-html reports/` - All with coverage
 `vendor/bin/phpunit theTestMethod theTestFile` - Specific method in specific test
-`php artisan dusk` - Browser tests
+`php artisan dusk` - Browser tests - **Ensure the selenium container is running**
 
 # XDebug
 
