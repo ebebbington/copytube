@@ -51,7 +51,7 @@ jobs:
           docker-compose build --parallel
           docker-compose up -d > /dev/null
           sleep 12
-          docker exec copytube_phpfpm vendor/bin/phpunit
+          docker exec copytube_phpfpm make test_dusk
 
   laravel-frontend-tests:
     runs-on: ubuntu-latest

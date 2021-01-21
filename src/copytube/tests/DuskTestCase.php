@@ -19,9 +19,9 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public static function prepare()
     {
-        if (! static::runningInSail()) {
-            static::startChromeDriver();
-        }
+//        if (! static::runningInSail()) {
+//            static::startChromeDriver();
+//        }
     }
 
     /**
@@ -38,7 +38,7 @@ abstract class DuskTestCase extends BaseTestCase
         ]);
 
         return RemoteWebDriver::create(
-            'http://selenium:4444/wd/hub',
+            'http://localhost:9515',
             DesiredCapabilities::chrome()->setCapability(
                 ChromeOptions::CAPABILITY, $options
             )
