@@ -67,10 +67,10 @@ class TestUtilities
                 : 1,
             "recover_token" => isset($overrides["recover_token"])
                 ? $overrides["recover_token"]
-                : null,
+                : "",
             "profile_picture" => isset($overrides["profile_picture"])
                 ? $overrides["profile_picture"]
-                : null,
+                : "",
         ];
         $Database = new DB();
         return $Database::table("users")->insertGetId($data); // userId
