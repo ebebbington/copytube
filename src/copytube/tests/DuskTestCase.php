@@ -39,6 +39,10 @@ abstract class DuskTestCase extends BaseTestCase
 
         return RemoteWebDriver::create(
             "http://selenium:4444/wd/hub",
+            // TODO :: Comment out line in prepare
+            // TODO :: Try use ::firefox() instead too
+            // todo :: then try https://github.com/derekmd/laravel-dusk-firefox
+            // todo :: then try https://laravel.com/docs/8.x/dusk#running-tests-on-github-actions
             DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options)
                 ->setCapability(WebDriverCapabilityType::ACCEPT_SSL_CERTS, true)
                 ->setCapability('acceptInsecureCerts', true)
