@@ -18,17 +18,19 @@ class AddCommentComponentTest extends DuskTestCase
     {
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
-            $browser
-                ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        TestUtilities::$validEmail
-                    )
-                        ->limit(1)
-                        ->first()
+            $browser->pause(10);
+            $browser->loginAs(
+                UserModel::where(
+                    "email_address",
+                    "=",
+                    TestUtilities::$validEmail
                 )
-                ->visit($this->uri)
+                    ->limit(1)
+                    ->first()
+            );
+            $browser
+                ->pause(10)
+                ->visit("http://copytube_nginx:9002$this->uri")
                 ->assertpathIs($this->path)
                 ->type("new-comment", "hello");
             $count = $browser->attribute(

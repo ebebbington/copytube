@@ -25,7 +25,9 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.idekey=VSCode" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.client_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini
+    && echo "xdebug.client_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/xdebug.ini
+    # Maybe instal xdebug ext
 
 # Configure php.ini
 COPY ./.docker/config/php.ini /etc/php.ini

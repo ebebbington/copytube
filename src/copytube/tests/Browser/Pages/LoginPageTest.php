@@ -50,13 +50,13 @@ class LoginPageTest extends DuskTestCase
         TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
         $user = TestUtilities::getTestUserInDb();
-        $this->browse(function ($browser) use ($user) {
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->visit(TestUtilities::$login_path)
                 ->type("email", $user->email_address)
                 ->type("password", "Welcome1")
                 ->press("Submit")
-                ->waitUntil(TestUtilities::$active)
+                ->waitUntil(TestUtilities::$active, 20)
                 ->assertPathIs("/home");
             $browser
                 ->visit(TestUtilities::$login_path)

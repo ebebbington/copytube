@@ -62,7 +62,7 @@ class VideoSearchComponentTest extends DuskTestCase
                 "innerHTML"
             );
             $this->assertEquals("Loading...", $value);
-            $browser->waitUntil(TestUtilities::$active);
+            $browser->waitUntilMissingText("Loading...", 20);
             $value = $browser->attribute(
                 $this->search_bar_results_selector,
                 "innerHTML"
@@ -118,10 +118,10 @@ class VideoSearchComponentTest extends DuskTestCase
                 )
                 ->visit(TestUtilities::$video_path_with_query)
                 ->type($this->search_bar_id, $this->lava_sample_title)
-                ->waitUntil(TestUtilities::$active);
+                ->waitUntil(TestUtilities::$active, 20);
             $browser
                 ->click($this->search_bar_results_selector)
-                ->waitUntil(TestUtilities::$active);
+                ->waitUntil(TestUtilities::$active, 20);
             $this->assertEquals(
                 "http://copytube_nginx:9002/videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
