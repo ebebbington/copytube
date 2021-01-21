@@ -2,15 +2,15 @@
 
 namespace Tests;
 
-use Facebook\WebDriver\Chrome\ChromeOptions;
+use Derekmd\Dusk\Firefox\SupportsFirefox;
+use Facebook\WebDriver\Firefox\FirefoxDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 use Laravel\Dusk\TestCase as BaseTestCase;
 
 abstract class DuskTestCase extends BaseTestCase
 {
-    use CreatesApplication;
+    use CreatesApplication, SupportsFirefox;
 
     /**
      * Prepare for Dusk test execution.
@@ -20,7 +20,11 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public static function prepare()
     {
-        static::startChromeDriver();
+        if (static::runningFirefoxInSail()) {
+            return;
+        }
+
+        static::startFirefoxDriver();
     }
 
     /**
@@ -30,23 +34,23 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function driver()
     {
-        $options = (new ChromeOptions)->addArguments([
-            '--headless',
-            '--disable-gpu',
-            '--no-sandbox',
-            '--ignore-certificate-errors',
-        ]);
+        $options = [
+            'args' => [
+                '--headless',
+                '--window-size=1920,1080',
+                "--no-sandbox"
+            ],
+        ];
+
+        $capabilities = DesiredCapabilities::firefox()
+            ->setCapability('moz:firefoxOptions', $options);
+
+        $capabilities->getCapability(FirefoxDriver::PROFILE)
+            ->setPreference('devtools.console.stdout.content', true);
 
         return RemoteWebDriver::create(
-            "http://selenium:4444/wd/hub",
-            // TODO :: Try use ::firefox() instead too
-            // todo :: then try https://github.com/derekmd/laravel-dusk-firefox
-            // todo :: then try https://laravel.com/docs/8.x/dusk#running-tests-on-github-actions (maybe means we remove selenium container?)
-            // TODO :: Then maybee get into a scenario where we don't have to use a selenium image? (might coincide with running using github actions)
-            // TODO :: Then try follow https://laravel.com/docs/5.8/dusk#using-other-browsers, maybe we dont need selenium for this but we need to find what the default url for dusk tets cas eis
-            DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options)
-                ->setCapability(WebDriverCapabilityType::ACCEPT_SSL_CERTS, true)
-                ->setCapability('acceptInsecureCerts', true)
+            $_ENV['DUSK_DRIVER_URL'] ?? 'http://selenium:4444/wd/hub',
+            $capabilities
         );
     }
 }

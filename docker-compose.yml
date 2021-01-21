@@ -74,7 +74,7 @@ services:
       - copytube-network
 
   selenium:
-    image: selenium/standalone-chrome
+    image: selenium/standalone-firefox
     networks:
       - copytube-network
 

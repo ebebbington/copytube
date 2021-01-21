@@ -67,6 +67,7 @@ jobs:
           php-version: '8'
           tools: composer
 
+
       - name: Laravel Frontend Tests
         run: |
           npm ci > /dev/null
