@@ -24,13 +24,6 @@ class HomePageTest extends DuskTestCase
         return "/";
     }
 
-    public function testTest () {
-        $this->browse(function (Browser $browser) {
-            $browser->visit("/login");
-            $browser->dump();
-        });
-    }
-
     /**
      * Assert that the browser is on the page.
      *

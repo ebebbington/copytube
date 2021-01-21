@@ -71,10 +71,9 @@ jobs:
           npm ci
           composer install
           npm run dev
-          docker-compose build > /dev/null
-          docker-compose up
-#          sleep 8
-#          docker exec copytube_phpfpm php artisan dusk
+          docker-compose up -d
+          sleep 8
+          docker exec copytube_phpfpm php artisan dusk
 
   realtime-checks:
     runs-on: ubuntu-latest
