@@ -16,8 +16,10 @@ class AddCommentComponentTest extends DuskTestCase
 
     public function testTest () {
         $this->browse(function (Browser $browser) {
+            $browser->pause(10000);
             $browser
                 ->visit("/register");
+            $browser->pause(10000);
             $body = $browser->element('body');
             var_dump($body);
             $browser->visit("http://copytube_nginx:9002/register");
