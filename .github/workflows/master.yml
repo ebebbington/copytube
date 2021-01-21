@@ -68,12 +68,12 @@ jobs:
 
       - name: Laravel Frontend Tests
         run: |
-          npm ci
-          composer install
-          npm run dev
+          npm ci > /dev/null
+          composer install > /dev/null
+          npm run dev > /dev/null
           docker-compose up -d
           sleep 8
-          docker exec copytube_phpfpm php artisan dusk:chrome-driver && php artisan dusk
+          docker exec copytube_phpfpm php artisan dusk:chrome-driver 76 && php artisan dusk
 
   realtime-checks:
     runs-on: ubuntu-latest
