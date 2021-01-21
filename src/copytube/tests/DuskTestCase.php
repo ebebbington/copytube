@@ -38,7 +38,6 @@ abstract class DuskTestCase extends BaseTestCase
             'args' => [
                 '--headless',
                 '--window-size=1920,1080',
-                "--no-sandbox"
             ],
         ];
 
@@ -49,7 +48,7 @@ abstract class DuskTestCase extends BaseTestCase
             ->setPreference('devtools.console.stdout.content', true);
 
         return RemoteWebDriver::create(
-            $_ENV['DUSK_DRIVER_URL'] ?? 'http://selenium:4444/wd/hub',
+            $_ENV['DUSK_DRIVER_URL'] ?? 'http://selenium:9999/wd/hub',
             $capabilities
         );
     }

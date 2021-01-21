@@ -75,6 +75,8 @@ services:
 
   selenium:
     image: selenium/standalone-firefox
+    ports:
+    - "9999:9999"
     networks:
       - copytube-network
 
