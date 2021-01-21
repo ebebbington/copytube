@@ -37,7 +37,7 @@ abstract class DuskTestCase extends BaseTestCase
         ]);
 
         return RemoteWebDriver::create(
-            "http://copytube_selenium:4444/wd/hub",
+            "http://copytube_selenium:8999/wd/hub",
             DesiredCapabilities::chrome()->setCapability(
                 ChromeOptions::CAPABILITY,
                 $options
