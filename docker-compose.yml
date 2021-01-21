@@ -71,10 +71,10 @@ services:
     networks:
       - copytube-network
 
-#  selenium:
-#    image: selenium/standalone-chrome
-#    networks:
-#      - copytube-network
+  selenium:
+    image: selenium/standalone-chrome
+    networks:
+      - copytube-network
 
   realtime:
     container_name: copytube_realtime
