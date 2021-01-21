@@ -73,7 +73,7 @@ jobs:
           npm run dev
           docker-compose up -d
           sleep 8
-          docker exec copytube_phpfpm php artisan dusk
+          docker exec copytube_phpfpm php artisan dusk:chrome-driver && php artisan dusk
 
   realtime-checks:
     runs-on: ubuntu-latest
