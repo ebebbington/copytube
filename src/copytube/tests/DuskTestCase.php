@@ -20,7 +20,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public static function prepare()
     {
-        static::startChromeDriver();
+        //static::startChromeDriver();
     }
 
     /**
@@ -43,7 +43,6 @@ abstract class DuskTestCase extends BaseTestCase
             // TODO :: Try use ::firefox() instead too
             // todo :: then try https://github.com/derekmd/laravel-dusk-firefox
             // todo :: then try https://laravel.com/docs/8.x/dusk#running-tests-on-github-actions (maybe means we remove selenium container?)
-            // TODO :: Then try set os in workflow to macos-latest, and install docker by: brew install docker-machine docker (if errors, maybe https://github.community/t/is-it-possible-to-install-and-configure-docker-on-macos-runner/16981/8 will help
             // TODO :: Then maybee get into a scenario where we don't have to use a selenium image? (might coincide with running using github actions)
             DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options)
                 ->setCapability(WebDriverCapabilityType::ACCEPT_SSL_CERTS, true)
