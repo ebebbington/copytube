@@ -53,7 +53,7 @@ jobs:
           docker exec copytube_phpfpm vendor/bin/phpunit
 
   laravel-frontend-tests:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     defaults:
       run:
         working-directory: src/copytube
@@ -71,6 +71,7 @@ jobs:
           npm ci > /dev/null
           composer install > /dev/null
           npm run dev > /dev/null
+          brew install docker-machine docker
           docker-compose up -d > /dev/null
           sleep 8
           docker exec copytube_phpfpm php artisan dusk tests/Browser/Components/AddCommentComponentTest.php
