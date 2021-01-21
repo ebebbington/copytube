@@ -38,7 +38,7 @@ abstract class DuskTestCase extends BaseTestCase
         ]);
 
         return RemoteWebDriver::create(
-            env('DUSK_BROWSER_URL', 'http://localhost:9515'),
+            "http://selenium:4444/wd/hub",
             DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options)
                 ->setCapability(WebDriverCapabilityType::ACCEPT_SSL_CERTS, true)
                 ->setCapability('acceptInsecureCerts', true)
