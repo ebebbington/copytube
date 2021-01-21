@@ -14,6 +14,19 @@ class AddCommentComponentTest extends DuskTestCase
 
     private string $path = "/video";
 
+    public function testTest () {
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->visit("/register");
+            $body = $browser->element('body');
+            var_dump($body);
+            $browser->visit("http://copytube_nginx:9002/register");
+            $body = $browser->element('body');
+            var_dump($body);
+            $browser->dump();
+        })
+    }
+
     public function testCharacterCountWorksAndTextCanBeWritten()
     {
         TestUtilities::createTestUserInDb();
