@@ -24,7 +24,7 @@ class AddCommentComponentTest extends DuskTestCase
             $body = $browser->element('body');
             var_dump($body);
             $browser->dump();
-        })
+        });
     }
 
     public function testCharacterCountWorksAndTextCanBeWritten()
