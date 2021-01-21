@@ -104,7 +104,7 @@ CREATE TABLE `users` (
   `profile_picture` varchar(155),
   `recover_token` varchar(8000),
   `updated_at` timestamp NOT NULL DEFAULT NOW() ON UPDATE NOW(),
-  `created_at` timestamp NOT NULL
+  `created_at` timestamp NOT NULL DEFAULT NOW()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

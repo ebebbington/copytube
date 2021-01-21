@@ -1,4 +1,4 @@
-FROM mysql:5.6
+FROM mysql:8
 
 # Update and install required packages
 #RUN apt-get update -y

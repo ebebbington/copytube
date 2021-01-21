@@ -31,6 +31,7 @@ jobs:
         run: |
           deno run -A console/update_php_versions.ts
           deno run -A console/update_deno_versions.ts
+          deno run -A console/update_redis_version.ts
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
