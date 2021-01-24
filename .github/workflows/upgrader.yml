@@ -29,7 +29,7 @@ jobs:
 
       - name: Update Other Version Strings
         run: |
-          deno run -A console/update_php_versions.ts
+          deno run -A console/update_php_version.ts
           deno run -A console/update_deno_versions.ts
           deno run -A console/update_redis_version.ts
 
