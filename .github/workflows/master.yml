@@ -53,32 +53,31 @@ jobs:
           sleep 12
           docker exec copytube_phpfpm vendor/bin/phpunit
 
-#  laravel-frontend-tests:
-#    runs-on: ubuntu-latest
-#    defaults:
-#      run:
-#        working-directory: src/copytube
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Setup PHP and Composer
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: '8'
-#          tools: composer
-#
-#
-#      - name: Laravel Frontend Tests
-#        run: |
-#          npm ci > /dev/null
-#          composer install > /dev/null
-#          npm run dev > /dev/null
-#          docker-compose build --parallel
-#          docker-compose up -d > /dev/null
-#          sleep 12
-#          docker exec copytube_phpfpm make test_dusk
-##         docker exec copytube_phpfpm php artisan dusk tests/Browser/Components/AddCommentComponentTest.php
-##         docker exec copytube_phpfpm php artisan dusk:install
+  laravel-frontend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/copytube
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8'
+          tools: composer
+
+      - name: Laravel Frontend Tests
+        run: |
+          npm ci
+          composer install
+          npm run dev
+          docker-compose build --parallel
+          docker-compose up -d > /dev/null
+          sleep 12
+          docker exec copytube_phpfpm php artisan dusk
+#         docker exec copytube_phpfpm php artisan dusk tests/Browser/Components/AddCommentComponentTest.php
+#         docker exec copytube_phpfpm php artisan dusk:install
 
   realtime-checks:
     runs-on: ubuntu-latest
