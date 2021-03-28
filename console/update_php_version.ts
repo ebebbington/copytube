@@ -12,9 +12,9 @@ Deno.writeFileSync("./.docker/phpfpm.dockerfile", new TextEncoder().encode(split
 
 let masterWorkflowContent = new TextDecoder().decode(Deno.readFileSync("./.github/workflows/master.yml"))
 masterWorkflowContent = masterWorkflowContent.replace(/php-version: [0-9.0-9]/g, `php-version: ${latestMinorVersion}`)
-Deno.writeFileSync("./.github/workflow/master.yml", new TextEncoder().encode(masterWorkflowContent))
+Deno.writeFileSync("./.github/workflows/master.yml", new TextEncoder().encode(masterWorkflowContent))
 
 let upgraderWorkflowContent = new TextDecoder().decode(Deno.readFileSync("./.github/workflows/upgrader.yml"))
 upgraderWorkflowContent = upgraderWorkflowContent.replace(/php-version: [0-9.0-9]/g, `php-version: ${latestMinorVersion}`)
-Deno.writeFileSync("./.github/workflow/upgrader.yml", new TextEncoder().encode(upgraderWorkflowContent))
+Deno.writeFileSync("./.github/workflows/upgrader.yml", new TextEncoder().encode(upgraderWorkflowContent))
 
