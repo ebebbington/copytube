@@ -11,15 +11,15 @@ export { config } from "https://deno.land/x/dotenv@v2.0.0/dotenv.ts";
 //     testing
 // }
 
-export { serve } from "https://deno.land/std@0.93.0/http/server.ts";
+export { serve } from "https://deno.land/std@0.95.0/http/server.ts";
 
 export {
   acceptWebSocket,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
   isWebSocketPongEvent,
-} from "https://deno.land/std@0.93.0/ws/mod.ts";
-export type { WebSocket } from "https://deno.land/std@0.93.0/ws/mod.ts";
+} from "https://deno.land/std@0.95.0/ws/mod.ts";
+export type { WebSocket } from "https://deno.land/std@0.95.0/ws/mod.ts";
 
 export { connect } from "https://deno.land/x/redis@v0.22.0/redis.ts";
 export type {
@@ -27,8 +27,8 @@ export type {
   RedisSubscription,
 } from "https://deno.land/x/redis@v0.22.0/mod.ts";
 
-export { assertEquals } from "https://deno.land/std@0.93.0/testing/asserts.ts";
+export { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 
-export { deferred } from "https://deno.land/std@0.93.0/async/deferred.ts";
+export { deferred } from "https://deno.land/std@0.95.0/async/deferred.ts";
 
 export { Rhum } from "https://deno.land/x/rhum@v1.1.9/mod.ts";
