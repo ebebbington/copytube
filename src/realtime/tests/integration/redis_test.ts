@@ -1,5 +1,5 @@
 // expect connection to be success full
-import { assertEquals, config, Rhum } from "../../deps.ts";
+import { assertEquals, Rhum } from "../../deps.ts";
 import { Redis } from "../../redis.ts";
 // expect redis to listen to correct channels and have subscribe to them
 

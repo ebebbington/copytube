@@ -1,6 +1,5 @@
 import { assertEquals, deferred, Rhum } from "../../deps.ts";
 import { Redis } from "../../redis.ts";
-import { SocketServer } from "../../socket.ts";
 
 // Deno.test({
 //     name: 'The Socket Server Should Remove from The List Of Clients',

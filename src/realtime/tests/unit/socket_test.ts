@@ -1,5 +1,4 @@
-import { deferred, Rhum } from "../../deps.ts";
-import { SocketServer } from "../../socket.ts";
+import { Rhum } from "../../deps.ts";
 
 Rhum.testPlan("tests/unit/socket_test.ts", () => {
   Rhum.testSuite("getAllClients()", () => {
