@@ -1,4 +1,4 @@
-FROM php:8.0.3-fpm
+FROM php:8.0.5-fpm
 
 ARG HOST_IP
 
