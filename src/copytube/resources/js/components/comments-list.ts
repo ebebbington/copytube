@@ -35,12 +35,12 @@ const Commentslist = (function () {
                     "#templates > #user-comment-template"
                 ).clone();
                 newCommentHtml.attr("id", "");
-                const [year, month, day] = message.comment.date_posted.split(
-                    "-"
-                );
+                const [year, month, day] =
+                    message.comment.date_posted.split("-");
                 const formattedDate = day + "/" + month + "/" + year;
                 newCommentHtml.attr("data-user-id", message.comment.user_id);
-                newCommentHtml[0].children[1].children[1].textContent = formattedDate;
+                newCommentHtml[0].children[1].children[1].textContent =
+                    formattedDate;
                 newCommentHtml[0].children[1].children[2].textContent =
                     message.comment.comment;
                 newCommentHtml[0].children[0].children[0].src =
