@@ -86,9 +86,9 @@ export class SocketServer {
         try {
           console.info("Emitting socket message to id " + client.id);
           client.socket.send(message);
-        } catch (e) {
+        } catch (_e) {
           console.error(
-            `Tried to send a message to a closed socket. removing ${client.id}: ${e.message}`,
+            `Tried to send a message to a closed socket. removing ${client.id}`,
           );
           allClients.splice(i, 1);
         }
