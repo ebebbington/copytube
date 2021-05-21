@@ -88,7 +88,7 @@ export class SocketServer {
           client.socket.send(message);
         } catch (_e) {
           console.error(
-            `Tried to send a message to a closed socket. removing ${client.id}.`,
+            `Tried to send a message to a closed socket. removing ${client.id}`,
           );
           allClients.splice(i, 1);
         }
