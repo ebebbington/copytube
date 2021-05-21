@@ -1,4 +1,4 @@
-import { assertEquals, Rhum } from "../../deps.ts";
+import { Rhum } from "../../deps.ts";
 import { Redis } from "../../redis.ts";
 
 Rhum.testPlan("tests/unit/redis_test.ts", () => {
