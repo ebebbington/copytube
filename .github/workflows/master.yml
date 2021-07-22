@@ -49,8 +49,8 @@ jobs:
           composer install
           npm run dev
           docker-compose build --parallel
+          docker-compose up -d copytube_sql > /dev/null
           docker-compose up -d > /dev/null
-          sleep 12
           docker exec copytube_phpfpm vendor/bin/phpunit
 
 #  laravel-frontend-tests:
