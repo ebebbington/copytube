@@ -67,10 +67,12 @@ class BaseModelTest extends TestCase
         // Selecting data
         $TestModel = new TestModel();
         $createdRow = $TestModel->CreateQuery(["test" => "Hello world"]);
-        $selectedRow = $TestModel->SelectQuery([
+        $selectedRow = $TestModel->SelectQuery(
+            [
             "select" => ["id", "test"],
             "limit" => 1,
-        ]);
+            ]
+        );
         $createdRowId = $createdRow->id;
         $selectedRowId = $selectedRow->id;
         $this->assertEquals(true, isset($createdRowId));
@@ -85,11 +87,13 @@ class BaseModelTest extends TestCase
         $TestModel = new TestModel();
         $testFieldValue = "Something More";
         $TestModel->CreateQuery(["test" => $testFieldValue]);
-        $selectedRow = $TestModel->SelectQuery([
+        $selectedRow = $TestModel->SelectQuery(
+            [
             "select" => ["test.*", "videos.title"],
             "join" => ["videos", "test.test", "=", "videos.title"],
             "limit" => 1,
-        ]);
+            ]
+        );
         $this->assertEquals($testFieldValue, $selectedRow->test);
         $this->assertEquals($testFieldValue, $selectedRow->title);
         $this->deleteAllRows();
@@ -100,10 +104,12 @@ class BaseModelTest extends TestCase
         // Where
         $TestModel = new TestModel();
         $TestModel->CreateQuery(["test" => "Test2"]);
-        $selectedRow = $TestModel->SelectQuery([
+        $selectedRow = $TestModel->SelectQuery(
+            [
             "where" => "test = 'Test2'",
             "limit" => 1,
-        ]);
+            ]
+        );
         $this->assertEquals("Test2", $selectedRow->test);
         $this->deleteAllRows();
     }
@@ -130,10 +136,12 @@ class BaseModelTest extends TestCase
         $TestModel->CreateQuery(["test" => "3"]);
         $TestModel->CreateQuery(["test" => "1"]);
         $TestModel->CreateQuery(["test" => "2"]);
-        $rows = $TestModel->SelectQuery([
+        $rows = $TestModel->SelectQuery(
+            [
             "limit" => 3,
             "orderBy" => ["column" => "test", "direction" => "DESC"],
-        ]);
+            ]
+        );
         $this->assertTrue($rows[0]->test === "3");
         $this->assertTrue($rows[1]->test === "2");
         $this->assertTrue($rows[2]->test === "1");
@@ -160,10 +168,12 @@ class BaseModelTest extends TestCase
             ["test" => "Goodbye world"]
         );
         $this->assertEquals(true, $success);
-        $row = $TestModel->SelectQuery([
+        $row = $TestModel->SelectQuery(
+            [
             "where" => "test = 'Goodbye world'",
             "limit" => 1,
-        ]);
+            ]
+        );
         $this->assertEquals("Goodbye world", $row->test);
         $this->deleteAllRows();
     }
@@ -187,10 +197,12 @@ class BaseModelTest extends TestCase
         $expectedRedisData->id = 205;
         $expectedRedisData->test = "Goodbye world 2";
         $this->assertEquals($expectedRedisData, $redisData);
-        $row = $TestModel->SelectQuery([
+        $row = $TestModel->SelectQuery(
+            [
             "where" => "test = 'Goodbye world 2'",
             "limit" => 1,
-        ]);
+            ]
+        );
         $redisData = $Cache::get($cacheKey);
         $this->assertEquals($redisData, $row);
         $this->deleteAllRows();
@@ -240,10 +252,12 @@ class BaseModelTest extends TestCase
         $TestModel = new TestModel();
         $testFieldValue = "Hello world 4";
         $TestModel->CreateQuery(["test" => $testFieldValue]);
-        $row = $TestModel->SelectQuery([
+        $row = $TestModel->SelectQuery(
+            [
             "where" => "test = '$testFieldValue'",
             "limit" => 1,
-        ]);
+            ]
+        );
         $this->assertEquals($testFieldValue, $row->test);
         $this->deleteAllRows();
 

@@ -6,6 +6,7 @@ use App\UserModel;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Feature\TestUtilities;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /***
  * Class HomePage
@@ -14,6 +15,8 @@ use Tests\Feature\TestUtilities;
  */
 class HomePageTest extends DuskTestCase
 {
+    use RefreshDatabase;
+
     /**
      * Get the URL for the page.
      *
@@ -27,34 +30,34 @@ class HomePageTest extends DuskTestCase
     /**
      * Assert that the browser is on the page.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
+     * @param  \Laravel\Dusk\Browser $browser
      * @return void
      */
     public function testVideosDisplay()
     {
-        TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb();
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(
-                UserModel::where(
-                    "email_address",
-                    "=",
-                    TestUtilities::$validEmail
-                )
-                    ->limit(1)
-                    ->first()
-            );
-            $browser
-                ->visit("/home")
-                ->assertPathIs("/home")
-                ->assertSee("Something More")
-                ->assertSee("Lava Sample")
-                ->assertSee("An Iceland Venture");
-            $browser->assertPresent("#account-options");
-            $rabbitHole = $browser->elements(".rabbit-hole-video-holder");
-            $this->assertEquals(3, count($rabbitHole));
-            TestUtilities::removeTestUsersInDb();
-        });
+        $this->browse(
+            function (Browser $browser) {
+                $browser->loginAs(
+                    UserModel::where(
+                        "email_address",
+                        "=",
+                        TestUtilities::$validEmail
+                    )
+                        ->limit(1)
+                        ->first()
+                );
+                $browser
+                    ->visit("/home")
+                    ->assertPathIs("/home")
+                    ->assertSee("Something More")
+                    ->assertSee("Lava Sample")
+                    ->assertSee("An Iceland Venture");
+                $browser->assertPresent("#account-options");
+                $rabbitHole = $browser->elements(".rabbit-hole-video-holder");
+                $this->assertEquals(3, count($rabbitHole));
+            }
+        );
     }
 
     /**

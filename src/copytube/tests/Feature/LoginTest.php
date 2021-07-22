@@ -15,6 +15,8 @@ use Illuminate\Testing\TestResponse;
 
 class LoginTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -52,26 +54,25 @@ class LoginTest extends TestCase
         $userId = TestUtilities::createTestUserInDb();
         Auth::loginUsingId($userId);
         $response = $this->json("GET", TestUtilities::$login_path);
-        TestUtilities::removeTestUsersInDb();
         $response->assertRedirect("/home");
     }
 
     public function testPostLockedAccount()
     {
         Cache::flush();
-        TestUtilities::removeTestUsersInDb();
         TestUtilities::createTestUserInDb(["login_attempts" => 0]);
         // Send post request
         $response = $this->makePostRequest(
             TestUtilities::$validEmail,
             TestUtilities::$validPassword
         );
-        $response->assertJson([
+        $response->assertJson(
+            [
             "success" => false,
             "message" => "This account has been locked.",
-        ]);
+            ]
+        );
         $response->assertStatus(403);
-        TestUtilities::removeTestUsersInDb();
     }
 
     public function testPostIncorrectPasswordButValidEmail()
@@ -81,12 +82,13 @@ class LoginTest extends TestCase
             TestUtilities::$validEmail,
             TestUtilities::$invalidPasswords[0]
         );
-        $response->assertJson([
+        $response->assertJson(
+            [
             "success" => false,
             "message" => "Failed to authenticate",
-        ]);
+            ]
+        );
         $response->assertStatus(403);
-        TestUtilities::removeTestUsersInDb();
     }
 
     // eg cannot auth attempt it as the user isnt in db
@@ -96,10 +98,12 @@ class LoginTest extends TestCase
             TestUtilities::$validEmail,
             TestUtilities::$validPassword
         );
-        $response->assertJson([
+        $response->assertJson(
+            [
             "success" => false,
             "message" => "This account does not exist with that email",
-        ]);
+            ]
+        );
         $response->assertStatus(403);
     }
 
@@ -111,7 +115,6 @@ class LoginTest extends TestCase
             TestUtilities::$validEmail,
             TestUtilities::$validPassword
         );
-        TestUtilities::removeTestUsersInDb();
         $response->assertRedirect("/home");
     }
 
@@ -128,6 +131,5 @@ class LoginTest extends TestCase
         $this->assertEquals(0, $user->logged_in);
         $response->assertJson(["success" => true]);
         $response->assertStatus(200);
-        TestUtilities::removeTestUsersInDb();
     }
 }

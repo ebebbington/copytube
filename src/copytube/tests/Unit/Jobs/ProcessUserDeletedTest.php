@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Queue;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;
 use App\Jobs\ProcessUserDeleted;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProcessUserDeletedTest extends TestCase
 {
+    use RefreshDatabase;
     public function testProcessUserDeleted()
     {
         $Queue = new Queue();
@@ -36,7 +38,5 @@ class ProcessUserDeletedTest extends TestCase
         // Expect it was called
 
         $Queue::assertPushedOn("users", \App\Jobs\ProcessUserDeleted::class);
-
-        TestUtilities::removeTestUsersInDb();
     }
 }

@@ -13,6 +13,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RecoverTest extends TestCase
 {
+    use RefreshDatabase;
+
     private $uri = "/recover";
 
     private function sendPostRequest($email, $password)
@@ -55,7 +57,6 @@ class RecoverTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs("recover");
         $response->assertCookie("recoverToken");
-        TestUtilities::removeTestUsersInDb();
     }
 
     public function testPostWhenTokenDoesntMatch()
@@ -72,11 +73,12 @@ class RecoverTest extends TestCase
                 "X-CSRF-TOKEN" => csrf_token(),
             ]
         );
-        TestUtilities::removeTestUsersInDb();
-        $response->assertJson([
+        $response->assertJson(
+            [
             "success" => false,
             "message" => "Token does not match",
-        ]);
+            ]
+        );
         $response->assertStatus(403);
     }
 
@@ -96,11 +98,12 @@ class RecoverTest extends TestCase
                 "X-CSRF-TOKEN" => csrf_token(),
             ]
         );
-        TestUtilities::removeTestUsersInDb();
-        $response->assertJson([
+        $response->assertJson(
+            [
             "success" => false,
             "message" => "The password format is invalid.",
-        ]);
+            ]
+        );
         $response->assertStatus(403);
     }
 
@@ -108,20 +111,23 @@ class RecoverTest extends TestCase
     {
         // Test when getting user that doesnt exist
         $response = $this->sendPostRequest("idontexist@hotmail.com", "");
-        $response->assertJson([
+        $response->assertJson(
+            [
             "success" => false,
             "message" => "Unable to authenticate",
-        ]);
+            ]
+        );
         $response->assertStatus(403);
 
         // Test it updates the row correctly
-        TestUtilities::removeTestUsersInDb();
         $this->disableCookieEncryption();
-        TestUtilities::createTestUserInDb([
+        TestUtilities::createTestUserInDb(
+            [
             "recover_token" => "test_token",
             "profile_picture" => "Test.png",
             "login_attempts" => 0,
-        ]);
+            ]
+        );
         $response = $this->withCookie("recoverToken", "test_token")->post(
             $this->uri,
             [
@@ -141,13 +147,13 @@ class RecoverTest extends TestCase
         );
 
         // Assert json response
-        $response->assertJson([
+        $response->assertJson(
+            [
             "success" => true,
             "message" => "Successfully updated your password",
-        ]);
+            ]
+        );
 
         $this->assertEquals(true, $user->recover_token === null);
-
-        TestUtilities::removeTestUsersInDb();
     }
 }

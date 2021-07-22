@@ -13,14 +13,16 @@ class UserModelTest extends TestCase
 
     private function createTestUser($recoverToken = null)
     {
-        DB::table("users")->insert([
+        DB::table("users")->insert(
+            [
             "username" => $this->test_username,
             "password" => "Test",
             "logged_in" => 1,
             "login_attempts" => 3,
             "email_address" => "testemail",
             "recover_token" => $recoverToken,
-        ]);
+            ]
+        );
     }
 
     private function deleteTestUser()

@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Feature\TestUtilities;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentListComponentTest extends DuskTestCase
 {
+    use RefreshDatabase;
+
     private string $delete_comment_button_class_name = "span.delete-comment";
 
     private string $profile_picture_path = "img/sample.jpg";
@@ -24,29 +27,30 @@ class CommentListComponentTest extends DuskTestCase
 
     public function testANewCommentShowsWhenAddedByCurrentUser()
     {
-        TestUtilities::removeTestUsersInDb();
-        TestUtilities::createTestUserInDb([
+        TestUtilities::createTestUserInDb(
+            [
             "profile_picture" => $this->profile_picture_path,
-        ]);
-        $this->browse(function (Browser $browser) {
-            $browser
-                ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        TestUtilities::$validEmail
+            ]
+        );
+        $this->browse(
+            function (Browser $browser) {
+                $browser
+                    ->loginAs(
+                        UserModel::where(
+                            "email_address",
+                            "=",
+                            TestUtilities::$validEmail
+                        )
+                            ->limit(1)
+                            ->first()
                     )
-                        ->limit(1)
-                        ->first()
-                )
-                ->visit($this->test_uri)
-                ->assertpathIs($this->path)
-                ->type("new-comment", "TEST COMMENT FROM DUSK")
-                ->click("#comment > button")
-                ->waitForText("TEST COMMENT FROM DUSK", 10);
-            TestUtilities::removeTestUsersInDb();
-            TestUtilities::removeTestCommentsInDB();
-        });
+                    ->visit($this->test_uri)
+                    ->assertpathIs($this->path)
+                    ->type("new-comment", "TEST COMMENT FROM DUSK")
+                    ->click("#comment > button")
+                    ->waitForText("TEST COMMENT FROM DUSK", 10);
+            }
+        );
     }
 
     //    public function testANewCommentShowsWhenAddedByAnotherUser()

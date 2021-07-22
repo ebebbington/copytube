@@ -28,23 +28,6 @@ class TestUtilities
         "testPas", // must be min len of 8
     ];
 
-    public static function removeTestCommentsInDB(int $userId = null)
-    {
-        $Database = new DB();
-        if ($userId) {
-            $Database
-                ::table("comments")
-                ->where("id", "=", $userId)
-                ->delete();
-        } else {
-            $TestUtilities = new TestUtilities();
-            $Database
-                ::table("comments")
-                ->where("author", "=", $TestUtilities::$validUsername)
-                ->delete();
-        }
-    }
-
     public static function createTestUserInDb(array $overrides = [])
     {
         $TestUtilities = new TestUtilities();
@@ -87,23 +70,6 @@ class TestUtilities
         ];
         $Database = new DB();
         return $Database::table("comments")->insertGetId($data); // commentId
-    }
-
-    public static function removeTestUsersInDb(array $query = [])
-    {
-        $Database = new DB();
-        if (isset($query) && count($query) >= 1) {
-            $Database
-                ::table("users")
-                ->where($query)
-                ->delete();
-        } else {
-            $TestUtilities = new TestUtilities();
-            $Database
-                ::table("users")
-                ->where(["username" => $TestUtilities::$validUsername])
-                ->delete();
-        }
     }
 
     public static function getTestUserInDb(int $userId = null)

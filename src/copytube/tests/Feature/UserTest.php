@@ -43,7 +43,8 @@ class UserTest extends TestCase
         $Auth::loginUsingId($userId);
 
         // Add comments before
-        $Database::table("comments")->insert([
+        $Database::table("comments")->insert(
+            [
             [
                 "comment" => "Hello",
                 "author" => "hello",
@@ -58,7 +59,8 @@ class UserTest extends TestCase
                 "video_posted_on" => "test",
                 "date_posted" => "2020-03-03",
             ],
-        ]);
+            ]
+        );
 
         // Make request
         $headers = [

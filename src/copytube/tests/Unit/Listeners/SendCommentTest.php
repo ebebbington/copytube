@@ -27,13 +27,15 @@ class SendCommentTest extends TestCase
 
         // Setup data
         $CommentsModel = new CommentsModel();
-        $comment = $CommentsModel->CreateQuery([
+        $comment = $CommentsModel->CreateQuery(
+            [
             "comment" => "Test",
             "author" => "Test",
             "date_posted" => "2020-02-02",
             "user_id" => 2,
             "video_posted_on" => "test",
-        ]);
+            ]
+        );
         $Mockery = new Mockery();
         $listener = $Mockery::mock("SendComment");
         $job = new ProcessNewComment($comment, "img/test");

@@ -8,9 +8,12 @@ use App\Jobs\ProcessNewComment;
 use Illuminate\Support\Facades\Event;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentAddedTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic unit test example.
      *
@@ -18,17 +21,18 @@ class CommentAddedTest extends TestCase
      */
     public function testEventFired()
     {
-        TestUtilities::removeTestUsersInDb();
         $Event = new Event();
         $Event::fake();
         $CommentsModel = new CommentsModel();
-        $comment = $CommentsModel->CreateQuery([
+        $comment = $CommentsModel->CreateQuery(
+            [
             "comment" => "Test",
             "author" => "Test",
             "date_posted" => "2020-02-02",
             "user_id" => 2,
             "video_posted_on" => "test",
-        ]);
+            ]
+        );
         // Send event
         $Event::dispatch(new CommentAdded($comment));
         $Event::assertDispatched(CommentAdded::class, 1);

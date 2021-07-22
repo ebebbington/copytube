@@ -13,6 +13,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LogoutTest extends TestCase
 {
+    use RefreshDatabase;
+    
     private function makeDeleteRequest(): ?object
     {
         //        $headers = [

@@ -24,7 +24,6 @@
  *
  * Laravel 'mentions' that a unit test is really just focussing on small isolated portions, mainly a single method,
  * where as features are larger, how objects inetract with each other and full HTTP json endpoints
- *
  */
 
 namespace Tests\Unit;

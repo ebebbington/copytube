@@ -35,6 +35,5 @@ class SendUserIdTest extends TestCase
         $this->app->instance(\App\Listeners\SendUserId::class, $listener);
         dispatch(new ProcessUserDeleted($userId));
         app("queue")->setDefaultDriver($defaultDriver);
-        TestUtilities::removeTestUsersInDb();
     }
 }

@@ -51,7 +51,7 @@ class ExampleTest extends TestCase
     /**
      * A test can depend on another test for a returned value. This is also called a consumer
      *
-     * @param $val  {Array}
+     * @param $val {Array}
      *
      * @depends testReturnVal
      *

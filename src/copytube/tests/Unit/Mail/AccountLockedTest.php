@@ -24,9 +24,11 @@ class AccountLockedTest extends TestCase
             ->send(
                 new AccountLocked("Test Email", "Generated from unit tests")
             );
-        $Mail::assertSent(AccountLocked::class, function ($mail) {
-            return $mail->hasTo("EdwardSBebbington@hotmail.com");
-        });
+        $Mail::assertSent(
+            AccountLocked::class, function ($mail) {
+                return $mail->hasTo("EdwardSBebbington@hotmail.com");
+            }
+        );
         $Mail::assertSent(AccountLocked::class, 1);
     }
 }

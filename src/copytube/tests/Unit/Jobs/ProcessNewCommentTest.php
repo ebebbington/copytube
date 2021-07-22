@@ -24,13 +24,15 @@ class ProcessNewCommentTest extends TestCase
 
         // Get data
         $CommentsModel = new CommentsModel();
-        $comment = $CommentsModel->CreateQuery([
+        $comment = $CommentsModel->CreateQuery(
+            [
             "comment" => "Test",
             "author" => "Test",
             "date_posted" => "2020-02-02",
             "user_id" => 2,
             "video_posted_on" => "test",
-        ]);
+            ]
+        );
 
         //        Queue::assertPushed(ProcessNewComment::class, function ($job) {
         //            return 1 === 10;
