@@ -49,7 +49,7 @@ jobs:
           composer install
           npm run dev
           docker-compose build --parallel
-          docker-compose up -d copytube_sql > /dev/null
+          docker-compose up -d sql > /dev/null
           docker-compose up -d > /dev/null
           docker exec copytube_phpfpm vendor/bin/phpunit
 
@@ -108,7 +108,7 @@ jobs:
       - name: Realtime Tests
         run: |
           docker-compose build --parallel > /dev/null
+          docker-compose up -d redis
           docker-compose up -d
-          sleep 20
           docker exec copytube_realtime deno test -A tests/integration/tests.ts
           docker exec copytube_realtime deno test -A  tests/unit/tests.ts
