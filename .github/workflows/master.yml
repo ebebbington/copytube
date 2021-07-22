@@ -45,9 +45,6 @@ jobs:
 
       - name: Laravel Backend Tests
         run: |
-          npm ci
-          composer install
-          npm run dev
           docker-compose build --parallel
           docker-compose up -d > /dev/null
           sleep 12
