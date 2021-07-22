@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Events\CommentAdded;
 use App\Events\UserDeleted;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

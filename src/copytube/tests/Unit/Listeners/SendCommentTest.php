@@ -3,15 +3,8 @@
 namespace Tests\Unit\Listeners;
 
 use App\CommentsModel;
-use App\Events\CommentAdded;
 use App\Jobs\ProcessNewComment;
-use App\Jobs\RedisQueueTest;
 use App\Listeners\SendComment;
-use Illuminate\Queue\Jobs\Job;
-use Illuminate\Queue\Listener;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;

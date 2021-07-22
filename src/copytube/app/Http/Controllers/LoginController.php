@@ -4,19 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Mail\AccountLocked;
 use App\UserModel;
-use App\SessionModel;
 
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use View;
-use Cookie;
-use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {

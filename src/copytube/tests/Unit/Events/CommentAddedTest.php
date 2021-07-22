@@ -4,7 +4,6 @@ namespace Tests\Unit\Events;
 
 use App\CommentsModel;
 use App\Events\CommentAdded;
-use App\Jobs\ProcessNewComment;
 use Illuminate\Support\Facades\Event;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;

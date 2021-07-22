@@ -7,7 +7,6 @@
 namespace App\Controller\Login;
 
 require_once "If no autoloader is present";
-use App\Some\Classes\Required\In\This\File\MyClass;
 
 class SomeClass extends AnotherClass implements AnInterface
 {

@@ -14,7 +14,6 @@ namespace App\Models\Classes; // or remove the "MyModel" bit? as i would do: App
 require "DatabaseModel.php";
 require "UserInterface.php";
 use App\Models\Interfaces\UserInterface;
-use App\Models\Classes\DatabaseModel;
 
 class UserModel extends DatabaseModel implements UserInterface
 {

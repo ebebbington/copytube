@@ -2,9 +2,7 @@
 
 namespace Tests\Browse\Component;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use Laravel\Dusk\Component;
 use Tests\DuskTestCase;
 
 class LoadingComponentTest extends DuskTestCase

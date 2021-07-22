@@ -5,6 +5,7 @@ namespace App\Controllers\Classes;
 require "AbstractController.php";
 require "IndexInterface.php";
 use App\Controllers\Interfaces\IndexInterface;
+
 require "/Users/edward/Development/environments/php-testing/src/Models/UserModel.php";
 use App\Models\Classes\UserModel;
 

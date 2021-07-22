@@ -4,7 +4,6 @@ namespace Tests\Unit\Mail;
 
 use App\Mail\AccountLocked;
 use Illuminate\Support\Facades\Mail;
-use Mockery;
 use Tests\TestCase;
 
 class AccountLockedTest extends TestCase
