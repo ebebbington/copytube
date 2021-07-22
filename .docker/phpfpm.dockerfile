@@ -35,6 +35,8 @@ COPY ./.docker/config/php.ini /etc/php.ini
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+WORKDIR src/copytube
 RUN composer install
 RUN npm ci
 RUN npm run dev
+COPY . .
