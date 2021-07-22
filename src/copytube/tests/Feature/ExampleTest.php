@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\RegisterController;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use PhpParser\Node\Expr\Cast\Object_;
 use Tests\TestCase;
 
 /**

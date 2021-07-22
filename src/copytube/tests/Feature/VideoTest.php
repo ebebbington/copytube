@@ -2,15 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
-use Mockery;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideoTest extends TestCase
@@ -273,7 +268,6 @@ class VideoTest extends TestCase
         $res = $this->get("/video/titles?title=I Dont exist", $headers);
         $res->assertStatus(200);
         $res->assertJson(["success" => true, "data" => []]);
-
     }
 
     public function testWatchSingleVideoWithoutAuth()
@@ -409,7 +403,8 @@ class VideoTest extends TestCase
         $TestUtilities::logUserIn($userId2);
         // make request with correct title
         $response = $this->put(
-            $TestUtilities::$video_comment_path, [
+            $TestUtilities::$video_comment_path,
+            [
             "id" => $commentId,
             "newComment" => "Hello world :)",
             ]
@@ -436,7 +431,8 @@ class VideoTest extends TestCase
         // make request with correct title
         $newComment = "Hello world :)";
         $response = $this->put(
-            $TestUtilities::$video_comment_path, [
+            $TestUtilities::$video_comment_path,
+            [
             "id" => $commentId,
             "newComment" => $newComment,
             ]

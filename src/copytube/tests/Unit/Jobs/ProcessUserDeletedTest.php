@@ -2,10 +2,7 @@
 
 namespace Tests\Unit\Jobs;
 
-use App\CommentsModel;
 use App\Jobs\ProcessNewComment;
-use App\UserModel;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;

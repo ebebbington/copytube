@@ -3,18 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\UserModel;
-use App\SessionModel;
 
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use View;
-use App\Mail\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
 
 class RecoverController extends Controller

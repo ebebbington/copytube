@@ -2,11 +2,6 @@
 
 namespace Tests\Unit\Events;
 
-use App\CommentsModel;
-use App\Events\CommentAdded;
-use App\Jobs\ProcessNewComment;
-use App\UserModel;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;
@@ -16,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class UserDeletedTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function testEventFired()
     {
         $Event = new Event();

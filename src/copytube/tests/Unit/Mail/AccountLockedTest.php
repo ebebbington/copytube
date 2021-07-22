@@ -4,7 +4,6 @@ namespace Tests\Unit\Mail;
 
 use App\Mail\AccountLocked;
 use Illuminate\Support\Facades\Mail;
-use Mockery;
 use Tests\TestCase;
 
 class AccountLockedTest extends TestCase
@@ -25,7 +24,8 @@ class AccountLockedTest extends TestCase
                 new AccountLocked("Test Email", "Generated from unit tests")
             );
         $Mail::assertSent(
-            AccountLocked::class, function ($mail) {
+            AccountLocked::class,
+            function ($mail) {
                 return $mail->hasTo("EdwardSBebbington@hotmail.com");
             }
         );

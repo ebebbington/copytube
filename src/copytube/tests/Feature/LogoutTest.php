@@ -3,18 +3,14 @@
 namespace Tests\Feature;
 
 use App\User;
-use App\UserModel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LogoutTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     private function makeDeleteRequest(): ?object
     {
         //        $headers = [
