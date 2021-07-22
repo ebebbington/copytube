@@ -7,11 +7,8 @@ use App\UserModel;
 use http\Client\Curl\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use View;
 
 class RegisterController extends Controller

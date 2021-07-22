@@ -2,14 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\UserModel;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RecoverTest extends TestCase
 {

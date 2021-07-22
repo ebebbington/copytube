@@ -2,15 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\BaseModel;
 use App\User;
-use App\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 
 class LoginTest extends TestCase

@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\CommentAdded;
 use App\Jobs\ProcessNewComment;
 use App\UserModel;
 
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use View;

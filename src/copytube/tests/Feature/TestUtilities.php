@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\User;
 use App\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

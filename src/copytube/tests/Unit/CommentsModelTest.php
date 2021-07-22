@@ -3,13 +3,8 @@
 namespace Tests\Unit;
 
 use App\CommentsModel;
-use App\TestModel;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
-use Illuminate\Container\Container as Container;
-use Illuminate\Support\Facades\Facade as Facade;
 
 class CommentsModelTest extends TestCase
 {

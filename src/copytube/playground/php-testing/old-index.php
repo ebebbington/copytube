@@ -24,6 +24,7 @@ class LoginModel
 
 // Two classes have a method named the same
 namespace App\Controller\ClassA;
+
 class A
 {
     public function number()
@@ -33,6 +34,7 @@ class A
 }
 
 namespace App\Model\ClassA;
+
 class A
 {
     public function number()
@@ -44,6 +46,7 @@ class A
 // Now it's impossible to call a method with the same name if we
 // specify the class object
 use App\Controller\ClassA as ClassAController;
+
 $Controller = new ClassAController\A();
 $int = $Controller->number();
 echo $int;
@@ -51,6 +54,7 @@ echo $int;
 echo " : ";
 
 use App\Model\ClassA;
+
 $Model = new ClassA\A();
 $int = $Model->number();
 echo $int;

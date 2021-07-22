@@ -5,12 +5,9 @@ namespace App\Http\Controllers;
 use App\CommentsModel;
 use App\Jobs\ProcessUserDeleted;
 use App\UserModel;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class UserController extends Controller
 {
