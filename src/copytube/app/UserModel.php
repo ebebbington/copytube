@@ -106,7 +106,7 @@ class UserModel extends BaseModel
      */
     protected $rules = [
         "username" => "required",
-        "email" => "required|email|unique:users,email_address",
+        "email" => "required|email",
         "password" => "required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/",
         "profile_picture" => ["required", "regex:/.*\.(jpg|jpeg|png)\b/"],
     ];
