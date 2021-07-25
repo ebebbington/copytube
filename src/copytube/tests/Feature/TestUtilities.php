@@ -100,13 +100,11 @@ class TestUtilities
     {
         $TestUtilities = new TestUtilities();
         if ($userId) {
-            return DB
-                ::table("users")
+            return DB::table("users")
                 ->where("id", "=", $userId)
                 ->first();
         }
-        return DB
-            ::table("users")
+        return DB::table("users")
             ->where("email_address", "=", $TestUtilities::$validEmail)
             ->first();
     }

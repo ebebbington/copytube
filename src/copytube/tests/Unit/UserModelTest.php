@@ -20,7 +20,6 @@ class UserModelTest extends TestCase
             "login_attempts" => 3,
             "email_address" => "testemail",
             "recover_token" => $recoverToken,
-            
         ]);
     }
 

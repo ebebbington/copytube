@@ -11,14 +11,14 @@ class OptimiseCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'optimise';
+    protected $signature = "optimise";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Make optimisations to improve speed';
+    protected $description = "Make optimisations to improve speed";
 
     /**
      * Create a new command instance.
@@ -37,6 +37,8 @@ class OptimiseCommand extends Command
      */
     public function handle()
     {
-        shell_exec("composer dumpautoload -o && php artisan route:cache && php artisan cache:clear && php artisan api:cache && php artisan config:cache");
+        shell_exec(
+            "composer dumpautoload -o && php artisan route:cache && php artisan cache:clear && php artisan api:cache && php artisan config:cache"
+        );
     }
 }
