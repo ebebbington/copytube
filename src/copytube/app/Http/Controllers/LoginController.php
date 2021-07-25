@@ -86,7 +86,7 @@ class LoginController extends Controller
         }
     }
 
-    public function get()
+    public function get(Request $request)
     {
         if (Auth::user()) {
             return response()->redirectTo("/home");
