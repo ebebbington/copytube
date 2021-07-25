@@ -181,7 +181,7 @@ class BaseModelTest extends TestCase
         );
         $redisData = $Cache::get($cacheKey);
         $expectedRedisData = new \stdClass();
-        $expectedRedisData->id = 205;
+        $expectedRedisData->id = 12;
         $expectedRedisData->test = "Goodbye world 2";
         $this->assertEquals($expectedRedisData, $redisData);
         $row = $TestModel->SelectQuery([

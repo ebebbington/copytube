@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->tinyInteger('logged_in');
             $table->tinyInteger('login_attempts');
-            $table->string('profile_picture');
+            $table->string('profile_picture')->nullable(true);
             $table->string('recover_token', 8000)->nullable(true);
             $table->rememberToken();
             $table->timestamps();
