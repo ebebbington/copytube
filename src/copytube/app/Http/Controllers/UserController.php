@@ -20,7 +20,7 @@ class UserController extends Controller
 
         // Remove row from db
         $UserModel = new UserModel();
-        $UserModel->DeleteQuery(["email_address" => $user["email_address"]]);
+        $UserModel->DeleteQuery(["email_address" => $user->email_address]);
 
         // Remove all comments
         $CommentsModel = new CommentsModel();

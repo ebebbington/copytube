@@ -173,7 +173,7 @@ class VideoController extends Controller
             "author" => $username,
             "date_posted" => $datePosted,
             "video_posted_on" => $videoPostedOn,
-            "user_id" => $user["id"],
+            "user_id" => $user->id,
         ];
         $validated = $Comments->validate($newComment);
         if ($validated !== true) {
