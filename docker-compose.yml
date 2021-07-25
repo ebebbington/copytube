@@ -50,9 +50,7 @@ services:
 
   sql:
     container_name: copytube_sql
-    build:
-      context: .
-      dockerfile: .docker/sql.dockerfile
+    image: mysql:8
     ports:
       - "3007:3006"
     env_file:
