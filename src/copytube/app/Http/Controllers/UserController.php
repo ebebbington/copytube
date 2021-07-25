@@ -6,7 +6,6 @@ use App\CommentsModel;
 use App\Jobs\ProcessUserDeleted;
 use App\UserModel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\UserModel;
-
-use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use View;

@@ -51,6 +51,7 @@ services:
       - ./src/copytube/webpack.mix.js:/var/www/copytube/webpack.mix.js
       - ./src/copytube/.env:/var/www/copytube/.env
       - ./src/copytube/tests:/var/www/copytube/tests
+      - ./src/copytube/storage:/var/www/copytube/storage
     # Run commands after volumes are mounted. The php-fpm cmd is here so the container doesnt exit after running the composer command
     networks:
       - copytube-network

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\UserModel;
-
-use http\Client\Curl\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,7 +23,6 @@ class RegisterController extends Controller
         // get data
         $username = $request->input("username");
         $email = $request->input("email");
-        $hash = UserModel::generateHash($request->input("password"));
 
         // Validate user details
         $User = new UserModel();
@@ -52,25 +49,13 @@ class RegisterController extends Controller
         }
 
         // remove the raw password
+        $hash = UserModel::generateHash($request->input("password"));
         $_POST["password"] = null;
         $request->merge(["password" => null]);
         Log::info("Removed references to the raw password");
 
-        // Check if user already exists
-        $userExists = UserModel::exists($email);
-        if ($userExists === true) {
-            return response(
-                [
-                    "success" => false,
-                    "message" => "user already exists",
-                ],
-                403
-            );
-        }
-        Log::info("User doesnt exists");
-
         // Save the user
-        $User->CreateQuery([
+        $user = $User->CreateQuery([
             "username" => $username,
             "email_address" => $email,
             "password" => $hash,
@@ -84,10 +69,6 @@ class RegisterController extends Controller
         //            ], 500);
         //        }
         // Get user id, save profile picture if required and update the profile_picture field
-        $user = $User->SelectQuery([
-            "where" => "email_address = '$email'",
-            "limit" => 1,
-        ]);
         $profilePicturePath = $request->hasFile("profile-picture")
             ? $request->file("profile-picture")->store($user->id)
             : "sample.jpg";

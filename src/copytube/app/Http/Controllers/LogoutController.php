@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\UserModel;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class LogoutController extends Controller

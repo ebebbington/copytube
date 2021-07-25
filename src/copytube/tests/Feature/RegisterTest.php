@@ -252,24 +252,6 @@ class RegisterTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function testPostWhenUserExists()
-    {
-        TestUtilities::removeTestUsersInDb();
-        TestUtilities::createTestUserInDb();
-        $response = $this->makePostRequest(
-            TestUtilities::$validUsername,
-            TestUtilities::$validEmail,
-            TestUtilities::$validPassword,
-            ""
-        );
-        $response->assertJson([
-            "success" => false,
-            "message" => "user already exists",
-        ]);
-        $response->assertStatus(403);
-        TestUtilities::removeTestUsersInDb();
-    }
-
     public function testProfilePictureIsSavedOnPost()
     {
         $TestUtilities = new TestUtilities();
