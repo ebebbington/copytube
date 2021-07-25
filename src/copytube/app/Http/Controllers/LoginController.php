@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mail\AccountLocked;
 use App\UserModel;
 
-use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
