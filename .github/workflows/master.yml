@@ -45,12 +45,11 @@ jobs:
 
       - name: Laravel Backend Tests
         run: |
-          npm ci
-          composer install
-          npm run dev
+          docker-compose up -d sql
           docker-compose build --parallel
           docker-compose up -d > /dev/null
-          sleep 12
+          docker exec copytube_phpfpm php artisan migrate
+          docker exec copytube_phpfpm php artisan db:seed
           docker exec copytube_phpfpm vendor/bin/phpunit
 
 #  laravel-frontend-tests:

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browse\Component;
+namespace Tests\Browser\Component;
 
 use App\UserModel;
 use Illuminate\Support\Facades\Cache;
@@ -72,7 +72,7 @@ class RabbitHoleComponentTest extends DuskTestCase
                 ->waitUntil('!$.active');
             // check rabbit hole videos
             $this->assertEquals(
-                "http://copytube_nginx:9002/videos/lava_sample.mp4",
+                "videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(

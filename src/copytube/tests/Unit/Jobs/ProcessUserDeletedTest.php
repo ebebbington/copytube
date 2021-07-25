@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Jobs;
 
-use App\Jobs\ProcessNewComment;
 use Illuminate\Support\Facades\Queue;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;

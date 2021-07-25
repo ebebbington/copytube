@@ -18,32 +18,29 @@
 //return Cache::remember('home.index', 60 * 60 * 24, fn() => (new App\Http\Controllers\HomeController)->index($request));
 */
 
-Route::get("/", function () {
-    return redirect("home");
+Route::redirect("/", "/home");
+
+Route::prefix("register")->group(function () {
+    Route::get("/", "RegisterController@index")->name("register");
+    Route::post("/", "RegisterController@submit");
 });
 
-Route::get("/register", [
-    "as" => "register",
-    "uses" => "RegisterController@index",
-]);
-Route::post("/register", "RegisterController@submit");
+Route::prefix("/login")->group(function () {
+    Route::get("/", "LoginController@get")->name("login");
+    Route::post("/", "LoginController@post");
+});
 
-Route::get("/login", ["as" => "login", "uses" => "LoginController@get"]);
-Route::post("/login", "LoginController@post");
-
-Route::get("/home", [
-    "as" => "home",
-    "uses" => "HomeController@index",
-])->middleware("auth");
+Route::get("/home", "HomeController@index")
+    ->middleware("auth")
+    ->name("home");
 
 Route::post("/video/comment", "VideoController@postComment")->middleware(
     "auth"
 );
 Route::get("/video/titles", "VideoController@autocomplete")->middleware("auth");
-Route::get("/video", [
-    "as" => "video",
-    "uses" => "VideoController@index",
-])->middleware("auth");
+Route::get("/video", "VideoController@index")
+    ->middleware("auth")
+    ->name("video");
 Route::get("/videos", "VideoController@getVideos")->middleware("auth");
 Route::delete("/video/comment", "VideoController@deleteComment")->middleware(
     "auth"
@@ -55,10 +52,7 @@ Route::put("video/comment", "VideoController@updateComment")->middleware(
 Route::get("/logout", "LogoutController@logout")->middleware("auth");
 
 Route::get("/recover", "RecoverController@index");
-Route::post("/recover", [
-    "as" => "recover",
-    "uses" => "RecoverController@post",
-]);
+Route::post("/recover", "RecoverController@post")->name("recover");
 
 Route::get("/chat", "ChatController@index");
 

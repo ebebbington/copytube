@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Mail\AccountLocked;
 use App\UserModel;
-
-use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -41,6 +39,7 @@ class LoginController extends Controller
         }
 
         // Disable their account if no login attempts are left
+        // TODO :: For future reference, we should pop this into a queue, but for just learning Laravel, there's not much point
         if ($user->login_attempts === 0) {
             $token = $UserModel->lockAccount($user->id, $email);
             $title = "Account Locked";

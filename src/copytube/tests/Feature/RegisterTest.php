@@ -6,7 +6,6 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
-use Illuminate\Support\Facades\DB;
 
 class RegisterTest extends TestCase
 {
@@ -251,24 +250,6 @@ class RegisterTest extends TestCase
             "message" => $this->profile_picture_invalid_error_msg,
         ]);
         $response->assertStatus(401);
-    }
-
-    public function testPostWhenUserExists()
-    {
-        TestUtilities::removeTestUsersInDb();
-        TestUtilities::createTestUserInDb();
-        $response = $this->makePostRequest(
-            TestUtilities::$validUsername,
-            TestUtilities::$validEmail,
-            TestUtilities::$validPassword,
-            ""
-        );
-        $response->assertJson([
-            "success" => false,
-            "message" => "user already exists",
-        ]);
-        $response->assertStatus(403);
-        TestUtilities::removeTestUsersInDb();
     }
 
     public function testProfilePictureIsSavedOnPost()

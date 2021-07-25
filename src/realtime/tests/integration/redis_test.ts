@@ -17,14 +17,13 @@ Rhum.testPlan("tests/integration/redis_test.ts", () => {
         })();
         await pub.publish("realtime.comments.new", "wayway");
         const message = await p;
-
+        await sub.close();
+        pub.close();
+        redis.close();
         assertEquals(message, {
           channel: "realtime.comments.new",
           message: "wayway",
         });
-        await sub.close();
-        pub.close();
-        redis.close();
       },
     );
   });

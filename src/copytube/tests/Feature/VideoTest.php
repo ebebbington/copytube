@@ -270,7 +270,7 @@ class VideoTest extends TestCase
     {
         $TestUtilities = new TestUtilities();
         $userId = $TestUtilities::createTestUserInDb(["logged_in" => 0]);
-        $TestUtilities::logUserIn($userId);
+        Auth::loginUsingId($userId);
         // make request with title but doesnt exist
         $response = $this->get("/video?requestedVideo=Idontexist");
         $response->assertStatus(404);
@@ -285,7 +285,7 @@ class VideoTest extends TestCase
         $TestUtilities = new TestUtilities();
         $userId = $TestUtilities::createTestUserInDb(["logged_in" => 0]);
         // Auth user
-        $TestUtilities::logUserIn($userId);
+        Auth::loginUsingId($userId);
         // Make request with no video request
         $response = $this->get($TestUtilities::$video_path);
         // Assert the view
@@ -317,7 +317,7 @@ class VideoTest extends TestCase
         $Cache::flush();
         $TestUtilities = new TestUtilities();
         $userId = $TestUtilities::createTestUserInDb();
-        $TestUtilities::logUserIn($userId);
+        Auth::loginUsingId($userId);
         // make request with correct title
         $response = $this->get("/video?requestedVideo=Lava Sample");
         // Assert the view
@@ -338,7 +338,7 @@ class VideoTest extends TestCase
         foreach ($data["rabbitHoleVideos"] as $vid) {
             $this->assertEquals(true, $vid->title !== $this->lava_sample_title);
         }
-        $this->assertEquals(3, sizeof($data["comments"]));
+        $this->assertEquals(1, sizeof($data["comments"]));
         foreach ($data["comments"] as $comment) {
             $this->assertEquals(
                 true,
@@ -366,7 +366,7 @@ class VideoTest extends TestCase
         $userId = $TestUtilities::createTestUserInDb();
         $user = $TestUtilities::getTestUserInDb($userId);
         $commentId = $TestUtilities::createTestCommentInDb($user);
-        $TestUtilities::logUserIn($userId);
+        Auth::loginUsingId($userId);
         // make request with correct title
         $response = $this->put(TestUtilities::$video_comment_path);
         $response->assertSee(
@@ -390,7 +390,7 @@ class VideoTest extends TestCase
             ::table("comments")
             ->where("id", "=", $commentId)
             ->first();
-        $TestUtilities::logUserIn($userId2);
+        Auth::loginUsingId($userId2);
         // make request with correct title
         $response = $this->put($TestUtilities::$video_comment_path, [
             "id" => $commentId,
@@ -416,7 +416,7 @@ class VideoTest extends TestCase
             ::table("comments")
             ->where("id", "=", $commentId)
             ->first();
-        $TestUtilities::logUserIn($userId);
+        Auth::loginUsingId($userId);
         // make request with correct title
         $newComment = "Hello world :)";
         $response = $this->put($TestUtilities::$video_comment_path, [

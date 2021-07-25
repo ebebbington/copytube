@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\UserModel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TestUtilities
@@ -29,16 +28,13 @@ class TestUtilities
 
     public static function removeTestCommentsInDB(int $userId = null)
     {
-        $Database = new DB();
         if ($userId) {
-            $Database
-                ::table("comments")
+            DB::table("comments")
                 ->where("id", "=", $userId)
                 ->delete();
         } else {
             $TestUtilities = new TestUtilities();
-            $Database
-                ::table("comments")
+            DB::table("comments")
                 ->where("author", "=", $TestUtilities::$validUsername)
                 ->delete();
         }
@@ -71,8 +67,7 @@ class TestUtilities
                 ? $overrides["profile_picture"]
                 : "",
         ];
-        $Database = new DB();
-        return $Database::table("users")->insertGetId($data); // userId
+        return DB::table("users")->insertGetId($data); // userId
     }
 
     public static function createTestCommentInDb($user): int
@@ -84,22 +79,18 @@ class TestUtilities
             "video_posted_on" => "Something More",
             "user_id" => $user->id,
         ];
-        $Database = new DB();
-        return $Database::table("comments")->insertGetId($data); // commentId
+        return DB::table("comments")->insertGetId($data); // commentId
     }
 
     public static function removeTestUsersInDb(array $query = [])
     {
-        $Database = new DB();
         if (isset($query) && count($query) >= 1) {
-            $Database
-                ::table("users")
+            DB::table("users")
                 ->where($query)
                 ->delete();
         } else {
             $TestUtilities = new TestUtilities();
-            $Database
-                ::table("users")
+            DB::table("users")
                 ->where(["username" => $TestUtilities::$validUsername])
                 ->delete();
         }
@@ -107,23 +98,14 @@ class TestUtilities
 
     public static function getTestUserInDb(int $userId = null)
     {
-        $Database = new DB();
         $TestUtilities = new TestUtilities();
         if ($userId) {
-            return $Database
-                ::table("users")
+            return DB::table("users")
                 ->where("id", "=", $userId)
                 ->first();
         }
-        return $Database
-            ::table("users")
+        return DB::table("users")
             ->where("email_address", "=", $TestUtilities::$validEmail)
             ->first();
-    }
-
-    public static function logUserIn(int $userId)
-    {
-        $Auth = new Auth();
-        $Auth::loginUsingId($userId);
     }
 }

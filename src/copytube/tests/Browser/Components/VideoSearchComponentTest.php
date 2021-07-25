@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browse\Component;
+namespace Tests\Browser\Component;
 
 use App\UserModel;
 use Laravel\Dusk\Browser;
@@ -88,7 +88,7 @@ class VideoSearchComponentTest extends DuskTestCase
                 ->click("#search-button")
                 ->waitUntil(TestUtilities::$active);
             $this->assertEquals(
-                "http://copytube_nginx:9002/videos/lava_sample.mp4",
+                "videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(
@@ -122,7 +122,7 @@ class VideoSearchComponentTest extends DuskTestCase
                 ->click($this->search_bar_results_selector)
                 ->waitUntil(TestUtilities::$active, 20);
             $this->assertEquals(
-                "http://copytube_nginx:9002/videos/lava_sample.mp4",
+                "videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(

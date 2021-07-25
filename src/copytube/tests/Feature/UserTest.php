@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use PHPUnit\Util\Test;
 use Tests\TestCase;
 
 class UserTest extends TestCase

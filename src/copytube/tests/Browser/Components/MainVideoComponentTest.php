@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browse\Component;
+namespace Tests\Browser\Component;
 
 use App\UserModel;
 use Laravel\Dusk\Browser;
@@ -26,7 +26,7 @@ class MainVideoComponentTest extends DuskTestCase
                 ->visit(TestUtilities::$video_path_with_query)
                 ->assertPathIs(TestUtilities::$video_path);
             $this->assertEquals(
-                "http://copytube_nginx:9002/videos/something_more.mp4",
+                "videos/something_more.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(
@@ -60,7 +60,7 @@ class MainVideoComponentTest extends DuskTestCase
                 ->visit("/video?requestedVideo=Lava+Sample")
                 ->assertPathIs(TestUtilities::$video_path);
             $this->assertEquals(
-                "http://copytube_nginx:9002/videos/lava_sample.mp4",
+                "videos/lava_sample.mp4",
                 $browser->attribute("#main-video-holder > video", "src")
             );
             $this->assertEquals(

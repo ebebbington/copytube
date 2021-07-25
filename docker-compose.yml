@@ -40,19 +40,25 @@ services:
       - ./.docker/env/phpfpm.env
     ports:
       - "9000:9000"
-    volumes:
-      - ./src/copytube:/var/www/copytube
-    # Run commands after volumes are mounted. The php-fpm cmd is here so the container doesnt exit after running the composer command
     command: bash -c "php-fpm -F"
-    working_dir: /var/www/copytube
+    volumes:
+      - ./src/copytube/app:/var/www/copytube/app
+      - ./src/copytube/config:/var/www/copytube/config
+      - ./src/copytube/routes:/var/www/copytube/routes
+      - ./src/copytube/database:/var/www/copytube/database
+      - ./src/copytube/resources:/var/www/copytube/resources
+      - ./src/copytube/composer.json:/var/www/copytube/composer.json
+      - ./src/copytube/webpack.mix.js:/var/www/copytube/webpack.mix.js
+      - ./src/copytube/.env:/var/www/copytube/.env
+      - ./src/copytube/tests:/var/www/copytube/tests
+      - ./src/copytube/storage:/var/www/copytube/storage
+    # Run commands after volumes are mounted. The php-fpm cmd is here so the container doesnt exit after running the composer command
     networks:
       - copytube-network
 
   sql:
     container_name: copytube_sql
-    build:
-      context: .
-      dockerfile: .docker/sql.dockerfile
+    image: mysql:8
     ports:
       - "3007:3006"
     env_file:

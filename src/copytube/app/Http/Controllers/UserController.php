@@ -6,7 +6,6 @@ use App\CommentsModel;
 use App\Jobs\ProcessUserDeleted;
 use App\UserModel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -20,7 +19,7 @@ class UserController extends Controller
 
         // Remove row from db
         $UserModel = new UserModel();
-        $UserModel->DeleteQuery(["email_address" => $user["email_address"]]);
+        $UserModel->DeleteQuery(["email_address" => $user->email_address]);
 
         // Remove all comments
         $CommentsModel = new CommentsModel();

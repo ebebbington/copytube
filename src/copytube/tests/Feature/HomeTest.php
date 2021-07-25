@@ -3,13 +3,14 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Support\Facades\Auth;
 
 class HomeTest extends TestCase
 {
     public function testGetWithAuth()
     {
         $userId = TestUtilities::createTestUserInDb();
-        TestUtilities::logUserIn($userId);
+        Auth::loginUsingId($userId);
         $response = $this->json("GET", "/home");
         $response->assertStatus(200);
         $response->assertViewIs("home");

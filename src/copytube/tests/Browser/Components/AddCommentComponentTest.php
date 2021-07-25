@@ -31,7 +31,7 @@ class AddCommentComponentTest extends DuskTestCase
                 ->pause(10)
                 ->visit("http://copytube_nginx:9002$this->uri")
                 ->assertpathIs($this->path)
-                ->type("new-comment", "hello");
+                ->type("#add-comment-input", "hello");
             $count = $browser->attribute(
                 "#comment-character-count",
                 "innerHTML"
