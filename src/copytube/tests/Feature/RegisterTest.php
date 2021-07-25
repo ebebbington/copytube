@@ -6,7 +6,6 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
-use Illuminate\Support\Facades\DB;
 
 class RegisterTest extends TestCase
 {
