@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browse\Component;
+namespace Tests\Browser\Component;
 
 use App\UserModel;
 use Laravel\Dusk\Browser;
