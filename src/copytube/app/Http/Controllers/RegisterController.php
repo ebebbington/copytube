@@ -47,6 +47,16 @@ class RegisterController extends Controller
                 401
             );
         }
+        if (UserModel::exists($email) === true) {
+            return response(
+                [
+                    "success" => false,
+                    "message" => "user already exists",
+                ],
+                403
+            );
+        }
+        Log::info("User doesnt exists");
 
         // remove the raw password
         $hash = UserModel::generateHash($request->input("password"));

@@ -69,12 +69,12 @@ class LoginController extends Controller
             );
         } else {
             // Reduce login attempts
-            // if ($user->login_attempts > 0) {
-            //     $UserModel->updateLoginAttempts(
-            //         $email,
-            //         $user->login_attempts - 1
-            //     );
-            // }
+            if ($user->login_attempts > 0) {
+                $UserModel->updateLoginAttempts(
+                    $email,
+                    $user->login_attempts - 1
+                );
+            }
             return response(
                 [
                     "success" => false,
