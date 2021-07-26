@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\RegisterController;
 use Tests\TestCase;
 
 /**
