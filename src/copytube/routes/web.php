@@ -22,7 +22,7 @@ Route::redirect("/", "/home");
 
 Route::prefix("register")->group(function () {
     Route::get("/", "RegisterController@index")->name("register");
-    Route::post("/", "RegisterController@submit");
+    Route::post("/", "RegisterController@submit")->middleware('redirect.if.authed');
 });
 
 Route::prefix("login")->group(function () {
