@@ -10,7 +10,6 @@ class TestUtilities
     public static string $active = "!$.active";
     public static string $login_path = "/login";
     public static string $register_path = "/register";
-    public static string $chat_path = "/chat";
     public static string $home_path = "/home";
     public static string $video_path_with_query = "/video?requestedVideo=Something+More";
     public static string $video_path = "/video";

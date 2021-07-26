@@ -25,9 +25,11 @@ Route::prefix("register")->group(function () {
     Route::post("/", "RegisterController@submit");
 });
 
-Route::prefix("/login")->group(function () {
-    Route::get("/", "LoginController@get")->name("login");
-    Route::post("/", "LoginController@post");
+Route::prefix("login")->group(function () {
+    Route::get("/", "LoginController@get")
+        ->name("login")
+        ->middleware("redirect.if.authed");
+    Route::post("/", "LoginController@post")->middleware("redirect.if.authed");
 });
 
 Route::get("/home", "HomeController@index")
@@ -53,8 +55,6 @@ Route::get("/logout", "LogoutController@logout")->middleware("auth");
 
 Route::get("/recover", "RecoverController@index");
 Route::post("/recover", "RecoverController@post")->name("recover");
-
-Route::get("/chat", "ChatController@index");
 
 Route::delete("/user", "UserController@Delete")->middleware("auth");
 

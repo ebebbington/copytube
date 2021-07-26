@@ -72,29 +72,6 @@ class HeaderComponentTest extends DuskTestCase
         });
     }
 
-    public function testChatLinkCanBeClicked()
-    {
-        TestUtilities::createTestUserInDb();
-        $this->browse(function ($browser) {
-            $browser
-                ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        TestUtilities::$validEmail
-                    )
-                        ->limit(1)
-                        ->first()
-                )
-                ->visit(TestUtilities::$video_path_with_query)
-                ->waitForText("Something More")
-                ->assertPathIs(TestUtilities::$video_path)
-                ->clickLink("Chat")
-                ->assertPathIs(TestUtilities::$chat_path);
-            TestUtilities::removeTestUsersInDb();
-        });
-    }
-
     public function testRegisterLinkCanBeClicked()
     {
         $this->browse(function ($browser) {

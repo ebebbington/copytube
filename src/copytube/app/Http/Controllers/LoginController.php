@@ -13,10 +13,6 @@ class LoginController extends Controller
 {
     public function post(Request $request)
     {
-        if (Auth::user()) {
-            return response()->redirectTo("/home");
-        }
-
         // get data
         $email = $request->input("email");
         $password = $request->input("password");
@@ -57,17 +53,9 @@ class LoginController extends Controller
                 403
             );
         }
+
         // Auth
-        if (Auth::attempt($credentials)) {
-            // Set the user to logged in
-            $UserModel->updateLoggedIn(0, $email);
-            return response(
-                [
-                    "success" => true,
-                ],
-                200
-            );
-        } else {
+        if (!Auth::attempt($credentials)) {
             // Reduce login attempts
             if ($user->login_attempts > 0) {
                 $UserModel->updateLoginAttempts(
@@ -83,13 +71,19 @@ class LoginController extends Controller
                 403
             );
         }
+
+        // Set the user to logged in
+        $UserModel->updateLoggedIn(0, $email);
+        return response(
+            [
+                "success" => true,
+            ],
+            200
+        );
     }
 
     public function get()
     {
-        if (Auth::user()) {
-            return response()->redirectTo("/home");
-        }
         return View::make("login")->with("title", "Login");
     }
 }

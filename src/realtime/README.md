@@ -1,7 +1,6 @@
 # Realtime (Realtime Socket Update)
 
 This section provides the real time update aspect for **the whole application**
-minus the Video Chat.
 
 It contains and uses the following:
 
