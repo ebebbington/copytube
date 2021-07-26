@@ -18,6 +18,7 @@
 //return Cache::remember('home.index', 60 * 60 * 24, fn() => (new App\Http\Controllers\HomeController)->index($request));
 */
 
+
 Route::redirect("/", "/home");
 
 Route::prefix("register")->group(function () {
@@ -25,8 +26,8 @@ Route::prefix("register")->group(function () {
     Route::post("/", "RegisterController@submit");
 });
 
-Route::prefix("/login")->group(function () {
-    Route::get("/", "LoginController@get")->name("login");
+Route::prefix('login')->group(function () {
+    Route::get("/", "LoginController@get")->name("login")->middleware('redirect.if.authed');
     Route::post("/", "LoginController@post");
 });
 
