@@ -22,12 +22,12 @@ Route::redirect("/", "/home");
 
 Route::prefix("register")->group(function () {
     Route::get("/", "RegisterController@index")->name("register");
-    Route::post("/", "RegisterController@submit")->middleware('redirect.if.authed');
+    Route::post("/", "RegisterController@submit");
 });
 
 Route::prefix("login")->group(function () {
     Route::get("/", "LoginController@get")->name("login")->middleware('redirect.if.authed');
-    Route::post("/", "LoginController@post");
+    Route::post("/", "LoginController@post")->middleware('redirect.if.authed');
 });
 
 Route::get("/home", "HomeController@index")
