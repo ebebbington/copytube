@@ -35,33 +35,6 @@ class VideoController extends Controller
         ) {
             abort(403);
         }
-        // Old code before adding laravel auth
-        //        // Get a user by that cookie
-        //        $Session = new SessionModel;
-        //        $data = [
-        //            'query' => ['session_id' => $sessionId],
-        //            'selectOne' => true
-        //        ];
-        //        $found = $Session->SelectQuery($data);
-        //        if (empty($found)) {
-        //            Log::debug('No session was found with that session id e.g. it was never created in the db');
-        //            return View::make('login')->with('title', 'Login');
-        //        }
-
-        // Old code before adding laravel auth
-        //        $User = new UserModel;
-        //        $data['query'] = ['id' => $Session->user_id];
-        //        $found = $User->SelectQuery($data);
-        //        if (empty($found) || !$User || $Session->user_id !== $User->id) {
-        //            Log::debug('No user was found with a matching user id in the sessions table');
-        //            return View::make('login')->with('title', 'Login');
-        //        }
-
-        // Old code before adding laravel auth
-        //        // Set the user in the session
-        //        unset($User->password);
-        //        session(['user' => $User]); // $request->session()->get('user'); // [{...}]
-        //        Log::debug('Set the user inside the session object, returning home');
 
         $VideosModel = new VideosModel();
         $mainVideo = $VideosModel->getVideoByTitle($videoNameRequested);
@@ -71,17 +44,6 @@ class VideoController extends Controller
                 ": " .
                 json_encode($mainVideo)
         );
-        // TODO :: replace logic from getAllByVideoTitleAndJoinProfilePicture with this code and use that method
-        $comments = CommentsModel::join(
-            "users",
-            "comments.user_id",
-            "=",
-            "users.id"
-        )
-            ->select(["comments.*", "users.profile_picture"])
-            ->where("video_id", "=", $mainVideo->id)
-            ->get();
-        Log::debug($comments);
 
         // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
@@ -91,6 +53,10 @@ class VideoController extends Controller
             );
             abort(404);
         }
+
+        $CommentsModel = new CommentsModel;
+        $comments = $CommentsModel->getAllByVideoIdJoinUserProfilePic($mainVideo->id);
+        Log::debug($comments);
 
         Log::info(
             $loggingPrefix .

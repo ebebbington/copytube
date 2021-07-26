@@ -109,36 +109,21 @@ class CommentsModel extends BaseModel
         return $day . "/" . $month . "/" . $year; // the formatted date
     }
 
-    /**
-     * @method getAllByVideoTitle
-     *
-     * @description
-     * Gets al comments that match the passed in title. Also formats the dates for you
-     *
-     * @param string $videoTitle
-     *
-     * @return array|bool|object
-     *
-     * @example
-     * $comments = $CommentsModel->getAllByVideoTitle('Something More'); array or false
-     */
-    public function getAllByVideoTitleAndJoinProfilePicture(int $videoId)
+    public function getAllByVideoIdJoinUserProfilePic(int $videoId)
     {
         $query = [
-            "select" => ["comments.*", "users.profile_picture"],
-            "join" => ["users", "comments.user_id", "=", "users.id"],
-            "where" => "video_id = $videoId",
-            "limit" => -1,
-            "orderBy" => ["column" => "date_posted", "direction" => "DESC"],
+            'select' => ['comments.*', 'users.profile_picture'],
+            'join' => ['users', 'comments.user_id', '=', 'users.id'],
+            'where' => "video_id = $videoId",
+            'limit' => -1,
+            "orderBy" => ["column" => "date_posted", "direction" => "DESC"]
         ];
         $cacheKey = "db:comments:videoId=" . $videoId;
         $comments = $this->SelectQuery($query, $cacheKey);
-        if ($comments) {
-            $comments = $this->formatDates($comments);
-        } else {
-            $comments = [];
+        if (!$comments) {
+            return [];
         }
-        return $comments;
+        return $this->formatDates($comments);
     }
 
     public function createComment(array $data)
