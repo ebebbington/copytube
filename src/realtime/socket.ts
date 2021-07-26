@@ -11,14 +11,6 @@ let allClients: Array<IClient> = [];
 const port = config().PORT;
 
 export class SocketServer {
-  /**
-   * Gets all connected clients
-   *
-   * @returns The list of all clients
-   */
-  public static getAllClients(): IClient[] {
-    return allClients;
-  }
 
   // Blocks the event loop, needs to be at the end
   // Start the websocket server, and with each connection, append to a list of clients

@@ -29,7 +29,6 @@ export class Redis {
     console.info(
       "Subscribed to redis and awaiting messages on the following channels:",
     );
-    console.info(channels);
     return await redis.subscribe(...channels);
   }
 
@@ -50,7 +49,6 @@ export class Redis {
             ". Sending the message to the socket client",
         );
         console.info("FYI, here's the data received from Redis:");
-        console.info(message);
         sendMessageCallback(message);
       }
     })();

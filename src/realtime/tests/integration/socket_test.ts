@@ -1,4 +1,4 @@
-import { assertEquals, deferred, Rhum } from "../../deps.ts";
+import { assertEquals, deferred, Rhum } from "../deps.ts";
 import { Redis } from "../../redis.ts";
 
 // Deno.test({

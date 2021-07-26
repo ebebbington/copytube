@@ -109,5 +109,5 @@ jobs:
           docker-compose build --parallel > /dev/null
           docker-compose up -d
           sleep 20
-          docker exec copytube_realtime deno test -A tests/integration/tests.ts
-          docker exec copytube_realtime deno test -A  tests/unit/tests.ts
+          docker exec copytube_realtime deno test -A tests/integration
+          docker exec copytube_realtime deno test -A  tests/unit
