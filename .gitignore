@@ -9,6 +9,7 @@ src/copytube/Homestead.json
 src/copytube/Homestead.yaml
 src/copytube/npm-debug.log
 src/copytube/yarn-error.log
+src/copytube/storage/debugbar
 .git
 .idea
 src/copytube/data/*
