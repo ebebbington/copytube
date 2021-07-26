@@ -112,11 +112,11 @@ class CommentsModel extends BaseModel
     public function getAllByVideoIdJoinUserProfilePic(int $videoId)
     {
         $query = [
-            'select' => ['comments.*', 'users.profile_picture'],
-            'join' => ['users', 'comments.user_id', '=', 'users.id'],
-            'where' => "video_id = $videoId",
-            'limit' => -1,
-            "orderBy" => ["column" => "date_posted", "direction" => "DESC"]
+            "select" => ["comments.*", "users.profile_picture"],
+            "join" => ["users", "comments.user_id", "=", "users.id"],
+            "where" => "video_id = $videoId",
+            "limit" => -1,
+            "orderBy" => ["column" => "date_posted", "direction" => "DESC"],
         ];
         $cacheKey = "db:comments:videoId=" . $videoId;
         $comments = $this->SelectQuery($query, $cacheKey);

@@ -54,8 +54,10 @@ class VideoController extends Controller
             abort(404);
         }
 
-        $CommentsModel = new CommentsModel;
-        $comments = $CommentsModel->getAllByVideoIdJoinUserProfilePic($mainVideo->id);
+        $CommentsModel = new CommentsModel();
+        $comments = $CommentsModel->getAllByVideoIdJoinUserProfilePic(
+            $mainVideo->id
+        );
         Log::debug($comments);
 
         Log::info(
@@ -67,6 +69,7 @@ class VideoController extends Controller
         );
 
         // Get rabbit hole videos that aren't main video
+        // TODO :: Maybe we can get mainvideo and rabbit hold vids in one query?
         $rabbitHoleVideos = $VideosModel->getRabbitHoleVideos(
             $videoNameRequested
         );
