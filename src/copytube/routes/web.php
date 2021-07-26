@@ -26,10 +26,8 @@ Route::prefix("register")->group(function () {
 });
 
 Route::prefix("login")->group(function () {
-    Route::get("/", "LoginController@get")
-        ->name("login")
-        ->middleware("redirect.if.authed");
-    Route::post("/", "LoginController@post");
+    Route::get("/", "LoginController@get")->name("login");
+    Route::post("/", "LoginController@post")->middleware("redirect.if.authed");
 });
 
 Route::get("/home", "HomeController@index")
