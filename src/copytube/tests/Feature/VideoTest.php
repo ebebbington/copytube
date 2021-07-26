@@ -11,7 +11,7 @@ class VideoTest extends TestCase
 {
     private string $something_more_title = "Something More";
 
-    private string $lava_sample_title = "Lava Sample";
+    private string $lava_sample_id = 2;
 
     public function testPostCommentWithoutAuth()
     {
@@ -342,7 +342,7 @@ class VideoTest extends TestCase
         foreach ($data["comments"] as $comment) {
             $this->assertEquals(
                 true,
-                $comment->video_posted_on === $this->lava_sample_title
+                $comment->video_id === $this->lava_sample_id
             );
         }
         $this->assertEquals(true, $data["email"] === "TestEmail@hotmail.com");

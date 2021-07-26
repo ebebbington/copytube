@@ -44,7 +44,7 @@ class CommentsModel extends BaseModel
      *
      * @var Int
      */
-    public $video_posted_on;
+    public $video_id;
 
     public $user_id;
 
@@ -57,7 +57,7 @@ class CommentsModel extends BaseModel
         "comment",
         "author",
         "date_posted",
-        "video_posted_on",
+        "video_id",
         "user_id",
     ];
 
@@ -70,11 +70,16 @@ class CommentsModel extends BaseModel
         "comment" => "required",
         "author" => "required",
         "date_posted" => "required",
-        "video_posted_on" => "required",
+        "video_id" => "required",
         "user_id" => "required",
     ];
 
     public $timestamps = false;
+
+    public function user()
+    {
+        return $this->hasOne(UserModel::class, "id", "user_id");
+    }
 
     /**
      * @method formatDates
@@ -117,16 +122,16 @@ class CommentsModel extends BaseModel
      * @example
      * $comments = $CommentsModel->getAllByVideoTitle('Something More'); array or false
      */
-    public function getAllByVideoTitleAndJoinProfilePicture(string $videoTitle)
+    public function getAllByVideoTitleAndJoinProfilePicture(int $videoId)
     {
         $query = [
             "select" => ["comments.*", "users.profile_picture"],
             "join" => ["users", "comments.user_id", "=", "users.id"],
-            "where" => "video_posted_on = '$videoTitle'",
+            "where" => "video_id = $videoId",
             "limit" => -1,
             "orderBy" => ["column" => "date_posted", "direction" => "DESC"],
         ];
-        $cacheKey = "db:comments:videoTitle=" . $videoTitle;
+        $cacheKey = "db:comments:videoId=" . $videoId;
         $comments = $this->SelectQuery($query, $cacheKey);
         if ($comments) {
             $comments = $this->formatDates($comments);
@@ -138,7 +143,7 @@ class CommentsModel extends BaseModel
 
     public function createComment(array $data)
     {
-        $cacheKey = "db:comments:videoTitle=" . $data["video_posted_on"];
+        $cacheKey = "db:comments:videoId=" . $data["video_id"];
         return $this->CreateQuery($data, $cacheKey);
     }
 }

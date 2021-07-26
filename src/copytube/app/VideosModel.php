@@ -62,6 +62,11 @@ class VideosModel extends BaseModel
      */
     protected $rules = [];
 
+    public function comments()
+    {
+        return $this->hasMany(CommentsModel::class, "video_id", "id");
+    }
+
     private function getLoggingPrefix(string $functionName): string
     {
         return "[VideosModel - " . $functionName . "] ";

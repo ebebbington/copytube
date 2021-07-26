@@ -71,6 +71,17 @@ class VideoController extends Controller
                 ": " .
                 json_encode($mainVideo)
         );
+        // TODO :: replace logic from getAllByVideoTitleAndJoinProfilePicture with this code and use that method
+        $comments = CommentsModel::join(
+            "users",
+            "comments.user_id",
+            "=",
+            "users.id"
+        )
+            ->select(["comments.*", "users.profile_picture"])
+            ->where("video_id", "=", $mainVideo->id)
+            ->get();
+        Log::debug($comments);
 
         // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
@@ -95,11 +106,6 @@ class VideoController extends Controller
         );
         Log::info($loggingPrefix . "Retrieved rabbit hole videos");
 
-        // Get the comments for the main video
-        $Comments = new CommentsModel();
-        $comments = $Comments->getAllByVideoTitleAndJoinProfilePicture(
-            $videoNameRequested
-        );
         $user = Auth::user();
         $renderData = [
             "title" => $mainVideo->title,
@@ -168,7 +174,7 @@ class VideoController extends Controller
             "comment" => $comment,
             "author" => $username,
             "date_posted" => $datePosted,
-            "video_posted_on" => $videoPostedOn,
+            "video_id" => $foundVideo->id,
             "user_id" => $user->id,
         ];
         $validated = $Comments->validate($newComment);
@@ -182,7 +188,13 @@ class VideoController extends Controller
             );
         }
         $row = $Comments->createComment($newComment);
-        dispatch(new ProcessNewComment($row, $user->profile_picture));
+        dispatch(
+            new ProcessNewComment(
+                $row,
+                $user->profile_picture,
+                $foundVideo->title
+            )
+        );
         $resData = [
             "success" => true,
         ];
@@ -241,11 +253,10 @@ class VideoController extends Controller
         $success = $CommentsModel->DeleteQuery([
             "id" => $commentId,
         ]);
-        $videoTitle = $comment->video_posted_on;
         $cacheKey = str_replace(
             " ",
             "+",
-            "db:comments:videoTitle=" . $videoTitle
+            "db:comments:videoId=" . $comment->video_id
         );
         Cache::forget($cacheKey);
         return response()->json([
@@ -290,11 +301,10 @@ class VideoController extends Controller
                 "comment" => $commentText,
             ]
         );
-        $videoTitle = $comment->video_posted_on;
         $cacheKey = str_replace(
             " ",
             "+",
-            "db:comments:videoTitle=" . $videoTitle
+            "db:comments:videoId=" . $comment->video_id
         );
         Cache::forget($cacheKey);
         return response()->json([

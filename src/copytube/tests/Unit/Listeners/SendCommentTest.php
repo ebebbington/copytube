@@ -24,7 +24,7 @@ class SendCommentTest extends TestCase
             "author" => "Test",
             "date_posted" => "2020-02-02",
             "user_id" => 2,
-            "video_posted_on" => "test",
+            "video_id" => 4,
         ]);
         $Mockery = new Mockery();
         $listener = $Mockery::mock("SendComment");

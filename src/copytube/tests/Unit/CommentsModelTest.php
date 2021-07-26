@@ -34,9 +34,7 @@ class CommentsModelTest extends TestCase
     public function testGetAllByVideoTitleAndJoinProfilePictures()
     {
         $CommentsModel = new CommentsModel();
-        $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture(
-            "Something More"
-        );
+        $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture(1);
         $this->assertEquals(false, empty($comments));
         foreach ($comments as $comment) {
             $this->assertEquals(
@@ -50,9 +48,7 @@ class CommentsModelTest extends TestCase
         $this->assertEquals(true, isset($redisData) && !empty($redisData));
 
         // And when no comments are found
-        $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture(
-            "I dont exist"
-        );
+        $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture(3);
         $this->assertTrue($comments === []);
     }
 
@@ -63,7 +59,7 @@ class CommentsModelTest extends TestCase
             "comment" => "Test",
             "author" => "Test",
             "date_posted" => "2020-03-02",
-            "video_posted_on" => "Test",
+            "video_id" => 4,
             "user_id" => 1,
         ];
         $comment = $CommentsModel->createComment($data);

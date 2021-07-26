@@ -19,20 +19,26 @@ class ProcessNewComment implements ShouldQueue
 
     protected $profilePicture;
 
+    protected $videoPostedOn;
+
     /**
      * Create a new job instance.
      *
      * @param CommentsModel $comment
      * @param string        $profilePicture
      */
-    public function __construct(CommentsModel $comment, string $profilePicture)
-    {
+    public function __construct(
+        CommentsModel $comment,
+        string $profilePicture,
+        string $videoPostedOn
+    ) {
         Log::info(
             "[ProcessNewComment - constructor] Received: " .
                 json_encode($comment)
         );
         $this->comment = $comment;
         $this->profilePicture = $profilePicture;
+        $this->videoPostedOn = $videoPostedOn;
     }
 
     /**
@@ -43,6 +49,7 @@ class ProcessNewComment implements ShouldQueue
     public function handle()
     {
         $this->comment["profile_picture"] = $this->profilePicture;
+        $this->comment["video_posted_on"] = $this->videoPostedOn;
         Log::info(
             "[ProcessNewComment - handle] Sending following data to CommentAdded event: " .
                 json_encode($this->comment)

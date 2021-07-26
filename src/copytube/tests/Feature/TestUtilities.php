@@ -75,7 +75,7 @@ class TestUtilities
             "comment" => "TEST COMMENT FROM DUSK",
             "author" => $user->username,
             "date_posted" => "2020-09-04",
-            "video_posted_on" => "Something More",
+            "video_id" => 1,
             "user_id" => $user->id,
         ];
         return DB::table("comments")->insertGetId($data); // commentId

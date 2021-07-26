@@ -111,6 +111,11 @@ class UserModel extends BaseModel
         "profile_picture" => ["required", "regex:/.*\.(jpg|jpeg|png)\b/"],
     ];
 
+    public function comments()
+    {
+        return $this->hasMany(CommentsModel::class, "user_id", "id");
+    }
+
     /**
      * Check a user exists by a given email address
      *

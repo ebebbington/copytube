@@ -26,7 +26,7 @@ class CommentAddedTest extends TestCase
             "author" => "Test",
             "date_posted" => "2020-02-02",
             "user_id" => 2,
-            "video_posted_on" => "test",
+            "video_id" => 4,
         ]);
         // Send event
         $Event::dispatch(new CommentAdded($comment));
