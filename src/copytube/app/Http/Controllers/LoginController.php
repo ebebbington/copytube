@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Mail\AccountLocked;
 use App\UserModel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
+use Request;
+use Auth;
+use Mail;
 use View;
 
 class LoginController extends Controller

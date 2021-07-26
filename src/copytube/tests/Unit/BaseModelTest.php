@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\TestModel;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use Cache;
+use DB;
 use Tests\TestCase;
 
 class BaseModelTest extends TestCase

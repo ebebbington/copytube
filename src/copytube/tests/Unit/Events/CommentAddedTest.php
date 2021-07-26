@@ -4,7 +4,7 @@ namespace Tests\Unit\Events;
 
 use App\CommentsModel;
 use App\Events\CommentAdded;
-use Illuminate\Support\Facades\Event;
+use Event;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;
 

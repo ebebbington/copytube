@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\CommentsModel;
 use App\Jobs\ProcessUserDeleted;
 use App\UserModel;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Auth;
+use Storage;
 
 class UserController extends Controller
 {

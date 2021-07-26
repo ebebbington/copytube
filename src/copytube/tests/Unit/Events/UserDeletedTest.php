@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Events;
 
-use Illuminate\Support\Facades\Event;
+use Event;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;
 use App\Events\UserDeleted;

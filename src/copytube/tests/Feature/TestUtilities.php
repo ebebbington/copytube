@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\UserModel;
-use Illuminate\Support\Facades\DB;
+use DB;
 
 class TestUtilities
 {

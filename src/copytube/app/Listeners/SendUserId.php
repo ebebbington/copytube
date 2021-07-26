@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\UserDeleted;
-use Illuminate\Support\Facades\Redis;
+use Redis;
 
 class SendUserId
 {

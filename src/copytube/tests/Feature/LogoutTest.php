@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use Tests\TestCase;
 
 class LogoutTest extends TestCase

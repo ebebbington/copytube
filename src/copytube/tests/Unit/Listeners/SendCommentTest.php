@@ -5,7 +5,7 @@ namespace Tests\Unit\Listeners;
 use App\CommentsModel;
 use App\Jobs\ProcessNewComment;
 use App\Listeners\SendComment;
-use Illuminate\Support\Facades\Redis;
+use Redis;
 use Tests\TestCase;
 use Mockery;
 

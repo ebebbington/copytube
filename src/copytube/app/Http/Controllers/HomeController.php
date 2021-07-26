@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Auth;
+use Log;
 use View;
 use App\VideosModel;
 

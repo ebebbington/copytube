@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use Seeder;
 use Database\Seeders\CommentSeeder;
 use Database\Seeders\VideoSeeder;
 use Database\Seeders\UserSeeder;

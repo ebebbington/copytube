@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Jobs;
 
-use Illuminate\Support\Facades\Queue;
+use Queue;
 use Tests\Feature\TestUtilities;
 use Tests\TestCase;
 use App\Jobs\ProcessUserDeleted;

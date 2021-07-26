@@ -4,7 +4,7 @@ namespace Tests\Unit\Jobs;
 
 use App\CommentsModel;
 use App\Jobs\ProcessNewComment;
-use Illuminate\Support\Facades\Queue;
+use Queue;
 use Tests\TestCase;
 
 class ProcessNewCommentTest extends TestCase

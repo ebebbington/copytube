@@ -3,8 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\CommentAdded;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
+use Log;
+use Redis;
 
 class SendComment
 {

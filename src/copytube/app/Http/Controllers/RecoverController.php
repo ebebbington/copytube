@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\UserModel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Request;
+use Log;
 use View;
-use Illuminate\Support\Facades\Cookie;
+use Cookie;
 
 class RecoverController extends Controller
 {

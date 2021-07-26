@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use Auth;
+use Cache;
+use DB;
 use Tests\TestCase;
 use Illuminate\Testing\TestResponse;
 

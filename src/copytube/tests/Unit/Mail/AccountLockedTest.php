@@ -3,7 +3,7 @@
 namespace Tests\Unit\Mail;
 
 use App\Mail\AccountLocked;
-use Illuminate\Support\Facades\Mail;
+use Mail;
 use Tests\TestCase;
 
 class AccountLockedTest extends TestCase

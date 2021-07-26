@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
+use Hash;
+use Log;
 use Illuminate\Support\Str;
 
 class UserModel extends BaseModel

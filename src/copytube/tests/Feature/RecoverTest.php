@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Hash;
+use Hash;
 use Tests\TestCase;
 
 class RecoverTest extends TestCase

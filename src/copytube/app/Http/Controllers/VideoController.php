@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ProcessNewComment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use Request;
+use Auth;
+use Cache;
+use Log;
 use View;
 use App\CommentsModel;
 use App\VideosModel;

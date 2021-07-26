@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\UserModel;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use DB;
+use Hash;
 use Tests\TestCase;
 
 class UserModelTest extends TestCase

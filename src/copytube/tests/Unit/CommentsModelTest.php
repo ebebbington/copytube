@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\CommentsModel;
-use Illuminate\Support\Facades\Cache;
+use Cache;
 use Tests\TestCase;
 
 class CommentsModelTest extends TestCase
