@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CommentsModelTest extends TestCase
 {
     use RefreshDatabase;
+    
     public function testFormattingDates()
     {
         $CommentsModel = new CommentsModel();

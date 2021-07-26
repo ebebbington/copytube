@@ -81,11 +81,8 @@ class TestUtilities
         return DB::table("comments")->insertGetId($data); // commentId
     }
 
-    public static function removeTestUsersInDb(array $query = [], string $foreignKey = "")
+    public static function removeTestUsersInDb(array $query = [], bool $constraint = true)
     {
-        if ($foreignKey) {
-            DB::table("users")->forei
-        }
         if (isset($query) && count($query) >= 1) {
             DB::table("users")
                 ->where($query)

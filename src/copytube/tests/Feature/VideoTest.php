@@ -2,16 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\TestModel;
+use App\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideoTest extends TestCase
-{
-    use RefreshDatabase;
-    
+{    
     private string $something_more_title = "Something More";
 
     private int $lava_sample_id = 2;
@@ -19,7 +18,6 @@ class VideoTest extends TestCase
     public function testPostCommentWithoutAuth()
     {
         $TestUtilities = new TestUtilities();
-        $TestUtilities::removeTestUsersInDb();
         // Run request without auth
         $headers = [
             "HTTP_X-Requested-With" => "XMLHttpRequest",
@@ -46,7 +44,6 @@ class VideoTest extends TestCase
         $Auth = new Auth();
         $Database = new DB();
         $TestUtilities = new TestUtilities();
-        $TestUtilities::removeTestUsersInDb();
         $userId = $TestUtilities::createTestUserInDb([
             "profile_picture" => $TestUtilities::$validProfilePicture,
         ]);
@@ -65,12 +62,12 @@ class VideoTest extends TestCase
             ::table("comments")
             ->whereRaw("id = $commentId")
             ->first();
-        $this->assertEquals(null, $comment);
         $TestUtilities::removeTestUsersInDb();
         $Database
             ::table("comments")
             ->whereRaw("id = $commentId")
             ->delete();
+        $this->assertEquals(null, $comment);
     }
 
     public function testDeleteCommentWhenNoIDPassedIn()
@@ -98,7 +95,6 @@ class VideoTest extends TestCase
         $Auth = new Auth();
         $Database = new DB();
         $TestUtilities = new TestUtilities();
-        $TestUtilities::removeTestUsersInDb();
         $userId1 = $TestUtilities::createTestUserInDb([
             "profile_picture" => $TestUtilities::$validProfilePicture,
         ]);
@@ -248,7 +244,7 @@ class VideoTest extends TestCase
         $res->assertStatus(200);
         $res->assertJson([
             "success" => true,
-            "data" => [$this->something_more_title, $this->lava_sample_title],
+            "data" => [$this->something_more_title, 'Lava Sample'],
         ]);
 
         // make request with an incorrect title that will respond with no data
@@ -330,16 +326,16 @@ class VideoTest extends TestCase
         // assert the data sent back to view
         $content = $response->getOriginalContent();
         $data = $content->getData();
-        $this->assertEquals($this->lava_sample_title, $data["title"]); // defaults to something more
+        $this->assertEquals('Lava Sample', $data["title"]); // defaults to something more
         $this->assertEquals("TestUsername", $data["username"]);
         $this->assertEquals(
-            $this->lava_sample_title,
+            'Lava Sample',
             $data["mainVideo"]->title
         );
         $this->assertEquals("2", sizeof($data["rabbitHoleVideos"]));
         // Shouldn't be the main video
         foreach ($data["rabbitHoleVideos"] as $vid) {
-            $this->assertEquals(true, $vid->title !== $this->lava_sample_title);
+            $this->assertEquals(true, $vid->title !== 'Lava Sample');
         }
         $this->assertEquals(1, sizeof($data["comments"]));
         foreach ($data["comments"] as $comment) {
