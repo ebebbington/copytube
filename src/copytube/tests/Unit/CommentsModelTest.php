@@ -5,9 +5,11 @@ namespace Tests\Unit;
 use App\CommentsModel;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentsModelTest extends TestCase
 {
+    use RefreshDatabase;
     public function testFormattingDates()
     {
         $CommentsModel = new CommentsModel();
@@ -63,7 +65,7 @@ class CommentsModelTest extends TestCase
             "user_id" => 21,
         ];
         $comment = $CommentsModel->createComment($data);
-        $CommentsModel->DeleteQuery(["comment", "=", "Test"]);
+        $CommentsModel->DeleteQuery(["comment" => "Test"]);
         $this->assertEquals(true, isset($comment) && !empty($comment));
     }
 }

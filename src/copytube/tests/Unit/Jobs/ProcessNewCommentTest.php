@@ -37,7 +37,7 @@ class ProcessNewCommentTest extends TestCase
         //        });
 
         // Run the faked job
-        $job = (new ProcessNewComment($comment, "img/test"))->onQueue(
+        $job = (new ProcessNewComment($comment, "img/test", "An Iceland Venture"))->onQueue(
             "comments"
         );
         dispatch($job);

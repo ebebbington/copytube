@@ -6,9 +6,11 @@ use App\TestModel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BaseModelTest extends TestCase
 {
+    use RefreshDatabase;
     private function insertOne($value)
     {
         $Database = new DB();

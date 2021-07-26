@@ -6,9 +6,11 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterTest extends TestCase
 {
+    use RefreshDatabase;
     private string $password_invalid_error_msg = "The password format is invalid.";
     private string $profile_picture_invalid_error_msg = "The profile picture format is invalid.";
 

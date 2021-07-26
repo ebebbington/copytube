@@ -4,9 +4,12 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RecoverTest extends TestCase
 {
+    use RefreshDatabase;
+    
     private $uri = "/recover";
 
     private function sendPostRequest($email, $password)

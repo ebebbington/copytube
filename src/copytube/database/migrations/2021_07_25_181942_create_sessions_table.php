@@ -31,6 +31,9 @@ class CreateSessionsTable extends Migration
      */
     public function down()
     {
+        Schema::table('sessions', function (Blueprint $table) {
+            $table->dropForeign('user_id');
+        });
         Schema::dropIfExists("sessions");
     }
 }

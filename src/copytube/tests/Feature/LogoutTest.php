@@ -4,9 +4,12 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LogoutTest extends TestCase
 {
+    use RefreshDatabase;
+    
     private function makeDeleteRequest(): ?object
     {
         //        $headers = [

@@ -4,9 +4,12 @@ namespace Tests\Unit;
 
 use App\VideosModel;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideosModelTest extends TestCase
 {
+    use RefreshDatabase;
+    
     public function testGetVideoByTitleMethod()
     {
         $VideosModel = new VideosModel();

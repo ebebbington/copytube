@@ -28,7 +28,7 @@ class SendCommentTest extends TestCase
         ]);
         $Mockery = new Mockery();
         $listener = $Mockery::mock("SendComment");
-        $job = new ProcessNewComment($comment, "img/test");
+        $job = new ProcessNewComment($comment, "img/test", "An Iceland Venture");
 
         // Assertions
         $Redis = new Redis();
