@@ -23,7 +23,7 @@ class SendCommentTest extends TestCase
             "comment" => "Test",
             "author" => "Test",
             "date_posted" => "2020-02-02",
-            "user_id" => 2,
+            "user_id" => 21,
             "video_id" => 3,
         ]);
         $Mockery = new Mockery();

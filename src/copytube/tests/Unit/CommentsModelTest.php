@@ -34,7 +34,7 @@ class CommentsModelTest extends TestCase
     public function testGetAllByVideoIdJoinUserProfilePic()
     {
         $CommentsModel = new CommentsModel();
-        $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture(1);
+        $comments = $CommentsModel->getAllByVideoIdJoinUserProfilePic(1);
         $this->assertEquals(false, empty($comments));
         foreach ($comments as $comment) {
             $this->assertEquals(
@@ -48,7 +48,7 @@ class CommentsModelTest extends TestCase
         $this->assertEquals(true, isset($redisData) && !empty($redisData));
 
         // And when no comments are found
-        $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture(3);
+        $comments = $CommentsModel->getAllByVideoIdJoinUserProfilePic(3);
         $this->assertTrue($comments === []);
     }
 
@@ -60,10 +60,10 @@ class CommentsModelTest extends TestCase
             "author" => "Test",
             "date_posted" => "2020-03-02",
             "video_id" => 3,
-            "user_id" => 1,
+            "user_id" => 21,
         ];
         $comment = $CommentsModel->createComment($data);
-        $CommentsModel->DeleteQuery(['comment', '=', 'Test']);
+        $CommentsModel->DeleteQuery(["comment", "=", "Test"]);
         $this->assertEquals(true, isset($comment) && !empty($comment));
     }
 }
