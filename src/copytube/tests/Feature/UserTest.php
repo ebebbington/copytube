@@ -44,14 +44,14 @@ class UserTest extends TestCase
                 "comment" => "Hello",
                 "author" => "hello",
                 "user_id" => $userId,
-                "video_id" => 4,
+                "video_id" => 3,
                 "date_posted" => "2020-03-03",
             ],
             [
                 "comment" => "Hello",
                 "author" => "hello",
                 "user_id" => $userId,
-                "video_id" => 4,
+                "video_id" => 3,
                 "date_posted" => "2020-03-03",
             ],
         ]);

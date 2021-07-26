@@ -31,7 +31,7 @@ class CommentsModelTest extends TestCase
         $this->assertEquals("22/03/2020", $formattedDate);
     }
 
-    public function testGetAllByVideoTitleAndJoinProfilePictures()
+    public function testGetAllByVideoIdJoinUserProfilePic()
     {
         $CommentsModel = new CommentsModel();
         $comments = $CommentsModel->getAllByVideoTitleAndJoinProfilePicture(1);
@@ -59,10 +59,11 @@ class CommentsModelTest extends TestCase
             "comment" => "Test",
             "author" => "Test",
             "date_posted" => "2020-03-02",
-            "video_id" => 4,
+            "video_id" => 3,
             "user_id" => 1,
         ];
         $comment = $CommentsModel->createComment($data);
+        $CommentsModel->DeleteQuery(['comment', '=', 'Test']);
         $this->assertEquals(true, isset($comment) && !empty($comment));
     }
 }
