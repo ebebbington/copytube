@@ -31,6 +31,6 @@ class RedirectIfAuthenticated
             return response()->redirectTo("/home");
         }
 
-        // return $next($request);
+        return $next($request);
     }
 }
