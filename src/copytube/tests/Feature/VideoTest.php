@@ -11,7 +11,7 @@ class VideoTest extends TestCase
 {
     private string $something_more_title = "Something More";
 
-    private string $lava_sample_id = 2;
+    private int $lava_sample_id = 2;
 
     public function testPostCommentWithoutAuth()
     {
