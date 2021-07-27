@@ -228,6 +228,8 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 -   3. Install the PHP Debug extension for VSCode
 -   4. Start debugging
 
+If you see xdebug errors when inside the phpfpm container (host.docker.internal), it's because your IDE isn't running debugging, just go to "Run" -> "Start Debugging"
+
 # Information
 
 ## 4xx|5xx Status
