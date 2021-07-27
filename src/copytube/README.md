@@ -223,7 +223,7 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 
 ## Setup
 
--   1. Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
+-   1. ~~Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)~~ Not actually needed anymore
 -   2. The configuration file for VSCode has already been setup (`./.vscode/*`)
 -   3. Install the PHP Debug extension for VSCode
 -   4. Start debugging
