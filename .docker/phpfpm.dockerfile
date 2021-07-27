@@ -10,7 +10,6 @@ RUN apt-get install -y \
   libpng-dev unzip curl libjpeg-dev libzip-dev libjpeg62-turbo-dev libfreetype6-dev
 # or libc-client-dev, libonig-dev, apt-transport-https, apt-utils, libmcrypt-dev
 
-RUN apt install -y nodejs
 RUN apt install -y npm
 RUN npm i npm@latest -g
 
