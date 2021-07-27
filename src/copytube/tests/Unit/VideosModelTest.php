@@ -9,7 +9,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class VideosModelTest extends TestCase
 {
     use RefreshDatabase;
-    
+
+    protected $seed = true;
+
     public function testGetVideoByTitleMethod()
     {
         $VideosModel = new VideosModel();

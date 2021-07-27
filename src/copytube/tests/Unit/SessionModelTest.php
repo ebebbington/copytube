@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class SessionModelTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $seed = true;
     /**
      * A basic unit test example.
      *

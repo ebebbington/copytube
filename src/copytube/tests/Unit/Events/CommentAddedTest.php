@@ -5,11 +5,14 @@ namespace Tests\Unit\Events;
 use App\CommentsModel;
 use App\Events\CommentAdded;
 use Illuminate\Support\Facades\Event;
-use Tests\Feature\TestUtilities;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentAddedTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected $seed = true;
     /**
      * A basic unit test example.
      *
@@ -17,7 +20,6 @@ class CommentAddedTest extends TestCase
      */
     public function testEventFired()
     {
-        TestUtilities::removeTestUsersInDb();
         $Event = new Event();
         $Event::fake();
         $CommentsModel = new CommentsModel();

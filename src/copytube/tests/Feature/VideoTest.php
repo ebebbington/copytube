@@ -2,34 +2,38 @@
 
 namespace Tests\Feature;
 
-use App\TestModel;
+use App\CommentsModel;
 use App\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideoTest extends TestCase
-{    
+{
+    use RefreshDatabase;
+
     private string $something_more_title = "Something More";
+
+    protected $seed = true;
 
     private int $lava_sample_id = 2;
 
     public function testPostCommentWithoutAuth()
     {
-        $TestUtilities = new TestUtilities();
         // Run request without auth
         $headers = [
             "HTTP_X-Requested-With" => "XMLHttpRequest",
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         $res = $this->post(
-            $TestUtilities::$video_comment_path,
+            TestUtilities::$video_comment_path,
             ["comment" => "test"],
             $headers
         );
         $res->assertStatus(302);
-        $res->assertRedirect($TestUtilities::$login_path);
+        $res->assertRedirect(TestUtilities::$login_path);
     }
 
     public function testDeleteCommentWithoutAuth()
@@ -41,99 +45,73 @@ class VideoTest extends TestCase
 
     public function testDeleteCommentWithAllValidData()
     {
-        $Auth = new Auth();
-        $Database = new DB();
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb([
-            "profile_picture" => $TestUtilities::$validProfilePicture,
+        $user = UserModel::factory()->create([
+            "profile_picture" => TestUtilities::$validProfilePicture,
         ]);
-        $Auth::loginUsingId($userId);
+        Auth::loginUsingId($user["id"]);
         // $user = Auth::user();
         //        $headers = [
         //            "HTTP_X-Requested-With" => "XMLHttpRequest",
         //            "X-CSRF-TOKEN" => csrf_token(),
         //        ];
-        $user = $Auth::user();
-        $TestUtilities = new TestUtilities();
-        $commentId = $TestUtilities::createTestCommentInDb($user);
-        $res = $this->delete("/video/comment?id=" . $commentId);
+        $comment = CommentsModel::factory()->create([
+            "user_id" => $user["id"],
+        ]);
+        $res = $this->delete("/video/comment?id=" . $comment["id"]);
         $res->assertSee("Successfully deleted");
-        $comment = $Database
-            ::table("comments")
-            ->whereRaw("id = $commentId")
+        $comment = DB::table("comments")
+            ->whereRaw("id = " . $comment["id"])
             ->first();
-        $TestUtilities::removeTestUsersInDb();
-        $Database
-            ::table("comments")
-            ->whereRaw("id = $commentId")
-            ->delete();
         $this->assertEquals(null, $comment);
     }
 
     public function testDeleteCommentWhenNoIDPassedIn()
     {
-        $Auth = new Auth();
-        $TestUtilities = new TestUtilities();
-        $TestUtilities::removeTestUsersInDb();
-        $userId = $TestUtilities::createTestUserInDb([
+        $user = UserModel::factory()->create([
             "profile_picture" => TestUtilities::$validProfilePicture,
         ]);
-        $Auth::loginUsingId($userId);
+        Auth::loginUsingId($user["id"]);
         //        $user = Auth::user();
         //        $headers = [
         //            "HTTP_X-Requested-With" => "XMLHttpRequest",
         //            "X-CSRF-TOKEN" => csrf_token(),
         //        ];
-        $user = $Auth::user();
-        $TestUtilities::createTestCommentInDb($user);
-        $res = $this->delete($TestUtilities::$video_comment_path);
+        CommentsModel::factory()->create([
+            "user_id" => $user["id"],
+        ]);
+        $res = $this->delete(TestUtilities::$video_comment_path);
         $res->assertSee("Failed to delete. Id must be provided");
     }
 
     public function testDeleteCommentOnlyDeletedWhenIsUsers()
     {
-        $Auth = new Auth();
-        $Database = new DB();
-        $TestUtilities = new TestUtilities();
-        $userId1 = $TestUtilities::createTestUserInDb([
-            "profile_picture" => $TestUtilities::$validProfilePicture,
+        $users = UserModel::factory()
+            ->count(2)
+            ->create([
+                "profile_picture" => TestUtilities::$validProfilePicture,
+            ]);
+        Auth::loginUsingId($users[0]["id"]);
+        $comment1 = CommentsModel::factory()->create([
+            "user_id" => $users[0]["id"],
         ]);
-        $Auth::loginUsingId($userId1);
-        $userId2 = $TestUtilities::createTestUserInDb([
-            "profile_picture" => $TestUtilities::$validProfilePicture,
+        $comment2 = CommentsModel::factory()->create([
+            "user_id" => $users[1]["id"],
         ]);
-        $user2 = $TestUtilities::getTestUserInDb($userId2);
-        $user1 = $Auth::user();
-        $commentId1 = $TestUtilities::createTestCommentInDb($user1);
-        $commentId2 = $TestUtilities::createTestCommentInDb($user2);
-        $res = $this->delete("/video/comment?id=" . $commentId2);
+        $res = $this->delete("/video/comment?id=" . $comment2["id"]);
         $res->assertSee("Not allowed to delete other peoples comments");
-        $comment2 = $Database
-            ::table("comments")
-            ->whereRaw("id = $commentId2")
+        $comment2 = DB::table("comments")
+            ->whereRaw("id = " . $comment2["id"])
             ->first();
         $this->assertEquals(false, $comment2 === null);
-        $TestUtilities::removeTestUsersInDb();
-        $Database
-            ::table("comments")
-            ->whereRaw("id = $commentId1")
-            ->delete();
-        $Database
-            ::table("comments")
-            ->whereRaw("id = $commentId2")
-            ->delete();
     }
 
     public function testPostCommentWithAuth()
     {
-        $Database = new DB();
-        $Auth = new Auth();
         // Auth myself
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb([
-            "profile_picture" => $TestUtilities::$validProfilePicture,
+        $user = UserModel::factory()->create([
+            "profile_picture" => TestUtilities::$validProfilePicture,
         ]);
-        $Auth::loginUsingId($userId);
+        Auth::loginUsingId($user["id"]);
 
         //
         // INCORRECT REQUEST
@@ -145,7 +123,7 @@ class VideoTest extends TestCase
             "X-CSRF-TOKEN" => csrf_token(),
         ];
         $res = $this->post(
-            $TestUtilities::$video_comment_path,
+            TestUtilities::$video_comment_path,
             ["videoPostedOn" => $this->something_more_title],
             $headers
         );
@@ -158,11 +136,7 @@ class VideoTest extends TestCase
         // No date posted but with video title to test validation
         $data = ["comment" => "hello"];
         $data["videoPostedOn"] = $this->something_more_title;
-        $res = $this->post(
-            $TestUtilities::$video_comment_path,
-            $data,
-            $headers
-        );
+        $res = $this->post(TestUtilities::$video_comment_path, $data, $headers);
         $res->assertStatus(406);
         $res->assertJson([
             "success" => false,
@@ -172,11 +146,7 @@ class VideoTest extends TestCase
         // No video posted on
         $data["datePosted"] = "2020-03-02";
         $data["videoPostedOn"] = null;
-        $res = $this->post(
-            $TestUtilities::$video_comment_path,
-            $data,
-            $headers
-        );
+        $res = $this->post(TestUtilities::$video_comment_path, $data, $headers);
         $res->assertStatus(403);
         $res->assertJson([
             "success" => false,
@@ -185,11 +155,7 @@ class VideoTest extends TestCase
 
         // No video found with that title
         $data["videoPostedOn"] = "I Dont Exist";
-        $res = $this->post(
-            $TestUtilities::$video_comment_path,
-            $data,
-            $headers
-        );
+        $res = $this->post(TestUtilities::$video_comment_path, $data, $headers);
         $res->assertStatus(404);
         $res->assertJson([
             "success" => false,
@@ -202,20 +168,9 @@ class VideoTest extends TestCase
 
         // Run request with correct data
         $data["videoPostedOn"] = $this->something_more_title;
-        $res = $this->post(
-            $TestUtilities::$video_comment_path,
-            $data,
-            $headers
-        );
+        $res = $this->post(TestUtilities::$video_comment_path, $data, $headers);
         $res->assertStatus(200);
         $res->assertJson(["success" => true]);
-
-        // Remove all comments and user
-        $Database
-            ::table("comments")
-            ->where("user_id", "=", $userId)
-            ->delete();
-        $TestUtilities::removeTestUsersInDb();
     }
 
     public function testAutocomplete()
@@ -229,10 +184,8 @@ class VideoTest extends TestCase
         $res->assertStatus(302);
 
         // Auth myself
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb();
-        $Auth = new Auth();
-        $Auth::loginUsingId($userId);
+        $user = UserModel::factory()->create();
+        Auth::loginUsingId($user["id"]);
 
         // send requestResponds with empty array when no title is passed in e.g. no value in search bar
         $res = $this->get("/video/titles?title=", $headers);
@@ -244,21 +197,18 @@ class VideoTest extends TestCase
         $res->assertStatus(200);
         $res->assertJson([
             "success" => true,
-            "data" => [$this->something_more_title, 'Lava Sample'],
+            "data" => [$this->something_more_title, "Lava Sample"],
         ]);
 
         // make request with an incorrect title that will respond with no data
         $res = $this->get("/video/titles?title=I Dont exist", $headers);
         $res->assertStatus(200);
         $res->assertJson(["success" => true, "data" => []]);
-
-        $TestUtilities::removeTestUsersInDb();
     }
 
     public function testWatchSingleVideoWithoutAuth()
     {
-        $Auth = new Auth();
-        $Auth::logout();
+        Auth::logout();
         $response = $this->get(TestUtilities::$video_path);
         $response->assertStatus(302);
         $response = $this->get("/");
@@ -267,26 +217,24 @@ class VideoTest extends TestCase
 
     public function testWatchSingleVideoWithAuthWithInvalidQuery()
     {
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb(["logged_in" => 0]);
-        Auth::loginUsingId($userId);
+        $user = UserModel::factory()->create([
+            "logged_in" => 0,
+        ]);
+        Auth::loginUsingId($user["id"]);
         // make request with title but doesnt exist
         $response = $this->get("/video?requestedVideo=Idontexist");
         $response->assertStatus(404);
-        $TestUtilities::removeTestUsersInDb();
     }
 
     public function testWatchSingleVideoWithAuthWithNoQuery()
     {
-        $Cache = new Cache();
-        $Cache::flush();
+        Cache::flush();
         // create user
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb(["logged_in" => 0]);
+        $user = UserModel::factory()->create(["logged_in" => 0]);
         // Auth user
-        Auth::loginUsingId($userId);
+        Auth::loginUsingId($user["id"]);
         // Make request with no video request
-        $response = $this->get($TestUtilities::$video_path);
+        $response = $this->get(TestUtilities::$video_path);
         // Assert the view
         //$response->assertViewIs('Home');
         // Assert the status
@@ -312,11 +260,9 @@ class VideoTest extends TestCase
 
     public function testWatchSingleVideoWithAuthWithQuery()
     {
-        $Cache = new Cache();
-        $Cache::flush();
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb();
-        Auth::loginUsingId($userId);
+        Cache::flush();
+        $user = UserModel::factory()->create();
+        Auth::loginUsingId($user["id"]);
         // make request with correct title
         $response = $this->get("/video?requestedVideo=Lava Sample");
         // Assert the view
@@ -326,16 +272,12 @@ class VideoTest extends TestCase
         // assert the data sent back to view
         $content = $response->getOriginalContent();
         $data = $content->getData();
-        $this->assertEquals('Lava Sample', $data["title"]); // defaults to something more
-        $this->assertEquals("TestUsername", $data["username"]);
-        $this->assertEquals(
-            'Lava Sample',
-            $data["mainVideo"]->title
-        );
+        $this->assertEquals("Lava Sample", $data["title"]); // defaults to something more
+        $this->assertEquals("Lava Sample", $data["mainVideo"]->title);
         $this->assertEquals("2", sizeof($data["rabbitHoleVideos"]));
         // Shouldn't be the main video
         foreach ($data["rabbitHoleVideos"] as $vid) {
-            $this->assertEquals(true, $vid->title !== 'Lava Sample');
+            $this->assertEquals(true, $vid->title !== "Lava Sample");
         }
         $this->assertEquals(1, sizeof($data["comments"]));
         foreach ($data["comments"] as $comment) {
@@ -344,14 +286,11 @@ class VideoTest extends TestCase
                 $comment->video_id === $this->lava_sample_id
             );
         }
-        $this->assertEquals(true, $data["email"] === "TestEmail@hotmail.com");
-        $TestUtilities::removeTestUsersInDb();
     }
 
     public function testUpdateCommentWithNoAuth()
     {
-        $Cache = new Cache();
-        $Cache::flush();
+        Cache::flush();
         // make request with correct title
         $response = $this->put(TestUtilities::$video_comment_path);
         $response->assertRedirect(TestUtilities::$login_path);
@@ -359,76 +298,60 @@ class VideoTest extends TestCase
 
     public function testUpdateCommentWithInvalidBody()
     {
-        $Cache = new Cache();
-        $Cache::flush();
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb();
-        $user = $TestUtilities::getTestUserInDb($userId);
-        $commentId = $TestUtilities::createTestCommentInDb($user);
-        Auth::loginUsingId($userId);
+        Cache::flush();
+        $user = UserModel::factory()->create();
+        $comment = CommentsModel::factory()->create([
+            "user_id" => $user["id"],
+        ]);
+        Auth::loginUsingId($user["id"]);
         // make request with correct title
         $response = $this->put(TestUtilities::$video_comment_path);
         $response->assertSee(
             "Failed to delete. The id and text must be provided"
         );
-        $TestUtilities::removeTestUsersInDb();
-        $TestUtilities::removeTestCommentsInDB($commentId);
     }
 
     public function testUpdateCommentWhenCommentToUpdateIsntUsers()
     {
-        $Cache = new Cache();
-        $Cache::flush();
-        $TestUtilities = new TestUtilities();
-        $userId1 = $TestUtilities::createTestUserInDb();
-        $userId2 = $TestUtilities::createTestUserInDb();
-        $user1 = $TestUtilities::getTestUserInDb($userId1);
-        $commentId = $TestUtilities::createTestCommentInDb($user1);
-        $Database = new DB();
-        $Database
-            ::table("comments")
-            ->where("id", "=", $commentId)
-            ->first();
-        Auth::loginUsingId($userId2);
+        Cache::flush();
+        $users = UserModel::factory()
+            ->count(2)
+            ->create();
+        $comment = CommentsModel::factory()->create([
+            "user_id" => $users[1]["id"],
+        ]);
+        Auth::loginUsingId($users[0]["id"]);
         // make request with correct title
-        $response = $this->put($TestUtilities::$video_comment_path, [
-            "id" => $commentId,
+        $response = $this->put(TestUtilities::$video_comment_path, [
+            "id" => $comment["id"],
             "newComment" => "Hello world :)",
         ]);
         $response->assertSee(
             "Unauthenticated. Not allowed to delete other peoples comments"
         );
-        $TestUtilities::removeTestUsersInDb();
-        $TestUtilities::removeTestCommentsInDB($commentId);
     }
 
     public function testUpdateCommentWhenAllDataIsCorrect()
     {
-        $Cache = new Cache();
-        $Cache::flush();
-        $TestUtilities = new TestUtilities();
-        $userId = $TestUtilities::createTestUserInDb();
-        $user = $TestUtilities::getTestUserInDb($userId);
-        $commentId = $TestUtilities::createTestCommentInDb($user);
-        $Database = new DB();
-        $Database
-            ::table("comments")
-            ->where("id", "=", $commentId)
-            ->first();
-        Auth::loginUsingId($userId);
+        Cache::flush();
+        $user = UserModel::factory()->create();
+        $comment = CommentsModel::factory()->create([
+            "user_id" => $user["id"],
+        ]);
+        $commentId = $comment["id"];
+        Auth::loginUsingId($user["id"]);
         // make request with correct title
+        var_dump($user["id"]);
+        var_dump($comment["id"], $comment["user_id"]);
         $newComment = "Hello world :)";
-        $response = $this->put($TestUtilities::$video_comment_path, [
+        $response = $this->put(TestUtilities::$video_comment_path, [
             "id" => $commentId,
             "newComment" => $newComment,
         ]);
         $response->assertSee("Successfully updated");
-        $updatedComment = $Database
-            ::table("comments")
+        $updatedComment = DB::table("comments")
             ->where("id", "=", $commentId)
             ->first();
         $this->assertEquals($updatedComment->comment, $newComment);
-        $TestUtilities::removeTestUsersInDb();
-        $TestUtilities::removeTestCommentsInDB($commentId);
     }
 }

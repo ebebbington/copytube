@@ -5,11 +5,14 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\UserModel;
 
 class LogoutTest extends TestCase
 {
     use RefreshDatabase;
-    
+
+    protected $seed = true;
+
     private function makeDeleteRequest(): ?object
     {
         //        $headers = [
@@ -23,10 +26,11 @@ class LogoutTest extends TestCase
     public function testDeleteUserWithAuth()
     {
         // create user
-        TestUtilities::createTestUserInDb();
-        $user = TestUtilities::getTestUserInDb();
+        $user = UserModel::factory()->create([
+            "logged_in" => 0,
+        ]);
         // Auth user
-        Auth::loginUsingId($user->id);
+        Auth::loginUsingId($user["id"]);
         // User must be authed
         $authedUser = Auth::user();
         $this->assertEquals(true, isset($authedUser));
@@ -35,8 +39,11 @@ class LogoutTest extends TestCase
         // assert response
         $response->assertStatus(302);
         // user must have logged_in = 1
-        $user = TestUtilities::getTestUserInDb();
-        $this->assertEquals(1, $user->logged_in);
+        $user = UserModel::where(
+            "email_address",
+            $user["email_address"]
+        )->first();
+        $this->assertEquals(1, $user["logged_in"]);
         Auth::logout();
     }
 

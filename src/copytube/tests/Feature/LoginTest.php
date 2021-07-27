@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\UserModel;
+use Illuminate\Support\Facades\Hash;
 
 class LoginTest extends TestCase
 {
     use RefreshDatabase;
-    
+
+    protected $seed = true;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -20,16 +24,15 @@ class LoginTest extends TestCase
         Cache::flush();
     }
 
-    private function makePostRequest($email, $password): TestResponse
-    {
-        $data = [];
-        if (isset($email)) {
-            $data["email"] = $email;
-        }
-        if (isset($password)) {
-            $data["password"] = $password;
-        }
-
+    // TODO Is this type of fn reused everywhere?
+    private function makePostRequest(
+        string $email,
+        string $password
+    ): TestResponse {
+        $data = [
+            "email" => $email,
+            "password" => $password,
+        ];
         $headers = [
             "HTTP_X-Requested-With" => "XMLHttpRequest",
             "X-CSRF-TOKEN" => csrf_token(),
@@ -47,36 +50,35 @@ class LoginTest extends TestCase
 
     public function testGetWhenAlreadyLoggedIn()
     {
-        $userId = TestUtilities::createTestUserInDb();
-        Auth::loginUsingId($userId);
+        $user = UserModel::factory()->create();
+        Auth::loginUsingId($user["id"]);
         $response = $this->json("GET", TestUtilities::$login_path);
-        TestUtilities::removeTestUsersInDb();
         $response->assertRedirect("/home");
     }
 
     public function testPostLockedAccount()
     {
         Cache::flush();
-        TestUtilities::removeTestUsersInDb();
-        TestUtilities::createTestUserInDb(["login_attempts" => 0]);
+        $user = UserModel::factory()->create([
+            "login_attempts" => 0,
+        ]);
         // Send post request
         $response = $this->makePostRequest(
-            TestUtilities::$validEmail,
-            TestUtilities::$validPassword
+            $user["email_address"],
+            $user["email_address"]
         );
         $response->assertJson([
             "success" => false,
             "message" => "This account has been locked.",
         ]);
         $response->assertStatus(403);
-        TestUtilities::removeTestUsersInDb();
     }
 
     public function testPostIncorrectPasswordButValidEmail()
     {
-        TestUtilities::createTestUserInDb();
+        $user = UserModel::factory()->create();
         $response = $this->makePostRequest(
-            TestUtilities::$validEmail,
+            $user["email_address"],
             TestUtilities::$invalidPasswords[0]
         );
         $response->assertJson([
@@ -84,7 +86,6 @@ class LoginTest extends TestCase
             "message" => "Failed to authenticate",
         ]);
         $response->assertStatus(403);
-        TestUtilities::removeTestUsersInDb();
     }
 
     // eg cannot auth attempt it as the user isnt in db
@@ -103,29 +104,28 @@ class LoginTest extends TestCase
 
     public function testPostWhenAlreadyLoggedIn()
     {
-        $userId = TestUtilities::createTestUserInDb();
-        Auth::loginUsingId($userId);
+        $user = UserModel::factory()->create();
+        Auth::loginUsingId($user["id"]);
         $response = $this->makePostRequest(
-            TestUtilities::$validEmail,
-            TestUtilities::$validPassword
+            $user["email_address"],
+            $user["password"]
         );
-        TestUtilities::removeTestUsersInDb();
         $response->assertRedirect("/home");
     }
 
     public function testPostSuccessfulLogin()
     {
-        TestUtilities::createTestUserInDb();
-        $response = $this->makePostRequest(
-            TestUtilities::$validEmail,
-            TestUtilities::$validPassword
-        );
-        $user = DB::table("users")
-            ->where("email_address", "=", TestUtilities::$validEmail)
-            ->first();
-        $this->assertEquals(0, $user->logged_in);
+        $pass = "Welcome1";
+        $user = UserModel::factory()->create([
+            "email_address" => "ed@hotmail.com",
+            "password" => Hash::make($pass),
+        ]);
+        $response = $this->makePostRequest($user["email_address"], $pass);
         $response->assertJson(["success" => true]);
         $response->assertStatus(200);
-        TestUtilities::removeTestUsersInDb();
+        $user = DB::table("users")
+            ->where("email_address", "=", $user["email_address"])
+            ->first();
+        $this->assertEquals(0, $user->logged_in);
     }
 }

@@ -2,8 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class CommentsModel extends BaseModel
 {
+    use HasFactory;
+
     /**
      * The table associated with the model.
      *
@@ -105,6 +109,9 @@ class CommentsModel extends BaseModel
     public function convertDate(string $date)
     {
         // expected: "yyyy-mm-dd"
+        if (!strpos($date, "-")) {
+            return $date;
+        }
         list($year, $month, $day) = explode("-", $date);
         return $day . "/" . $month . "/" . $year; // the formatted date
     }

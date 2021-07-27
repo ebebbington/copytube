@@ -6,9 +6,13 @@ use App\CommentsModel;
 use App\Jobs\ProcessNewComment;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProcessNewCommentTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected $seed = true;
     /**
      * A basic unit test example.
      *
@@ -37,9 +41,11 @@ class ProcessNewCommentTest extends TestCase
         //        });
 
         // Run the faked job
-        $job = (new ProcessNewComment($comment, "img/test", "An Iceland Venture"))->onQueue(
-            "comments"
-        );
+        $job = (new ProcessNewComment(
+            $comment,
+            "img/test",
+            "An Iceland Venture"
+        ))->onQueue("comments");
         dispatch($job);
 
         // Expect it was called

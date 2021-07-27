@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\UserModel;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class RegisterTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $seed = true;
+
     private string $password_invalid_error_msg = "The password format is invalid.";
     private string $profile_picture_invalid_error_msg = "The profile picture format is invalid.";
 
@@ -61,11 +65,13 @@ class RegisterTest extends TestCase
             "success" => true,
         ]);
         $response->assertStatus(200);
-        $user = TestUtilities::getTestUserInDb();
-        TestUtilities::removeTestUsersInDb();
-        $username = $user->username;
-        $path = $user->profile_picture;
-        $email = $user->email_address;
+        $user = UserModel::where(
+            "email_address",
+            TestUtilities::$validEmail
+        )->first();
+        $username = $user["username"];
+        $path = $user["profile_picture"];
+        $email = $user["email_address"];
         $this->assertEquals(TestUtilities::$validUsername, $username);
         $this->assertEquals(TestUtilities::$validEmail, $email);
         $this->assertEquals("img/sample.jpg", $path);
@@ -256,52 +262,46 @@ class RegisterTest extends TestCase
 
     public function testProfilePictureIsSavedOnPost()
     {
-        $TestUtilities = new TestUtilities();
-        $TestUtilities::removeTestUsersInDb();
-
         $Storage = new Storage();
         $Storage::fake("local");
         $this->makePostRequest(
-            $TestUtilities::$validUsername,
-            $TestUtilities::$validEmail,
-            $TestUtilities::$validPassword,
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword,
             UploadedFile::fake()->image("img/something_more.jpg")
         );
         // Assert the file was stored...
-        $user = $TestUtilities::getTestUserInDb();
-        $picPath = str_replace("img/", "", $user->profile_picture);
+        $user = UserModel::where(
+            "email_address",
+            TestUtilities::$validEmail
+        )->first();
+        $picPath = str_replace("img/", "", $user["profile_picture"]);
         $Storage::disk("local")->assertExists($picPath);
-
-        $TestUtilities::removeTestUsersInDb();
     }
 
     public function testSuccessfulPostRequest()
     {
-        $TestUtilities = new TestUtilities();
-        // First remove the test user if there is one
-        $TestUtilities::removeTestUsersInDb();
-
         // Test adding a user and that table has that column
         $response = $this->makePostRequest(
-            $TestUtilities::$validUsername,
-            $TestUtilities::$validEmail,
-            $TestUtilities::$validPassword,
-            UploadedFile::fake()->image($TestUtilities::$validProfilePicture)
+            TestUtilities::$validUsername,
+            TestUtilities::$validEmail,
+            TestUtilities::$validPassword,
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
         );
 
         // Get user from DB and assert the data
-        $user = $TestUtilities::getTestUserInDb();
-        $this->assertEquals($TestUtilities::$validUsername, $user->username);
-        $this->assertEquals($TestUtilities::$validEmail, $user->email_address);
+        $user = UserModel::where(
+            "email_address",
+            TestUtilities::$validEmail
+        )->first();
+        $this->assertEquals(TestUtilities::$validUsername, $user["username"]);
+        $this->assertEquals(TestUtilities::$validEmail, $user["email_address"]);
         $Hash = new Hash();
         $this->assertEquals(
             true,
-            $Hash::check($TestUtilities::$validPassword, $user->password)
+            $Hash::check(TestUtilities::$validPassword, $user["password"])
         );
-        $this->assertEquals(true, isset($user->profile_picture));
-
-        // Remove the data
-        $TestUtilities::removeTestUsersInDb();
+        $this->assertEquals(true, isset($user["profile_picture"]));
 
         // Assert the response
         $response->assertJson(["success" => true]);

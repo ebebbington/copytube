@@ -11,6 +11,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class BaseModelTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $seed = true;
+
     private function insertOne($value)
     {
         $Database = new DB();
@@ -50,8 +53,6 @@ class BaseModelTest extends TestCase
         $redisData = $Cache::get($cacheKey);
         $this->assertEquals($row, $redisData);
         $Cache::forget($cacheKey);
-        $this->deleteAllRows();
-
         //
         // Existing cache key - for code coverage
         //
@@ -59,6 +60,7 @@ class BaseModelTest extends TestCase
         $Cache::put("test", "hi", 3600);
         $data = $TestModel->SelectQuery(["limit" => 1], "test");
         $this->assertEquals("hi", $data);
+        $this->deleteAllRows();
     }
 
     public function testSelectQueryWithSelect()
@@ -72,10 +74,10 @@ class BaseModelTest extends TestCase
         ]);
         $createdRowId = $createdRow->id;
         $selectedRowId = $selectedRow->id;
+        $this->deleteAllRows();
         $this->assertEquals(true, isset($createdRowId));
         $this->assertEquals(true, isset($selectedRowId));
         $this->assertEquals($createdRowId, $selectedRowId);
-        $this->deleteAllRows();
     }
 
     public function testSelectQueryWithJoin()
@@ -89,9 +91,9 @@ class BaseModelTest extends TestCase
             "join" => ["videos", "test.test", "=", "videos.title"],
             "limit" => 1,
         ]);
+        $this->deleteAllRows();
         $this->assertEquals($testFieldValue, $selectedRow->test);
         $this->assertEquals($testFieldValue, $selectedRow->title);
-        $this->deleteAllRows();
     }
 
     public function testSelectQueryWithWhere()
@@ -103,8 +105,8 @@ class BaseModelTest extends TestCase
             "where" => "test = 'Test2'",
             "limit" => 1,
         ]);
-        $this->assertEquals("Test2", $selectedRow->test);
         $this->deleteAllRows();
+        $this->assertEquals("Test2", $selectedRow->test);
     }
 
     public function testSelectQueryWithLimit()
@@ -133,10 +135,10 @@ class BaseModelTest extends TestCase
             "limit" => 3,
             "orderBy" => ["column" => "test", "direction" => "DESC"],
         ]);
+        $this->deleteAllRows();
         $this->assertTrue($rows[0]->test === "3");
         $this->assertTrue($rows[1]->test === "2");
         $this->assertTrue($rows[2]->test === "1");
-        $this->deleteAllRows();
     }
 
     public function testSelectQueryWhenEmpty()
@@ -163,8 +165,8 @@ class BaseModelTest extends TestCase
             "where" => "test = 'Goodbye world'",
             "limit" => 1,
         ]);
-        $this->assertEquals("Goodbye world", $row->test);
         $this->deleteAllRows();
+        $this->assertEquals("Goodbye world", $row->test);
     }
 
     public function testUpdateQueryWithCacheKey()

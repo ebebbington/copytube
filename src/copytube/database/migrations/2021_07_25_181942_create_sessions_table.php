@@ -21,7 +21,7 @@ class CreateSessionsTable extends Migration
                 ->foreign("user_id")
                 ->references("id")
                 ->on("users")
-                ->onDelete('cascade');
+                ->onDelete("cascade");
         });
     }
 
@@ -32,8 +32,8 @@ class CreateSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->dropForeign('user_id');
+        Schema::table("sessions", function (Blueprint $table) {
+            $table->dropForeign("user_id");
         });
         Schema::dropIfExists("sessions");
     }

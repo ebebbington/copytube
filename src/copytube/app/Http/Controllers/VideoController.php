@@ -208,11 +208,7 @@ class VideoController extends Controller
             "where" => "id = $commentId AND user_id = $user->id",
             "limit" => 1,
         ]);
-        if (
-            !$comment ||
-            !isset($comment) ||
-            $comment->author !== $user->username
-        ) {
+        if (!$comment || !isset($comment)) {
             return response()->json([
                 "success" => false,
                 "message" =>
@@ -251,11 +247,7 @@ class VideoController extends Controller
             "where" => "id = $commentId AND user_id = $user->id",
             "limit" => 1,
         ]);
-        if (
-            !$comment ||
-            !isset($comment) ||
-            $comment->author !== $user->username
-        ) {
+        if (!$comment || !isset($comment)) {
             return response()->json([
                 "success" => false,
                 "message" =>

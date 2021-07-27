@@ -8,9 +8,14 @@ use App\Listeners\SendComment;
 use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 use Mockery;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SendCommentTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected $seed = true;
+
     public function testHandle()
     {
         // Make queue synchronous
@@ -28,7 +33,11 @@ class SendCommentTest extends TestCase
         ]);
         $Mockery = new Mockery();
         $listener = $Mockery::mock("SendComment");
-        $job = new ProcessNewComment($comment, "img/test", "An Iceland Venture");
+        $job = new ProcessNewComment(
+            $comment,
+            "img/test",
+            "An Iceland Venture"
+        );
 
         // Assertions
         $Redis = new Redis();

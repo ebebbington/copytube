@@ -11,7 +11,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class UserModelTest extends TestCase
 {
     use RefreshDatabase;
-    
+
+    protected $seed = true;
+
     private string $test_username = "Test User";
 
     private function createTestUser($recoverToken = null)
