@@ -210,6 +210,8 @@ Mimic existing file structure, and try to writ tests for each case
 
 ## Debugbar
 
+I believe this may reduce performance slightly? It isn't much, but if we want to be as fast as possible, then it is a problem
+
 This is setup, so it should just be enabled by default when you go to a page. If there's anything problems:
 
 -   Try reinstall it
