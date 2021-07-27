@@ -35,33 +35,6 @@ class VideoController extends Controller
         ) {
             abort(403);
         }
-        // Old code before adding laravel auth
-        //        // Get a user by that cookie
-        //        $Session = new SessionModel;
-        //        $data = [
-        //            'query' => ['session_id' => $sessionId],
-        //            'selectOne' => true
-        //        ];
-        //        $found = $Session->SelectQuery($data);
-        //        if (empty($found)) {
-        //            Log::debug('No session was found with that session id e.g. it was never created in the db');
-        //            return View::make('login')->with('title', 'Login');
-        //        }
-
-        // Old code before adding laravel auth
-        //        $User = new UserModel;
-        //        $data['query'] = ['id' => $Session->user_id];
-        //        $found = $User->SelectQuery($data);
-        //        if (empty($found) || !$User || $Session->user_id !== $User->id) {
-        //            Log::debug('No user was found with a matching user id in the sessions table');
-        //            return View::make('login')->with('title', 'Login');
-        //        }
-
-        // Old code before adding laravel auth
-        //        // Set the user in the session
-        //        unset($User->password);
-        //        session(['user' => $User]); // $request->session()->get('user'); // [{...}]
-        //        Log::debug('Set the user inside the session object, returning home');
 
         $VideosModel = new VideosModel();
         $mainVideo = $VideosModel->getVideoByTitle($videoNameRequested);
@@ -81,6 +54,12 @@ class VideoController extends Controller
             abort(404);
         }
 
+        $CommentsModel = new CommentsModel();
+        $comments = $CommentsModel->getAllByVideoIdJoinUserProfilePic(
+            $mainVideo->id
+        );
+        Log::debug($comments);
+
         Log::info(
             $loggingPrefix .
                 "Successfully retrieved a main video of " .
@@ -90,16 +69,12 @@ class VideoController extends Controller
         );
 
         // Get rabbit hole videos that aren't main video
+        // TODO :: Maybe we can get mainvideo and rabbit hold vids in one query?
         $rabbitHoleVideos = $VideosModel->getRabbitHoleVideos(
             $videoNameRequested
         );
         Log::info($loggingPrefix . "Retrieved rabbit hole videos");
 
-        // Get the comments for the main video
-        $Comments = new CommentsModel();
-        $comments = $Comments->getAllByVideoTitleAndJoinProfilePicture(
-            $videoNameRequested
-        );
         $user = Auth::user();
         $renderData = [
             "title" => $mainVideo->title,
@@ -168,7 +143,7 @@ class VideoController extends Controller
             "comment" => $comment,
             "author" => $username,
             "date_posted" => $datePosted,
-            "video_posted_on" => $videoPostedOn,
+            "video_id" => $foundVideo->id,
             "user_id" => $user->id,
         ];
         $validated = $Comments->validate($newComment);
@@ -182,7 +157,13 @@ class VideoController extends Controller
             );
         }
         $row = $Comments->createComment($newComment);
-        dispatch(new ProcessNewComment($row, $user->profile_picture));
+        dispatch(
+            new ProcessNewComment(
+                $row,
+                $user->profile_picture,
+                $foundVideo->title
+            )
+        );
         $resData = [
             "success" => true,
         ];
@@ -227,11 +208,7 @@ class VideoController extends Controller
             "where" => "id = $commentId AND user_id = $user->id",
             "limit" => 1,
         ]);
-        if (
-            !$comment ||
-            !isset($comment) ||
-            $comment->author !== $user->username
-        ) {
+        if (!$comment || !isset($comment)) {
             return response()->json([
                 "success" => false,
                 "message" =>
@@ -241,11 +218,10 @@ class VideoController extends Controller
         $success = $CommentsModel->DeleteQuery([
             "id" => $commentId,
         ]);
-        $videoTitle = $comment->video_posted_on;
         $cacheKey = str_replace(
             " ",
             "+",
-            "db:comments:videoTitle=" . $videoTitle
+            "db:comments:videoId=" . $comment->video_id
         );
         Cache::forget($cacheKey);
         return response()->json([
@@ -271,11 +247,7 @@ class VideoController extends Controller
             "where" => "id = $commentId AND user_id = $user->id",
             "limit" => 1,
         ]);
-        if (
-            !$comment ||
-            !isset($comment) ||
-            $comment->author !== $user->username
-        ) {
+        if (!$comment || !isset($comment)) {
             return response()->json([
                 "success" => false,
                 "message" =>
@@ -290,11 +262,10 @@ class VideoController extends Controller
                 "comment" => $commentText,
             ]
         );
-        $videoTitle = $comment->video_posted_on;
         $cacheKey = str_replace(
             " ",
             "+",
-            "db:comments:videoTitle=" . $videoTitle
+            "db:comments:videoId=" . $comment->video_id
         );
         Cache::forget($cacheKey);
         return response()->json([

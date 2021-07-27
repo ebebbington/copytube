@@ -16,7 +16,12 @@ class CreateSessionsTable extends Migration
         Schema::create("sessions", function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->string("session_id");
-            $table->smallInteger("user_id");
+            $table->unsignedBigInteger("user_id");
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users")
+                ->onDelete("cascade");
         });
     }
 
@@ -27,6 +32,9 @@ class CreateSessionsTable extends Migration
      */
     public function down()
     {
+        Schema::table("sessions", function (Blueprint $table) {
+            $table->dropForeign("user_id");
+        });
         Schema::dropIfExists("sessions");
     }
 }

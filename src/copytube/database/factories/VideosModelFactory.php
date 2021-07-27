@@ -2,17 +2,19 @@
 
 namespace Database\Factories;
 
-use App\User;
+use App\VideosModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class VideosModelFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = VideosModel::class;
+
+    public $timestamps = false;
 
     /**
      * Define the model's default state.
@@ -22,7 +24,10 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-                //
-            ];
+            "title" => $this->faker->name(),
+            "description" => $this->faker->name(),
+            "src" => "videos/_test.mp4",
+            "poster" => "img/_test.jpg",
+        ];
     }
 }

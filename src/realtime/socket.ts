@@ -11,7 +11,6 @@ let allClients: Array<IClient> = [];
 const port = config().PORT;
 
 export class SocketServer {
-
   // Blocks the event loop, needs to be at the end
   // Start the websocket server, and with each connection, append to a list of clients
   // And on each disconnect, remove the client from the list

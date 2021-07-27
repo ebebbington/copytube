@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class VideosModel extends BaseModel
 {
+    use HasFactory;
+
     /**
      * The table associated with the model.
      *
@@ -61,6 +64,13 @@ class VideosModel extends BaseModel
      * @var array
      */
     protected $rules = [];
+
+    public $timestamps = false;
+
+    public function comments()
+    {
+        return $this->hasMany(CommentsModel::class, "video_id", "id");
+    }
 
     private function getLoggingPrefix(string $functionName): string
     {

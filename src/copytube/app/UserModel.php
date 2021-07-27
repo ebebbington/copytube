@@ -5,9 +5,12 @@ namespace App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserModel extends BaseModel
 {
+    use HasFactory;
+
     const USER_BY_EMAIL_CACHE_KEY = "db:users:email_address=";
 
     /**
@@ -110,6 +113,11 @@ class UserModel extends BaseModel
         "password" => "required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/",
         "profile_picture" => ["required", "regex:/.*\.(jpg|jpeg|png)\b/"],
     ];
+
+    public function comments()
+    {
+        return $this->hasMany(CommentsModel::class, "user_id", "id");
+    }
 
     /**
      * Check a user exists by a given email address

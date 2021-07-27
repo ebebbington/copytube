@@ -4,12 +4,18 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\UserModel;
 
 class RecoverTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected $seed = true;
+
     private $uri = "/recover";
 
-    private function sendPostRequest($email, $password)
+    private function sendPostRequest(string $email, string $password)
     {
         $data = [
             "email" => $email,
@@ -44,21 +50,24 @@ class RecoverTest extends TestCase
     public function testGetWithCorrectToken()
     {
         // Assert correct response with correct token
-        TestUtilities::createTestUserInDb(["recover_token" => "test_token"]);
+        UserModel::factory()->create([
+            "recover_token" => "test_token",
+        ]);
         $response = $this->get("/recover?token=test_token");
         $response->assertStatus(200);
         $response->assertViewIs("recover");
         $response->assertCookie("recoverToken");
-        TestUtilities::removeTestUsersInDb();
     }
 
     public function testPostWhenTokenDoesntMatch()
     {
-        TestUtilities::createTestUserInDb(["recover_token" => "test_token"]);
+        $user = UserModel::factory()->create([
+            "recover_token" => "test_token",
+        ]);
         $response = $this->withCookie("recoverToken", "goody")->post(
             $this->uri,
             [
-                "email" => TestUtilities::$validEmail,
+                "email" => $user["email_address"],
                 "password" => TestUtilities::$validPassword,
             ],
             [
@@ -66,7 +75,6 @@ class RecoverTest extends TestCase
                 "X-CSRF-TOKEN" => csrf_token(),
             ]
         );
-        TestUtilities::removeTestUsersInDb();
         $response->assertJson([
             "success" => false,
             "message" => "Token does not match",
@@ -78,11 +86,13 @@ class RecoverTest extends TestCase
     {
         $tokenValue = "test_token";
         $this->disableCookieEncryption();
-        TestUtilities::createTestUserInDb(["recover_token" => $tokenValue]);
+        $user = UserModel::factory()->create([
+            "recover_token" => $tokenValue,
+        ]);
         $response = $this->withCookie("recoverToken", $tokenValue)->post(
             $this->uri,
             [
-                "email" => TestUtilities::$validEmail,
+                "email" => $user["email_address"],
                 "password" => "a",
             ],
             [
@@ -90,7 +100,6 @@ class RecoverTest extends TestCase
                 "X-CSRF-TOKEN" => csrf_token(),
             ]
         );
-        TestUtilities::removeTestUsersInDb();
         $response->assertJson([
             "success" => false,
             "message" => "The password format is invalid.",
@@ -98,7 +107,7 @@ class RecoverTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testPost()
+    public function testPostWhenUserDoesntExist()
     {
         // Test when getting user that doesnt exist
         $response = $this->sendPostRequest("idontexist@hotmail.com", "");
@@ -107,11 +116,13 @@ class RecoverTest extends TestCase
             "message" => "Unable to authenticate",
         ]);
         $response->assertStatus(403);
+    }
 
+    public function testPost()
+    {
         // Test it updates the row correctly
-        TestUtilities::removeTestUsersInDb();
         $this->disableCookieEncryption();
-        TestUtilities::createTestUserInDb([
+        $user = UserModel::factory()->create([
             "recover_token" => "test_token",
             "profile_picture" => "Test.png",
             "login_attempts" => 0,
@@ -119,20 +130,20 @@ class RecoverTest extends TestCase
         $response = $this->withCookie("recoverToken", "test_token")->post(
             $this->uri,
             [
-                "email" => TestUtilities::$validEmail,
-                "password" => TestUtilities::$validPassword,
+                "email" => $user["email_address"],
+                "password" => "Welcome2",
             ],
             [
                 "HTTP_X-Requested-With" => "XMLHttpRequest",
                 "X-CSRF-TOKEN" => csrf_token(),
             ]
         );
-        $user = TestUtilities::getTestUserInDb();
-        $this->assertEquals(true, $user->login_attempts === 3);
-        $this->assertEquals(
-            true,
-            Hash::check(TestUtilities::$validPassword, $user->password)
-        );
+        $user = UserModel::where(
+            "email_address",
+            $user["email_address"]
+        )->first();
+        $this->assertEquals(true, $user["login_attempts"] === 3);
+        $this->assertEquals(true, Hash::check("Welcome2", $user["password"]));
 
         // Assert json response
         $response->assertJson([
@@ -141,7 +152,5 @@ class RecoverTest extends TestCase
         ]);
 
         $this->assertEquals(true, $user->recover_token === null);
-
-        TestUtilities::removeTestUsersInDb();
     }
 }

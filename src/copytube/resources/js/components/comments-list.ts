@@ -28,7 +28,7 @@ const Commentslist = (function () {
             Realtime.handleNewVideoComment = function (message) {
                 if (
                     $("#main-video-holder > h2").text() !==
-                    message.comment.video_posted_on
+                    message.comment.video_posted_on // TODO this prop is no longer on a comment
                 )
                     return false;
                 const newCommentHtml: any = $(

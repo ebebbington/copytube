@@ -6,9 +6,14 @@ use App\UserModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserModelTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected $seed = true;
+
     private string $test_username = "Test User";
 
     private function createTestUser($recoverToken = null)

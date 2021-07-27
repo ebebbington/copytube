@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 class SessionModel extends BaseModel
 {
     /**
@@ -51,4 +50,9 @@ class SessionModel extends BaseModel
         "session_id" => "required",
         "user_id" => "required",
     ];
+
+    public function user()
+    {
+        return $this->hasOne(UserModel::class, "id", "user_id");
+    }
 }

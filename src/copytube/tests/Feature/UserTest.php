@@ -2,13 +2,20 @@
 
 namespace Tests\Feature;
 
+use App\CommentsModel;
+use App\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected $seed = true;
+
     public function testDeleteMethodWithoutAuth()
     {
         // Test request when not authed - should fail
@@ -22,39 +29,25 @@ class UserTest extends TestCase
     public function testDeleteMethodWithAuthOnSuccess()
     {
         // Copy profile picture
-        $userId = TestUtilities::createTestUserInDb();
-        $profilePicPath = "img/" . $userId . "/test.jpg";
+        $user = UserModel::factory()->create();
+        $profilePicPath = "img/" . $user["id"] . "/test.jpg";
         $Storage = new Storage();
         $Storage::disk("local_public")->copy("img/sample.jpg", $profilePicPath);
         // Update user in table
-        $Database = new DB();
-        $TestUtilities = new TestUtilities();
-        $Database
-            ::table("users")
-            ->where("email_address", "=", $TestUtilities::$validEmail)
+        DB::table("users")
+            ->where("email_address", "=", TestUtilities::$validEmail)
             ->update(["profile_picture" => $profilePicPath]);
 
         // Auth myself as its an authed route
         $Auth = new Auth();
-        $Auth::loginUsingId($userId);
+        $Auth::loginUsingId($user["id"]);
 
         // Add comments before
-        $Database::table("comments")->insert([
-            [
-                "comment" => "Hello",
-                "author" => "hello",
-                "user_id" => $userId,
-                "video_posted_on" => "test",
-                "date_posted" => "2020-03-03",
-            ],
-            [
-                "comment" => "Hello",
-                "author" => "hello",
-                "user_id" => $userId,
-                "video_posted_on" => "test",
-                "date_posted" => "2020-03-03",
-            ],
-        ]);
+        CommentsModel::factory()
+            ->count(3)
+            ->create([
+                "user_id" => $user["id"],
+            ]);
 
         // Make request
         $headers = [
@@ -67,13 +60,12 @@ class UserTest extends TestCase
         //Storage::disk('local_public')->assertMissing($profilePicPath);
 
         // Check row was deleted
-        $row = $TestUtilities::getTestUserInDb();
+        $row = UserModel::where("id", $user["id"])->first();
         $this->assertEquals(false, $row);
 
         // Check all comments were deleted
-        $comments = $Database
-            ::table("comments")
-            ->where("user_id", "=", $userId)
+        $comments = DB::table("comments")
+            ->where("user_id", "=", $user["id"])
             ->get();
         $this->assertEquals(false, sizeof($comments) >= 1);
 

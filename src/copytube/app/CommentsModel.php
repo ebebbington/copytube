@@ -2,8 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class CommentsModel extends BaseModel
 {
+    use HasFactory;
+
     /**
      * The table associated with the model.
      *
@@ -44,7 +48,7 @@ class CommentsModel extends BaseModel
      *
      * @var Int
      */
-    public $video_posted_on;
+    public $video_id;
 
     public $user_id;
 
@@ -57,7 +61,7 @@ class CommentsModel extends BaseModel
         "comment",
         "author",
         "date_posted",
-        "video_posted_on",
+        "video_id",
         "user_id",
     ];
 
@@ -70,11 +74,16 @@ class CommentsModel extends BaseModel
         "comment" => "required",
         "author" => "required",
         "date_posted" => "required",
-        "video_posted_on" => "required",
+        "video_id" => "required",
         "user_id" => "required",
     ];
 
     public $timestamps = false;
+
+    public function user()
+    {
+        return $this->hasOne(UserModel::class, "id", "user_id");
+    }
 
     /**
      * @method formatDates
@@ -100,45 +109,33 @@ class CommentsModel extends BaseModel
     public function convertDate(string $date)
     {
         // expected: "yyyy-mm-dd"
+        if (!strpos($date, "-")) {
+            return $date;
+        }
         list($year, $month, $day) = explode("-", $date);
         return $day . "/" . $month . "/" . $year; // the formatted date
     }
 
-    /**
-     * @method getAllByVideoTitle
-     *
-     * @description
-     * Gets al comments that match the passed in title. Also formats the dates for you
-     *
-     * @param string $videoTitle
-     *
-     * @return array|bool|object
-     *
-     * @example
-     * $comments = $CommentsModel->getAllByVideoTitle('Something More'); array or false
-     */
-    public function getAllByVideoTitleAndJoinProfilePicture(string $videoTitle)
+    public function getAllByVideoIdJoinUserProfilePic(int $videoId)
     {
         $query = [
             "select" => ["comments.*", "users.profile_picture"],
             "join" => ["users", "comments.user_id", "=", "users.id"],
-            "where" => "video_posted_on = '$videoTitle'",
+            "where" => "video_id = $videoId",
             "limit" => -1,
             "orderBy" => ["column" => "date_posted", "direction" => "DESC"],
         ];
-        $cacheKey = "db:comments:videoTitle=" . $videoTitle;
+        $cacheKey = "db:comments:videoId=" . $videoId;
         $comments = $this->SelectQuery($query, $cacheKey);
-        if ($comments) {
-            $comments = $this->formatDates($comments);
-        } else {
-            $comments = [];
+        if (!$comments) {
+            return [];
         }
-        return $comments;
+        return $this->formatDates($comments);
     }
 
     public function createComment(array $data)
     {
-        $cacheKey = "db:comments:videoTitle=" . $data["video_posted_on"];
+        $cacheKey = "db:comments:videoId=" . $data["video_id"];
         return $this->CreateQuery($data, $cacheKey);
     }
 }
