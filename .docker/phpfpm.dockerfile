@@ -10,7 +10,6 @@ RUN apt-get install -y \
   libpng-dev unzip curl libjpeg-dev libzip-dev libjpeg62-turbo-dev libfreetype6-dev
 # or libc-client-dev, libonig-dev, apt-transport-https, apt-utils, libmcrypt-dev
 
-RUN apt install -y nodejs
 RUN apt install -y npm
 RUN npm i npm@latest -g
 
@@ -28,9 +27,11 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.idekey=VSCode" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.discover_client_host=true" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.client_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN docker-php-ext-enable xdebug
     # Maybe instal xdebug ext
 
 # Configure php.ini
