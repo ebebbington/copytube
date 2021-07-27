@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browser\Component;
+namespace Tests\Browser\Components;
 
 use App\UserModel;
 use Illuminate\Support\Facades\Cache;
