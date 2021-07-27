@@ -208,6 +208,15 @@ Mimic existing file structure, and try to writ tests for each case
 `vendor/bin/phpunit theTestMethod theTestFile` - Specific method in specific test
 `php artisan dusk` - Browser tests
 
+## Debugbar
+
+I believe this may reduce performance slightly? It isn't much, but if we want to be as fast as possible, then it is a problem
+
+This is setup, so it should just be enabled by default when you go to a page. If there's anything problems:
+
+-   Try reinstall it
+-   Cache routes and config
+
 # XDebug
 
 Xdebug is setup and configured for CopyTube, with the use a Chrome extension and VSCode. It has only been done so by configuring the Xdebug configuration file from a remote-host IP to `host.docker.internal`, as well as setting up VSCode.
@@ -216,6 +225,8 @@ Xdebug is setup and configured for CopyTube, with the use a Chrome extension and
 
 -   1. Install the chrome extension [here](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
 -   2. The configuration file for VSCode has already been setup (`./.vscode/*`)
+-   3. Install the PHP Debug extension for VSCode
+-   4. Start debugging
 
 # Information
 
