@@ -212,8 +212,8 @@ Mimic existing file structure, and try to writ tests for each case
 
 This is setup, so it should just be enabled by default when you go to a page. If there's anything problems:
 
-- Try reinstall it
-- Cache routes and config
+-   Try reinstall it
+-   Cache routes and config
 
 # XDebug
 
