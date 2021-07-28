@@ -7,10 +7,11 @@ use App\Jobs\ProcessUserDeleted;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function Delete()
+    public function Delete(Request $request)
     {
         $user = Auth::user();
 
@@ -25,6 +26,8 @@ class UserController extends Controller
 
         // Log user out from Auth
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         // Send event to remove all comments
         dispatch(new ProcessUserDeleted($user->id));

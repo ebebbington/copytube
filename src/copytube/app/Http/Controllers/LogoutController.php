@@ -13,12 +13,10 @@ class LogoutController extends Controller
         //$loggingPrefix = "[LogoutController - " . __FUNCTION__ . "] ";
         // update db
         $user = Auth::user();
-        // Log::debug(print_r($user, true));
         $user = User::where("id", $user->id)->first();
         $user->logged_in = 1;
         $user->save();
 
-        // TODO :: This logic should be moved into a util class or something so delete method inuser controller can use it too
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

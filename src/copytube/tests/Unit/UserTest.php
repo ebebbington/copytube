@@ -13,8 +13,6 @@ class UserTest extends TestCase
 
     protected $seed = true;
 
-    private string $test_username = "Test User";
-
     public function testGenerateHashMethod()
     {
         $rawPass = "Hello";
