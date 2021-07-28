@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use View;
+use Illuminate\Support\Facades\View;
+
 use Illuminate\Support\Facades\Cookie;
 
 class RecoverController extends Controller

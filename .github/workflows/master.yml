@@ -29,19 +29,22 @@ jobs:
         run: |
           npm run fmt:check
 
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8'
+          tools: composer
+
+      - name: Lint Checks
+        run: composer lint
+
   laravel-backend-tests:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: src/copytube
     steps:
-      - uses: actions/checkout@v2
-
-      # - name: Setup PHP and Composer
-      #   uses: shivammathur/setup-php@v2
-      #   with:
-      #     php-version: '8'
-      #     tools: composer
+      - uses: actions/checkout@
 
       - name: Laravel Backend Tests
         run: |

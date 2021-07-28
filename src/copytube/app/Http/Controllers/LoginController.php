@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use View;
+use Illuminate\Support\Facades\View;
 
 class LoginController extends Controller
 {

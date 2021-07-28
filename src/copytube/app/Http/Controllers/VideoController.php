@@ -6,7 +6,7 @@ use App\Jobs\ProcessNewComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use View;
+use Illuminate\Support\Facades\View;
 use App\Comment;
 use App\Video;
 
