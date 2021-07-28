@@ -44,7 +44,7 @@ jobs:
       run:
         working-directory: src/copytube
     steps:
-      - uses: actions/checkout@
+      - uses: actions/checkout@v2
 
       - name: Laravel Backend Tests
         run: |
