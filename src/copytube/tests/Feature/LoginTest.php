@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\UserModel;
+use App\User;
 use Illuminate\Support\Facades\Hash;
 
 class LoginTest extends TestCase
@@ -50,7 +50,7 @@ class LoginTest extends TestCase
 
     public function testGetWhenAlreadyLoggedIn()
     {
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
         Auth::loginUsingId($user["id"]);
         $response = $this->json("GET", TestUtilities::$login_path);
         $response->assertRedirect("/home");
@@ -59,7 +59,7 @@ class LoginTest extends TestCase
     public function testPostLockedAccount()
     {
         Cache::flush();
-        $user = UserModel::factory()->create([
+        $user = User::factory()->create([
             "login_attempts" => 0,
         ]);
         // Send post request
@@ -76,7 +76,7 @@ class LoginTest extends TestCase
 
     public function testPostIncorrectPasswordButValidEmail()
     {
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
         $response = $this->makePostRequest(
             $user["email_address"],
             TestUtilities::$invalidPasswords[0]
@@ -104,7 +104,7 @@ class LoginTest extends TestCase
 
     public function testPostWhenAlreadyLoggedIn()
     {
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
         Auth::loginUsingId($user["id"]);
         $response = $this->makePostRequest(
             $user["email_address"],
@@ -116,7 +116,7 @@ class LoginTest extends TestCase
     public function testPostSuccessfulLogin()
     {
         $pass = "Welcome1";
-        $user = UserModel::factory()->create([
+        $user = User::factory()->create([
             "email_address" => "ed@hotmail.com",
             "password" => Hash::make($pass),
         ]);

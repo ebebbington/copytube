@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\UserModel;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use View;
@@ -13,9 +13,8 @@ class RecoverController extends Controller
     public function index(Request $request)
     {
         $token = $request->query("token");
-        $User = new UserModel();
-        $user = $User->getByToken($token);
-        if (!isset($token) || $user === false) {
+        $user = User::where("recover_token", $token)->first();
+        if (!isset($token) || !$user) {
             return redirect()->route("login");
         } // because field is null and token might be null
         Log::debug("Going to queue cookie token: " . $token);
@@ -31,9 +30,8 @@ class RecoverController extends Controller
         $password = $request->input("password");
 
         // get user by that email
-        $User = new UserModel();
-        $user = $User->getByEmail($email);
-        if ($user === false) {
+        $user = User::where("email_address", $email)->first();
+        if (!$user) {
             return response(
                 [
                     "success" => false,
@@ -53,12 +51,15 @@ class RecoverController extends Controller
                 403
             );
         }
-        $validated = $User->validate([
-            "username" => $user->username,
-            "email" => $user->email_address,
-            "password" => $password,
-            "profile_picture" => $user->profile_picture,
-        ]);
+        $validated = User::validate(
+            [
+                "username" => $user->username,
+                "email" => $user->email_address,
+                "password" => $password,
+                "profile_picture" => $user->profile_picture,
+            ],
+            User::$rules
+        );
         if ($validated !== true) {
             return response(
                 [
@@ -70,7 +71,10 @@ class RecoverController extends Controller
         }
 
         // update the new hashed password, login_attempts and recover_token
-        $User->updateAfterRecover($email, $password);
+        $user->password = User::generateHash($password);
+        $user->login_attempts = 3;
+        $user->recover_token = null;
+        $user->save();
 
         return response([
             "success" => true,

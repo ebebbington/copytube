@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Components;
 
-use App\UserModel;
+use App\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Feature\TestUtilities;
@@ -17,7 +17,7 @@ class MainVideoComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         "TestEmail@hotmail.com"
@@ -49,7 +49,7 @@ class MainVideoComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         "TestEmail@hotmail.com"

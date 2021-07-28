@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\CommentsModel;
+use App\Comment;
 use App\Events\CommentAdded;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -24,11 +24,11 @@ class ProcessNewComment implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param CommentsModel $comment
+     * @param Comment $comment
      * @param string        $profilePicture
      */
     public function __construct(
-        CommentsModel $comment,
+        Comment $comment,
         string $profilePicture,
         string $videoPostedOn
     ) {

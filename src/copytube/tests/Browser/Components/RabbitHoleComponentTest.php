@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Components;
 
-use App\UserModel;
+use App\User;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
@@ -23,7 +23,7 @@ class RabbitHoleComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         "TestEmail@hotmail.com"
@@ -56,7 +56,7 @@ class RabbitHoleComponentTest extends DuskTestCase
             // login
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         "TestEmail@hotmail.com"

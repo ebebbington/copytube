@@ -43,7 +43,6 @@ Route::get("/video/titles", "VideoController@autocomplete")->middleware("auth");
 Route::get("/video", "VideoController@index")
     ->middleware("auth")
     ->name("video");
-Route::get("/videos", "VideoController@getVideos")->middleware("auth");
 Route::delete("/video/comment", "VideoController@deleteComment")->middleware(
     "auth"
 );

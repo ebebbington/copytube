@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
-use App\UserModel;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HomeTest extends TestCase
@@ -15,7 +15,7 @@ class HomeTest extends TestCase
 
     public function testGetWithAuth()
     {
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
         Auth::loginUsingId($user["id"]);
         $response = $this->json("GET", "/home");
         $response->assertStatus(200);

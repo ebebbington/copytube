@@ -5,7 +5,7 @@ namespace Tests\Unit\Jobs;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use App\Jobs\ProcessUserDeleted;
-use App\UserModel;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProcessUserDeletedTest extends TestCase
@@ -24,7 +24,7 @@ class ProcessUserDeletedTest extends TestCase
         $Queue::assertNothingPushed();
 
         // Get data
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
 
         //        Queue::assertPushed(ProcessNewComment::class, function ($job) {
         //            return 1 === 10;

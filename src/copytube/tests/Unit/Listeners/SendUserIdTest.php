@@ -3,7 +3,7 @@
 namespace Tests\Unit\Listeners;
 
 use App\Jobs\ProcessUserDeleted;
-use App\UserModel;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -20,7 +20,7 @@ class SendUserIdTest extends TestCase
         app("queue")->setDefaultDriver("sync");
 
         // Setup data
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
         $Mockery = new \Mockery();
         $listener = $Mockery::mock("SendUserId");
 

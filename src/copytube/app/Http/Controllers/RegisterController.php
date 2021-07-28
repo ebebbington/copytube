@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\UserModel;
+use App\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,18 +25,20 @@ class RegisterController extends Controller
         $email = $request->input("email");
 
         // Validate user details
-        $User = new UserModel();
         $profilePictureName = $request->hasFile("profile-picture")
             ? strtolower(
                 $request->file("profile-picture")->getClientOriginalName()
             )
             : "sample.jpg";
-        $passedValidation = $User->validate([
-            "username" => $username,
-            "email" => $email,
-            "password" => $request->input("password"),
-            "profile_picture" => $profilePictureName,
-        ]);
+        $passedValidation = User::validate(
+            [
+                "username" => $username,
+                "email" => $email,
+                "password" => $request->input("password"),
+                "profile_picture" => $profilePictureName,
+            ],
+            User::$rules
+        );
         if ($passedValidation !== true) {
             Log::info("Couldnt validate input: " . $passedValidation);
             return response(
@@ -47,7 +49,7 @@ class RegisterController extends Controller
                 401
             );
         }
-        if (UserModel::exists($email) === true) {
+        if (User::where("email_address", $email)->first()) {
             return response(
                 [
                     "success" => false,
@@ -59,19 +61,19 @@ class RegisterController extends Controller
         Log::info("User doesnt exists");
 
         // remove the raw password
-        $hash = UserModel::generateHash($request->input("password"));
+        $hash = User::generateHash($request->input("password"));
         $_POST["password"] = null;
         $request->merge(["password" => null]);
         Log::info("Removed references to the raw password");
 
         // Save the user
-        $user = $User->CreateQuery([
-            "username" => $username,
-            "email_address" => $email,
-            "password" => $hash,
-            "logged_in" => 1,
-            "login_attempts" => 3,
-        ]);
+        $user = new User();
+        $user->username = $username;
+        $user->email_address = $email;
+        $user->password = $hash;
+        $user->logged_in = 1;
+        $user->login_attempts = 3;
+        $user->save();
         //        if (empty($updated)) {
         //            return response([
         //              'success' => false,
@@ -83,10 +85,8 @@ class RegisterController extends Controller
             ? $request->file("profile-picture")->store($user->id)
             : "sample.jpg";
         $profilePicturePath = "img/" . $profilePicturePath;
-        $User->UpdateQuery(
-            ["email_address" => $email],
-            ["profile_picture" => $profilePicturePath]
-        );
+        $user->profile_picture = $profilePicturePath;
+        $user->save();
         Log::info("Saved a user");
 
         return response(

@@ -5,7 +5,7 @@ namespace Tests\Unit\Events;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 use App\Events\UserDeleted;
-use App\UserModel;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserDeletedTest extends TestCase
@@ -18,7 +18,7 @@ class UserDeletedTest extends TestCase
     {
         $Event = new Event();
         $Event::fake();
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
         // Send event
         $Event::dispatch(new UserDeleted($user["id"]));
         $Event::assertDispatched(UserDeleted::class, 1);

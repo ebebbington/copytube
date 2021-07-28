@@ -11,6 +11,7 @@
         "php": "^8",
         "barryvdh/laravel-debugbar": "^3.6",
         "fideloper/proxy": "^4.0",
+        "fzaninotto/faker": "^1.5",
         "laravel/framework": "^8.22.1",
         "laravel/tinker": "^2.5.0",
         "phpmailer/phpmailer": "^6.1",

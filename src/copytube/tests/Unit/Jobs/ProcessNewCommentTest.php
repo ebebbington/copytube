@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Jobs;
 
-use App\CommentsModel;
+use App\Comment;
 use App\Jobs\ProcessNewComment;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -27,14 +27,13 @@ class ProcessNewCommentTest extends TestCase
         $Queue::assertNothingPushed();
 
         // Get data
-        $CommentsModel = new CommentsModel();
-        $comment = $CommentsModel->CreateQuery([
-            "comment" => "Test",
-            "author" => "Test",
-            "date_posted" => "2020-02-02",
-            "user_id" => 21,
-            "video_id" => 3,
-        ]);
+        $comment = new Comment();
+        $comment->comment = "Test";
+        $comment->author = "Test";
+        $comment->date_posted = "2020-02-02";
+        $comment->user_id = 21;
+        $comment->video_id = 3;
+        $comment->save();
 
         //        Queue::assertPushed(ProcessNewComment::class, function ($job) {
         //            return 1 === 10;

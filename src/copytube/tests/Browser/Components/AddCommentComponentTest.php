@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Components;
 
-use App\UserModel;
+use App\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Feature\TestUtilities;
@@ -19,11 +19,7 @@ class AddCommentComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->pause(10);
             $browser->loginAs(
-                UserModel::where(
-                    "email_address",
-                    "=",
-                    TestUtilities::$validEmail
-                )
+                User::where("email_address", "=", TestUtilities::$validEmail)
                     ->limit(1)
                     ->first()
             );
@@ -50,7 +46,7 @@ class AddCommentComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         TestUtilities::$validEmail
@@ -93,7 +89,7 @@ class AddCommentComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($userId) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         TestUtilities::$validEmail

@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Components;
 
-use App\UserModel;
+use App\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Feature\TestUtilities;
@@ -24,7 +24,7 @@ class CommentListComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         TestUtilities::$validEmail
@@ -56,11 +56,7 @@ class CommentListComponentTest extends DuskTestCase
         $this->browse(function (Browser $browserOne, Browser $browserTwo) {
             $browserOne
                 ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        "TestEmail1@hotmail.com"
-                    )
+                    User::where("email_address", "=", "TestEmail1@hotmail.com")
                         ->limit(1)
                         ->first()
                 )
@@ -68,11 +64,7 @@ class CommentListComponentTest extends DuskTestCase
                 ->assertpathIs($this->path);
             $browserTwo
                 ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        "TestEmail2@hotmail.com"
-                    )
+                    User::where("email_address", "=", "TestEmail2@hotmail.com")
                         ->limit(1)
                         ->first()
                 )
@@ -103,7 +95,7 @@ class CommentListComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         TestUtilities::$validEmail
@@ -129,7 +121,7 @@ class CommentListComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         TestUtilities::$validEmail
@@ -158,7 +150,7 @@ class CommentListComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($commentId) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         TestUtilities::$validEmail
@@ -196,7 +188,7 @@ class CommentListComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($commentId) {
             $browser
                 ->loginAs(
-                    UserModel::where(
+                    User::where(
                         "email_address",
                         "=",
                         TestUtilities::$validEmail
@@ -242,11 +234,7 @@ class CommentListComponentTest extends DuskTestCase
         ) {
             $browserTwo
                 ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        "TestEmail9@hotmail.com"
-                    )
+                    User::where("email_address", "=", "TestEmail9@hotmail.com")
                         ->limit(1)
                         ->first()
                 )
@@ -254,11 +242,7 @@ class CommentListComponentTest extends DuskTestCase
                 ->assertpathIs($this->path);
             $browserTwo
                 ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        "TestEmail10@hotmail.com"
-                    )
+                    User::where("email_address", "=", "TestEmail10@hotmail.com")
                         ->limit(1)
                         ->first()
                 )
@@ -305,11 +289,7 @@ class CommentListComponentTest extends DuskTestCase
         $this->browse(function (Browser $browserOne, Browser $browserTwo) {
             $browserTwo
                 ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        "TestEmail11@hotmail.com"
-                    )
+                    User::where("email_address", "=", "TestEmail11@hotmail.com")
                         ->limit(1)
                         ->first()
                 )
@@ -317,11 +297,7 @@ class CommentListComponentTest extends DuskTestCase
                 ->assertpathIs($this->path);
             $browserTwo
                 ->loginAs(
-                    UserModel::where(
-                        "email_address",
-                        "=",
-                        "TestEmail12@hotmail.com"
-                    )
+                    User::where("email_address", "=", "TestEmail12@hotmail.com")
                         ->limit(1)
                         ->first()
                 )

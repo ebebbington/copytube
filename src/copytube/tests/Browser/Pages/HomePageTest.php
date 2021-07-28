@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Pages;
 
-use App\UserModel;
+use App\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Feature\TestUtilities;
@@ -36,11 +36,7 @@ class HomePageTest extends DuskTestCase
         TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
             $browser->loginAs(
-                UserModel::where(
-                    "email_address",
-                    "=",
-                    TestUtilities::$validEmail
-                )
+                User::where("email_address", "=", TestUtilities::$validEmail)
                     ->limit(1)
                     ->first()
             );

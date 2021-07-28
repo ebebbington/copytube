@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\UserModel;
+use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class LogoutController extends Controller
@@ -14,10 +13,12 @@ class LogoutController extends Controller
         //$loggingPrefix = "[LogoutController - " . __FUNCTION__ . "] ";
         // update db
         $user = Auth::user();
-        Log::debug(print_r($user, true));
-        $User = new UserModel();
-        $User->updateLoggedIn(1, $user->email_address);
+        // Log::debug(print_r($user, true));
+        $user = User::where("id", $user->id)->first();
+        $user->logged_in = 1;
+        $user->save();
 
+        // TODO :: This logic should be moved into a util class or something so delete method inuser controller can use it too
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

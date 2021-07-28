@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\UserModel;
+use App\User;
 
 class RecoverTest extends TestCase
 {
@@ -50,7 +50,7 @@ class RecoverTest extends TestCase
     public function testGetWithCorrectToken()
     {
         // Assert correct response with correct token
-        UserModel::factory()->create([
+        User::factory()->create([
             "recover_token" => "test_token",
         ]);
         $response = $this->get("/recover?token=test_token");
@@ -61,7 +61,7 @@ class RecoverTest extends TestCase
 
     public function testPostWhenTokenDoesntMatch()
     {
-        $user = UserModel::factory()->create([
+        $user = User::factory()->create([
             "recover_token" => "test_token",
         ]);
         $response = $this->withCookie("recoverToken", "goody")->post(
@@ -86,7 +86,7 @@ class RecoverTest extends TestCase
     {
         $tokenValue = "test_token";
         $this->disableCookieEncryption();
-        $user = UserModel::factory()->create([
+        $user = User::factory()->create([
             "recover_token" => $tokenValue,
         ]);
         $response = $this->withCookie("recoverToken", $tokenValue)->post(
@@ -122,7 +122,7 @@ class RecoverTest extends TestCase
     {
         // Test it updates the row correctly
         $this->disableCookieEncryption();
-        $user = UserModel::factory()->create([
+        $user = User::factory()->create([
             "recover_token" => "test_token",
             "profile_picture" => "Test.png",
             "login_attempts" => 0,
@@ -138,10 +138,7 @@ class RecoverTest extends TestCase
                 "X-CSRF-TOKEN" => csrf_token(),
             ]
         );
-        $user = UserModel::where(
-            "email_address",
-            $user["email_address"]
-        )->first();
+        $user = User::where("email_address", $user["email_address"])->first();
         $this->assertEquals(true, $user["login_attempts"] === 3);
         $this->assertEquals(true, Hash::check("Welcome2", $user["password"]));
 

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\CommentsModel;
-use App\UserModel;
+use App\Comment;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +29,7 @@ class UserTest extends TestCase
     public function testDeleteMethodWithAuthOnSuccess()
     {
         // Copy profile picture
-        $user = UserModel::factory()->create();
+        $user = User::factory()->create();
         $profilePicPath = "img/" . $user["id"] . "/test.jpg";
         $Storage = new Storage();
         $Storage::disk("local_public")->copy("img/sample.jpg", $profilePicPath);
@@ -43,7 +43,7 @@ class UserTest extends TestCase
         $Auth::loginUsingId($user["id"]);
 
         // Add comments before
-        CommentsModel::factory()
+        Comment::factory()
             ->count(3)
             ->create([
                 "user_id" => $user["id"],
@@ -60,7 +60,7 @@ class UserTest extends TestCase
         //Storage::disk('local_public')->assertMissing($profilePicPath);
 
         // Check row was deleted
-        $row = UserModel::where("id", $user["id"])->first();
+        $row = User::where("id", $user["id"])->first();
         $this->assertEquals(false, $row);
 
         // Check all comments were deleted

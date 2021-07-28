@@ -2,18 +2,17 @@
 
 namespace Database\Factories;
 
-use App\UserModel;
+use App\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash as FacadesHash;
 
-class UserModelFactory extends Factory
+class UserFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = UserModel::class;
+    protected $model = User::class;
 
     /**
      * Define the model's default state.
@@ -25,7 +24,7 @@ class UserModelFactory extends Factory
         return [
             "username" => $this->faker->name(),
             "email_address" => $this->faker->unique()->safeEmail(),
-            "password" => UserModel::generateHash("Welcome1"),
+            "password" => User::generateHash("Welcome1"),
             "logged_in" => 1,
             "login_attempts" => 3,
             "profile_picture" => null,
