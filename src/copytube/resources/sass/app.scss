@@ -9,39 +9,39 @@
 @use 'loading';
 
 :root {
-    --custom-white: ghostwhite;
-    --custom-black: #393c3d;
-    --custom-dark-grey: #636b6f;
-    --custom-light-grey: #f6f6f6;
-    --custom-grey-border: #e2e2e2;
-    --custom-pink: #af0020; /* e85e77 */
+  --custom-white: ghostwhite;
+  --custom-black: #393c3d;
+  --custom-dark-grey: #636b6f;
+  --custom-light-grey: #f6f6f6;
+  --custom-grey-border: #e2e2e2;
+  --custom-pink: #af0020; /* e85e77 */
 }
 .center-h {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 .center-v {
-    margin-top: auto;
-    margin-bottom: auto;
-    text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: center;
 }
 .container {
-    margin-top: 9em;
+  margin-top: 9em;
 }
 .row.pardon-me {
-    margin-bottom: 2em;
+  margin-bottom: 2em;
 }
 span {
-    display: flex;
+  display: flex;
 }
 .button-to-text {
-    border: none;
-    background: none;
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: blue;
+  border: none;
+  background: none;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: blue;
 }
 .bold {
-    font-weight: bold;
+  font-weight: bold;
 }

@@ -1,46 +1,46 @@
 #search {
-    width: 100%;
-    border-radius: 0.25rem;
-    top: 0;
-    transition-duration: 1s;
+  width: 100%;
+  border-radius: 0.25rem;
+  top: 0;
+  transition-duration: 1s;
 
-    &.stick {
-        position: fixed;
-        right: 0;
-        left: 0;
-        margin: auto;
-        top: 129px;
-        z-index: 1;
-        width: fit-content;
+  &.stick {
+    position: fixed;
+    right: 0;
+    left: 0;
+    margin: auto;
+    top: 129px;
+    z-index: 1;
+    width: fit-content;
+  }
+  & > input:first-of-type {
+    border-radius: 0.25rem 0 0 0.25rem;
+  }
+  & button {
+    border-radius: 0 0.25rem 0.25rem 0;
+    color: var(--custom-white);
+    background: var(--custom-pink);
+    &:hover {
+      color: var(--custom-pink);
+      background-color: var(--custom-white);
+      box-shadow: 0px 0px 5px 2px var(--custom-pink);
     }
-    & > input:first-of-type {
-        border-radius: 0.25rem 0 0 0.25rem;
+  }
+  & ul#search-bar-matching-dropdown {
+    position: absolute;
+    background: var(--custom-grey-border);
+    list-style-type: none;
+    top: 38px;
+    width: 100%;
+    text-align: left;
+    & li {
+      padding: 0.5em;
+      cursor: pointer;
+      width: fit-content;
+      color: var(--custom-dark-grey);
+      &:hover {
+        color: var(--custom-black);
+      }
     }
-    & button {
-        border-radius: 0 0.25rem 0.25rem 0;
-        color: var(--custom-white);
-        background: var(--custom-pink);
-        &:hover {
-            color: var(--custom-pink);
-            background-color: var(--custom-white);
-            box-shadow: 0px 0px 5px 2px var(--custom-pink);
-        }
-    }
-    & ul#search-bar-matching-dropdown {
-        position: absolute;
-        background: var(--custom-grey-border);
-        list-style-type: none;
-        top: 38px;
-        width: 100%;
-        text-align: left;
-        & li {
-            padding: 0.5em;
-            cursor: pointer;
-            width: fit-content;
-            color: var(--custom-dark-grey);
-            &:hover {
-                color: var(--custom-black);
-            }
-        }
-    }
+  }
 }

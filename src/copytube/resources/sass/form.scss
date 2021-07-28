@@ -4,44 +4,44 @@
 
 /* Styling for Forms */
 form {
-    text-align: center;
-    background: var(--custom-light-grey);
-    border: 1px solid var(--custom-grey-border);
-    border-radius: 2px;
-    width: 316px;
-    margin: auto;
-    fieldset {
-        padding: 2em;
-        text-align: left;
-        legend {
-            border-bottom: 1px solid var(--custom-grey-border);
-        }
-        input.form-submit {
-            color: var(--custom-white);
-            background-color: var(--custom-pink);
-            font-size: 1em;
-            font-family: Arial, serif;
-            text-decoration: none;
-            transition-duration: 0.5s;
-            border: 0;
-            &:hover {
-                color: var(--custom-pink);
-                background-color: var(--custom-white);
-                box-shadow: 0px 0px 5px 2px var(--custom-pink);
-            }
-        }
-        label {
-            width: 100%;
-        }
-        input {
-            width: 100%;
-        }
-        input.form-field {
-            margin: auto;
-            text-align: center;
-        }
-        input.form-field[type="file"] {
-            height: auto;
-        }
+  text-align: center;
+  background: var(--custom-light-grey);
+  border: 1px solid var(--custom-grey-border);
+  border-radius: 2px;
+  width: 316px;
+  margin: auto;
+  fieldset {
+    padding: 2em;
+    text-align: left;
+    legend {
+      border-bottom: 1px solid var(--custom-grey-border);
     }
+    input.form-submit {
+      color: var(--custom-white);
+      background-color: var(--custom-pink);
+      font-size: 1em;
+      font-family: Arial, serif;
+      text-decoration: none;
+      transition-duration: 0.5s;
+      border: 0;
+      &:hover {
+        color: var(--custom-pink);
+        background-color: var(--custom-white);
+        box-shadow: 0px 0px 5px 2px var(--custom-pink);
+      }
+    }
+    label {
+      width: 100%;
+    }
+    input {
+      width: 100%;
+    }
+    input.form-field {
+      margin: auto;
+      text-align: center;
+    }
+    input.form-field[type="file"] {
+      height: auto;
+    }
+  }
 }
