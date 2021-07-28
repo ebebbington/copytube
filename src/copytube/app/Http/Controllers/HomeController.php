@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use View;
-use App\VideosModel;
+use App\Video;
 
 class HomeController extends Controller
 {
@@ -13,9 +13,8 @@ class HomeController extends Controller
     {
         $loggingPrefix = "[HomeController - " . __FUNCTION__ . "] ";
         Log::info($loggingPrefix);
-        $VideosModel = new VideosModel();
         $user = Auth::user();
-        $videos = $VideosModel->getVideosForHomePage();
+        $videos = Video::find(3)->get();
         return View::make("home")
             ->with("title", "Home")
             ->with("username", $user->username)

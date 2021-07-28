@@ -2,81 +2,81 @@
   * Start of Notifier Styling
   */
 @keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 @keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 #notifier-container {
-    position: fixed;
-    left: 0;
-    right: 0;
-    text-align: center;
-    margin: auto;
-    bottom: 20px;
-    border-radius: 10px;
-    transition-duration: 1s;
-    height: 75px;
-    visibility: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  margin: auto;
+  bottom: 20px;
+  border-radius: 10px;
+  transition-duration: 1s;
+  height: 75px;
+  visibility: hidden;
 }
 #notifier-container.success {
-    background-color: green;
+  background-color: green;
 
-    animation: fadeIn 1s forwards;
-    animation: fadeOut 1s forwards 4s;
+  animation: fadeIn 1s forwards;
+  animation: fadeOut 1s forwards 4s;
 }
 #notifier-container.warning {
-    background-color: orange;
+  background-color: orange;
 
-    animation: fadeIn 1s forwards;
-    animation: fadeOut 1s forwards 4s;
+  animation: fadeIn 1s forwards;
+  animation: fadeOut 1s forwards 4s;
 }
 #notifier-container.error {
-    background-color: red;
+  background-color: red;
 
-    animation: fadeIn 1s forwards;
-    animation: fadeOut 1s forwards 4s;
+  animation: fadeIn 1s forwards;
+  animation: fadeOut 1s forwards 4s;
 }
 #notifier-container p#notifier-title {
-    margin: auto;
-    border-bottom: 1px solid white;
-    color: white;
+  margin: auto;
+  border-bottom: 1px solid white;
+  color: white;
 }
 #notifier-container p#notifier-message {
-    color: white;
+  color: white;
 }
 @media screen and (min-width: 320px) {
-    #notifier-container {
-        width: 90% !important;
-    }
+  #notifier-container {
+    width: 90% !important;
+  }
 }
 @media screen and (min-width: 480px) {
-    #notifier-container {
-        width: 70% !important;
-    }
+  #notifier-container {
+    width: 70% !important;
+  }
 }
 @media screen and (min-width: 768px) {
-    #notifier-container {
-        width: 40% !important;
-    }
+  #notifier-container {
+    width: 40% !important;
+  }
 }
 @media screen and (min-width: 992px) {
-    #notifier-container {
-        width: 30% !important;
-    }
+  #notifier-container {
+    width: 30% !important;
+  }
 }
 @media screen and (min-width: 1200px) {
-    #notifier-container {
-        width: 20% !important;
-    }
+  #notifier-container {
+    width: 20% !important;
+  }
 }

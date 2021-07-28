@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\UserModel;
+use App\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -65,7 +65,7 @@ class RegisterTest extends TestCase
             "success" => true,
         ]);
         $response->assertStatus(200);
-        $user = UserModel::where(
+        $user = User::where(
             "email_address",
             TestUtilities::$validEmail
         )->first();
@@ -271,7 +271,7 @@ class RegisterTest extends TestCase
             UploadedFile::fake()->image("img/something_more.jpg")
         );
         // Assert the file was stored...
-        $user = UserModel::where(
+        $user = User::where(
             "email_address",
             TestUtilities::$validEmail
         )->first();
@@ -290,7 +290,7 @@ class RegisterTest extends TestCase
         );
 
         // Get user from DB and assert the data
-        $user = UserModel::where(
+        $user = User::where(
             "email_address",
             TestUtilities::$validEmail
         )->first();

@@ -26,9 +26,7 @@ jobs:
           npm update
           cd ../realtime
           deno run --allow-all https://deno.land/x/dmm/mod.ts update
-
-      - name: Update Other Version Strings
-        run: |
+          cd ..
           deno run -A console/update_php_version.ts
           deno run -A console/update_deno_versions.ts
           deno run -A console/update_redis_version.ts

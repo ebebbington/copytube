@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\VideosModel;
+use App\Video;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class VideosModelFactory extends Factory
+class VideoFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = VideosModel::class;
+    protected $model = Video::class;
 
     public $timestamps = false;
 

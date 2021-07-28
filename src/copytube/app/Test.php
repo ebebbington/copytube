@@ -2,7 +2,7 @@
 
 namespace App;
 
-class TestModel extends BaseModel
+class Test extends Base
 {
     /**
      * The table associated with the model.
@@ -19,8 +19,6 @@ class TestModel extends BaseModel
     protected $primaryKey = "id";
 
     public $timestamps = false;
-
-    public string $test;
 
     /**
      * Fields to be populated

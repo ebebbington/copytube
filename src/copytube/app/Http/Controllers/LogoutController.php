@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\UserModel;
+use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class LogoutController extends Controller
@@ -14,9 +13,9 @@ class LogoutController extends Controller
         //$loggingPrefix = "[LogoutController - " . __FUNCTION__ . "] ";
         // update db
         $user = Auth::user();
-        Log::debug(print_r($user, true));
-        $User = new UserModel();
-        $User->updateLoggedIn(1, $user->email_address);
+        $user = User::where("id", $user->id)->first();
+        $user->logged_in = 1;
+        $user->save();
 
         Auth::logout();
         $request->session()->invalidate();

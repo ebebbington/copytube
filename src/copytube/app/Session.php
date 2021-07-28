@@ -2,7 +2,7 @@
 
 namespace App;
 
-class SessionModel extends BaseModel
+class Session extends Base
 {
     /**
      * The table associated with the model.
@@ -17,20 +17,6 @@ class SessionModel extends BaseModel
      * @var string
      */
     protected $primaryKey = "id";
-
-    /**
-     * Username of the user
-     *
-     * @var String
-     */
-    public $session_id;
-
-    /**
-     * Hashed password of user
-     *
-     * @var String
-     */
-    public $user_id;
 
     /**
      * Fields to be populated
@@ -53,6 +39,6 @@ class SessionModel extends BaseModel
 
     public function user()
     {
-        return $this->hasOne(UserModel::class, "id", "user_id");
+        return $this->hasOne(User::class, "id", "user_id");
     }
 }

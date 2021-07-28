@@ -4,105 +4,103 @@ import Notifier from "./components/notifier";
 import Loading from "./components/loading";
 
 const Register = (function () {
-    const Methods = (function () {
-        function validateInput(): boolean {
-            const username: string = $('input[name="username"]').val();
-            const email: string = $('input[name="email"]').val();
-            const password: string = $('input[name="password"]').val();
-            if (
-                username === null ||
-                username === undefined ||
-                username === "" ||
-                username.trim().length === 0
-            ) {
-                Notifier.error("Username", "Enter a Username");
-                return false;
-            }
-            if (
-                email === null ||
-                email === undefined ||
-                email === "" ||
-                email.trim().length === 0
-            ) {
-                Notifier.error("Email", "Enter an Email");
-                return false;
-            }
-            if (
-                password === null ||
-                password === undefined ||
-                password === "" ||
-                password.trim().length === 0
-            ) {
-                Notifier.error("Password", "Enter a Password");
-                return false;
-            }
+  const Methods = (function () {
+    function validateInput(): boolean {
+      const username: string = $('input[name="username"]').val();
+      const email: string = $('input[name="email"]').val();
+      const password: string = $('input[name="password"]').val();
+      if (
+        username === null ||
+        username === undefined ||
+        username === "" ||
+        username.trim().length === 0
+      ) {
+        Notifier.error("Username", "Enter a Username");
+        return false;
+      }
+      if (
+        email === null ||
+        email === undefined ||
+        email === "" ||
+        email.trim().length === 0
+      ) {
+        Notifier.error("Email", "Enter an Email");
+        return false;
+      }
+      if (
+        password === null ||
+        password === undefined ||
+        password === "" ||
+        password.trim().length === 0
+      ) {
+        Notifier.error("Password", "Enter a Password");
+        return false;
+      }
+      return true;
+    }
+
+    function registerUser(): void {
+      Loading(true);
+      //@ts-ignore
+      const formData = new FormData($("form")[0]);
+      $.ajax({
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        type: "POST",
+        url: "/register",
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (data, status, jqXHR) {
+          Loading(false);
+          if (data.success === true) {
+            $("form").trigger("reset");
+            Notifier.success("Register", "Created an account");
             return true;
-        }
-
-        function registerUser(): void {
-            Loading(true);
+          }
+          // else theres a problem
+          Notifier.error("Error", data.message);
+          return false;
+        },
+        error: function (error) {
+          try {
+            const errMsg = error.responseJSON.message;
+            //$('#register-form').trigger('reset')
+            Notifier.error("Error", errMsg);
+          } catch (err) {
             //@ts-ignore
-            const formData = new FormData($("form")[0]);
-            $.ajax({
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                },
-                type: "POST",
-                url: "/register",
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function (data, status, jqXHR) {
-                    Loading(false);
-                    if (data.success === true) {
-                        $("form").trigger("reset");
-                        Notifier.success("Register", "Created an account");
-                        return true;
-                    }
-                    // else theres a problem
-                    Notifier.error("Error", data.message);
-                    return false;
-                },
-                error: function (error) {
-                    try {
-                        const errMsg = error.responseJSON.message;
-                        //$('#register-form').trigger('reset')
-                        Notifier.error("Error", errMsg);
-                    } catch (err) {
-                        //@ts-ignore
-                        Notifier.error("Error", error.message);
-                    }
-                    //$('html', 'body').animate({scrollTop: 0}, 'slow')
-                    //return false
-                    Loading(false);
-                },
-            });
-        }
-
-        return {
-            validateInput: validateInput,
-            registerUser: registerUser,
-        };
-    })();
-
-    (function () {
-        $(document).ready(() => {
-            $("#register-button").on("click", function (e) {
-                e.preventDefault();
-                const passed = Methods.validateInput();
-                if (!passed) {
-                    return false;
-                }
-                Methods.registerUser();
-            });
-        });
-    })();
+            Notifier.error("Error", error.message);
+          }
+          //$('html', 'body').animate({scrollTop: 0}, 'slow')
+          //return false
+          Loading(false);
+        },
+      });
+    }
 
     return {
-        Methods: Methods,
+      validateInput: validateInput,
+      registerUser: registerUser,
     };
+  })();
+
+  (function () {
+    $(document).ready(() => {
+      $("#register-button").on("click", function (e) {
+        e.preventDefault();
+        const passed = Methods.validateInput();
+        if (!passed) {
+          return false;
+        }
+        Methods.registerUser();
+      });
+    });
+  })();
+
+  return {
+    Methods: Methods,
+  };
 })();
 
 // $(document).ready(function () {

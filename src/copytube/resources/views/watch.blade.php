@@ -13,10 +13,10 @@
     <!-- main video -->
     <div class="row pardon-me">
         @component('components/main-video', [
-            'title' => $mainVideo->title,
-            'description' => $mainVideo->description,
-            'poster' => $mainVideo->poster,
-            'src' => $mainVideo->src,
+            'title' => $mainVideo['title'],
+            'description' => $mainVideo['description'],
+            'poster' => $mainVideo['poster'],
+            'src' => $mainVideo['src'],
         ])
         @endcomponent
     </div>

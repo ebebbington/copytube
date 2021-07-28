@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\UserModel;
+use App\User;
 
 class LogoutTest extends TestCase
 {
@@ -26,7 +26,7 @@ class LogoutTest extends TestCase
     public function testDeleteUserWithAuth()
     {
         // create user
-        $user = UserModel::factory()->create([
+        $user = User::factory()->create([
             "logged_in" => 0,
         ]);
         // Auth user
@@ -39,10 +39,7 @@ class LogoutTest extends TestCase
         // assert response
         $response->assertStatus(302);
         // user must have logged_in = 1
-        $user = UserModel::where(
-            "email_address",
-            $user["email_address"]
-        )->first();
+        $user = User::where("email_address", $user["email_address"])->first();
         $this->assertEquals(1, $user["logged_in"]);
         Auth::logout();
     }

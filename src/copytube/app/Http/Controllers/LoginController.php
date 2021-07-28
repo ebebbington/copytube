@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AccountLocked;
-use App\UserModel;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use View;
 
 class LoginController extends Controller
@@ -22,9 +23,8 @@ class LoginController extends Controller
         ];
 
         // Get user
-        $UserModel = new UserModel();
-        $user = $UserModel->getByEmail($email);
-        if ($user === false) {
+        $user = User::where("email_address", $email)->first();
+        if (!$user) {
             return response(
                 [
                     "success" => false,
@@ -37,7 +37,9 @@ class LoginController extends Controller
         // Disable their account if no login attempts are left
         // TODO :: For future reference, we should pop this into a queue, but for just learning Laravel, there's not much point
         if ($user->login_attempts === 0) {
-            $token = $UserModel->lockAccount($user->id, $email);
+            $token = Str::random(32);
+            $user->recover_token = $token;
+            $user->save();
             $title = "Account Locked";
             $message =
                 "Your account has been locked. Please reset your password using the following link: 127.0.0.1:9002/recover?token=" .
@@ -58,10 +60,7 @@ class LoginController extends Controller
         if (!Auth::attempt($credentials)) {
             // Reduce login attempts
             if ($user->login_attempts > 0) {
-                $UserModel->updateLoginAttempts(
-                    $email,
-                    $user->login_attempts - 1
-                );
+                $user->login_attempts = $user->login_attempts - 1;
             }
             return response(
                 [
@@ -73,7 +72,8 @@ class LoginController extends Controller
         }
 
         // Set the user to logged in
-        $UserModel->updateLoggedIn(0, $email);
+        $user->logged_in = 0;
+        $user->save();
         return response(
             [
                 "success" => true,

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\CommentsModel;
+use App\Comment;
 use App\Jobs\ProcessUserDeleted;
-use App\UserModel;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function Delete()
+    public function Delete(Request $request)
     {
         $user = Auth::user();
 
@@ -18,15 +19,15 @@ class UserController extends Controller
         Storage::disk("local_public")->deleteDirectory("img/" . $user->id); //Storage::disk('local_public')->delete('img/'.$user['id']);
 
         // Remove row from db
-        $UserModel = new UserModel();
-        $UserModel->DeleteQuery(["email_address" => $user->email_address]);
+        User::where("email_address", $user->email_address)->delete();
 
         // Remove all comments
-        $CommentsModel = new CommentsModel();
-        $CommentsModel->DeleteQuery(["user_id" => $user->id]);
+        Comment::where("user_id", $user->id)->delete();
 
         // Log user out from Auth
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         // Send event to remove all comments
         dispatch(new ProcessUserDeleted($user->id));

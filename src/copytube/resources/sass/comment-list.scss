@@ -1,30 +1,30 @@
 #comment-list {
-    padding: 1em;
-    background: var(--custom-light-grey);
-    border-radius: 5px;
-    width: 100%;
-    .media {
-        padding: 0.5em;
-        .media-left {
-            img {
-                width: 35px;
-                height: 35px;
-                border-radius: 80%;
-            }
-        }
-        .media-body {
-            text-align: left;
-            margin-left: 0.5em;
-            h3 {
-                color: var(--custom-dark-grey);
-                font-size: 1em;
-            }
-            p {
-                word-break: break-word;
-            }
-        }
-        span {
-            cursor: pointer;
-        }
+  padding: 1em;
+  background: var(--custom-light-grey);
+  border-radius: 5px;
+  width: 100%;
+  .media {
+    padding: 0.5em;
+    .media-left {
+      img {
+        width: 35px;
+        height: 35px;
+        border-radius: 80%;
+      }
     }
+    .media-body {
+      text-align: left;
+      margin-left: 0.5em;
+      h3 {
+        color: var(--custom-dark-grey);
+        font-size: 1em;
+      }
+      p {
+        word-break: break-word;
+      }
+    }
+    span {
+      cursor: pointer;
+    }
+  }
 }

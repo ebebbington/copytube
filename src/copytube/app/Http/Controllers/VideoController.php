@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Jobs\ProcessNewComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use View;
-use App\CommentsModel;
-use App\VideosModel;
+use App\Comment;
+use App\Video;
 
 class VideoController extends Controller
 {
@@ -36,15 +35,7 @@ class VideoController extends Controller
             abort(403);
         }
 
-        $VideosModel = new VideosModel();
-        $mainVideo = $VideosModel->getVideoByTitle($videoNameRequested);
-        Log::debug(
-            "THE VIDEO of req title " .
-                $videoNameRequested .
-                ": " .
-                json_encode($mainVideo)
-        );
-
+        $mainVideo = Video::where("title", $videoNameRequested)->first();
         // Video requested could well be wrong or undefined e.g. '' or 'Something Moreee'
         if (empty($mainVideo) || !isset($mainVideo)) {
             Log::error(
@@ -53,12 +44,6 @@ class VideoController extends Controller
             );
             abort(404);
         }
-
-        $CommentsModel = new CommentsModel();
-        $comments = $CommentsModel->getAllByVideoIdJoinUserProfilePic(
-            $mainVideo->id
-        );
-        Log::debug($comments);
 
         Log::info(
             $loggingPrefix .
@@ -69,21 +54,20 @@ class VideoController extends Controller
         );
 
         // Get rabbit hole videos that aren't main video
-        // TODO :: Maybe we can get mainvideo and rabbit hold vids in one query?
-        $rabbitHoleVideos = $VideosModel->getRabbitHoleVideos(
-            $videoNameRequested
-        );
+        $rabbitHoleVideos = Video::where("id", "!=", $mainVideo["id"])
+            ->limit(2)
+            ->get();
         Log::info($loggingPrefix . "Retrieved rabbit hole videos");
 
         $user = Auth::user();
         $renderData = [
-            "title" => $mainVideo->title,
+            "title" => $mainVideo["title"],
             "username" => $user->username,
             "email" => $user->email_address,
             "profilePicture" => $user->profile_picture,
             "mainVideo" => $mainVideo,
             "rabbitHoleVideos" => $rabbitHoleVideos,
-            "comments" => $comments,
+            "comments" => $mainVideo->comments,
         ];
         Log::info(
             $loggingPrefix . "Return view of `home` with the following data:",
@@ -124,9 +108,8 @@ class VideoController extends Controller
         }
 
         // check the video actually exist
-        $Videos = new VideosModel();
-        $foundVideo = $Videos->getVideoByTitle($videoPostedOn);
-        if (empty($foundVideo) || $foundVideo === false) {
+        $foundVideo = Video::where("title", $videoPostedOn)->first();
+        if (empty($foundVideo) || !$foundVideo) {
             Log::debug("Video title or user does not exist");
             return response(
                 [
@@ -138,7 +121,6 @@ class VideoController extends Controller
         }
 
         // Create the new comment
-        $Comments = new CommentsModel();
         $newComment = [
             "comment" => $comment,
             "author" => $username,
@@ -146,7 +128,7 @@ class VideoController extends Controller
             "video_id" => $foundVideo->id,
             "user_id" => $user->id,
         ];
-        $validated = $Comments->validate($newComment);
+        $validated = Comment::validate($newComment, Comment::$rules);
         if ($validated !== true) {
             return response(
                 [
@@ -156,10 +138,16 @@ class VideoController extends Controller
                 406
             );
         }
-        $row = $Comments->createComment($newComment);
+        $Comment = Comment::create([
+            "comment" => $comment,
+            "author" => $username,
+            "date_posted" => $datePosted,
+            "video_id" => $foundVideo->id,
+            "user_id" => $user->id,
+        ]);
         dispatch(
             new ProcessNewComment(
-                $row,
+                $Comment,
                 $user->profile_picture,
                 $foundVideo->title
             )
@@ -177,13 +165,9 @@ class VideoController extends Controller
         $title = $request->input("title");
         $titles = [];
         if (!empty($title)) {
-            $Videos = new VideosModel();
-            $query = [
-                "select" => "title",
-                "where" => "title LIKE '%$title%'",
-                "limit" => 10,
-            ];
-            $videos = $Videos->SelectQuery($query); // dont want to cache as we dont want a fixed list of titles
+            $videos = Video::where("title", "LIKE", "%$title%")
+                ->take(10)
+                ->get();
             if (!empty($videos)) {
                 $titles = array_column($videos->toArray(), "title");
             }
@@ -202,30 +186,18 @@ class VideoController extends Controller
                 "message" => "Failed to delete. Id must be provided",
             ]);
         }
-        $CommentsModel = new CommentsModel();
         $user = Auth::user();
-        $comment = $CommentsModel->SelectQuery([
-            "where" => "id = $commentId AND user_id = $user->id",
-            "limit" => 1,
-        ]);
-        if (!$comment || !isset($comment)) {
+        $comment = Comment::where("id", $commentId)->first();
+        if (!$comment || ($comment && $comment->user_id !== $user->id)) {
             return response()->json([
                 "success" => false,
                 "message" =>
                     "Unauthenticated. Not allowed to delete other peoples comments",
             ]);
         }
-        $success = $CommentsModel->DeleteQuery([
-            "id" => $commentId,
-        ]);
-        $cacheKey = str_replace(
-            " ",
-            "+",
-            "db:comments:videoId=" . $comment->video_id
-        );
-        Cache::forget($cacheKey);
+        $comment->delete();
         return response()->json([
-            "success" => $success,
+            "success" => true,
             "message" => "Successfully deleted",
         ]);
     }
@@ -241,35 +213,19 @@ class VideoController extends Controller
                     "Failed to delete. The id and text must be provided",
             ]);
         }
-        $CommentsModel = new CommentsModel();
         $user = Auth::user();
-        $comment = $CommentsModel->SelectQuery([
-            "where" => "id = $commentId AND user_id = $user->id",
-            "limit" => 1,
-        ]);
-        if (!$comment || !isset($comment)) {
+        $comment = Comment::where("id", "=", $commentId)->first();
+        if (!$comment || ($comment && $comment->user_id !== $user->id)) {
             return response()->json([
                 "success" => false,
                 "message" =>
                     "Unauthenticated. Not allowed to delete other peoples comments",
             ]);
         }
-        $success = $CommentsModel->UpdateQuery(
-            [
-                "id" => $commentId,
-            ],
-            [
-                "comment" => $commentText,
-            ]
-        );
-        $cacheKey = str_replace(
-            " ",
-            "+",
-            "db:comments:videoId=" . $comment->video_id
-        );
-        Cache::forget($cacheKey);
+        $comment->comment = $commentText;
+        $comment->save();
         return response()->json([
-            "success" => $success,
+            "success" => true,
             "message" => "Successfully updated",
         ]);
     }
