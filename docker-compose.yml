@@ -38,6 +38,7 @@ services:
       - sql
     env_file:
       - ./.docker/env/phpfpm.env
+    shm_size: '2gb'
     ports:
       - "9000:9000"
     command: bash -c "php-fpm -F"
@@ -74,10 +75,13 @@ services:
     networks:
       - copytube-network
 
-  # selenium:
-  #   image: selenium/standalone-chrome
-  #   networks:
-  #     - copytube-network
+  selenium:
+    image: selenium/standalone-chrome
+    networks:
+      - copytube-network
+    shm_size: '2gb'
+    # ports:
+    #   - "4444:4444"
 
   realtime:
     container_name: copytube_realtime

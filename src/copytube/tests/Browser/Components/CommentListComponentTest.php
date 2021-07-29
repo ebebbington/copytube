@@ -17,29 +17,14 @@ class CommentListComponentTest extends DuskTestCase
 
     public function testANewCommentShowsWhenAddedByCurrentUser()
     {
-        TestUtilities::removeTestUsersInDb();
-        TestUtilities::createTestUserInDb([
-            "profile_picture" => $this->profile_picture_path,
-        ]);
         $this->browse(function (Browser $browser) {
-            $browser
-                ->loginAs(
-                    User::where(
-                        "email_address",
-                        "=",
-                        TestUtilities::$validEmail
-                    )
-                        ->limit(1)
-                        ->first()
-                )
+            $this->doLogin($browser)
                 ->visit($this->test_uri)
-                ->assertpathIs($this->path)
                 ->type("new-comment", "TEST COMMENT FROM DUSK");
             $browser
+                ->scrollIntoView('#comment > button')
                 ->click("#comment > button")
                 ->waitForText("TEST COMMENT FROM DUSK", 10);
-            TestUtilities::removeTestUsersInDb();
-            TestUtilities::removeTestCommentsInDB();
         });
     }
 
