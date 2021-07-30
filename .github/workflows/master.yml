@@ -38,6 +38,7 @@ jobs:
       - name: Lint Checks
         run: |
           composer install
+          composer dump-autoload -o
           composer lint
 
   laravel-backend-tests:
