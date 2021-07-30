@@ -12,14 +12,14 @@
     "fmt:fix": "npm i --no-save prettier @prettier/plugin-php && node_modules/.bin/prettier --write ."
   },
   "devDependencies": {
-    "@types/jquery": "^2.0.54",
+    "@types/jquery": "^2.0.57",
     "cross-env": "^5.2.1",
     "laravel-mix": "^4.1.4",
     "resolve-url-loader": "^2.3.1",
-    "sass": "^1.15.2",
+    "sass": "^1.36.0",
     "sass-loader": "^7.1.0",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.7.5",
+    "typescript": "^3.9.10",
     "vue-template-compiler": "^2.6.14"
   },
   "dependencies": {
