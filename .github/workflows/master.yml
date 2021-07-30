@@ -36,7 +36,9 @@ jobs:
           tools: composer
 
       - name: Lint Checks
-        run: composer lint
+        run: |
+          composer install
+          composer lint
 
   laravel-backend-tests:
     runs-on: ubuntu-latest
