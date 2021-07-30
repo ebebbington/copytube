@@ -21,6 +21,8 @@ class CommentListComponentTest extends DuskTestCase
 
     private string $delete_comment_button_class_name = ".delete-comment";
 
+    private string $add_comment_button_selector = "#comment > button";
+
     public function testANewCommentShowsWhenAddedByCurrentUser()
     {
         $this->browse(function (Browser $browser) {
@@ -28,8 +30,8 @@ class CommentListComponentTest extends DuskTestCase
                 ->visit($this->test_uri)
                 ->type("new-comment", "TEST COMMENT FROM DUSK");
             $browser
-                ->scrollIntoView("#comment > button")
-                ->click("#comment > button")
+                ->scrollIntoView($this->add_comment_button_selector)
+                ->click($this->add_comment_button_selector)
                 ->waitForText("TEST COMMENT FROM DUSK", 10);
             $this->clean();
             $this->assertTrue(true);
@@ -51,8 +53,8 @@ class CommentListComponentTest extends DuskTestCase
             $this->assertEquals(1, count($numberOfComments));
             $browserOne
                 ->type("new-comment", "TEST COMMENT FROM DUSK TWO")
-                ->scrollIntoView("#comment > button")
-                ->click("#comment > button")
+                ->scrollIntoView($this->add_comment_button_selector)
+                ->click($this->add_comment_button_selector)
                 ->waitForText("Success", 10);
             $numberOfComments = $browserTwo->elements(
                 $this->comment_list_items_selector
@@ -143,66 +145,64 @@ class CommentListComponentTest extends DuskTestCase
         });
     }
 
-    // TODO :: Not actually implemented yet
-    // public function testClickingDeleteButtonRemovesCommentFromDOM()
-    // {
-    //     $this->browse(function (Browser $browserOne, Browser $browserTwo) {
-    //         $this->doLogin($browserOne)
-    //             ->visit($this->test_uri)
-    //             ->assertpathIs($this->path);
-    //         $this->doLogin($browserTwo, "test")
-    //             ->visit($this->test_uri)
-    //             ->assertpathIs($this->path);
+    // NOTE :: Not actually implemented yet
+    public function testClickingDeleteButtonRemovesCommentFromDOM()
+    {
+        $this->browse(function (Browser $browserOne, Browser $browserTwo) {
+            $this->doLogin($browserOne)
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+            $this->doLogin($browserTwo, "test")
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
 
-    //         // Make sure we can see the comment first
-    //         $this->assertEquals(
-    //             1,
-    //             count($browserTwo->elements($this->comment_list_items_selector))
-    //         );
+            // Make sure we can see the comment first
+            $this->assertEquals(
+                1,
+                count($browserTwo->elements($this->comment_list_items_selector))
+            );
 
-    //         $browserOne
-    //             ->click(
-    //                 'span.delete-comment[data-comment-id="' . 1 . '"]'
-    //             )
-    //             ->acceptDialog()->waitUntil(TestUtilities::$active)
-    //             ->waitForText("Successfully deleted");
-    //         $this->assertEquals(
-    //             0,
-    //             count($browserTwo->elements($this->comment_list_items_selector))
-    //         );
-    //     });
-    // }
+            $browserOne
+                ->click('span.delete-comment[data-comment-id="' . 1 . '"]')
+                ->acceptDialog()
+                ->waitUntil(TestUtilities::$active)
+                ->waitForText("Successfully deleted");
+            $this->assertEquals(
+                0,
+                count($browserTwo->elements($this->comment_list_items_selector))
+            );
+        });
+    }
 
     /**
      *  Relies on fixing the above. We need to test that when browser one
      *  deletes its account after adding comments, that browser two will not see
      *  those comments in the dom (both browsers need to be logged in to home page
      */
-    // TODO
-    // public function testCommentsAreRemovedWhenAnAccountIsDeleted()
-    // {
-    //     $this->browse(function (Browser $browserOne, Browser $browserTwo) {
-    //         $this->doLogin($browserOne)
-    //             ->visit($this->test_uri)
-    //             ->assertpathIs($this->path);
-    //         $this->doLogin($browserOne, "test")
-    //             ->visit($this->test_uri)
-    //             ->assertpathIs($this->path);
+    public function testCommentsAreRemovedWhenAnAccountIsDeleted()
+    {
+        $this->browse(function (Browser $browserOne, Browser $browserTwo) {
+            $this->doLogin($browserOne)
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
+            $this->doLogin($browserOne, "test")
+                ->visit($this->test_uri)
+                ->assertpathIs($this->path);
 
-    //         // Make sure we can see the comment first
-    //         $this->assertEquals(
-    //             1,
-    //             count($browserTwo->elements($this->comment_list_items_selector))
-    //         );
-    //         // delete user1 acc
-    //         $browserOne->click("#delete-account-trigger");
-    //         $browserOne->acceptDialog();
-    //         $browserOne->waitForLocation("/register", 10);
-    //         // assert comments removed
-    //         $this->assertEquals(
-    //             0,
-    //             count($browserTwo->elements($this->comment_list_items_selector))
-    //         );
-    //     });
-    // }
+            // Make sure we can see the comment first
+            $this->assertEquals(
+                1,
+                count($browserTwo->elements($this->comment_list_items_selector))
+            );
+            // delete user1 acc
+            $browserOne->click("#delete-account-trigger");
+            $browserOne->acceptDialog();
+            $browserOne->waitForLocation("/register", 10);
+            // assert comments removed
+            $this->assertEquals(
+                0,
+                count($browserTwo->elements($this->comment_list_items_selector))
+            );
+        });
+    }
 }
