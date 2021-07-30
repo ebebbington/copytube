@@ -56,7 +56,7 @@ jobs:
         run: |
           export APP_DEBUG=false
           docker-compose up -d sql
-          docker-compose build --parallel
+          docker-compose build phpfpm
 ########          docker-compose up -d > /dev/null
 #          docker exec copytube_phpfpm php artisan migrate
 #          docker exec copytube_phpfpm php artisan db:seed
