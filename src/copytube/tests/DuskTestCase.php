@@ -2,13 +2,15 @@
 
 namespace Tests;
 
+use App\Comment;
 use App\User;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Dusk\TestCase as BaseTestCase;
 use Laravel\Dusk\Browser;
-use DB;
 
 abstract class DuskTestCase extends BaseTestCase
 {
@@ -50,25 +52,19 @@ abstract class DuskTestCase extends BaseTestCase
         );
     }
 
-    protected function doLogin(Browser $browser) {
-        // Some reason, trynna login with any of the uers below doesnt work
-        // I dont think its actually saving to the db or something?
-        $users = User::all();
-        $user = User::factory()->create();
-        foreach ($users as $u) {
-            if ($u->username === $user['username']) {
-                $user = $u;
-                break;
-            }
-        }
-        //dump($user);
-        $u = DB::table('users')->where('username', $user->username)->first();
-        $browser->loginAs(User::where('username', 'Edward Home')->limit(1)->first());
+    protected function doLogin(Browser $browser, string $username = "Edward Home")
+    {
+        $browser->loginAs(User::where('username', $username)->limit(1)->first());
         //$browser->visit('http://copytube_nginx:9002');
         //$browser->type('#email', $user->email_address)->type('#password', 'Welcome1');
         //$browser->press('#login-button')->storeConsoleLog('bar');
         //$browser->pause(5000);
         //$browser->dump();
         return $browser;
+    }
+
+    protected function clean()
+    {
+        DB::table('comments')->where('id', '>', '3')->delete();
     }
 }
