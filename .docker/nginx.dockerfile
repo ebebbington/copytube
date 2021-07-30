@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:alpine
 
 # Update and install required packages
 #RUN     apt-get update
