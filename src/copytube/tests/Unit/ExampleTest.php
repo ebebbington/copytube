@@ -13,7 +13,8 @@
  *
  * Be verbose in the cli
  *
- * You can always extend the test case class by creating an abstract subclass of it, and the test class inheriting that instead, e.g.
+ * You can always extend the test case class by creating an abstract subclass of it, and the
+ * test class inheriting that instead, e.g.
  * namespace PHPUnit\Framework
  * use PHP\Framework\TestCase
  * abstract class Assert {

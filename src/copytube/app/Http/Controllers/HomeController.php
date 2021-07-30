@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use View;
+use Illuminate\Support\Facades\View;
 use App\Video;
 
 class HomeController extends Controller

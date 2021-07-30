@@ -29,6 +29,18 @@ jobs:
         run: |
           npm run fmt:check
 
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8'
+          tools: composer
+
+      - name: Lint Checks
+        run: |
+          composer install
+          composer dump-autoload -o
+          composer lint
+
   laravel-backend-tests:
     runs-on: ubuntu-latest
     defaults:
@@ -36,12 +48,6 @@ jobs:
         working-directory: src/copytube
     steps:
       - uses: actions/checkout@v2
-
-      # - name: Setup PHP and Composer
-      #   uses: shivammathur/setup-php@v2
-      #   with:
-      #     php-version: '8'
-      #     tools: composer
 
       - name: Laravel Backend Tests
         run: |

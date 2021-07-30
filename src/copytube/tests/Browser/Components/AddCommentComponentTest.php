@@ -2,61 +2,34 @@
 
 namespace Tests\Browser\Components;
 
-use App\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use Tests\Feature\TestUtilities;
 
 class AddCommentComponentTest extends DuskTestCase
 {
     private string $uri = "/video?requestedVideo=Something+More";
 
-    private string $path = "/video";
-
     public function testCharacterCountWorksAndTextCanBeWritten()
     {
-        TestUtilities::createTestUserInDb();
+        // dd(env('DB_DATABASE'));
         $this->browse(function (Browser $browser) {
-            $browser->pause(10);
-            $browser->loginAs(
-                User::where("email_address", "=", TestUtilities::$validEmail)
-                    ->limit(1)
-                    ->first()
-            );
+            $this->doLogin($browser);
             $browser
-                ->pause(10)
                 ->visit("http://copytube_nginx:9002$this->uri")
-                ->assertpathIs($this->path)
                 ->type("#add-comment-input", "hello");
-            $count = $browser->attribute(
-                "#comment-character-count",
-                "innerHTML"
-            );
-            $comment = $browser->value("#add-comment-input");
+            $count = $browser->text("#comment-character-count");
             $this->assertEquals("5", $count);
+            $comment = $browser->inputValue("#add-comment-input");
             $this->assertEquals("hello", $comment);
             $browser->clear("new-comment");
-            TestUtilities::removeTestUsersInDb();
         });
     }
 
     public function testErrorWhenSendingWithNoText()
     {
-        TestUtilities::createTestUserInDb();
         $this->browse(function (Browser $browser) {
-            $browser
-                ->loginAs(
-                    User::where(
-                        "email_address",
-                        "=",
-                        TestUtilities::$validEmail
-                    )
-                        ->limit(1)
-                        ->first()
-                )
-                ->visit($this->uri)
-                ->assertpathIs($this->path);
-
+            $this->doLogin($browser);
+            $browser->visit($this->uri);
             $loadingContainer = $browser->element("#loading-container");
             $loadingVisibility = $loadingContainer->getCSSValue("visibility");
             $this->assertEquals("hidden", $loadingVisibility);
@@ -64,52 +37,36 @@ class AddCommentComponentTest extends DuskTestCase
             $notifyVisibility = $notifyContainer->getCSSValue("visibility");
             $this->assertEquals("hidden", $notifyVisibility);
 
+            $browser->scrollIntoView("#comment > button");
             $browser->click("#comment > button");
 
             $loadingContainer = $browser->element("#loading-container");
             $loadingVisibility = $loadingContainer->getCSSValue("visibility");
             $this->assertEquals("visible", $loadingVisibility);
-
             $browser->waitForText("The comment field is required", 10);
 
             $notifyContainer = $browser->element("#notifier-container");
             $notifyVisibility = $notifyContainer->getCSSValue("visibility");
             $this->assertEquals("visible", $notifyVisibility);
-
-            $browser->assertPathIs($this->path);
-            TestUtilities::removeTestUsersInDb();
         });
     }
+
     //
     public function testSuccessWhenSendingWithComment()
     {
-        $userId = TestUtilities::createTestUserInDb([
-            "profile_picture" => "img/sample.jpg",
-        ]);
-        $this->browse(function (Browser $browser) use ($userId) {
-            $browser
-                ->loginAs(
-                    User::where(
-                        "email_address",
-                        "=",
-                        TestUtilities::$validEmail
-                    )
-                        ->limit(1)
-                        ->first()
-                )
-                ->visit($this->uri)
-                ->assertpathIs($this->path)
-                ->type("new-comment", "hello")
-                ->click("#comment > button");
+        $this->browse(function (Browser $browser) {
+            $this->doLogin($browser);
+            $browser->visit($this->uri);
+            $browser->type("new-comment", "hello");
+            $browser->scrollIntoView("#comment > button");
+            $browser->click("#comment > button");
             $browser->waitForText("Success", 10);
-            $browser->pause(2000);
-            $selector = ".media[data-user-id=\"" . $userId . "\"]";
-            $commentContainer = $browser->element($selector);
-            $this->assertTrue($commentContainer !== null);
+            $this->clean();
+            $browser->waitForText("hello", 10);
+            $selector = ".media[data-user-id=\"" . 21 . "\"]";
             $comment = $browser->element($selector . " p");
             $commentValue = $comment->getText();
             $this->assertEquals("hello", $commentValue);
-            TestUtilities::removeTestUsersInDb();
         });
     }
 }
