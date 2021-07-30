@@ -64,11 +64,11 @@ services:
     networks:
       - copytube-network
 
-  selenium:
-    image: selenium/standalone-chrome
-    networks:
-      - copytube-network
-    shm_size: '2gb'
+  # selenium:
+  #   image: selenium/standalone-chrome
+  #   networks:
+  #     - copytube-network
+  #   shm_size: '2gb'
     # ports:
     #   - "4444:4444"
 
