@@ -38,8 +38,6 @@ services:
       - XDEBUG=true
     depends_on:
       - sql
-    env_file:
-      - ./.docker/env/phpfpm.env
     shm_size: '2gb'
     ports:
       - "9000:9000"
