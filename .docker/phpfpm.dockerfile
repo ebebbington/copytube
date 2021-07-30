@@ -19,8 +19,10 @@ RUN docker-php-ext-install pdo_mysql zip
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 
-# Install Xdebug
-RUN yes | pecl install xdebug \
+ARG APP_DEBUG
+
+RUN if [ $APP_DEBUG == true ]; then \
+  pecl install xdebug \
     && echo "[Xdebug]" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/xdebug.ini \
@@ -29,9 +31,9 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.discover_client_host=true" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.client_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN docker-php-ext-enable xdebug
-    # Maybe instal xdebug ext
+    && echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && docker-php-ext-enable xdebug; \
+fi
 
 # Configure php.ini
 COPY ./.docker/config/php.ini /etc/php.ini
