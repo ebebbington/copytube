@@ -18,11 +18,9 @@
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.6",
-    "codeception/codeception": "^4.1",
     "mockery/mockery": "^1.0",
     "nunomaduro/collision": "^5.2.0",
-    "phpunit/phpunit": "^9.5.1",
-    "codeception/module-webdriver": "^1.0.0"
+    "phpunit/phpunit": "^9.5.1"
   },
   "config": {
     "optimize-autoloader": true,
