@@ -50,6 +50,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Laravel Backend Tests
+        env:
+          XDEBUG: ""
+          DEBUGBAR_ENABLE: false
         run: |
           docker-compose up -d sql
           docker-compose build --parallel
@@ -109,8 +112,8 @@ jobs:
 
       - name: Realtime Tests
         run: |
-          docker-compose build --parallel > /dev/null
-          docker-compose up -d
+          docker-compose build --parallel redis realtime
+          docker-compose up -d redis realtime
           sleep 20
           docker exec copytube_realtime deno test -A tests/integration
           docker exec copytube_realtime deno test -A  tests/unit

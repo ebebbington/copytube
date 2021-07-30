@@ -34,6 +34,8 @@ services:
     build:
       context: .
       dockerfile: .docker/phpfpm.dockerfile
+    environment:
+      - XDEBUG=true
     depends_on:
       - sql
     env_file:

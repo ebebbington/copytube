@@ -23,6 +23,7 @@
   </testsuites>
   <php>
     <server name="APP_ENV" value="testing"/>
+    <server name="DEBUGBAR_ENABLE" value="false"/>
     <server name="BCRYPT_ROUNDS" value="4"/>
     <server name="CACHE_DRIVER" value="array"/>
     <server name="MAIL_DRIVER" value="array"/>
