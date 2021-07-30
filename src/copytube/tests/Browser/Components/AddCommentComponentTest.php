@@ -15,9 +15,9 @@ class AddCommentComponentTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $this->doLogin($browser);
             $browser
-                 ->visit("http://copytube_nginx:9002$this->uri")
+                ->visit("http://copytube_nginx:9002$this->uri")
                 ->type("#add-comment-input", "hello");
-            $count = $browser->text('#comment-character-count');
+            $count = $browser->text("#comment-character-count");
             $this->assertEquals("5", $count);
             $comment = $browser->inputValue("#add-comment-input");
             $this->assertEquals("hello", $comment);
@@ -29,8 +29,7 @@ class AddCommentComponentTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $this->doLogin($browser);
-            $browser
-                ->visit($this->uri);
+            $browser->visit($this->uri);
             $loadingContainer = $browser->element("#loading-container");
             $loadingVisibility = $loadingContainer->getCSSValue("visibility");
             $this->assertEquals("hidden", $loadingVisibility);
@@ -38,7 +37,7 @@ class AddCommentComponentTest extends DuskTestCase
             $notifyVisibility = $notifyContainer->getCSSValue("visibility");
             $this->assertEquals("hidden", $notifyVisibility);
 
-            $browser->scrollIntoView('#comment > button');
+            $browser->scrollIntoView("#comment > button");
             $browser->click("#comment > button");
 
             $loadingContainer = $browser->element("#loading-container");
@@ -52,20 +51,18 @@ class AddCommentComponentTest extends DuskTestCase
         });
     }
 
-
     //
     public function testSuccessWhenSendingWithComment()
     {
         $this->browse(function (Browser $browser) {
             $this->doLogin($browser);
-            $browser
-                ->visit($this->uri);
+            $browser->visit($this->uri);
             $browser->type("new-comment", "hello");
-            $browser->scrollIntoView('#comment > button');
+            $browser->scrollIntoView("#comment > button");
             $browser->click("#comment > button");
             $browser->waitForText("Success", 10);
             $this->clean();
-            $browser->waitForText('hello', 10);
+            $browser->waitForText("hello", 10);
             $selector = ".media[data-user-id=\"" . 21 . "\"]";
             $comment = $browser->element($selector . " p");
             $commentValue = $comment->getText();

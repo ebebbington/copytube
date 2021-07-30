@@ -52,9 +52,15 @@ abstract class DuskTestCase extends BaseTestCase
         );
     }
 
-    protected function doLogin(Browser $browser, string $username = "Edward Home")
-    {
-        $browser->loginAs(User::where('username', $username)->limit(1)->first());
+    protected function doLogin(
+        Browser $browser,
+        string $username = "Edward Home"
+    ) {
+        $browser->loginAs(
+            User::where("username", $username)
+                ->limit(1)
+                ->first()
+        );
         //$browser->visit('http://copytube_nginx:9002');
         //$browser->type('#email', $user->email_address)->type('#password', 'Welcome1');
         //$browser->press('#login-button')->storeConsoleLog('bar');
@@ -65,6 +71,8 @@ abstract class DuskTestCase extends BaseTestCase
 
     protected function clean()
     {
-        DB::table('comments')->where('id', '>', '3')->delete();
+        DB::table("comments")
+            ->where("id", ">", "3")
+            ->delete();
     }
 }

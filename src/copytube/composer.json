@@ -61,7 +61,7 @@
       "@php artisan key:generate --ansi"
     ],
     "lint": [
-        "vendor/bin/parallel-lint --exclude vendor . && vendor/bin/phpstan analyse --memory-limit=2G app database tests resource"
+      "vendor/bin/parallel-lint --exclude vendor . && vendor/bin/phpstan analyse --memory-limit=2G app database tests/Unit tests/Feature resources"
     ]
   }
 }

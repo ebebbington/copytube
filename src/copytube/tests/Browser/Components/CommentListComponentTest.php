@@ -17,7 +17,7 @@ class CommentListComponentTest extends DuskTestCase
 
     private string $path = "/video";
 
-    private $comment_list_items_selector = '#comment-list > .media';
+    private $comment_list_items_selector = "#comment-list > .media";
 
     private string $delete_comment_button_class_name = ".delete-comment";
 
@@ -28,7 +28,7 @@ class CommentListComponentTest extends DuskTestCase
                 ->visit($this->test_uri)
                 ->type("new-comment", "TEST COMMENT FROM DUSK");
             $browser
-                ->scrollIntoView('#comment > button')
+                ->scrollIntoView("#comment > button")
                 ->click("#comment > button")
                 ->waitForText("TEST COMMENT FROM DUSK", 10);
             $this->clean();
@@ -51,7 +51,7 @@ class CommentListComponentTest extends DuskTestCase
             $this->assertEquals(1, count($numberOfComments));
             $browserOne
                 ->type("new-comment", "TEST COMMENT FROM DUSK TWO")
-                ->scrollIntoView('#comment > button')
+                ->scrollIntoView("#comment > button")
                 ->click("#comment > button")
                 ->waitForText("Success", 10);
             $numberOfComments = $browserTwo->elements(
@@ -111,7 +111,7 @@ class CommentListComponentTest extends DuskTestCase
                 ->assertDialogOpened(
                     "Are you sure you want to delete this comment?"
                 );
-                $this->clean();
+            $this->clean();
             $browser->acceptDialog()->waitUntil(TestUtilities::$active);
             $elems = $browser->elements(
                 $this->delete_comment_button_class_name
@@ -127,17 +127,13 @@ class CommentListComponentTest extends DuskTestCase
                 ->visit($this->test_uri)
                 ->assertpathIs($this->path)
                 ->waitUntil(TestUtilities::$active);
-            $browser->click(
-                'span.edit-comment[data-comment-id="' . 1 . '"]'
-            );
+            $browser->click('span.edit-comment[data-comment-id="' . 1 . '"]');
             $element = $browser->element(
                 '.media > .media-body > p[contenteditable="true"]'
             );
             $this->assertEquals(true, $element !== null);
             $browser
-                ->click(
-                    'span.edit-comment[data-comment-id="' . 1 . '"]'
-                )
+                ->click('span.edit-comment[data-comment-id="' . 1 . '"]')
                 ->waitUntil(TestUtilities::$active);
             $this->clean();
             $element = $browser->element(
