@@ -57,7 +57,6 @@ jobs:
           docker-compose up -d sql
           docker-compose build --parallel
           docker-compose up -d > /dev/null
-          docker exec copytube_phpfpm DEBUGBAR_ENABLE=false
           docker exec copytube_phpfpm php artisan migrate
           docker exec copytube_phpfpm php artisan db:seed
           docker exec copytube_phpfpm vendor/bin/phpunit
