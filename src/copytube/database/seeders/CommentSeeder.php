@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Comment;
+use App\User;
+use App\Video;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,27 +17,31 @@ class CommentSeeder extends Seeder
      */
     public function run()
     {
+        $user = User::first();
+        $videos = Video::all();
+        $date = "2019-03-08";
         DB::table("comments")->insert([
             "comment" =>
-                "Super long comment to test how a comment would display when its content is so large that it might end up not overflowing correctly for example it might just keep displaying on the right and move out of view which we do not want do we",
-            "author" => "Edward Home",
-            "date_posted" => "2019-03-08",
-            "video_id" => 1,
-            "user_id" => 21,
+                "Super long comment to test how a comment would display when its content is so large that it might end up not overflowing correctly for example it might just keep displaying on the right and move out of view which we do not want do we" .
+                $videos[0]["title"],
+            "author" => $user["username"],
+            "date_posted" => $date,
+            "video_id" => $videos[0]["id"],
+            "user_id" => $user["id"],
         ]);
         DB::table("comments")->insert([
-            "comment" => "test comment lava sample",
-            "author" => "Edward Home",
-            "date_posted" => "2019-03-08",
-            "video_id" => 2,
-            "user_id" => 21,
+            "comment" => "test comment " . $videos[1]["title"],
+            "author" => $user["username"],
+            "date_posted" => $date,
+            "video_id" => $videos[1]["id"],
+            "user_id" => $user["id"],
         ]);
         DB::table("comments")->insert([
-            "comment" => "test comment iceland",
+            "comment" => "test comment " . $videos[2]["title"],
             "author" => "Edward Home",
-            "date_posted" => "2019-03-08",
-            "video_id" => 3,
-            "user_id" => 21,
+            "date_posted" => $date,
+            "video_id" => $videos[2]["id"],
+            "user_id" => $user["id"],
         ]);
     }
 }

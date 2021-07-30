@@ -16,17 +16,8 @@ class RedirectIfAuthenticated
      * @param  string|null  ...$guards
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, ...$guards)
+    public function handle(Request $request, Closure $next)
     {
-        //$guards = empty($guards) ? ["web"] : $guards;
-
-        // foreach ($guards as $guard) {
-        //     var_dump($guards);
-        //     if (Auth::guard($guard)->check()) {
-        //         return redirect('/home');
-        //     }
-        // }
-
         if (Auth::user()) {
             return response()->redirectTo("/home");
         }

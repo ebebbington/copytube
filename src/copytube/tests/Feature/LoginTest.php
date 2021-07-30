@@ -24,7 +24,6 @@ class LoginTest extends TestCase
         Cache::flush();
     }
 
-    // TODO Is this type of fn reused everywhere?
     private function makePostRequest(
         string $email,
         string $password

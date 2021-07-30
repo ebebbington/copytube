@@ -16,6 +16,8 @@ class VideoTest extends TestCase
 
     private string $something_more_title = "Something More";
 
+    private string $lava_sample_title = "Lava Sample";
+
     protected $seed = true;
 
     private int $lava_sample_id = 2;
@@ -197,7 +199,7 @@ class VideoTest extends TestCase
         $res->assertStatus(200);
         $res->assertJson([
             "success" => true,
-            "data" => [$this->something_more_title, "Lava Sample"],
+            "data" => [$this->something_more_title, $this->lava_sample_title],
         ]);
 
         // make request with an incorrect title that will respond with no data
@@ -264,7 +266,9 @@ class VideoTest extends TestCase
         $user = User::factory()->create();
         Auth::loginUsingId($user["id"]);
         // make request with correct title
-        $response = $this->get("/video?requestedVideo=Lava Sample");
+        $response = $this->get(
+            "/video?requestedVideo=$this->lava_sample_title"
+        );
         // Assert the view
         $response->assertViewIs("watch");
         // Assert the status
@@ -272,12 +276,15 @@ class VideoTest extends TestCase
         // assert the data sent back to view
         $content = $response->getOriginalContent();
         $data = $content->getData();
-        $this->assertEquals("Lava Sample", $data["title"]); // defaults to something more
-        $this->assertEquals("Lava Sample", $data["mainVideo"]->title);
+        $this->assertEquals($this->lava_sample_title, $data["title"]); // defaults to something more
+        $this->assertEquals(
+            $this->lava_sample_title,
+            $data["mainVideo"]->title
+        );
         $this->assertEquals("2", sizeof($data["rabbitHoleVideos"]));
         // Shouldn't be the main video
         foreach ($data["rabbitHoleVideos"] as $vid) {
-            $this->assertEquals(true, $vid->title !== "Lava Sample");
+            $this->assertEquals(true, $vid->title !== $this->lava_sample_title);
         }
         $this->assertEquals(1, sizeof($data["comments"]));
         foreach ($data["comments"] as $comment) {
@@ -300,7 +307,7 @@ class VideoTest extends TestCase
     {
         Cache::flush();
         $user = User::factory()->create();
-        $comment = Comment::factory()->create([
+        Comment::factory()->create([
             "user_id" => $user["id"],
         ]);
         Auth::loginUsingId($user["id"]);

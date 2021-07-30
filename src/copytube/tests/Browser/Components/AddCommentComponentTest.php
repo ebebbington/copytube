@@ -9,9 +9,10 @@ class AddCommentComponentTest extends DuskTestCase
 {
     private string $uri = "/video?requestedVideo=Something+More";
 
+    private string $add_comment_button_selector = "#comment > button";
+
     public function testCharacterCountWorksAndTextCanBeWritten()
     {
-        // dd(env('DB_DATABASE'));
         $this->browse(function (Browser $browser) {
             $this->doLogin($browser);
             $browser
@@ -38,7 +39,7 @@ class AddCommentComponentTest extends DuskTestCase
             $this->assertEquals("hidden", $notifyVisibility);
 
             $browser->scrollIntoView("#comment > button");
-            $browser->click("#comment > button");
+            $browser->click($this->add_comment_button_selector);
 
             $loadingContainer = $browser->element("#loading-container");
             $loadingVisibility = $loadingContainer->getCSSValue("visibility");
@@ -58,8 +59,8 @@ class AddCommentComponentTest extends DuskTestCase
             $this->doLogin($browser);
             $browser->visit($this->uri);
             $browser->type("new-comment", "hello");
-            $browser->scrollIntoView("#comment > button");
-            $browser->click("#comment > button");
+            $browser->scrollIntoView($this->add_comment_button_selector);
+            $browser->click($this->add_comment_button_selector);
             $browser->waitForText("Success", 10);
             $this->clean();
             $browser->waitForText("hello", 10);

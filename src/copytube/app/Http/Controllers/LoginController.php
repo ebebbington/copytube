@@ -35,7 +35,7 @@ class LoginController extends Controller
         }
 
         // Disable their account if no login attempts are left
-        // TODO :: For future reference, we should pop this into a queue, but for just learning Laravel, there's not much point
+        // NOTE :: For future reference, we should pop this into a queue so it isn't blocking, but for just learning Laravel, there's not much point
         if ($user->login_attempts === 0) {
             $token = Str::random(32);
             $user->recover_token = $token;
