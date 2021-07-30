@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: .docker/phpfpm.dockerfile
     environment:
-      - APP_DEBUG=true
+      - XDEBUG=true
     depends_on:
       - sql
     env_file:

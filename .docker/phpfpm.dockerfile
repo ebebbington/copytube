@@ -1,27 +1,24 @@
 FROM php:8.0.8-fpm
 
-ARG HOST_IP
-
 # Update and install required packages and dependencies
 RUN apt-get update -y
 #RUN apt-get install -y --no-install-recommends libxslt-dev
 
 RUN apt-get install -y \
-  libpng-dev unzip curl libjpeg-dev libzip-dev libjpeg62-turbo-dev libfreetype6-dev
+  libpng-dev unzip curl libjpeg-dev libzip-dev libjpeg62-turbo-dev libfreetype6-dev npm
 # or libc-client-dev, libonig-dev, apt-transport-https, apt-utils, libmcrypt-dev
 
-RUN apt install -y npm
 RUN npm i npm@latest -g
 
 # Avilable extensions by default when using docker-php-ext-install
 # bcmath bz2 calendar ctype curl dba dom enchant exif fileinfo filter ftp gd gettext gmp hash iconv imap interbase intl json ldap mbstring mysqli oci8 odbc opcache pcntl pdo pdo_dblib pdo_firebird pdo_mysql pdo_oci pdo_odbc pdo_pgsql pdo_sqlite pgsql phar posix pspell readline recode reflection session shmop simplexml snmp soap sockets sodium spl standard sysvmsg sysvsem sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zend_test zip
-RUN docker-php-ext-install pdo_mysql zip
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
+RUN docker-php-ext-install pdo_mysql zip \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install gd
 
-ARG APP_DEBUG
+ARG XDEBUG
 
-RUN if [ $APP_DEBUG ]; then \
+RUN if [ $XDEBUG ]; then \
   pecl install xdebug \
     && echo "[Xdebug]" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/conf.d/xdebug.ini \
