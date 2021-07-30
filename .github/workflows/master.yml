@@ -54,7 +54,7 @@ jobs:
           APP_DEBUG: bingobongo
           DEBUGBAR_ENABLE: nope
         run: |
-          export DEBUG=false
+          export APP_DEBUG=false
           docker-compose up -d sql
           docker-compose build --parallel
           docker-compose up -d > /dev/null
