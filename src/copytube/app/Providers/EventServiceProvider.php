@@ -18,16 +18,4 @@ class EventServiceProvider extends ServiceProvider
         "App\Events\CommentAdded" => ["App\Listeners\SendComment"],
         "App\Events\UserDeleted" => ["App\Listeners\SendUserId"],
     ];
-
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        parent::boot();
-
-        //
-    }
 }

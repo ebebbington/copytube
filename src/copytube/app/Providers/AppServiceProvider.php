@@ -14,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->app->environment("local", "testing")) {
+            // do nothing
         }
     }
 
