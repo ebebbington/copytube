@@ -115,5 +115,11 @@ jobs:
           docker-compose build --parallel redis realtime
           docker-compose up -d redis realtime
           sleep 20
-          docker exec copytube_realtime deno test -A tests/integration
-          docker exec copytube_realtime deno test -A  tests/unit
+          docker exec copytube_realtime deno test --coverage=cov -A tests
+          docker exec copytube_realtime deno coverage cov
+          docker exec copytube_realtime deno coverage --lcov cov > cov.lcov
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          name: copytube-realtime
+          files: cov.lcov
