@@ -1,4 +1,4 @@
-import { Rhum } from "../deps.ts";
+import { deferred, Rhum } from "../deps.ts";
 import { Redis } from "../../redis.ts";
 
 Rhum.testPlan("tests/unit/redis_test.ts", () => {
@@ -24,18 +24,15 @@ Rhum.testPlan("tests/unit/redis_test.ts", () => {
         const redis = await Redis.connect();
         const sub = await Redis.createSubscriber(redis);
         const pub = await Redis.connect();
-        const p = (async function () {
-          const it = sub.receive();
-          return (await it.next()).value;
-        })();
+        const p = deferred<string>();
+        await Redis.listen(sub, (message: string) => {
+          p.resolve(message);
+        });
         await pub.publish("realtime.comments.new", "wayway");
         const message = await p;
-        Rhum.asserts.assertEquals(message, {
-          channel: "realtime.comments.new",
-          message: "wayway",
-        });
         redis.close();
         pub.close();
+        Rhum.asserts.assertEquals(message, "wayway");
       },
     );
   });
