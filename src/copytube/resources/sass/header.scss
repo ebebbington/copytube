@@ -68,6 +68,7 @@ header {
 }
 
 $icon_size: 1em;
+$i: 1;
 
 .gear {
   display: inline-block;
@@ -77,7 +78,7 @@ $icon_size: 1em;
   height: $icon_size;
   background: white;
   border-radius: 50%;
-  border: math.div($icon_size, 3.5) solid gray;
+  border: 0.285em solid gray;
   box-sizing: border-box;
   margin: auto 1em auto auto;
   transition-duration: 0.5s;
