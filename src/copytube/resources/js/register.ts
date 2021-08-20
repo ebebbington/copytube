@@ -6,9 +6,9 @@ import Loading from "./components/loading";
 const Register = (function () {
   const Methods = (function () {
     function validateInput(): boolean {
-      const username: string = $('input[name="username"]').val();
-      const email: string = $('input[name="email"]').val();
-      const password: string = $('input[name="password"]').val();
+      const username: string = $('input[name="username"]').val().toString();
+      const email: string = $('input[name="email"]').val().toString();
+      const password: string = $('input[name="password"]').val().toString();
       if (
         username === null ||
         username === undefined ||
