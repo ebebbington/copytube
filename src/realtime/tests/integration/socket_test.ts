@@ -19,21 +19,20 @@ Deno.test(
     const pub = await Redis.connect();
     const msgToSend = "Hello from Client :)";
     // listen for recieved messages when they come in
-    let msgGotten = ""
-    const p1 = deferred()
+    let msgGotten = "";
+    const p1 = deferred();
     client.onmessage = function (msg) {
-      msgGotten = msg.data
-      p1.resolve()
+      msgGotten = msg.data;
+      p1.resolve();
     };
     await pub.publish("realtime.comments.new", msgToSend);
-    await p1
+    await p1;
     const promise = deferred();
     client.onclose = () => promise.resolve();
-    client.close()
-    await promise
-    pub.close()
-    console.log(msgGotten, msgToSend)
-    assertEquals(msgGotten, msgToSend)
+    client.close();
+    await promise;
+    pub.close();
+    assertEquals(msgGotten, msgToSend);
   },
 );
 
