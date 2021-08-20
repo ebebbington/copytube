@@ -1,6 +1,6 @@
 // Best practice regarding a Deno project is have a similar 'package.json' file to call your imports and then export them locally, that way there is a single point for imports
 
-export { config } from "https://deno.land/x/dotenv@v2.0.0/dotenv.ts";
+export { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
 
 // import { assertEquals } from "https://deno.land/std/testing@v0.39.0/asserts.ts";
 // const testing = {
@@ -11,13 +11,13 @@ export { config } from "https://deno.land/x/dotenv@v2.0.0/dotenv.ts";
 //     testing
 // }
 
-export { serve } from "https://deno.land/std@0.102.0/http/server.ts";
+export { serve } from "https://deno.land/std@0.104.0/http/server.ts";
 
 export {
   acceptWebSocket,
   isWebSocketCloseEvent,
-} from "https://deno.land/std@0.102.0/ws/mod.ts";
-export type { WebSocket } from "https://deno.land/std@0.102.0/ws/mod.ts";
+} from "https://deno.land/std@0.104.0/ws/mod.ts";
+export type { WebSocket } from "https://deno.land/std@0.104.0/ws/mod.ts";
 
 export { connect } from "https://deno.land/x/redis@v0.23.1/redis.ts";
 export type {

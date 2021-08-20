@@ -51,8 +51,8 @@ const Register = (function () {
   (function () {
     $(document).ready(function () {
       $("body").on("click", "#recover-button", function () {
-        const email = $("#email").val();
-        const password = $("#password").val();
+        const email = $("#email").val().toString();
+        const password = $("#password").val().toString();
         console.log("SENDING");
         Methods.recoverAccount(email, password);
       });

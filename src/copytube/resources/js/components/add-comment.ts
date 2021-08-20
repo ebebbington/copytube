@@ -62,7 +62,7 @@ const AddComment = (function () {
 
       $("#comment > button").on("click", function (event: any) {
         Loading(true);
-        const comment = $("#comment > span > textarea").val();
+        const comment = $("#comment > span > textarea").val().toString();
         const datePosted = getCurrentDate();
         // ajax
         const videoPostedOn: string = $("#main-video-holder > video").attr(

@@ -90,7 +90,7 @@ const Home = (function () {
       });
 
       $("#search-button").on("click", function (event: any) {
-        const videoTitle = $("#search-bar").val();
+        const videoTitle = $("#search-bar").val().toString();
         Methods.requestVideo(videoTitle);
       });
     });
