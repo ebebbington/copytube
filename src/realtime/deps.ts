@@ -11,13 +11,13 @@ export { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
 //     testing
 // }
 
-export { serve } from "https://deno.land/std@0.105.0/http/server.ts";
+export { serve } from "https://deno.land/std@0.106.0/http/server.ts";
 
 export {
   acceptWebSocket,
   isWebSocketCloseEvent,
-} from "https://deno.land/std@0.105.0/ws/mod.ts";
-export type { WebSocket } from "https://deno.land/std@0.105.0/ws/mod.ts";
+} from "https://deno.land/std@0.106.0/ws/mod.ts";
+export type { WebSocket } from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 export { connect } from "https://deno.land/x/redis@v0.23.2/redis.ts";
 export type {
