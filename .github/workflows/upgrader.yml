@@ -23,8 +23,9 @@ jobs:
         run: |
           npm i -g npm-check-updates
           cd src/copytube
+          composer require ebebbington/composer-check-updates
+          php vendor/ebebbington/composer-check-updates/check.php
           composer install
-          composer update
           npm-check-updates -u
           npm install
           cd ../realtime
