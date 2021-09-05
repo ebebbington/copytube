@@ -23,8 +23,7 @@ jobs:
         run: |
           npm i -g npm-check-updates
           cd src/copytube
-          composer require ebebbington/composer-check-updates
-          php vendor/ebebbington/composer-check-updates/check.php
+          deno run --allow-read=composer.json --allow-write=composer.json --allow-net=github.com https://deno.land/x/composer_check_updates@v2.0.0/check.ts
           composer install
           npm-check-updates -u
           npm install
