@@ -77,6 +77,22 @@ class RegisterTest extends TestCase
         $this->assertEquals("img/sample.jpg", $path);
     }
 
+    public function testWhenEmailAlreadyExists()
+    {
+        $user = User::factory()->create();
+        $response = $this->makePostRequest(
+            TestUtilities::$validUsername,
+            $user->email_address,
+            TestUtilities::$validPassword,
+            UploadedFile::fake()->image(TestUtilities::$validProfilePicture)
+        );
+        $response->assertJson([
+            "success" => false,
+            "message" => "user already exists",
+        ]);
+        $response->assertStatus(403);
+    }
+
     public function testFailedPostValidation()
     {
         //

@@ -57,6 +57,9 @@ class User extends Base
         "profile_picture" => ["required", "regex:/.*\.(jpg|jpeg|png)\b/"],
     ];
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function comments()
     {
         return $this->hasMany(Comment::class, "user_id", "id");

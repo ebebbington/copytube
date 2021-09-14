@@ -55,6 +55,9 @@ class Comment extends Base
         return $this->hasOne(User::class, "id", "user_id");
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function video()
     {
         return $this->belongsTo(Video::class);
