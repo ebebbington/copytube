@@ -5,15 +5,12 @@
   <a href="https://github.com/ebebbington/copytube/actions">
     <img src="https://img.shields.io/github/workflow/status/ebebbington/copytube/master?label=ci">
   </a>
-  <a href="https://github.com/ebebbington/copytube/actions">
-    <img src="https://img.shields.io/github/workflow/status/ebebbington/copytube/CodeQL?label=CodeQL">
-  </a>
   <a href="https://sonarcloud.io/dashboard?id=ebebbington_copytube">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=ebebbington_copytube&metric=alert_status">
   </a>
-  <a href="https://img.shields.io/badge/Backend%20coverage-100%25-green">
-    <img src="https://img.shields.io/badge/Backend%20coverage-100%25-green">
-  </a>  
+  <a href="https://codecov.io/gh/ebebbington/copytube">
+    <img src="https://codecov.io/gh/ebebbington/copytube/branch/master/graph/badge.svg?token=7USBVKOUKQ"/>
+  </a> 
 </p>
 
 ---

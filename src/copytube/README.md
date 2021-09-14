@@ -1,9 +1,3 @@
-<a href="">
-    <img src="https://img.shields.io/badge/coverage-97.69%25-brightgreen">
-</a>
-
----
-
 # CopyTube (Main App)
 
 This section provides the main application for this project, such as:
