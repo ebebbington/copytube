@@ -11,23 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8'
-          tools: composer
-
       - name: Install Deno
         uses: denolib/setup-deno@v2
 
       - name: Update all dependencies
         run: |
-          npm i -g npm-check-updates
-          cd src/copytube
-          deno run --allow-read=composer.json --allow-write=composer.json --allow-net=github.com https://deno.land/x/composer_check_updates@v2.0.0/check.ts
-          composer install
-          npm-check-updates -u
-          npm install
-          cd ../realtime
+          cd src/realtime
           deno run --allow-all https://deno.land/x/dmm/mod.ts update
           cd ../../
           deno run -A console/update_php_version.ts
