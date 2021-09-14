@@ -70,7 +70,6 @@ jobs:
         with:
           file: ./coverage.xml
           name: copytube-copytube
-          yml: ./codecov.yml
           fail_ci_if_error: true
 
 #  laravel-frontend-tests:
