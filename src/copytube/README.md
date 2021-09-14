@@ -24,10 +24,6 @@ This section provides the main application for this project, such as:
 
   - Holds all project configuration
 
-- `data/`
-
-  - Holds files that arent used but provide some use (like documentation)
-
 - `database/`
 
   - Holds the database files
@@ -35,10 +31,6 @@ This section provides the main application for this project, such as:
 - `node_modules/`
 
   - Holds NPM dependencies
-
-- `playground/`
-
-  - A plyground directory to test PHP-related features
 
 - `public/`
 
@@ -64,10 +56,6 @@ This section provides the main application for this project, such as:
 
   - Holds all composer dependencies
 
-- `.editorconfig`
-
-  - Holds configurations for coding styles to suit different IDE's and environments
-
 - `.env`
 
   - Holds all environmental data
@@ -75,18 +63,6 @@ This section provides the main application for this project, such as:
 - `.env.example`
 
   - Example environment file
-
-- `.gitattributes`
-
-  - ?
-
-- `phpunit.result.cache`
-
-  - ?
-
-- `.styleci.yml`
-
-  - ?
 
 - `artisan`
 
