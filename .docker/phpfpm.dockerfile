@@ -1,11 +1,10 @@
 FROM php:8.0.10-fpm
 
 # Update and install required packages and dependencies
-RUN apt-get update -y
 #RUN apt-get install -y --no-install-recommends libxslt-dev
 
-RUN apt-get install -y \
-  libpng-dev unzip curl libjpeg-dev libzip-dev libjpeg62-turbo-dev libfreetype6-dev npm
+RUN apt-get update -y \
+  && apt-get install -y libpng-dev unzip curl libjpeg-dev libzip-dev libjpeg62-turbo-dev libfreetype6-dev npm
 # or libc-client-dev, libonig-dev, apt-transport-https, apt-utils, libmcrypt-dev
 
 RUN npm i npm@latest -g
@@ -17,13 +16,14 @@ RUN docker-php-ext-install pdo_mysql zip \
   && docker-php-ext-install gd
 
 ARG XDEBUG
+ARG XDEBUG_MODE
 
 RUN if [ $XDEBUG ]; then \
   pecl install xdebug \
     && echo "[Xdebug]" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.mode=$XDEBUG_MODE" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.idekey=VSCode" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.discover_client_host=true" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \

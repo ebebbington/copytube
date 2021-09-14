@@ -55,11 +55,10 @@ jobs:
 
       - name: Laravel Backend Tests
         env:
-          XDEBUG: "true"
           DEBUGBAR_ENABLE: false
         run: |
           docker-compose up -d sql
-          docker-compose build --parallel redis phpfpm
+          docker-compose build --parallel --build-arg XDEBUG_MODE="coverage" redis phpfpm
           docker-compose up -d redis phpfpm > /dev/null
           docker exec copytube_phpfpm php artisan migrate
           docker exec copytube_phpfpm php artisan db:seed
