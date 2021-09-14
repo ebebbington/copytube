@@ -9,13 +9,18 @@ const Login = (function () {
       Loading(true);
       $.ajax({
         headers: {
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
         url: "/login",
         method: "POST",
         data: {
-          email: document.querySelector<HTMLInputElement>('input[name="email"]').value,
-          password: document.querySelector<HTMLInputElement>('input[name="password"]').value,
+          email: document.querySelector<HTMLInputElement>('input[name="email"]')
+            .value,
+          password: document.querySelector<HTMLInputElement>(
+            'input[name="password"]'
+          ).value,
         },
 
         success: function (data) {
@@ -38,12 +43,14 @@ const Login = (function () {
   })();
 
   (function () {
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelector("#login-button").addEventListener("click", function (event) {
-        event.preventDefault();
-        console.log("Clicked login");
-        Methods.login();
-      });
+    document.addEventListener("DOMContentLoaded", () => {
+      document
+        .querySelector("#login-button")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+          console.log("Clicked login");
+          Methods.login();
+        });
     });
   })();
 

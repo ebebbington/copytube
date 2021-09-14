@@ -49,10 +49,14 @@ const Register = (function () {
   })();
 
   (function () {
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       $("body").on("click", "#recover-button", function () {
-        const email = document.querySelector<HTMLInputElement>("#email").value.toString();
-        const password = document.querySelector<HTMLInputElement>("#password").value.toString();
+        const email = document
+          .querySelector<HTMLInputElement>("#email")
+          .value.toString();
+        const password = document
+          .querySelector<HTMLInputElement>("#password")
+          .value.toString();
         console.log("SENDING");
         Methods.recoverAccount(email, password);
       });

@@ -19,16 +19,21 @@ const Notifier = (function () {
     title: string,
     message: string
   ): void {
-    const $notifierContainer = $("#notifier-container");
+    const $notifierContainer = document.querySelector<HTMLDivElement>(
+      "#notifier-container"
+    );
     if (messageType && title && message) {
-      $notifierContainer.removeClass(classNames.toString().replace(",", " "));
-      $notifierContainer.addClass(messageType);
-      $notifierContainer.css("visibility", "visible");
-      $notifierContainer.find("p#notifier-title").text(title);
-      $notifierContainer.find("p#notifier-message").text(message);
+      $notifierContainer.classList.remove(
+        classNames.toString().replace(",", " ")
+      );
+      $notifierContainer.classList.add(messageType);
+      $notifierContainer.style.visibility = "visible";
+      $notifierContainer.querySelector("p#notifier-title").textContent = title;
+      $notifierContainer.querySelector("p#notifier-message").textContent =
+        message;
       setTimeout(function () {
-        $notifierContainer.removeClass("error warning success");
-        $notifierContainer.css("visibility", "hidden");
+        $notifierContainer.classList.remove("error warning success");
+        $notifierContainer.style.visibility = "hidden";
       }, FADE_OUT_DELAY);
     }
   }

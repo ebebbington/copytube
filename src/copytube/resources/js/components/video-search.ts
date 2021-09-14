@@ -39,7 +39,7 @@ const Home = (function () {
   })();
 
   const Handlers = (function () {
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", () => {
       const searchElem: any = document.getElementById("search");
       if (searchElem && typeof searchElem.offsetTop === "number") {
         const top = searchElem.offsetTop;
@@ -48,39 +48,41 @@ const Home = (function () {
         };
       }
 
-      $("#search-bar").on("keyup", function (event: any) {
-        const value = event.target.value;
-        console.log(value);
-        const dropdown = $("#search-bar-matching-dropdown");
-        dropdown.empty();
-        if (!value) {
-          return;
-        }
-        dropdown.append("<li>Loading...</li>");
-        if (xhr && xhr.readyState !== 4) {
-          xhr.abort();
-        }
-        xhr = $.ajax({
-          url: "/video/titles?title=" + value,
-          method: "GET",
-          dataType: "json",
-          success: function (data) {
-            console.log(data);
-            if (data.success) {
-              const matchingTitles = data.data;
-              dropdown.empty();
-              matchingTitles.forEach((element: string) => {
-                dropdown.append("<li>" + element + "</li>");
-              });
-            }
-          },
-          error: function (err) {
-            if (err.statusText !== "abort") {
-              console.error(err);
-            }
-          },
+      document
+        .querySelector("#search-bar")
+        .addEventListener("keyup", function (event: any) {
+          const value = event.target.value;
+          console.log(value);
+          const dropdown = $("#search-bar-matching-dropdown");
+          dropdown.empty();
+          if (!value) {
+            return;
+          }
+          dropdown.append("<li>Loading...</li>");
+          if (xhr && xhr.readyState !== 4) {
+            xhr.abort();
+          }
+          xhr = $.ajax({
+            url: "/video/titles?title=" + value,
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+              console.log(data);
+              if (data.success) {
+                const matchingTitles = data.data;
+                dropdown.empty();
+                matchingTitles.forEach((element: string) => {
+                  dropdown.append("<li>" + element + "</li>");
+                });
+              }
+            },
+            error: function (err) {
+              if (err.statusText !== "abort") {
+                console.error(err);
+              }
+            },
+          });
         });
-      });
 
       $("#search-bar-matching-dropdown").on("click", "li", function (event) {
         console.log("clicked a video dropdown title");
@@ -89,10 +91,14 @@ const Home = (function () {
         Methods.requestVideo(title);
       });
 
-      $("#search-button").on("click", function (event: any) {
-        const videoTitle = $("#search-bar").val().toString();
-        Methods.requestVideo(videoTitle);
-      });
+      document
+        .querySelector("#search-button")
+        .addEventListener("click", function (event: any) {
+          const videoTitle = document
+            .querySelector<HTMLInputElement>("#search-bar")
+            .value.toString();
+          Methods.requestVideo(videoTitle);
+        });
     });
   })();
 })();
