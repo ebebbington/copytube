@@ -37,6 +37,9 @@ class Session extends Base
         "user_id" => "required",
     ];
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function user()
     {
         return $this->hasOne(User::class, "id", "user_id");
