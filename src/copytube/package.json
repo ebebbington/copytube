@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.6",
-    "laravel-mix": "^6.0.28",
+    "laravel-mix": "^6.0.31",
     "resolve-url-loader": "^4.0.0",
     "sass": "^1.38.2",
     "sass-loader": "^12.1.0",
