@@ -63,7 +63,15 @@ jobs:
           docker-compose up -d redis phpfpm > /dev/null
           docker exec copytube_phpfpm php artisan migrate
           docker exec copytube_phpfpm php artisan db:seed
-          docker exec copytube_phpfpm vendor/bin/phpunit
+          docker exec copytube_phpfpm vendor/bin/phpunit --coverage-clover=coverage.xml
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+          name: copytube-copytube
+          yml: ./codecov.yml
+          fail_ci_if_error: true
 
 #  laravel-frontend-tests:
 #    runs-on: ubuntu-latest
