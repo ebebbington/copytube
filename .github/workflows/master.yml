@@ -47,9 +47,6 @@ jobs:
 
   laravel-backend-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/copytube
     steps:
       - uses: actions/checkout@v2
 
