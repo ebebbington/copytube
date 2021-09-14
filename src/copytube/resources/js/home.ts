@@ -1,9 +1,7 @@
 const Home = (function () {
   const Methods = (function () {})();
 
-  (function () {
-    
-  })();
+  (function () {})();
 
   return {
     Methods: Methods,
