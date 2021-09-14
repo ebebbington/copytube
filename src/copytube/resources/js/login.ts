@@ -7,16 +7,15 @@ const Login = (function () {
   const Methods = (function () {
     function login() {
       Loading(true);
-      console.log($('input[name="email"]').val());
       $.ajax({
         headers: {
-          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
         },
         url: "/login",
         method: "POST",
         data: {
-          email: $('input[name="email"]').val(),
-          password: $('input[name="password"]').val(),
+          email: document.querySelector<HTMLInputElement>('input[name="email"]').value,
+          password: document.querySelector<HTMLInputElement>('input[name="password"]').value,
         },
 
         success: function (data) {
@@ -39,8 +38,8 @@ const Login = (function () {
   })();
 
   (function () {
-    $(document).ready(() => {
-      $("#login-button").on("click", function (event) {
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector("#login-button").addEventListener("click", function (event) {
         event.preventDefault();
         console.log("Clicked login");
         Methods.login();

@@ -63,8 +63,8 @@ jobs:
           docker exec copytube_phpfpm php artisan migrate
           docker exec copytube_phpfpm php artisan db:seed
           docker exec copytube_phpfpm vendor/bin/phpunit --coverage-clover=coverage.xml
-          ls
-          ls src/copytube
+          docker exec copytube_phpfpm ls
+          docker cp copytube_phpfpm:/var/www/copytube/coverage.xml .
       
       - name: Upload coverage
         uses: codecov/codecov-action@v1
