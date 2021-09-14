@@ -1,7 +1,9 @@
 const Home = (function () {
   const Methods = (function () {})();
 
-  (function () {})();
+  (function () {
+    // do nothing
+  })();
 
   return {
     Methods: Methods,
