@@ -23,14 +23,16 @@ const RabbitHole = (function () {
   })();
 
   const Handlers = (function () {
-    $(document).ready(function () {
-      $(".rabbit-hole-video-holder > video").on("click", function (event: any) {
-        // Make this the main video
-        console.log("clicked rabbuit hole vid");
-        const rabbitHoleVideo = $(this);
-        const clickedVideoTitle = rabbitHoleVideo.attr("title");
-        Methods.requestVideo(clickedVideoTitle);
-      });
+    document.addEventListener("DOMContentLoaded", () => {
+      document
+        .querySelector(".rabbit-hole-video-holder > video")
+        .addEventListener("click", function (event: any) {
+          // Make this the main video
+          console.log("clicked rabbuit hole vid");
+          const rabbitHoleVideo = $(this);
+          const clickedVideoTitle = rabbitHoleVideo.attr("title");
+          Methods.requestVideo(clickedVideoTitle);
+        });
     });
   })();
 })();

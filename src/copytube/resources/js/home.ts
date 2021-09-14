@@ -2,7 +2,7 @@ const Home = (function () {
   const Methods = (function () {})();
 
   (function () {
-    $(document).ready(function () {});
+    // do nothing
   })();
 
   return {

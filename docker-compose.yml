@@ -23,6 +23,9 @@ services:
     build:
       context: .
       dockerfile: .docker/phpfpm.dockerfile
+      args:
+        - XDEBUG=true
+        - XDEBUG_MODE=debug
     environment:
       - XDEBUG=true
     depends_on:

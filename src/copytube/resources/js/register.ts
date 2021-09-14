@@ -6,9 +6,15 @@ import Loading from "./components/loading";
 const Register = (function () {
   const Methods = (function () {
     function validateInput(): boolean {
-      const username: string = $('input[name="username"]').val().toString();
-      const email: string = $('input[name="email"]').val().toString();
-      const password: string = $('input[name="password"]').val().toString();
+      const username: string = document
+        .querySelector<HTMLInputElement>('input[name="username"]')
+        .value.toString();
+      const email: string = document
+        .querySelector<HTMLInputElement>('input[name="email"]')
+        .value.toString();
+      const password: string = document
+        .querySelector<HTMLInputElement>('input[name="password"]')
+        .value.toString();
       if (
         username === null ||
         username === undefined ||
@@ -45,7 +51,9 @@ const Register = (function () {
       const formData = new FormData($("form")[0]);
       $.ajax({
         headers: {
-          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
         type: "POST",
         url: "/register",
@@ -86,15 +94,17 @@ const Register = (function () {
   })();
 
   (function () {
-    $(document).ready(() => {
-      $("#register-button").on("click", function (e) {
-        e.preventDefault();
-        const passed = Methods.validateInput();
-        if (!passed) {
-          return false;
-        }
-        Methods.registerUser();
-      });
+    document.addEventListener("DOMContentLoaded", () => {
+      document
+        .querySelector("#register-button")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          const passed = Methods.validateInput();
+          if (!passed) {
+            return false;
+          }
+          Methods.registerUser();
+        });
     });
   })();
 

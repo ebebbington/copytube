@@ -25,6 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
       - name: Format Checks
         run: |
           npm run fmt:check
@@ -51,15 +55,22 @@ jobs:
 
       - name: Laravel Backend Tests
         env:
-          XDEBUG: ""
           DEBUGBAR_ENABLE: false
         run: |
           docker-compose up -d sql
-          docker-compose build --parallel redis phpfpm
+          docker-compose build --parallel --build-arg XDEBUG_MODE="coverage" redis phpfpm
           docker-compose up -d redis phpfpm > /dev/null
           docker exec copytube_phpfpm php artisan migrate
           docker exec copytube_phpfpm php artisan db:seed
-          docker exec copytube_phpfpm vendor/bin/phpunit
+          docker exec copytube_phpfpm vendor/bin/phpunit --coverage-clover=coverage.xml
+          docker exec copytube_phpfpm ls
+          docker cp copytube_phpfpm:/var/www/copytube/coverage.xml .
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: coverage.xml
+          name: copytube-copytube
 
 #  laravel-frontend-tests:
 #    runs-on: ubuntu-latest
