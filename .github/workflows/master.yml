@@ -55,7 +55,7 @@ jobs:
 
       - name: Laravel Backend Tests
         env:
-          XDEBUG: ""
+          XDEBUG: "true"
           DEBUGBAR_ENABLE: false
         run: |
           docker-compose up -d sql
