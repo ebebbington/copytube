@@ -119,7 +119,7 @@ jobs:
           docker exec copytube_realtime deno coverage cov
           docker exec copytube_realtime deno coverage --lcov cov > cov.lcov
       - name: Upload Coverage
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2.1.0
         with:
           name: copytube-realtime
           files: cov.lcov
