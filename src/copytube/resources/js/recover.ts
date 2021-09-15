@@ -4,43 +4,31 @@ import Loading from "./components/loading";
 
 const Register = (function () {
   const Methods = (function () {
-    function recoverAccount(email: string, password: string) {
+    async function recoverAccount(email: string, password: string) {
       Loading(true);
-      $.ajax({
+      const res = await fetch("/recover", {
         headers: {
-          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
         method: "POST",
-        url: "/recover",
-        data: {
+        body: JSON.stringify({
           email,
           password,
-        },
-        success: function (data, status, jqXHR) {
-          Loading(false);
-          console.log(data);
-          if (data.success === true) {
-            $("form").trigger("reset");
-            Notifier.success("Recover", "Successfully Reset Your Password");
-            return true;
-          }
-          // else theres a problem
-          Notifier.error("Error", data.message);
-          return false;
-        },
-        error: function (error) {
-          console.error(error);
-          try {
-            const errMsg = error.responseJSON.message;
-            //$('#register-form').trigger('reset')
-            Notifier.error("Error", errMsg);
-          } catch (err) {
-            //@ts-ignore
-            Notifier.error("Error", error.message);
-          }
-          Loading(false);
-        },
+        }),
       });
+      const data = await res.json();
+      Loading(false);
+      console.log(data);
+      if (data.success === true) {
+        document.querySelector("form").trigger("reset");
+        Notifier.success("Recover", "Successfully Reset Your Password");
+        return true;
+      }
+      // else theres a problem
+      Notifier.error("Error", data.message);
+      return false;
     }
 
     return {
@@ -50,7 +38,11 @@ const Register = (function () {
 
   (function () {
     document.addEventListener("DOMContentLoaded", () => {
-      $("body").on("click", "#recover-button", function () {
+      const recover = document.querySelector("#recover-button");
+      if (!recover) {
+        return;
+      }
+      recover.addEventListener("click", async function () {
         const email = document
           .querySelector<HTMLInputElement>("#email")
           .value.toString();
@@ -58,7 +50,7 @@ const Register = (function () {
           .querySelector<HTMLInputElement>("#password")
           .value.toString();
         console.log("SENDING");
-        Methods.recoverAccount(email, password);
+        await Methods.recoverAccount(email, password);
       });
     });
   })();

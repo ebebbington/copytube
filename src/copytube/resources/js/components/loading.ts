@@ -1,11 +1,12 @@
-const Loading = function (isLoading: boolean, elemToHalt?: any) {
+const Loading = function (isLoading: boolean, elemToHalt?: HTMLElement) {
   const overlayElement = document.getElementById("overlay-container");
   const loadingElement = document.getElementById("loading-container");
   if (isLoading) {
     overlayElement.style.visibility = "visible";
     loadingElement.style.visibility = "visible";
-    if (elemToHalt) elemToHalt.disabled = true;
-    $("#loading-circle").css("animation", "pulse 1.5s infinite");
+    if (elemToHalt) elemToHalt.setAttribute("disabled", "true");
+    document.querySelector<HTMLDivElement>("#loading-circle").style.animation =
+      "pulse 1.5s infinite";
     // $(".loading-circles#loading-circle-one").css(
     //     "animation",
     //     "pulse 1.5s infinite"
@@ -31,8 +32,9 @@ const Loading = function (isLoading: boolean, elemToHalt?: any) {
   if (!isLoading) {
     overlayElement.style.visibility = "hidden";
     loadingElement.style.visibility = "hidden";
-    if (elemToHalt) elemToHalt.disabled = false;
-    $(".loading-circles").css("animation", "");
+    if (elemToHalt) elemToHalt.removeAttribute("disabled");
+    document.querySelector<HTMLDivElement>(".loading-circles").style.animation =
+      "";
   }
 };
 

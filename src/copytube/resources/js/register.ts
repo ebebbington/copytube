@@ -1,4 +1,3 @@
-/* global $, alert */
 "use strict";
 import Notifier from "./components/notifier";
 import Loading from "./components/loading";
@@ -45,46 +44,29 @@ const Register = (function () {
       return true;
     }
 
-    function registerUser(): void {
+    async function registerUser(): Promise<void> {
       Loading(true);
       //@ts-ignore
-      const formData = new FormData($("form")[0]);
-      $.ajax({
+      const formData = new FormData(document.querySelector("form"));
+      const res = await fetch("/register", {
         headers: {
           "X-CSRF-TOKEN": document
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content"),
         },
-        type: "POST",
-        url: "/register",
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function (data, status, jqXHR) {
-          Loading(false);
-          if (data.success === true) {
-            $("form").trigger("reset");
-            Notifier.success("Register", "Created an account");
-            return true;
-          }
-          // else theres a problem
-          Notifier.error("Error", data.message);
-          return false;
-        },
-        error: function (error) {
-          try {
-            const errMsg = error.responseJSON.message;
-            //$('#register-form').trigger('reset')
-            Notifier.error("Error", errMsg);
-          } catch (err) {
-            //@ts-ignore
-            Notifier.error("Error", error.message);
-          }
-          //$('html', 'body').animate({scrollTop: 0}, 'slow')
-          //return false
-          Loading(false);
-        },
+        method: "POST",
+        body: formData,
       });
+      Loading(false);
+      const data = await res.json();
+      if (data.success === true) {
+        document.querySelector("form").reset();
+        Notifier.success("Register", "Created an account");
+        return;
+      }
+      // else theres a problem
+      Notifier.error("Error", data.message);
+      return;
     }
 
     return {
@@ -95,16 +77,17 @@ const Register = (function () {
 
   (function () {
     document.addEventListener("DOMContentLoaded", () => {
-      document
-        .querySelector("#register-button")
-        .addEventListener("click", function (e) {
+      const register = document.querySelector("#register-button");
+      if (register) {
+        register.addEventListener("click", async function (e) {
           e.preventDefault();
           const passed = Methods.validateInput();
           if (!passed) {
             return false;
           }
-          Methods.registerUser();
+          await Methods.registerUser();
         });
+      }
     });
   })();
 
