@@ -1,14 +1,8 @@
-import {
-  acceptWebSocket,
-  isWebSocketCloseEvent,
-  serve,
-  WebSocket,
-} from "./deps.ts";
 import type IClient from "./interfaces/client.ts";
 import { config } from "./deps.ts";
 
 let allClients: Array<IClient> = [];
-const port = config().PORT;
+const port = Number(config().PORT);
 
 export class SocketServer {
   // Blocks the event loop, needs to be at the end
@@ -16,48 +10,17 @@ export class SocketServer {
   // And on each disconnect, remove the client from the list
   public static async startSocketServerAndListen(): Promise<void> {
     console.info(`websocket server is running on :${port}`);
-    for await (const req of serve(`:${port}`)) {
-      const { headers, conn } = req;
-      acceptWebSocket({
-        conn,
-        headers,
-        bufReader: req.r,
-        bufWriter: req.w,
-      }).then(async (sock: WebSocket): Promise<void> => {
-        console.info(
-          "New web socket connection with socket id of: " + conn.rid +
-            ". Adding this connection to the list of clients",
-        );
-        allClients.push({ id: conn.rid, socket: sock });
-        console.log("new client has just joined, here's the updated list:");
-        console.log(allClients);
-        try {
-          for await (const ev of sock) {
-            console.log("event form sock");
-            console.log(ev);
-            if (isWebSocketCloseEvent(ev)) {
-              console.info(
-                "Socket connection disconnected. Removing user from client list",
-              );
-              allClients = allClients.filter((client) =>
-                client.id !== conn.rid
-              );
-              console.log("a client has disconned, heres the updated list:");
-              console.log(allClients);
-            }
-          }
-        } catch (err) {
-          console.error(
-            "Failed when trying to remove socket connection on a disconnect. Trying again but here's the error:",
-          );
-          console.error(err);
+    const listener = Deno.listen({ port });
+    for await (const conn of listener) {
+      const httpConn = Deno.serveHttp(conn);
+      for await (const e of httpConn) {
+        const { socket } = Deno.upgradeWebSocket(e.request);
+        socket.onopen = () => allClients.push({ id: conn.rid, socket });
+        socket.onerror = () =>
           allClients = allClients.filter((client) => client.id !== conn.rid);
-          console.log("a client has disconned, heres the updated list:");
-          console.log(allClients);
-        }
-      }).catch((err: Error): void => {
-        console.error(`failed to accept websocket: ${err}`);
-      });
+        socket.onclose = () =>
+          allClients = allClients.filter((client) => client.id !== conn.rid);
+      }
     }
   }
 
