@@ -64,7 +64,7 @@ jobs:
           docker cp copytube_phpfpm:/var/www/copytube/coverage.xml .
       
       - name: Upload coverage
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2.1.0
         with:
           file: coverage.xml
           name: copytube-copytube
