@@ -10,16 +10,21 @@ export class SocketServer {
   // And on each disconnect, remove the client from the list
   public static async startSocketServerAndListen(): Promise<void> {
     console.info(`websocket server is running on :${port}`);
-    const listener = Deno.listen({ port });
+    const listener = Deno.listen({ hostname: "0.0.0.0", port });
     for await (const conn of listener) {
       const httpConn = Deno.serveHttp(conn);
       for await (const e of httpConn) {
-        const { socket } = Deno.upgradeWebSocket(e.request);
-        socket.onopen = () => allClients.push({ id: conn.rid, socket });
-        socket.onerror = () =>
+        const { socket, response } = Deno.upgradeWebSocket(e.request);
+        socket.onopen = () => {
+          allClients.push({ id: conn.rid, socket });
+        };
+        socket.onerror = () => {
           allClients = allClients.filter((client) => client.id !== conn.rid);
-        socket.onclose = () =>
+        };
+        socket.onclose = () => {
           allClients = allClients.filter((client) => client.id !== conn.rid);
+        };
+        e.respondWith(response);
       }
     }
   }
