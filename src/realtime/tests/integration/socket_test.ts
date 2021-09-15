@@ -15,8 +15,13 @@ Deno.test(
   "int/socket | Messages | The Socket Server Should Receive a message from redis whenn one is published, and should send the message to the Client",
   async () => {
     // Create the socket client
+    console.log("going to open");
     const client = new WebSocket("ws://127.0.0.1:9008/realtime");
+    const p = deferred();
+    client.onopen = () => p.resolve();
+    await p;
     const pub = await Redis.connect();
+    console.log("opened redis conn");
     const msgToSend = "Hello from Client :)";
     // listen for recieved messages when they come in
     let msgGotten = "";
