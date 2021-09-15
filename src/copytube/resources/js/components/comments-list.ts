@@ -17,7 +17,7 @@ const Commentslist = (function () {
           '#comment-list .media[data-user-id="' + message.userId + '"]'
         );
         if (!allComments.length) return false;
-        allComments.forEach(comment => comment.remove())
+        allComments.forEach((comment) => comment.remove());
       };
 
       //@ts-ignore
@@ -27,9 +27,9 @@ const Commentslist = (function () {
           message.comment.video_posted_on
         )
           return false;
-        const newCommentHtml = document.querySelector<HTMLDivElement>(
-          "#templates > #user-comment-template"
-        ).cloneNode(true) as HTMLDivElement;
+        const newCommentHtml = document
+          .querySelector<HTMLDivElement>("#templates > #user-comment-template")
+          .cloneNode(true) as HTMLDivElement;
         newCommentHtml.setAttribute("id", "");
         const [year, month, day] = message.comment.date_posted.split("-");
         const formattedDate = day + "/" + month + "/" + year;
@@ -52,89 +52,93 @@ const Commentslist = (function () {
         document.querySelector("#comment-list").prepend(newCommentHtml);
       };
 
-      const deleteComment = document.querySelector("#comment-list .media > span.delete-comment")
+      const deleteComment = document.querySelector(
+        "#comment-list .media > span.delete-comment"
+      );
       if (!deleteComment) {
         return false;
       }
-      deleteComment.addEventListener(
-        "click",
-        async function (event) {
-          const wantsToDelete = confirm(
-            "Are you sure you want to delete this comment?"
-          );
-          if (!wantsToDelete) {
-            return false;
-          }
-          const deleteElem = event.target as HTMLDivElement;
-          const commentId = deleteElem.getAttribute("data-comment-id");
-          if (!commentId) {
-            return false;
-          }
-          Loading(true);
-          const res = await fetch("/video/comment?id=" + commentId, {
-            method: "DELETE",
-            headers: {
-              "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-            },
-          })
-          const data = await res.json()
-          Loading(false);
-          if (!data.success) {
-            console.log(data)
-            return false;
-          }
-          console.log(data);
-          Loading(false);
-          if (data.success === false) {
-            Notifier.error("Delete comment", data.message);
-          } else {
-            Notifier.success("Delete comment", data.message);
-            deleteElem.closest(".media").remove();
-          }
+      deleteComment.addEventListener("click", async function (event) {
+        const wantsToDelete = confirm(
+          "Are you sure you want to delete this comment?"
+        );
+        if (!wantsToDelete) {
+          return false;
         }
-      );
+        const deleteElem = event.target as HTMLDivElement;
+        const commentId = deleteElem.getAttribute("data-comment-id");
+        if (!commentId) {
+          return false;
+        }
+        Loading(true);
+        const res = await fetch("/video/comment?id=" + commentId, {
+          method: "DELETE",
+          headers: {
+            "X-CSRF-TOKEN": document
+              .querySelector('meta[name="csrf-token"]')
+              .getAttribute("content"),
+          },
+        });
+        const data = await res.json();
+        Loading(false);
+        if (!data.success) {
+          console.log(data);
+          return false;
+        }
+        console.log(data);
+        Loading(false);
+        if (data.success === false) {
+          Notifier.error("Delete comment", data.message);
+        } else {
+          Notifier.success("Delete comment", data.message);
+          deleteElem.closest(".media").remove();
+        }
+      });
 
-      const edit = document.querySelector("#comment-list .media > span.edit-comment")
+      const edit = document.querySelector(
+        "#comment-list .media > span.edit-comment"
+      );
       if (!edit) {
         return;
       }
-      edit.addEventListener('click',
-        async (event) => {
-          const target = (event.target as HTMLSpanElement)
-          const container = target.parentElement;
-          const comment = container.querySelector<HTMLParagraphElement>('.media-body > p');
-          if (comment.getAttribute("contenteditable")) {
-            comment.setAttribute("contenteditable", "false");
-            const id = target.getAttribute("data-comment-id");
-            const newComment = comment.textContent;
-            // send post
-            Loading(true);
-            const res = await fetch("/video/comment", {
-              method: "PUT",
-              headers: {
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-              },
-              body: JSON.stringify({
-                id: id,
-                newComment: newComment,
-              })
-            })
-            const data = await res.json()
-            Loading(false);
-            if (data.success) {
-              Notifier.success("Update", data.message);
-            } else {
-              Notifier.error("Update", data.message);
-            }
-            console.error(data);
+      edit.addEventListener("click", async (event) => {
+        const target = event.target as HTMLSpanElement;
+        const container = target.parentElement;
+        const comment =
+          container.querySelector<HTMLParagraphElement>(".media-body > p");
+        if (comment.getAttribute("contenteditable")) {
+          comment.setAttribute("contenteditable", "false");
+          const id = target.getAttribute("data-comment-id");
+          const newComment = comment.textContent;
+          // send post
+          Loading(true);
+          const res = await fetch("/video/comment", {
+            method: "PUT",
+            headers: {
+              "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              id: id,
+              newComment: newComment,
+            }),
+          });
+          const data = await res.json();
+          Loading(false);
+          if (data.success) {
+            Notifier.success("Update", data.message);
           } else {
-            comment.setAttribute("contenteditable", "true");
-            comment.focus();
+            Notifier.error("Update", data.message);
           }
+          console.error(data);
+        } else {
+          comment.setAttribute("contenteditable", "true");
+          comment.focus();
         }
-      );
+      });
     });
   })();
 

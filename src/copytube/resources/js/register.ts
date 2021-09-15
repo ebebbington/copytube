@@ -55,10 +55,10 @@ const Register = (function () {
             .getAttribute("content"),
         },
         method: "POST",
-        body: formData
-      })
+        body: formData,
+      });
       Loading(false);
-      const data = await res.json()
+      const data = await res.json();
       if (data.success === true) {
         document.querySelector("form").reset();
         Notifier.success("Register", "Created an account");
@@ -77,8 +77,7 @@ const Register = (function () {
 
   (function () {
     document.addEventListener("DOMContentLoaded", () => {
-      const register = document
-      .querySelector("#register-button")
+      const register = document.querySelector("#register-button");
       if (register) {
         register.addEventListener("click", async function (e) {
           e.preventDefault();

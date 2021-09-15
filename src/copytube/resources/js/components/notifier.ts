@@ -22,9 +22,9 @@ const Notifier = (function () {
     const notifierContainer = document.querySelector<HTMLDivElement>(
       "#notifier-container"
     );
-    console.log(notifierContainer)
+    console.log(notifierContainer);
     if (messageType && title && message) {
-      notifierContainer.classList.remove(...classNames)
+      notifierContainer.classList.remove(...classNames);
       notifierContainer.classList.add(messageType);
       notifierContainer.style.visibility = "visible";
       notifierContainer.querySelector("p#notifier-title").textContent = title;

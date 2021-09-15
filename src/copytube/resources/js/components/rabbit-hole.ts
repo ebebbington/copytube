@@ -24,8 +24,7 @@ const RabbitHole = (function () {
 
   const Handlers = (function () {
     document.addEventListener("DOMContentLoaded", () => {
-      const video = document
-        .querySelector(".rabbit-hole-video-holder > video")
+      const video = document.querySelector(".rabbit-hole-video-holder > video");
       if (video) {
         video.addEventListener("click", function () {
           // Make this the main video

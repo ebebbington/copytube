@@ -7,31 +7,31 @@ const Login = (function () {
   const Methods = (function () {
     async function login() {
       Loading(true);
-      console.log('2')
-        const res = await fetch("/login", {
-          headers: {
-            "X-CSRF-TOKEN": document
-              .querySelector('meta[name="csrf-token"]')
-              .getAttribute("content"),
-            "Content-Type": "application/json"
-          },
-          method: "POST",
-          body: JSON.stringify({
-            email: document.querySelector<HTMLInputElement>('input[name="email"]')
-              .value,
-            password: document.querySelector<HTMLInputElement>(
-              'input[name="password"]'
-            ).value,
-          })
-        })
-        const data = await res.json()
-        Loading(false)
-        if (data.success === false) {
-          Notifier.error("Login", data.message)
-          return
-        }
-        Notifier.success("Login", data.message);
-        window.location.href = "/home";
+      console.log("2");
+      const res = await fetch("/login", {
+        headers: {
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          email: document.querySelector<HTMLInputElement>('input[name="email"]')
+            .value,
+          password: document.querySelector<HTMLInputElement>(
+            'input[name="password"]'
+          ).value,
+        }),
+      });
+      const data = await res.json();
+      Loading(false);
+      if (data.success === false) {
+        Notifier.error("Login", data.message);
+        return;
+      }
+      Notifier.success("Login", data.message);
+      window.location.href = "/home";
     }
 
     return {
