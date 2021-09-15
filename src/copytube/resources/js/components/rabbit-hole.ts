@@ -24,15 +24,16 @@ const RabbitHole = (function () {
 
   const Handlers = (function () {
     document.addEventListener("DOMContentLoaded", () => {
-      document
+      const video = document
         .querySelector(".rabbit-hole-video-holder > video")
-        .addEventListener("click", function (event: any) {
+      if (video) {
+        video.addEventListener("click", function () {
           // Make this the main video
           console.log("clicked rabbuit hole vid");
-          const rabbitHoleVideo = $(this);
-          const clickedVideoTitle = rabbitHoleVideo.attr("title");
+          const clickedVideoTitle = video.getAttribute("title");
           Methods.requestVideo(clickedVideoTitle);
         });
+      }
     });
   })();
 })();

@@ -11,36 +11,31 @@ const AddComment = (function () {
      * @param videoPostedOn
      * @param newCommentHtml
      */
-    function postComment(comment: string, date: string, videoPostedOn: string) {
-      $.ajax({
+    async function postComment(comment: string, date: string, videoPostedOn: string) {
+      const res = await fetch("/video/comment", {
         headers: {
-          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
-        url: "/video/comment",
         method: "POST",
-        data: {
+        body: JSON.stringify({
           comment: comment,
           datePosted: date,
           videoPostedOn: videoPostedOn,
-        },
-        success: function (data) {
-          if (data.success) {
-            Notifier.success("Add Comment", "Success");
-            //newCommentHtml[0].children[0].children[0].src = data.data.image
-            $("#add-comment-input").val("");
-            $("#comment > span > p").text("0");
-          }
-          Loading(false);
-        },
-        error: function (err) {
-          console.log("error");
-          //@ts-ignore
-          Notifier.error("Add Comment", JSON.parse(err.responseText).message);
-          console.error(err);
-          console.log(JSON.parse(err.responseText));
-          Loading(false);
-        },
-      });
+        })
+      })
+      const data = await res.json()
+      Loading(false);
+      if (data.success) {
+        Notifier.success("Add Comment", "Success");
+        //newCommentHtml[0].children[0].children[0].src = data.data.image
+        document.querySelector<HTMLInputElement>("#add-comment-input").value = "";
+        document.querySelector("#comment > span > p").textContent = "0";
+        return true
+      }
+      console.log("error");
+      Notifier.error("Add Comment", data.message);
     }
 
     return {
@@ -48,24 +43,24 @@ const AddComment = (function () {
     };
   })();
   const Handlers = (function () {
-    $(document).ready(function () {
-      $("#comment textarea").on("keyup", function (event: any) {
-        const comment = event.target.value;
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector("#comment textarea").addEventListener("keyup", function (event) {
+        const comment = (event.target as HTMLInputElement).value;
         const length = comment.length;
         if (length > 400) {
-          $("#comment > span > p").css("color", "red");
+          document.querySelector<HTMLParagraphElement>("#comment > span > p").style.color = "red";
         } else {
-          $("#comment > span > p").css("color", "var(--custom-dark-grey");
+          document.querySelector<HTMLParagraphElement>("#comment > span > p").style.color = "var(--custom-dark-grey";
         }
-        $("#comment > span > p").text(length);
+        document.querySelector<HTMLParagraphElement>("#comment > span > p").textContent = "length";
       });
 
-      $("#comment > button").on("click", function (event: any) {
+      document.querySelector("#comment > button").addEventListener("click", function () {
         Loading(true);
-        const comment = $("#comment > span > textarea").val().toString();
+        const comment = document.querySelector<HTMLTextAreaElement>("#comment > span > textarea").value.toString();
         const datePosted = getCurrentDate();
         // ajax
-        const videoPostedOn: string = $("#main-video-holder > video").attr(
+        const videoPostedOn: string = document.querySelector("#main-video-holder > video").getAttribute(
           "title"
         );
 

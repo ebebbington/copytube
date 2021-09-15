@@ -5,36 +5,33 @@ import Loading from "./components/loading";
 
 const Login = (function () {
   const Methods = (function () {
-    function login() {
+    async function login() {
       Loading(true);
-      $.ajax({
-        headers: {
-          "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
-        },
-        url: "/login",
-        method: "POST",
-        data: {
-          email: document.querySelector<HTMLInputElement>('input[name="email"]')
-            .value,
-          password: document.querySelector<HTMLInputElement>(
-            'input[name="password"]'
-          ).value,
-        },
-
-        success: function (data) {
-          console.log(data);
-          Notifier.success("Login", data.message);
-          window.location.href = "/home";
-          Loading(false);
-        },
-        error: function (err: any) {
-          console.error(err);
-          Notifier.error("Login", err.responseJSON.message);
-          Loading(false);
-        },
-      });
+      console.log('2')
+        const res = await fetch("/login", {
+          headers: {
+            "X-CSRF-TOKEN": document
+              .querySelector('meta[name="csrf-token"]')
+              .getAttribute("content"),
+            "Content-Type": "application/json"
+          },
+          method: "POST",
+          body: JSON.stringify({
+            email: document.querySelector<HTMLInputElement>('input[name="email"]')
+              .value,
+            password: document.querySelector<HTMLInputElement>(
+              'input[name="password"]'
+            ).value,
+          })
+        })
+        const data = await res.json()
+        Loading(false)
+        if (data.success === false) {
+          Notifier.error("Login", data.message)
+          return
+        }
+        Notifier.success("Login", data.message);
+        window.location.href = "/home";
     }
 
     return {
@@ -46,10 +43,10 @@ const Login = (function () {
     document.addEventListener("DOMContentLoaded", () => {
       document
         .querySelector("#login-button")
-        .addEventListener("click", function (event) {
+        .addEventListener("click", async function (event) {
           event.preventDefault();
           console.log("Clicked login");
-          Methods.login();
+          await Methods.login();
         });
     });
   })();

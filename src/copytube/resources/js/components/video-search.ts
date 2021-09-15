@@ -1,8 +1,4 @@
-import Realtime from "./realtime";
-import Notifier from "./notifier";
 import Loading from "./loading";
-
-let xhr: JQueryXHR;
 
 const Home = (function () {
   const Methods = (function () {
@@ -11,7 +7,7 @@ const Home = (function () {
      * @param elem
      * @param top
      */
-    function handleScroll(elem: any, top: any): void {
+    function handleScroll(elem: HTMLElement, top: number): void {
       if (window.pageYOffset > top) {
         elem.classList.add("stick");
       } else {
@@ -40,7 +36,7 @@ const Home = (function () {
 
   const Handlers = (function () {
     document.addEventListener("DOMContentLoaded", () => {
-      const searchElem: any = document.getElementById("search");
+      const searchElem = document.getElementById("search");
       if (searchElem && typeof searchElem.offsetTop === "number") {
         const top = searchElem.offsetTop;
         window.onscroll = function () {
@@ -48,57 +44,49 @@ const Home = (function () {
         };
       }
 
-      document
+      const searchBar = document
         .querySelector("#search-bar")
-        .addEventListener("keyup", function (event: any) {
-          const value = event.target.value;
+      if (searchBar) {
+        searchBar.addEventListener("keyup", async function (event) {
+          const value = (event.target as HTMLInputElement).value;
           console.log(value);
-          const dropdown = $("#search-bar-matching-dropdown");
-          dropdown.empty();
+          const dropdown = document.querySelector<HTMLUListElement>("#search-bar-matching-dropdown");
+          const items = dropdown.querySelectorAll('li')
+          items.forEach(item => item.remove())
           if (!value) {
             return;
           }
           dropdown.append("<li>Loading...</li>");
-          if (xhr && xhr.readyState !== 4) {
-            xhr.abort();
+          const res = await fetch("/video/titles?title=" + value)
+          const data = await res.json()
+          console.log(data);
+          if (data.success) {
+            const matchingTitles = data.data;
+            items.forEach(item => item.remove())
+            matchingTitles.forEach((element: string) => {
+              dropdown.append("<li>" + element + "</li>");
+            });
           }
-          xhr = $.ajax({
-            url: "/video/titles?title=" + value,
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-              console.log(data);
-              if (data.success) {
-                const matchingTitles = data.data;
-                dropdown.empty();
-                matchingTitles.forEach((element: string) => {
-                  dropdown.append("<li>" + element + "</li>");
-                });
-              }
-            },
-            error: function (err) {
-              if (err.statusText !== "abort") {
-                console.error(err);
-              }
-            },
+        })
+
+        const items = document.querySelectorAll<HTMLLIElement>("#search-bar-matching-dropdown li")
+        items.forEach(item => item.addEventListener("click", function (event) {
+          console.log("clicked a video dropdown title");
+          const title = (event.target as unknown as { textContent: string }).textContent;
+          Methods.requestVideo(title);
+        }))
+
+        const search = document
+          .querySelector("#search-button")
+        if (search) { 
+          search.addEventListener("click", function () {
+            const videoTitle = document
+              .querySelector<HTMLInputElement>("#search-bar")
+              .value.toString();
+            Methods.requestVideo(videoTitle);
           });
-        });
-
-      $("#search-bar-matching-dropdown").on("click", "li", function (event) {
-        console.log("clicked a video dropdown title");
-        console.log($(this).text());
-        const title = $(this).text();
-        Methods.requestVideo(title);
-      });
-
-      document
-        .querySelector("#search-button")
-        .addEventListener("click", function (event: any) {
-          const videoTitle = document
-            .querySelector<HTMLInputElement>("#search-bar")
-            .value.toString();
-          Methods.requestVideo(videoTitle);
-        });
+        }
+      }
     });
   })();
 })();
