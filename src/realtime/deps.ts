@@ -11,8 +11,8 @@ export { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
 //     testing
 // }
 
-export { connect } from "https://deno.land/x/redis@v0.23.2/redis.ts";
+export { connect } from "https://deno.land/x/redis@v0.24.0/redis.ts";
 export type {
   Redis as IRedis,
   RedisSubscription,
-} from "https://deno.land/x/redis@v0.23.2/mod.ts";
+} from "https://deno.land/x/redis@v0.24.0/mod.ts";
