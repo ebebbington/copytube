@@ -56,7 +56,3 @@ Route::get("/recover", "RecoverController@index");
 Route::post("/recover", "RecoverController@post")->name("recover");
 
 Route::delete("/user", "UserController@Delete")->middleware("auth");
-
-Route::get("/{any}", function () {
-    abort(404);
-})->where("any", ".*");
