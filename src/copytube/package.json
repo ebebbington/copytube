@@ -11,7 +11,7 @@
     "fmt:fix": "npm i --no-save prettier @prettier/plugin-php && node_modules/.bin/prettier --write ."
   },
   "devDependencies": {
-    "laravel-mix": "^6.0.31",
+    "laravel-mix": "^6.0.38",
     "resolve-url-loader": "^4.0.0",
     "sass": "^1.42.1",
     "sass-loader": "^12.1.0",
