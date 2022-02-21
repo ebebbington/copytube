@@ -1,4 +1,4 @@
-FROM php:8.1.2-fpm
+FROM php:8.1.3-fpm
 
 # Update and install required packages and dependencies
 #RUN apt-get install -y --no-install-recommends libxslt-dev
