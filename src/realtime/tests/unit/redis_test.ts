@@ -26,6 +26,7 @@ Deno.test(
     const message = await p;
     redis.close();
     pub.close();
+    await sub.close()
     Rhum.asserts.assertEquals(message, "wayway");
   },
 );
