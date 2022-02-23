@@ -9,7 +9,7 @@ import { SocketServer } from "./socket.ts";
 // Subscribe to redis channels and handle events when they come in
 const redis = await Redis.connect();
 const sub = await Redis.createSubscriber(redis);
-await Redis.listen(sub, SocketServer.sendRedisMessageToSocketClients);
+Redis.listen(sub, SocketServer.sendRedisMessageToSocketClients);
 
 // Start socket server
 await SocketServer.startSocketServerAndListen();

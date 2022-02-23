@@ -28,6 +28,7 @@ export class Redis {
     const channels = ["realtime.comments.new", "realtime.users.delete"];
     console.info(
       "Subscribed to redis and awaiting messages on the following channels:",
+      channels,
     );
     return await redis.subscribe(...channels);
   }
@@ -48,7 +49,7 @@ export class Redis {
           "Received a message from redis on the following channel: " + channel +
             ". Sending the message to the socket client",
         );
-        console.info("FYI, here's the data received from Redis:");
+        console.info("FYI, here's the data received from Redis:", message);
         sendMessageCallback(message);
       }
     })();

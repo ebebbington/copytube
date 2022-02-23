@@ -16,17 +16,17 @@ Deno.test(
   "unit/redis | listen() | Will call the callback when a message is sent to redis",
   async () => {
     const redis = await Redis.connect();
-    const sub = await Redis.createSubscriber(redis);
     const pub = await Redis.connect();
+    const sub = await Redis.createSubscriber(redis);
     const p = deferred<string>();
-    await Redis.listen(sub, (message: string) => {
+    Redis.listen(sub, (message: string) => {
+      console.log("listen called");
       p.resolve(message);
     });
     await pub.publish("realtime.comments.new", "wayway");
     const message = await p;
-    redis.close();
     pub.close();
-    await sub.close()
+    redis.close();
     Rhum.asserts.assertEquals(message, "wayway");
   },
 );
