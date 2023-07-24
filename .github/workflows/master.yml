@@ -64,7 +64,7 @@ jobs:
           docker cp copytube_phpfpm:/var/www/copytube/coverage.xml .
       
       - name: Upload coverage
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3.1.4
         with:
           file: coverage.xml
           name: copytube-copytube
@@ -129,7 +129,7 @@ jobs:
           docker exec copytube_realtime deno coverage cov
           docker exec copytube_realtime deno coverage --lcov cov > cov.lcov
       - name: Upload Coverage
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3.1.4
         with:
           name: copytube-realtime
           files: cov.lcov
