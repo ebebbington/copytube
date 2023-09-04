@@ -23,7 +23,7 @@ jobs:
       run:
         working-directory: src/copytube
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v2
         with:
@@ -48,7 +48,7 @@ jobs:
   laravel-backend-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Laravel Backend Tests
         env:
@@ -75,7 +75,7 @@ jobs:
 #      run:
 #        working-directory: src/copytube
 #    steps:
-#      - uses: actions/checkout@v2
+#      - uses: actions/checkout@v4
 #
 #      - name: Setup PHP and Composer
 #        uses: shivammathur/setup-php@v2
@@ -99,7 +99,7 @@ jobs:
   realtime-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install Deno
         uses: denoland/setup-deno@v1
@@ -118,7 +118,7 @@ jobs:
   realtime-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Realtime Tests
         run: |
