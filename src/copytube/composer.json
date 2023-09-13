@@ -14,7 +14,7 @@
     "laravel/framework": "^8.52",
     "laravel/tinker": "^2.6",
     "phpmailer/phpmailer": "^6.5",
-    "predis/predis": "^1.1"
+    "predis/predis": "^2.2"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.6",
